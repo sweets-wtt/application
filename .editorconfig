@@ -1,0 +1,19 @@
+# EditorConfig - https://editorconfig.org/
+
+# 根配置
+root = true
+
+# 通用
+[*]
+# 编码
+charset = utf-8
+# 换行符
+end_of_line = lf
+# 缩进风格
+indent_style = space
+# 缩进宽度
+indent_size = 2
+# 文件末尾换行
+insert_final_newline = true
+# 行尾空白
+trim_trailing_whitespace = true

@@ -1,0 +1,4 @@
+# gitattributes - https://git-scm.com/docs/gitattributes
+
+# 文本属性
+* text=auto eol=lf
