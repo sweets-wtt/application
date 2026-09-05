@@ -22,3 +22,79 @@ tasks:
     options:
       # 启用缓存
       cache: false
+
+  # 代码检查
+  lint:
+    # 前置任务
+    deps:
+      - "typos"
+      - "oxfmt"
+      - "no-pipe"
+    # 任务选项
+    options:
+      # CI 运行
+      runInCI: false
+
+  # 拼写检查
+  typos:
+    # 运行命令
+    command: "typos"
+    # 任务选项
+    options:
+      # CI 运行
+      runInCI: false
+
+  # Oxfmt 检查
+  oxfmt-check:
+    # 运行命令
+    command: "oxfmt --check ."
+    # 任务选项
+    options:
+      # CI 运行
+      runInCI: false
+      # 从工作区根目录运行
+      runFromWorkspaceRoot: true
+
+  # Oxfmt 格式化
+  oxfmt-format:
+    # 运行命令
+    command: "oxfmt ."
+    # 任务选项
+    options:
+      # 启用缓存
+      cache: false
+      # CI 运行
+      runInCI: false
+      # 从工作区根目录运行
+      runFromWorkspaceRoot: true
+
+  # Oxfmt 聚合
+  oxfmt:
+    # 前置任务
+    deps:
+      - "oxfmt-format"
+      - "oxfmt-check"
+    # 任务选项
+    options:
+      # CI 运行
+      runInCI: false
+      # 并行运行前置任务
+      runDepsInParallel: false
+
+  # 管道检查
+  no-pipe:
+    # 运行命令
+    command: "sh"
+    # 命令参数
+    args:
+      - -c
+      - >-
+        rg --hidden -e "(curl|wget)\s+[^|\n]*\|\s*(sudo\s+)?(sh|bash|zsh|ksh|dash)(\s|$)" ; [ $? -eq 1 ]
+    # 任务选项
+    options:
+      # 启用缓存
+      cache: false
+      # CI 运行
+      runInCI: false
+      # 经 shell 运行
+      shell: false
