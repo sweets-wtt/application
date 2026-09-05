@@ -1,0 +1,13 @@
+# lychee - https://lychee.cli.rs/
+
+# 排除路径
+exclude_path = []
+
+# 排除私有地址
+exclude_private = true
+
+# 最大重试数
+max_retries = 3
+
+# 重试等待时间
+retry_wait_time = 1

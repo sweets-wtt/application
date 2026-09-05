@@ -9,6 +9,8 @@ tasks:
 
   # 环境初始化
   setup:
+    # 命令
+    command: 'moon sync vcs-hooks'
     # 前置任务
     deps:
       - 'setup-tools'
@@ -16,4 +18,41 @@ tasks:
   # 代码检查
   lint:
     # 前置任务
-    deps: []
+    deps:
+      - 'typos'
+      - 'no-pipe'
+      - 'zizmor'
+
+  # 拼写检查
+  typos:
+    # 命令
+    command: 'typos'
+
+  # 链接检查
+  lychee:
+    # 命令
+    command: 'lychee --config lychee.toml .'
+    # 选项
+    options:
+      # CI 运行
+      runInCI: false
+
+  # 管道检查
+  no-pipe:
+    # 命令
+    command: 'sh'
+    # 参数
+    args:
+      - -c
+      - 'rg --hidden -e "(curl|wget)\s+[^|\n]*\|\s*(sudo\s+)?(sh|bash|zsh|ksh|dash)(\s|$)" ; [ $? -eq 1 ]'
+    # 选项
+    options:
+      # 缓存
+      cache: false
+      # Shell
+      shell: false
+
+  # 工作流审计
+  zizmor:
+    # 命令
+    command: 'zizmor .github/workflows'

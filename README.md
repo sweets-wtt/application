@@ -13,6 +13,11 @@
 | --- | --- |
 | [mise](https://mise.jdx.dev/) | 环境管理 |
 | [moon](https://moonrepo.dev/docs) | 构建系统 |
+| [ripgrep](https://github.com/BurntSushi/ripgrep) | 正则搜索 |
+| [typos](https://github.com/crate-ci/typos) | 拼写检查 |
+| [lychee](https://lychee.cli.rs/) | 链接检查 |
+| [cocogitto](https://docs.cocogitto.io/) | 提交检查 |
+| [zizmor](https://docs.zizmor.sh/) | 安全审计 |
 
 ## 命令
 
@@ -33,7 +38,11 @@
 ├── .editorconfig          # 代码风格
 ├── .gitattributes         # Git 属性
 ├── .gitignore             # Git 忽略
+├── .typos.toml            # 拼写检查
+├── cog.toml               # 提交检查
+├── lychee.toml            # 链接检查
 ├── mise.lock              # 工具版本
 ├── mise.toml              # 开发环境
+├── zizmor.yaml            # 安全审计
 └── README.md              # 项目说明
 ```

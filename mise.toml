@@ -17,3 +17,13 @@ not_found_system_fallback = false
 [tools]
 # 构建系统
 "aqua:moonrepo/moon" = '2.5.4'
+# 正则搜索
+"aqua:BurntSushi/ripgrep" = '15.2.0'
+# 拼写检查
+"aqua:crate-ci/typos" = '1.50.1'
+# 链接检查
+"aqua:lycheeverse/lychee" = '0.24.2'
+# 提交检查
+"aqua:cocogitto/cocogitto" = '7.0.0'
+# 工作流审计
+"aqua:zizmorcore/zizmor" = '1.30.0'

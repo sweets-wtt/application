@@ -18,6 +18,14 @@ vcs:
   client: 'git'
   # 默认分支
   defaultBranch: 'main'
+  # 钩子
+  hooks:
+    # 提交前
+    pre-commit:
+      - 'mise exec -- moon run :lint'
+    # 提交信息
+    commit-msg:
+      - 'mise exec -- cog verify --file $ARG1'
 
 # 管道
 pipeline:

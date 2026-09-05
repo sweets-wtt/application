@@ -13,3 +13,7 @@
 # 缓存
 .cache/
 .moon/cache
+.lycheecache
+
+# 生成
+.moon/hooks

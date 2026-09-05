@@ -1,0 +1,10 @@
+# cocogitto - https://docs.cocogitto.io/
+
+# 仅检查最新标签后的提交
+from_latest_tag = true
+
+# 忽略合并提交
+ignore_merge_commits = true
+
+# 提交类型（对齐 Conventional Commits，默认类型集）
+[commit_types]

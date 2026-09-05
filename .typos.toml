@@ -1,0 +1,12 @@
+# typos - https://github.com/crate-ci/typos
+
+# 文件
+[files]
+# 拓展排除
+extend-exclude = []
+
+# 拓展词
+[default.extend-words]
+
+# 拓展标识符
+[default.extend-identifiers]
