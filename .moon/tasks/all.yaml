@@ -1,0 +1,24 @@
+# moon 全局任务 - https://moonrepo.dev/docs/config/tasks
+
+# 任务
+tasks:
+  # 环境初始化
+  setup:
+    # 运行命令
+    command: "moon sync vcs-hooks"
+    # 前置任务
+    deps:
+      - "setup-tools"
+    # 任务选项
+    options:
+      # 启用缓存
+      cache: false
+
+  # 安装工具
+  setup-tools:
+    # 运行命令
+    command: "mise install --locked"
+    # 任务选项
+    options:
+      # 启用缓存
+      cache: false
