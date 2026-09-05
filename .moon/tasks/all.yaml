@@ -31,6 +31,8 @@ tasks:
       - "oxfmt"
       - "no-pipe"
       - "zizmor"
+      - "validate"
+      - "gitleaks"
     # 任务选项
     options:
       # CI 运行
@@ -121,5 +123,38 @@ tasks:
       cache: false
       # CI 运行
       runInCI: false
+      # 从工作区根目录运行
+      runFromWorkspaceRoot: true
+
+  # 配置校验
+  validate:
+    # 运行命令
+    command: "validator renovate.json5"
+    # 任务选项
+    options:
+      # CI 运行
+      runInCI: false
+      # 从工作区根目录运行
+      runFromWorkspaceRoot: true
+
+  # 密钥扫描
+  gitleaks:
+    # 运行命令
+    command: "gitleaks git --config .gitleaks.toml ."
+    # 任务选项
+    options:
+      # CI 运行
+      runInCI: false
+      # 从工作区根目录运行
+      runFromWorkspaceRoot: true
+
+  # 漏洞扫描
+  trivy:
+    # 运行命令
+    command: "trivy fs --scanners vuln --severity HIGH,CRITICAL --exit-code 1 --config trivy.yaml ."
+    # 任务选项
+    options:
+      # CI 运行
+      runInCI: true
       # 从工作区根目录运行
       runFromWorkspaceRoot: true
