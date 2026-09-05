@@ -1,0 +1,47 @@
+# GitHub Actions 定时运维 - https://docs.github.com/actions
+
+# 工作流名称
+name: ops
+
+# 触发事件
+on:
+  # 计划
+  schedule:
+    # 计划表达式
+    - cron: "30 0 * * 1"
+  # 手动触发
+  workflow_dispatch:
+
+# 令牌权限
+permissions:
+  # 内容
+  contents: read
+
+# 作业
+jobs:
+  # 链接检查
+  lychee:
+    # 运行环境
+    runs-on: ubuntu-latest
+    # 步骤
+    steps:
+      # 检出仓库
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        # 动作输入
+        with:
+          # 检出深度
+          fetch-depth: 0
+          # 凭据保留
+          persist-credentials: false
+      # 环境管理
+      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
+        # 动作输入
+        with:
+          # 版本
+          version: "2026.8.14"
+      # 运行命令
+      - run: moon run :lychee
+        # 环境变量
+        env:
+          # 持续集成标识
+          CI: ""

@@ -30,6 +30,7 @@ tasks:
       - "typos"
       - "oxfmt"
       - "no-pipe"
+      - "zizmor"
     # 任务选项
     options:
       # CI 运行
@@ -98,3 +99,27 @@ tasks:
       runInCI: false
       # 经 shell 运行
       shell: false
+
+  # 工作流审计
+  zizmor:
+    # 运行命令
+    command: "zizmor .github/workflows"
+    # 任务选项
+    options:
+      # CI 运行
+      runInCI: false
+      # 从工作区根目录运行
+      runFromWorkspaceRoot: true
+
+  # 链接检查
+  lychee:
+    # 运行命令
+    command: "lychee --config lychee.toml ."
+    # 任务选项
+    options:
+      # 启用缓存
+      cache: false
+      # CI 运行
+      runInCI: false
+      # 从工作区根目录运行
+      runFromWorkspaceRoot: true
