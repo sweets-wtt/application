@@ -1,3 +1,9 @@
 # zizmor - https://docs.zizmor.sh/
 
-{}
+# 审计规则
+rules:
+  # 凭据持久化
+  artipacked:
+    # 发版需推送标签
+    ignore:
+      - release.yaml

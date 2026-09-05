@@ -1,0 +1,62 @@
+# GitHub Actions 发版与发行 - https://docs.github.com/actions
+
+# 名称
+name: release
+
+# 触发
+on:
+  # 手动
+  workflow_dispatch:
+  # 推送
+  push:
+    # 标签
+    tags:
+      - 'v*'
+
+# 权限
+permissions:
+  # 内容
+  contents: read
+
+# 并发
+concurrency:
+  # 组
+  group: release
+  # 取消进行中
+  cancel-in-progress: false
+
+# 作业
+jobs:
+  # 发版
+  release:
+    # 条件
+    if: github.event_name == 'workflow_dispatch'
+    # 运行器
+    runs-on: ubuntu-latest
+    # 权限
+    permissions:
+      # 内容
+      contents: write
+    # 步骤
+    steps:
+      # 检出仓库
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        # 参数
+        with:
+          # 检出深度
+          fetch-depth: 0
+      # 环境管理
+      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
+        # 参数
+        with:
+          # 版本
+          version: '2026.8.14'
+          # 缓存
+          cache: false
+      # 提交身份
+      - run: git config user.name 'github-actions[bot]'
+      - run: git config user.email 'github-actions[bot]@users.noreply.github.com'
+      # 自动发版
+      - run: cog bump --auto
+      # 推送标签
+      - run: git push origin main --tags

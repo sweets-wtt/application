@@ -1,0 +1,73 @@
+# GitHub Actions 持续集成 - https://docs.github.com/actions
+
+# 名称
+name: ci
+
+# 触发
+on:
+  # 拉取请求
+  pull_request:
+  # 推送
+  push:
+    # 分支
+    branches:
+      - main
+
+# 权限
+permissions:
+  # 内容
+  contents: read
+
+# 作业
+jobs:
+  # 代码检查
+  lint:
+    # 运行器
+    runs-on: ubuntu-latest
+    # 步骤
+    steps:
+      # 检出仓库
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        # 参数
+        with:
+          # 检出深度
+          fetch-depth: 0
+          # 凭据持久化
+          persist-credentials: false
+      # 环境管理
+      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
+        # 参数
+        with:
+          # 版本
+          version: '2026.8.14'
+      # 代码检查
+      - run: moon run :lint
+        # 环境
+        env:
+          # CI 检测
+          CI: ''
+
+  # 任务编排
+  moon:
+    # 运行器
+    runs-on: ubuntu-latest
+    # 步骤
+    steps:
+      # 检出仓库
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        # 参数
+        with:
+          # 检出深度
+          fetch-depth: 0
+          # 凭据持久化
+          persist-credentials: false
+      # 环境管理
+      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
+        # 参数
+        with:
+          # 版本
+          version: '2026.8.14'
+      # 提交检查
+      - run: cog check
+      # 构建与测试
+      - run: moon ci

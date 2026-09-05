@@ -27,3 +27,5 @@ not_found_system_fallback = false
 "aqua:cocogitto/cocogitto" = '7.0.0'
 # 工作流审计
 "aqua:zizmorcore/zizmor" = '1.30.0'
+# 语法检查
+"aqua:rhysd/actionlint" = '1.7.12'

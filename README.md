@@ -18,6 +18,7 @@
 | [lychee](https://lychee.cli.rs/) | 链接检查 |
 | [cocogitto](https://docs.cocogitto.io/) | 提交检查 |
 | [zizmor](https://docs.zizmor.sh/) | 安全审计 |
+| [actionlint](https://rhysd.github.io/actionlint/) | 语法检查 |
 
 ## 命令
 
@@ -30,19 +31,25 @@
 
 ```text
 .
-├── .moon                  # 任务编排
-│   ├── tasks              # 任务目录
-│   │   └── all.yaml       # 全局任务
-│   ├── toolchains.yaml    # 工具链
-│   └── workspace.yaml     # 工作区
-├── .editorconfig          # 代码风格
-├── .gitattributes         # Git 属性
-├── .gitignore             # Git 忽略
-├── .typos.toml            # 拼写检查
-├── cog.toml               # 提交检查
-├── lychee.toml            # 链接检查
-├── mise.lock              # 工具版本
-├── mise.toml              # 开发环境
-├── zizmor.yaml            # 安全审计
-└── README.md              # 项目说明
+├── .github                          # 持续集成
+│   └── workflows                    # 工作流
+│       ├── ci.yaml                  # 持续集成
+│       ├── ops.yaml                 # 定时运维
+│       └── release.yaml             # 版本发行
+├── .moon                            # 任务编排
+│   ├── tasks                        # 任务目录
+│   │   └── all.yaml                 # 全局任务
+│   ├── toolchains.yaml              # 工具链
+│   └── workspace.yaml               # 工作区
+├── .editorconfig                    # 代码风格
+├── .gitattributes                   # Git 属性
+├── .gitignore                       # Git 忽略
+├── .release-please-manifest.json    # 版本清单
+├── .typos.toml                      # 拼写检查
+├── cog.toml                         # 提交检查
+├── lychee.toml                      # 链接检查
+├── mise.lock                        # 工具版本
+├── mise.toml                        # 开发环境
+├── zizmor.yaml                      # 安全审计
+└── README.md                        # 项目说明
 ```

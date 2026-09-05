@@ -22,11 +22,19 @@ tasks:
       - 'typos'
       - 'no-pipe'
       - 'zizmor'
+    # 选项
+    options:
+      # CI 运行
+      runInCI: false
 
   # 拼写检查
   typos:
     # 命令
     command: 'typos'
+    # 选项
+    options:
+      # CI 运行
+      runInCI: false
 
   # 链接检查
   lychee:
@@ -49,6 +57,8 @@ tasks:
     options:
       # 缓存
       cache: false
+      # CI 运行
+      runInCI: false
       # Shell
       shell: false
 
@@ -56,3 +66,7 @@ tasks:
   zizmor:
     # 命令
     command: 'zizmor .github/workflows'
+    # 选项
+    options:
+      # CI 运行
+      runInCI: false
