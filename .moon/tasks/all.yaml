@@ -1,0 +1,19 @@
+# moon 全局任务 - https://moonrepo.dev/docs/config/tasks
+
+# 任务
+tasks:
+  # 安装工具
+  setup-tools:
+    # 命令
+    command: 'mise install --locked'
+
+  # 环境初始化
+  setup:
+    # 前置任务
+    deps:
+      - 'setup-tools'
+
+  # 代码检查
+  lint:
+    # 前置任务
+    deps: []

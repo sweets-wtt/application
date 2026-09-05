@@ -1,0 +1,25 @@
+# moon 工作区 - https://moonrepo.dev/docs/config/workspace
+
+# 项目
+projects:
+  # 标识格式
+  globFormat: 'source-path'
+  # 匹配模式
+  globs:
+    - '**/moon.yaml'
+  # 映射
+  sources:
+    # 根项目
+    root: '.'
+
+# 版本控制
+vcs:
+  # 客户端
+  client: 'git'
+  # 默认分支
+  defaultBranch: 'main'
+
+# 管道
+pipeline:
+  # 安装依赖
+  installDependencies: false
