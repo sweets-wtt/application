@@ -12,3 +12,4 @@
 
 # 缓存
 .cache/
+.moon/cache
