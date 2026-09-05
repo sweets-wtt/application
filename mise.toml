@@ -25,3 +25,9 @@ not_found_system_fallback = false
 "aqua:BurntSushi/ripgrep" = "15.2.0"
 # 提交检查
 "aqua:cocogitto/cocogitto" = "7.0.0"
+# 工作流审计
+"aqua:zizmorcore/zizmor" = "1.30.0"
+# 链接检查
+"aqua:lycheeverse/lychee" = "0.24.2"
+# 语法检查
+"aqua:rhysd/actionlint" = "1.7.12"
