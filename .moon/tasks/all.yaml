@@ -15,3 +15,54 @@ tasks:
     command: "mise install --locked"
     options:
       cache: false
+
+  # 代码检查
+  lint:
+    deps:
+      - "typos"
+      - "oxfmt"
+      - "no-pipe"
+    options:
+      runInCI: false
+
+  # 拼写检查
+  typos:
+    command: "typos"
+    options:
+      runInCI: false
+
+  # Oxfmt 检查
+  oxfmt-check:
+    command: "oxfmt --check ."
+    options:
+      runInCI: false
+      runFromWorkspaceRoot: true
+
+  # Oxfmt 格式化
+  oxfmt-format:
+    command: "oxfmt ."
+    options:
+      cache: false
+      runInCI: false
+      runFromWorkspaceRoot: true
+
+  # Oxfmt 聚合
+  oxfmt:
+    deps:
+      - "oxfmt-format"
+      - "oxfmt-check"
+    options:
+      runInCI: false
+      runDepsInParallel: false
+
+  # 管道检查
+  no-pipe:
+    command: "sh"
+    args:
+      - -c
+      - >-
+        rg --hidden -e "(curl|wget)\s+[^|\n]*\|\s*(sudo\s+)?(sh|bash|zsh|ksh|dash)(\s|$)" ; [ $? -eq 1 ]
+    options:
+      cache: false
+      runInCI: false
+      shell: false

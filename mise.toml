@@ -17,3 +17,11 @@ not_found_system_fallback = false
 [tools]
 # 构建系统
 "aqua:moonrepo/moon" = "2.5.4"
+# 拼写检查
+"aqua:crate-ci/typos" = "1.50.1"
+# 代码格式化
+"aqua:oxc-project/oxc/oxfmt" = "1.82.0"
+# 正则搜索
+"aqua:BurntSushi/ripgrep" = "15.2.0"
+# 提交检查
+"aqua:cocogitto/cocogitto" = "7.0.0"
