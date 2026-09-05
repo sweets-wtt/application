@@ -1,0 +1,7 @@
+# trivy - https://trivy.dev/
+
+# 扫描
+scan:
+  # 跳过文件
+  skip-files:
+    - mise.lock
