@@ -1,0 +1,8 @@
+# sops - https://getsops.io/
+
+# 创建规则
+creation_rules:
+  # 路径正则
+  - path_regex: 'infra/ansible/inventory/group_vars/.*\.sops\.yaml'
+    # 公钥
+    age: 'age12aevpnh40cu2hc9t4g72yjda9hw5t2wdzec7mg942mglygfdyuxqe89zwt'

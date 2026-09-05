@@ -22,6 +22,8 @@ tasks:
       - 'typos'
       - 'no-pipe'
       - 'zizmor'
+      - 'gitleaks'
+      - 'validate'
     # 选项
     options:
       # CI 运行
@@ -66,6 +68,33 @@ tasks:
   zizmor:
     # 命令
     command: 'zizmor .github/workflows'
+    # 选项
+    options:
+      # CI 运行
+      runInCI: false
+
+  # 密钥扫描
+  gitleaks:
+    # 命令
+    command: 'gitleaks git --config .gitleaks.toml .'
+    # 选项
+    options:
+      # CI 运行
+      runInCI: false
+
+  # 漏洞扫描
+  audit:
+    # 命令
+    command: 'trivy fs --scanners vuln --severity HIGH,CRITICAL --exit-code 1 --config trivy.yaml .'
+    # 选项
+    options:
+      # CI 运行
+      runInCI: true
+
+  # 配置校验
+  validate:
+    # 命令
+    command: 'validator renovate.json5'
     # 选项
     options:
       # CI 运行

@@ -19,6 +19,11 @@
 | [cocogitto](https://docs.cocogitto.io/) | 提交检查 |
 | [zizmor](https://docs.zizmor.sh/) | 安全审计 |
 | [actionlint](https://rhysd.github.io/actionlint/) | 语法检查 |
+| [sops](https://getsops.io/) | 密钥加密 |
+| [age](https://age-encryption.org/) | 加密工具 |
+| [gitleaks](https://github.com/gitleaks/gitleaks) | 密钥扫描 |
+| [trivy](https://trivy.dev/) | 漏洞扫描 |
+| [config-file-validator](https://github.com/Boeing/config-file-validator) | 配置校验 |
 
 ## 命令
 
@@ -44,12 +49,16 @@
 ├── .editorconfig                    # 代码风格
 ├── .gitattributes                   # Git 属性
 ├── .gitignore                       # Git 忽略
+├── .gitleaks.toml                   # 密钥扫描
 ├── .release-please-manifest.json    # 版本清单
+├── .sops.yaml                       # 密钥加密
 ├── .typos.toml                      # 拼写检查
 ├── cog.toml                         # 提交检查
 ├── lychee.toml                      # 链接检查
 ├── mise.lock                        # 工具版本
 ├── mise.toml                        # 开发环境
+├── renovate.json5                   # 依赖更新
+├── trivy.yaml                       # 漏洞扫描
 ├── zizmor.yaml                      # 安全审计
 └── README.md                        # 项目说明
 ```

@@ -1,0 +1,6 @@
+# gitleaks - https://github.com/gitleaks/gitleaks
+
+# 扩展
+[extend]
+# 使用默认
+useDefault = true

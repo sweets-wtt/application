@@ -29,3 +29,13 @@ not_found_system_fallback = false
 "aqua:zizmorcore/zizmor" = '1.30.0'
 # 语法检查
 "aqua:rhysd/actionlint" = '1.7.12'
+# 密钥加密
+"aqua:getsops/sops" = '3.13.3'
+# 加密工具
+"aqua:FiloSottile/age" = '1.3.2'
+# 密钥扫描
+"aqua:gitleaks/gitleaks" = '8.30.1'
+# 漏洞扫描
+"aqua:aquasecurity/trivy" = '0.74.0'
+# 配置校验
+"aqua:Boeing/config-file-validator" = '2.3.0'

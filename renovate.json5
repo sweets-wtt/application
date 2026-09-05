@@ -1,0 +1,20 @@
+// Renovate - https://docs.renovatebot.com/configuration-options/
+{
+  // 模式
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  // 继承
+  extends: ['config:best-practices'],
+  // 锁文件维护
+  lockFileMaintenance: { enabled: true },
+  // 包规则
+  packageRules: [
+    {
+      // 分组名
+      groupName: 'monorepos',
+      // 匹配更新类型
+      matchUpdateTypes: ['minor', 'patch'],
+    },
+  ],
+  // 启用管理器
+  enabledManagers: ['mise', 'pep621', 'bun', 'dockerfile', 'docker-compose'],
+}
