@@ -1,0 +1,60 @@
+# OpenAPI - https://spec.openapis.org/
+
+openapi: 3.1.2
+
+# 接口信息
+info:
+  title: API
+  description: HTTP 契约
+  version: 0.1.0
+
+# JSON Schema 方言
+jsonSchemaDialect: "https://json-schema.org/draft/2020-12/schema"
+
+# 服务器
+servers:
+  - url: /
+
+# 可复用组件
+components:
+  schemas:
+    # 标准响应
+    Response:
+      type: object
+      required:
+        - code
+        - message
+        - data
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          type: object
+      additionalProperties: false
+
+# 路径
+paths:
+  # 存活探针
+  /healthz:
+    # 检查存活
+    get:
+      operationId: healthz
+      responses:
+        "200":
+          description: 存活
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Response"
+                  - properties:
+                      data:
+                        type: object
+                        required:
+                          - status
+                        properties:
+                          status:
+                            type: string
+                        additionalProperties: false

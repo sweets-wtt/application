@@ -105,3 +105,14 @@ tasks:
     options:
       runInCI: true
       runFromWorkspaceRoot: true
+
+  # 契约聚合
+  contracts:
+    deps:
+      - "openapi"
+
+  # 契约检查
+  openapi:
+    command: "vacuum lint --ruleset contracts/http/vacuum.yaml contracts/http/openapi.yaml"
+    options:
+      runFromWorkspaceRoot: true
