@@ -3,7 +3,7 @@
 ## 概览
 
 - 用途：框架模板
-- 状态：工具链
+- 状态：契约
 
 ## 技术
 
@@ -24,6 +24,14 @@
 | [gitleaks](https://github.com/gitleaks/gitleaks) | 密钥扫描 |
 | [trivy](https://trivy.dev/) | 漏洞扫描 |
 | [config-file-validator](https://github.com/Boeing/config-file-validator) | 配置校验 |
+
+### 契约
+
+| 名称 | 说明 |
+| --- | --- |
+| [OpenAPI](https://spec.openapis.org/) | API 描述规范 |
+| [vacuum](https://quobix.com/vacuum/) | 契约检查 |
+| [oasdiff](https://github.com/tufin/oasdiff) | 兼容检查 |
 
 ## 命令
 
@@ -46,6 +54,10 @@
 │   │   └── all.yaml                 # 全局任务
 │   ├── toolchains.yaml              # 工具链
 │   └── workspace.yaml               # 工作区
+├── contracts                        # 契约
+│   └── http                         # HTTP
+│       ├── openapi.yaml             # 接口规范
+│       └── vacuum.yaml              # 契约检查
 ├── .editorconfig                    # 代码风格
 ├── .gitattributes                   # Git 属性
 ├── .gitignore                       # Git 忽略

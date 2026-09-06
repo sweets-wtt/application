@@ -1,0 +1,49 @@
+# OpenAPI - https://spec.openapis.org/
+
+# 版本
+openapi: 3.1.2
+# 信息
+info:
+  # 标题
+  title: API
+  # 描述
+  description: HTTP 契约
+  # 版本号
+  version: 0.1.0
+# 方言
+jsonSchemaDialect: 'https://json-schema.org/draft/2020-12/schema'
+# 服务器
+servers:
+  # 相对地址
+  - url: /
+# 路径
+paths:
+  # 存活探针
+  /healthz:
+    # 检查存活
+    get:
+      # 操作标识
+      operationId: healthz
+      # 响应
+      responses:
+        # 正常
+        '200':
+          # 描述
+          description: 存活
+          # 内容
+          # 内容
+          content:
+            # 媒体类型
+            application/json:
+              # 模式
+              schema:
+                # 类型
+                type: object
+                # 属性
+                properties:
+                  # 状态
+                  status:
+                    # 类型
+                    type: string
+                # 额外属性
+                additionalProperties: false

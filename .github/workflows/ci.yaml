@@ -71,3 +71,30 @@ jobs:
       - run: cog check
       # 构建与测试
       - run: moon ci
+
+  # 兼容检查
+  oasdiff:
+    # 条件
+    if: github.event_name == 'pull_request'
+    # 运行器
+    runs-on: ubuntu-latest
+    # 步骤
+    steps:
+      # 检出仓库
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        # 参数
+        with:
+          # 检出深度
+          fetch-depth: 0
+          # 凭据持久化
+          persist-credentials: false
+      # 环境管理
+      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
+        # 参数
+        with:
+          # 版本
+          version: '2026.8.14'
+      # 命令
+      - run: |
+          vacuum bundle --ruleset contracts/http/vacuum.yaml contracts/http/openapi.yaml /tmp/rev.yaml
+          oasdiff breaking --fail-on ERR origin/main:contracts/http/openapi.yaml /tmp/rev.yaml

@@ -1,0 +1,31 @@
+# vacuum - https://quobix.com/vacuum/rulesets/
+
+# 继承
+extends: [[vacuum:oas, recommended]]
+# 规则
+rules:
+  # 敏感字段禁例
+  no-sensitive-examples:
+    # 描述
+    description: 敏感字段禁止示例与默认值
+    # 级别
+    severity: error
+    # 给定
+    given:
+      - '$..password'
+      - '$..secret'
+      - '$..token'
+    # 则
+    then:
+      # 字段
+      - field: example
+        # 函数
+        function: falsy
+      # 字段
+      - field: examples
+        # 函数
+        function: falsy
+      # 字段
+      - field: default
+        # 函数
+        function: falsy

@@ -39,3 +39,7 @@ not_found_system_fallback = false
 "aqua:aquasecurity/trivy" = '0.74.0'
 # 配置校验
 "aqua:Boeing/config-file-validator" = '2.3.0'
+# 契约检查
+"aqua:daveshanley/vacuum" = '0.30.3'
+# 兼容检查
+"github:tufin/oasdiff" = 'v1.31.0'

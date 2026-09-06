@@ -99,3 +99,14 @@ tasks:
     options:
       # CI 运行
       runInCI: false
+
+  # 契约检查
+  openapi:
+    # 命令
+    command: 'vacuum lint --ruleset contracts/http/vacuum.yaml contracts/http/openapi.yaml'
+
+  # 契约聚合
+  contracts:
+    # 前置任务
+    deps:
+      - 'openapi'
