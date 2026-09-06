@@ -158,3 +158,18 @@ tasks:
       runInCI: true
       # 从工作区根目录运行
       runFromWorkspaceRoot: true
+
+  # 契约聚合
+  contracts:
+    # 前置任务
+    deps:
+      - "openapi"
+
+  # 契约检查
+  openapi:
+    # 运行命令
+    command: "vacuum lint --ruleset contracts/http/vacuum.yaml contracts/http/openapi.yaml"
+    # 任务选项
+    options:
+      # 从工作区根目录运行
+      runFromWorkspaceRoot: true
