@@ -10,6 +10,7 @@ tasks:
     deps:
       - "setup-tools"
       - "setup-python"
+      - "setup-typescript"
     # 任务选项
     options:
       # 启用缓存
@@ -35,6 +36,7 @@ tasks:
       - "validate"
       - "gitleaks"
       - "ruff"
+      - "oxlint"
     # 任务选项
     options:
       # CI 运行
@@ -306,3 +308,19 @@ tasks:
       runInCI: false
       # 并行运行前置任务
       runDepsInParallel: false
+
+  # TypeScript 环境初始化
+  setup-typescript:
+    # 运行命令
+    command: "bun install --frozen-lockfile"
+
+  # Oxlint 检查
+  oxlint:
+    # 运行命令
+    command: "oxlint"
+    # 命令参数
+    args: ["--no-error-on-unmatched-pattern"]
+    # 任务选项
+    options:
+      # CI 运行
+      runInCI: false

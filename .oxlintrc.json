@@ -1,0 +1,21 @@
+// Oxlint - https://oxc.rs/docs/guide/usage/linter/config
+
+{
+  // Schema
+  "$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxlint/configuration_schema.json",
+
+  // 规则类别
+  "categories": {
+    // 正确性
+    "correctness": "error",
+    // 可疑
+    "suspicious": "error",
+    // 严格
+    "pedantic": "warn",
+    // 限制
+    "restriction": "warn"
+  },
+
+  // 忽略路径
+  "ignorePatterns": []
+}

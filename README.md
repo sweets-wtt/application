@@ -30,6 +30,9 @@
 | [uv](https://docs.astral.sh/uv/) | 依赖管理 |
 | [Ruff](https://docs.astral.sh/ruff/) | 代码检查 |
 | [ty](https://docs.astral.sh/ty/) | 类型检查 |
+| [Node.js](https://nodejs.org/) | JavaScript 运行时 |
+| [Bun](https://bun.com/) | 包管理 |
+| [oxlint](https://oxc.rs/docs/guide/usage/linter) | 代码检查 |
 
 ### 契约
 
@@ -82,14 +85,20 @@
 ├── .release-please-manifest.json    # 版本清单
 ├── .sops.yaml                       # 密钥加密
 ├── .typos.toml                      # 拼写检查
+├── .oxlintrc.json                   # 代码检查
+├── bun.lock                         # TS 依赖
+├── bunfig.toml                      # Bun 配置
 ├── cog.toml                         # 提交检查
 ├── docker-bake.hcl                  # 构建编排
 ├── lychee.toml                      # 链接检查
 ├── mise.lock                        # 工具版本
 ├── mise.toml                        # 开发环境
+├── package.json                     # TS 包
 ├── pyproject.toml                   # PY 配置
 ├── renovate.json5                   # 依赖更新
 ├── trivy.yaml                       # 漏洞扫描
+├── tsconfig.base.json               # TS 基础
+├── tsconfig.json                    # TS 配置
 ├── uv.lock                          # PY 依赖
 ├── zizmor.yaml                      # 安全审计
 └── README.md                        # 项目说明
