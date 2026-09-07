@@ -1,3 +1,7 @@
 # moon 工具链 - https://moonrepo.dev/docs/config/toolchain
 
-{}
+# Python
+unstable_python: {}
+
+# uv
+unstable_uv: {}

@@ -3,7 +3,7 @@
 ## 概览
 
 - 用途：框架模板
-- 状态：服务编排
+- 状态：语言
 
 ## 技术
 
@@ -26,6 +26,10 @@
 | [sops](https://getsops.io/) | 密钥加密 |
 | [age](https://age-encryption.org/) | 加密工具 |
 | [Hurl](https://hurl.dev/) | HTTP 测试 |
+| [Python](https://www.python.org/) | Python 运行时 |
+| [uv](https://docs.astral.sh/uv/) | 依赖管理 |
+| [Ruff](https://docs.astral.sh/ruff/) | 代码检查 |
+| [ty](https://docs.astral.sh/ty/) | 类型检查 |
 
 ### 契约
 
@@ -83,8 +87,10 @@
 ├── lychee.toml                      # 链接检查
 ├── mise.lock                        # 工具版本
 ├── mise.toml                        # 开发环境
+├── pyproject.toml                   # PY 配置
 ├── renovate.json5                   # 依赖更新
 ├── trivy.yaml                       # 漏洞扫描
+├── uv.lock                          # PY 依赖
 ├── zizmor.yaml                      # 安全审计
 └── README.md                        # 项目说明
 ```

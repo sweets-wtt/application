@@ -5,6 +5,7 @@
 .env.*
 !.env.example
 !.env.*.example
+.venv/
 
 # 日志
 *.log
@@ -14,6 +15,10 @@
 .cache/
 .moon/cache
 .lycheecache
+__pycache__/
+.ruff_cache
+.pytest_cache
 
 # 生成
 .moon/hooks
+.coverage

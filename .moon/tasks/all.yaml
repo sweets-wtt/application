@@ -9,6 +9,7 @@ tasks:
     # 前置任务
     deps:
       - "setup-tools"
+      - "setup-python"
     # 任务选项
     options:
       # 启用缓存
@@ -33,6 +34,7 @@ tasks:
       - "zizmor"
       - "validate"
       - "gitleaks"
+      - "ruff"
     # 任务选项
     options:
       # CI 运行
@@ -268,3 +270,39 @@ tasks:
       shell: false
       # 从工作区根目录运行
       runFromWorkspaceRoot: true
+
+  # Python 环境初始化
+  setup-python:
+    # 运行命令
+    command: "uv sync --locked"
+
+  # Ruff 检查
+  ruff-check:
+    # 运行命令
+    command: "ruff check ."
+    # 任务选项
+    options:
+      # CI 运行
+      runInCI: false
+
+  # Ruff 格式化
+  ruff-format:
+    # 运行命令
+    command: "ruff format --check ."
+    # 任务选项
+    options:
+      # CI 运行
+      runInCI: false
+
+  # Ruff 聚合
+  ruff:
+    # 前置任务
+    deps:
+      - "ruff-format"
+      - "ruff-check"
+    # 任务选项
+    options:
+      # CI 运行
+      runInCI: false
+      # 并行运行前置任务
+      runDepsInParallel: false

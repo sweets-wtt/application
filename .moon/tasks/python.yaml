@@ -1,0 +1,29 @@
+# moon Python 任务 - https://moonrepo.dev/docs/config/tasks
+
+# 继承条件
+inheritedBy:
+  # 工具链
+  toolchains:
+    - python
+
+# 任务
+tasks:
+  # 类型检查
+  typecheck:
+    # 运行命令
+    command: "ty check"
+    # 任务选项
+    options:
+      # CI 运行
+      runInCI: true
+
+  # 测试
+  test:
+    # 运行命令
+    command: "uv run --locked --all-packages pytest"
+    # 任务选项
+    options:
+      # CI 运行
+      runInCI: true
+      # 从工作区根目录运行
+      runFromWorkspaceRoot: true
