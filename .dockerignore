@@ -1,0 +1,9 @@
+# Dockerignore - https://docs.docker.com/build/concepts/context/#dockerignore-files
+
+# 版本控制
+.git/
+
+# 缓存
+.cache/
+.moon/cache
+.lycheecache
