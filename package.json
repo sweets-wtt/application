@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "application",
+  "private": true,
+  "workspaces": {
+    "packages": [],
+    "catalog": {}
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.0"
+  },
+  "trustedDependencies": []
+}

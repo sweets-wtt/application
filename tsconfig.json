@@ -1,0 +1,15 @@
+// TypeScript - https://www.typescriptlang.org/tsconfig/
+
+{
+  // 编译选项
+  "compilerOptions": {
+    // 复合
+    "composite": true
+  },
+
+  // 文件
+  "files": [],
+
+  // 项目引用
+  "references": []
+}

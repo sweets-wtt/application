@@ -8,6 +8,7 @@ tasks:
     deps:
       - "setup-tools"
       - "setup-python"
+      - "setup-typescript"
     options:
       cache: false
 
@@ -27,6 +28,7 @@ tasks:
       - "validate"
       - "gitleaks"
       - "ruff"
+      - "oxlint"
     options:
       runInCI: false
 
@@ -204,3 +206,14 @@ tasks:
     options:
       runInCI: false
       runDepsInParallel: false
+
+  # TypeScript 环境初始化
+  setup-typescript:
+    command: "bun install --frozen-lockfile"
+
+  # Oxlint 检查
+  oxlint:
+    command: "oxlint"
+    args: ["--no-error-on-unmatched-pattern"]
+    options:
+      runInCI: false

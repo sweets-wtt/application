@@ -1,0 +1,26 @@
+# moon TypeScript 任务 - https://moonrepo.dev/docs/config/tasks
+
+# 继承条件
+inheritedBy:
+  # 工具链
+  toolchains:
+    - javascript
+    - bun
+
+# 任务
+tasks:
+  # 类型检查
+  typecheck:
+    command: "tsc --build"
+    deps:
+      - "setup-typescript"
+    options:
+      runInCI: true
+
+  # 测试
+  test:
+    command: "bun run vitest run"
+    deps:
+      - "setup-typescript"
+    options:
+      runInCI: true

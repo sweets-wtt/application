@@ -2,6 +2,7 @@
 
 exclude_path = [
   "\.lock$",
+  "package-lock\.json$",
 ]# 排除路径
 
 # 排除私有地址

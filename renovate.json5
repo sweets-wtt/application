@@ -18,8 +18,14 @@
       // 匹配更新类型
       matchUpdateTypes: ["minor", "patch"],
     },
+    {
+      // 匹配管理器
+      matchManagers: ["bun"],
+      // 版本策略
+      rangeStrategy: "bump",
+    },
   ],
 
   // 启用管理器
-  enabledManagers: ["mise", "pep621"],
+  enabledManagers: ["mise", "pep621", "bun"],
 }

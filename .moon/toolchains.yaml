@@ -5,3 +5,9 @@ unstable_python: {}
 
 # uv
 unstable_uv: {}
+
+# JavaScript
+javascript: {}
+
+# Bun
+bun: {}
