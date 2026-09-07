@@ -1,0 +1,58 @@
+# pyproject.toml - https://packaging.python.org/en/latest/specifications/pyproject-toml/
+
+# 项目
+[project]
+# 名称
+name = "application"
+# 版本
+version = "0.1.0"
+# 要求 Python
+requires-python = ">=3.12"
+
+# uv 工作区
+[tool.uv.workspace]
+# 成员
+members = []
+
+# 依赖组
+[dependency-groups]
+# 开发
+dev = ["pytest>=9.0", "pytest-asyncio>=1.3", "pytest-cov>=7.0"]
+
+# Ruff - https://docs.astral.sh/ruff/
+[tool.ruff]
+# 目标 Python
+target-version = "py312"
+# 扩展排除
+extend-exclude = []
+
+[tool.ruff.format]
+# 字符串引号风格
+quote-style = "double"
+
+[tool.ruff.lint]
+# 规则集
+select = ["E", "W", "F", "I", "UP", "B", "C4", "SIM", "RUF", "ASYNC", "DTZ", "FA", "PERF", "TC"]
+
+# ty - https://docs.astral.sh/ty/
+[tool.ty.environment]
+# Python
+python-version = "3.12"
+
+[tool.ty.analysis]
+# 严格等式比较
+strict-equality-semantics = true
+# 严格泛型窄化
+strict-generic-narrowing = true
+
+# pytest - https://docs.pytest.org/
+[tool.pytest.ini_options]
+# 附加参数
+addopts = "--strict-markers --strict-config --cov --cov-branch"
+# asyncio 模式
+asyncio_mode = "auto"
+
+# coverage - https://coverage.readthedocs.io/
+[tool.coverage.run]
+# 分支覆盖
+branch = true

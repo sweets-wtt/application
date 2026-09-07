@@ -7,6 +7,7 @@ tasks:
     command: "moon sync vcs-hooks"
     deps:
       - "setup-tools"
+      - "setup-python"
     options:
       cache: false
 
@@ -25,6 +26,7 @@ tasks:
       - "zizmor"
       - "validate"
       - "gitleaks"
+      - "ruff"
     options:
       runInCI: false
 
@@ -177,3 +179,28 @@ tasks:
       runInCI: true
       shell: false
       runFromWorkspaceRoot: true
+
+  # Python 环境初始化
+  setup-python:
+    command: "uv sync --locked"
+
+  # Ruff 检查
+  ruff-check:
+    command: "ruff check ."
+    options:
+      runInCI: false
+
+  # Ruff 格式化
+  ruff-format:
+    command: "ruff format --check ."
+    options:
+      runInCI: false
+
+  # Ruff 聚合
+  ruff:
+    deps:
+      - "ruff-format"
+      - "ruff-check"
+    options:
+      runInCI: false
+      runDepsInParallel: false
