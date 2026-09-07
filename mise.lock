@@ -136,6 +136,31 @@ url = "https://github.com/FiloSottile/age/releases/download/v1.3.2/age-v1.3.2-wi
 url_api = "https://api.github.com/repos/FiloSottile/age/releases/assets/535541937"
 provenance = "github-attestations"
 
+[[tools."aqua:Orange-OpenSource/hurl"]]
+version = "8.0.1"
+backend = "aqua:Orange-OpenSource/hurl"
+specifiers = ["8.0.1"]
+
+[tools."aqua:Orange-OpenSource/hurl"."platforms.linux-arm64"]
+checksum = "sha256:bc4732df4754748e9bf296aa3832ec019f798afb399f1279b72ed37b6e04525c"
+url = "https://github.com/Orange-OpenSource/hurl/releases/download/8.0.1/hurl-8.0.1-aarch64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/Orange-OpenSource/hurl/releases/assets/407509616"
+
+[tools."aqua:Orange-OpenSource/hurl"."platforms.linux-x64"]
+checksum = "sha256:cac7c4670d69444db120edb21fe06c97ba8c80dcc52279957c8dd18f05fb0c06"
+url = "https://github.com/Orange-OpenSource/hurl/releases/download/8.0.1/hurl-8.0.1-x86_64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/Orange-OpenSource/hurl/releases/assets/407509607"
+
+[tools."aqua:Orange-OpenSource/hurl"."platforms.macos-arm64"]
+checksum = "sha256:b57928e246617df73cb1b2157f31f507dcbde6ae12e828cc53dde0e40e05bbbb"
+url = "https://github.com/Orange-OpenSource/hurl/releases/download/8.0.1/hurl-8.0.1-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/Orange-OpenSource/hurl/releases/assets/407509621"
+
+[tools."aqua:Orange-OpenSource/hurl"."platforms.windows-x64"]
+checksum = "sha256:2bb8c64ea3dbde464b92432cedd48aaa0fafdff4a39cb9c05c271c306bc8f124"
+url = "https://github.com/Orange-OpenSource/hurl/releases/download/8.0.1/hurl-8.0.1-x86_64-pc-windows-msvc.zip"
+url_api = "https://api.github.com/repos/Orange-OpenSource/hurl/releases/assets/407509632"
+
 [[tools."aqua:aquasecurity/trivy"]]
 version = "0.74.0"
 backend = "aqua:aquasecurity/trivy"

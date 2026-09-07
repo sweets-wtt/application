@@ -1,0 +1,4 @@
+# Dockerignore - https://docs.docker.com/build/concepts/context/#dockerignore-files
+
+# 版本控制
+.git/

@@ -116,3 +116,64 @@ tasks:
     command: "vacuum lint --ruleset contracts/http/vacuum.yaml contracts/http/openapi.yaml"
     options:
       runFromWorkspaceRoot: true
+
+  # Compose 配置检查
+  compose-config:
+    command: "docker compose -f infra/compose.yaml --project-directory infra config --quiet"
+    options:
+      runInCI: true
+      runFromWorkspaceRoot: true
+
+  # Compose 误配扫描
+  compose-misconfig:
+    command: "trivy fs --scanners misconfig --severity HIGH,CRITICAL --exit-code 1 --config trivy.yaml ."
+    options:
+      runInCI: true
+      runFromWorkspaceRoot: true
+
+  # 服务编排检查
+  compose-check:
+    deps:
+      - "compose-config"
+      - "compose-misconfig"
+    options:
+      runInCI: true
+
+  # 服务编排启动
+  compose-up:
+    command: "sh"
+    args:
+      - -c
+      - >-
+        if docker compose -f infra/compose.yaml --project-directory infra config --services | grep -q .; then
+          docker compose -f infra/compose.yaml --project-directory infra --profile check up -d --remove-orphans --wait;
+        fi
+    options:
+      cache: false
+      timeout: 300
+      shell: false
+      runFromWorkspaceRoot: true
+
+  # 服务编排停止
+  compose-down:
+    command: "docker compose -f infra/compose.yaml --project-directory infra down --remove-orphans"
+    options:
+      cache: false
+      runFromWorkspaceRoot: true
+
+  # 平台验收
+  verify:
+    command: "sh"
+    args:
+      - -c
+      - >-
+        start=$(( ($(date +%s) - 86400) * 1000000 )) && end=$(( ($(date +%s) + 3600) * 1000000 ))
+        && if ! compgen -G 'infra/checks/*.hurl' > /dev/null; then exit 0; fi
+        && exec hurl --variables-file infra/.env --variable start="$start" --variable end="$end" --glob 'infra/checks/*.hurl'
+    deps:
+      - "compose-up"
+    options:
+      cache: false
+      runInCI: true
+      shell: false
+      runFromWorkspaceRoot: true

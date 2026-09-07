@@ -45,3 +45,5 @@ not_found_system_fallback = false
 "aqua:daveshanley/vacuum" = "0.30.3"
 # 兼容检查
 "github:tufin/oasdiff" = "v1.31.0"
+# HTTP 测试
+"aqua:Orange-OpenSource/hurl" = "8.0.1"

@@ -1,9 +1,8 @@
 # lychee - https://lychee.cli.rs/
 
-# 排除路径
 exclude_path = [
   "\.lock$",
-]
+]# 排除路径
 
 # 排除私有地址
 exclude_private = true

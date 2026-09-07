@@ -3,7 +3,7 @@
 ## 概览
 
 - 用途：框架模板
-- 状态：契约
+- 状态：服务编排
 
 ## 技术
 
@@ -25,6 +25,7 @@
 | [config-file-validator](https://github.com/Boeing/config-file-validator) | 配置校验 |
 | [sops](https://getsops.io/) | 密钥加密 |
 | [age](https://age-encryption.org/) | 加密工具 |
+| [Hurl](https://hurl.dev/) | HTTP 测试 |
 
 ### 契约
 
@@ -33,6 +34,13 @@
 | [OpenAPI](https://spec.openapis.org/) | 接口规范 |
 | [vacuum](https://quobix.com/vacuum/) | 契约检查 |
 | [oasdiff](https://github.com/tufin/oasdiff) | 兼容检查 |
+
+### 平台
+
+| 名称 | 说明 |
+| --- | --- |
+| [Docker Compose](https://docs.docker.com/compose/) | 服务编排 |
+| [Docker Bake](https://docs.docker.com/build/bake/) | 构建编排 |
 
 ## 命令
 
@@ -60,6 +68,9 @@
 │   └── http                         # HTTP
 │       ├── openapi.yaml             # 接口规范
 │       └── vacuum.yaml              # 契约检查
+├── infra                            # 服务编排
+│   ├── .env.example                 # 环境变量
+│   └── compose.yaml                 # 平台编排
 ├── .editorconfig                    # 代码风格
 ├── .gitattributes                   # Git 属性
 ├── .gitignore                       # Git 忽略
@@ -68,6 +79,7 @@
 ├── .sops.yaml                       # 密钥加密
 ├── .typos.toml                      # 拼写检查
 ├── cog.toml                         # 提交检查
+├── docker-bake.hcl                  # 构建编排
 ├── lychee.toml                      # 链接检查
 ├── mise.lock                        # 工具版本
 ├── mise.toml                        # 开发环境
