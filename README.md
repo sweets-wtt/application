@@ -55,6 +55,9 @@
 | --- | --- |
 | [app-contracts](packages/python/contracts) | 契约模型 |
 | [app-log](packages/python/log) | 结构化日志 |
+| [@app/contracts](packages/typescript/contracts) | 契约客户端 |
+| [@app/log](packages/typescript/log) | 结构化日志 |
+| [@app/state](packages/typescript/state) | 持久化状态 |
 
 ## 命令
 
@@ -88,9 +91,13 @@
 │   ├── .env.example                 # 环境变量
 │   └── compose.yaml                 # 平台编排
 ├── packages                         # 共享包
-│   └── python                       # Python
-│       ├── contracts                # 契约模型
-│       └── log                      # 结构化日志
+│   ├── python                       # Python
+│   │   ├── contracts                # 契约模型
+│   │   └── log                      # 结构化日志
+│   └── typescript                   # TypeScript
+│       ├── contracts                # 契约客户端
+│       ├── log                      # 结构化日志
+│       └── state                    # 持久化状态
 ├── .editorconfig                    # 代码风格
 ├── .gitattributes                   # Git 属性
 ├── .gitignore                       # Git 忽略

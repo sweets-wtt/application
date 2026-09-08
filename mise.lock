@@ -1336,11 +1336,6 @@ checksum = "sha256:0177d4bc0bf04f4061e9277795b77335ee100a43b508e94fce5c46de083bb
 url = "https://github.com/oasdiff/oasdiff/releases/download/v1.31.0/oasdiff_1.31.0_linux_amd64.tar.gz"
 url_api = "https://api.github.com/repos/oasdiff/oasdiff/releases/assets/545507276"
 
-[tools."github:tufin/oasdiff"."platforms.linux-x64-musl-baseline"]
-checksum = "sha256:0177d4bc0bf04f4061e9277795b77335ee100a43b508e94fce5c46de083bbede"
-url = "https://github.com/oasdiff/oasdiff/releases/download/v1.31.0/oasdiff_1.31.0_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/oasdiff/oasdiff/releases/assets/545507276"
-
 [tools."github:tufin/oasdiff"."platforms.macos-arm64"]
 checksum = "sha256:920639cc49da700e37ec070b6981686d6fa2f02d036aa18aeb62e1445ffd9286"
 url = "https://github.com/oasdiff/oasdiff/releases/download/v1.31.0/oasdiff_1.31.0_darwin_all.tar.gz"
@@ -1351,17 +1346,7 @@ checksum = "sha256:920639cc49da700e37ec070b6981686d6fa2f02d036aa18aeb62e1445ffd9
 url = "https://github.com/oasdiff/oasdiff/releases/download/v1.31.0/oasdiff_1.31.0_darwin_all.tar.gz"
 url_api = "https://api.github.com/repos/oasdiff/oasdiff/releases/assets/545507282"
 
-[tools."github:tufin/oasdiff"."platforms.macos-x64-baseline"]
-checksum = "sha256:920639cc49da700e37ec070b6981686d6fa2f02d036aa18aeb62e1445ffd9286"
-url = "https://github.com/oasdiff/oasdiff/releases/download/v1.31.0/oasdiff_1.31.0_darwin_all.tar.gz"
-url_api = "https://api.github.com/repos/oasdiff/oasdiff/releases/assets/545507282"
-
 [tools."github:tufin/oasdiff"."platforms.windows-x64"]
-checksum = "sha256:1993d24b7eeac68f21ab906818a87376180662a60bb7bce809b880df95e24395"
-url = "https://github.com/oasdiff/oasdiff/releases/download/v1.31.0/oasdiff_1.31.0_windows_amd64.tar.gz"
-url_api = "https://api.github.com/repos/oasdiff/oasdiff/releases/assets/545507273"
-
-[tools."github:tufin/oasdiff"."platforms.windows-x64-baseline"]
 checksum = "sha256:1993d24b7eeac68f21ab906818a87376180662a60bb7bce809b880df95e24395"
 url = "https://github.com/oasdiff/oasdiff/releases/download/v1.31.0/oasdiff_1.31.0_windows_amd64.tar.gz"
 url_api = "https://api.github.com/repos/oasdiff/oasdiff/releases/assets/545507273"
@@ -1414,6 +1399,11 @@ url = "https://nodejs.org/dist/v26.8.1/node-v26.8.1-win-x64.zip"
 [tools.node."platforms.windows-x64-baseline"]
 checksum = "sha256:57693d8e93d1b04e7b7de46aca53ecd63e97564e73de36a68428d7ff08d83587"
 url = "https://nodejs.org/dist/v26.8.1/node-v26.8.1-win-x64.zip"
+
+[[tools."npm:orval"]]
+version = "8.30.0"
+backend = "npm:orval"
+specifiers = ["8.30.0"]
 
 [[tools."pipx:datamodel-code-generator"]]
 version = "0.76.2"

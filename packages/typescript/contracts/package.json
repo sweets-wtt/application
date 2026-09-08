@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@app/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@faker-js/faker": "catalog:",
+    "@tanstack/vue-query": "catalog:",
+    "msw": "catalog:",
+    "vue": "catalog:",
+    "zod": "catalog:"
+  }
+}

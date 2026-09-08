@@ -63,3 +63,5 @@ bun = "1.4.2"
 "aqua:oxc-project/oxc/oxlint" = "1.82.0"
 # 契约模型生成
 "pipx:datamodel-code-generator" = "0.76.2"
+# 契约客户端生成
+"npm:orval" = "8.30.0"

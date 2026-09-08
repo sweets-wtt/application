@@ -24,3 +24,16 @@ tasks:
       - "setup-typescript"
     options:
       runInCI: true
+
+  # 生成 TypeScript 契约客户端
+  generate-typescript:
+    command: "sh"
+    args:
+      - -c
+      - "orval --config packages/typescript/contracts/orval.config.ts --formatter oxfmt && git diff --exit-code -- packages/typescript/contracts/src"
+    deps:
+      - "openapi"
+    options:
+      runInCI: true
+      shell: false
+      runFromWorkspaceRoot: true
