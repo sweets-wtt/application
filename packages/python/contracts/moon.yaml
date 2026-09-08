@@ -1,0 +1,11 @@
+# moon 项目 - https://moonrepo.dev/docs/config/project
+
+# 语言
+language: "python"
+
+# 工具链
+toolchains:
+  unstable_python: {}
+
+# 标识
+id: "python-contracts"

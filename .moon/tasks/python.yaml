@@ -20,3 +20,16 @@ tasks:
     options:
       runInCI: true
       runFromWorkspaceRoot: true
+
+  # 生成 Python 契约模型
+  generate-python:
+    command: "sh"
+    args:
+      - -c
+      - "cd packages/python/contracts && datamodel-codegen --check"
+    deps:
+      - "openapi"
+    options:
+      runInCI: true
+      shell: false
+      runFromWorkspaceRoot: true
