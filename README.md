@@ -3,7 +3,7 @@
 ## 概览
 
 - 用途：框架模板
-- 状态：语言
+- 状态：共享包
 
 ## 技术
 
@@ -49,6 +49,13 @@
 | [Docker Compose](https://docs.docker.com/compose/) | 服务编排 |
 | [Docker Bake](https://docs.docker.com/build/bake/) | 构建编排 |
 
+### 共享包
+
+| 名称 | 说明 |
+| --- | --- |
+| [app-contracts](packages/python/contracts) | 契约模型 |
+| [app-log](packages/python/log) | 结构化日志 |
+
 ## 命令
 
 | 命令 | 用途 |
@@ -68,7 +75,9 @@
 │       └── release.yaml             # 版本发行
 ├── .moon                            # 任务编排
 │   ├── tasks                        # 任务目录
-│   │   └── all.yaml                 # 全局任务
+│   │   ├── all.yaml                 # 全局任务
+│   │   ├── python.yaml              # Python 任务
+│   │   └── typescript.yaml          # TypeScript 任务
 │   ├── toolchains.yaml              # 工具链
 │   └── workspace.yaml               # 工作区
 ├── contracts                        # 契约
@@ -78,6 +87,10 @@
 ├── infra                            # 服务编排
 │   ├── .env.example                 # 环境变量
 │   └── compose.yaml                 # 平台编排
+├── packages                         # 共享包
+│   └── python                       # Python
+│       ├── contracts                # 契约模型
+│       └── log                      # 结构化日志
 ├── .editorconfig                    # 代码风格
 ├── .gitattributes                   # Git 属性
 ├── .gitignore                       # Git 忽略

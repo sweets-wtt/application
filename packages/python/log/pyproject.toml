@@ -1,0 +1,26 @@
+# pyproject.toml - https://packaging.python.org/en/latest/specifications/pyproject-toml/
+
+# 项目
+[project]
+# 名称
+name = "app-log"
+# 版本
+version = "0.1.0"
+# 描述
+description = "结构化日志"
+# 要求 Python
+requires-python = ">=3.12"
+# 依赖
+dependencies = ["structlog>=26.1.0"]
+
+# 构建系统
+[build-system]
+# 构建依赖
+requires = ["uv_build>=0.12.10"]
+# 后端
+build-backend = "uv_build"
+
+# uv 构建后端
+[tool.uv.build-backend]
+# 模块名
+module-name = "app.log"

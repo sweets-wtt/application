@@ -27,3 +27,23 @@ tasks:
       runInCI: true
       # 从工作区根目录运行
       runFromWorkspaceRoot: true
+
+  # 生成 Python 契约模型
+  generate-python:
+    # 运行命令
+    command: "sh"
+    # 命令参数
+    args:
+      - -c
+      - "datamodel-codegen --check"
+    # 前置任务
+    deps:
+      - "openapi"
+    # 任务选项
+    options:
+      # CI 运行
+      runInCI: true
+      # 经 shell 运行
+      shell: false
+      # 从工作区根目录运行
+      runFromWorkspaceRoot: true
