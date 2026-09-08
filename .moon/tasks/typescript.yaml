@@ -32,3 +32,23 @@ tasks:
     options:
       # CI 运行
       runInCI: true
+
+  # 生成 TypeScript 契约客户端
+  generate-typescript:
+    # 运行命令
+    command: "sh"
+    # 命令参数
+    args:
+      - -c
+      - "orval --config packages/typescript/contracts/orval.config.ts --formatter oxfmt && git diff --exit-code -- packages/typescript/contracts/src"
+    # 前置任务
+    deps:
+      - "openapi"
+    # 任务选项
+    options:
+      # CI 运行
+      runInCI: true
+      # 经 shell 运行
+      shell: false
+      # 从工作区根目录运行
+      runFromWorkspaceRoot: true

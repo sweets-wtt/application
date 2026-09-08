@@ -1,0 +1,12 @@
+# moon 项目 - https://moonrepo.dev/docs/config/project
+
+# 语言
+language: "typescript"
+
+# 工具链
+toolchains:
+  javascript: {}
+  bun: {}
+
+# 标识
+id: "typescript-log"

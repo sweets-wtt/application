@@ -17,5 +17,5 @@
   },
 
   // 忽略路径
-  "ignorePatterns": []
+  "ignorePatterns": ["**/packages/typescript/contracts/src/http/**"]
 }
