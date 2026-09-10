@@ -26,3 +26,59 @@ volumes:
 
 # 密钥
 secrets:
+
+# 服务
+services:
+  # API
+  api:
+    # 镜像
+    image: "${SERVER_IMAGE:?}"
+    # 重启策略
+    restart: unless-stopped
+    # 健康检查
+    healthcheck:
+      # 就绪探测
+      test:
+        - CMD-SHELL
+        - >-
+          python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz')"
+      # 间隔
+      interval: "10s"
+      # 超时
+      timeout: "5s"
+      # 重试次数
+      retries: 5
+      # 启动宽限期
+      start_period: "30s"
+    # 网络
+    networks:
+      # 应用内部网
+      - "app-internal"
+      # 数据内部网
+      - "data-internal"
+
+  # Worker
+  worker:
+    # 镜像
+    image: "${SERVER_IMAGE:?}"
+    # 重启策略
+    restart: unless-stopped
+    # 健康检查
+    healthcheck:
+      # 就绪探测
+      test:
+        - CMD-SHELL
+        - >-
+          python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz')"
+      # 间隔
+      interval: "10s"
+      # 超时
+      timeout: "5s"
+      # 重试次数
+      retries: 5
+      # 启动宽限期
+      start_period: "30s"
+    # 网络
+    networks:
+      # 数据内部网
+      - "data-internal"

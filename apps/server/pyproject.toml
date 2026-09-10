@@ -1,0 +1,41 @@
+# pyproject.toml - https://packaging.python.org/en/latest/specifications/pyproject-toml/
+
+# 项目
+[project]
+# 名称
+name = "server"
+# 版本
+version = "0.1.0"
+# 描述
+description = "Server 应用"
+# 要求 Python
+requires-python = ">=3.12"
+# 依赖
+dependencies = [
+  "fastapi>=0.141.1",
+  "pydantic>=2.13.5",
+  "pydantic-settings>=2.15.0",
+  "granian>=2.8.2",
+  "schemathesis>=4.26.1",
+  "app-contracts",
+  "app-log",
+]
+
+# 构建系统
+[build-system]
+# 构建依赖
+requires = ["uv_build>=0.12.10"]
+# 后端
+build-backend = "uv_build"
+
+# uv 构建后端
+[tool.uv.build-backend]
+# 模块名
+module-name = "server"
+
+# uv 工作区引用
+[tool.uv.sources]
+# 契约模型
+app-contracts = { workspace = true }
+# 结构化日志
+app-log = { workspace = true }
