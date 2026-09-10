@@ -1,0 +1,28 @@
+# moon 项目 - https://moonrepo.dev/docs/config/project
+
+# 语言
+language: "python"
+
+# 工具链
+toolchains:
+  unstable_python: {}
+
+# 标识
+id: "server"
+
+# 任务
+tasks:
+  # 镜像构建
+  image:
+    command: "docker buildx bake -f docker-bake.hcl server"
+    options:
+      cache: false
+      runFromWorkspaceRoot: true
+
+  # Server 聚合
+  server:
+    deps:
+      - "typecheck"
+      - "test"
+    options:
+      runInCI: true

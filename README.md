@@ -3,7 +3,7 @@
 ## 概览
 
 - 用途：框架模板
-- 状态：共享包
+- 状态：应用
 
 ## 技术
 
@@ -59,6 +59,15 @@
 | [@app/log](packages/typescript/log) | 结构化日志 |
 | [@app/state](packages/typescript/state) | 持久化状态 |
 
+### Server
+
+| 名称 | 说明 |
+| --- | --- |
+| [FastAPI](https://fastapi.tiangolo.com/) | Web 框架 |
+| [Granian](https://github.com/emmett-framework/granian) | ASGI 服务器 |
+| [Schemathesis](https://schemathesis.readthedocs.io/) | 契约模糊 |
+| [pydantic-settings](https://docs.pydantic.dev/concepts/pydantic_settings/) | 配置管理 |
+
 ## 命令
 
 | 命令 | 用途 |
@@ -90,6 +99,8 @@
 ├── infra                            # 服务编排
 │   ├── .env.example                 # 环境变量
 │   └── compose.yaml                 # 平台编排
+├── apps                             # 应用
+│   └── server                       # Server
 ├── packages                         # 共享包
 │   ├── python                       # Python
 │   │   ├── contracts                # 契约模型

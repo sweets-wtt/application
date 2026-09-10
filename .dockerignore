@@ -2,3 +2,12 @@
 
 # 版本控制
 .git/
+
+# 环境
+.venv/
+
+# 缓存
+__pycache__/
+.pytest_cache
+.ruff_cache
+.hypothesis/

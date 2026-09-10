@@ -12,7 +12,7 @@ requires-python = ">=3.12"
 # uv 工作区
 [tool.uv.workspace]
 # 成员
-members = ["packages/python/*"]
+members = ["packages/python/*", "apps/server"]
 
 # 依赖组
 [dependency-groups]
