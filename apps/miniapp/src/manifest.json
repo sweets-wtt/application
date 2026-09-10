@@ -1,0 +1,16 @@
+{
+  "name": "miniapp",
+  "appid": "",
+  "description": "",
+  "versionName": "0.1.0",
+  "versionCode": "1",
+  "vueVersion": "3",
+  "mp-weixin": {
+    "appid": "",
+    "setting": {
+      "es6": true,
+      "minified": true
+    },
+    "usingComponents": true
+  }
+}

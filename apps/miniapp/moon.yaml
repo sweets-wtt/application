@@ -1,0 +1,40 @@
+# moon 项目 - https://moonrepo.dev/docs/config/project
+
+# 语言
+language: "typescript"
+
+# 工具链
+toolchains:
+  javascript: {}
+  bun: {}
+
+# 标识
+id: "miniapp"
+
+# 任务
+tasks:
+  # 构建
+  build:
+    command: "bun run uni build -p mp-weixin"
+    deps:
+      - "setup-typescript"
+    options:
+      cache: false
+
+  # 体积检查
+  size:
+    command: "bun run size-limit"
+    deps:
+      - "setup-typescript"
+      - "build"
+    options:
+      cache: false
+
+  # 小程序聚合
+  miniapp:
+    deps:
+      - "typecheck"
+      - "test"
+      - "size"
+    options:
+      runInCI: true

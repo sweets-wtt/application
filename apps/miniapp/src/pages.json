@@ -1,0 +1,21 @@
+// pages.json - https://uniapp.dcloud.net.cn/collocation/pages.html
+
+{
+  // 组件自动扫描规则
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^wd-(.*)": "wot-design-uni/components/wd-$1/wd-$1.vue"
+    }
+  },
+
+  // 页面路由，第一项为启动页
+  "pages": [
+    {
+      "path": "pages/home/index",
+      "style": {
+        "navigationBarTitleText": "首页"
+      }
+    }
+  ]
+}

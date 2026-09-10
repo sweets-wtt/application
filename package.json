@@ -5,7 +5,8 @@
   "workspaces": {
     "packages": [
       "packages/typescript/*",
-      "apps/web"
+      "apps/web",
+      "apps/miniapp"
     ],
     "catalog": {
       "@faker-js/faker": "^10.6.0",
@@ -36,7 +37,15 @@
   "devDependencies": {
     "@types/node": "^26.5.0",
     "typescript": "^7.0.2",
-    "vitest": "^5.0.0"
+    "vitest": "^5.0.0",
+    "vue": "catalog:"
+  },
+  "overrides": {
+    "@intlify/core-base": "9.1.11",
+    "@intlify/message-resolver": "9.1.11",
+    "adm-zip": "0.6.0",
+    "jpeg-js": "0.4.4",
+    "ws": "8.21.0"
   },
   "trustedDependencies": []
 }
