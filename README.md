@@ -84,6 +84,19 @@
 | [Playwright](https://playwright.dev/) | E2E 测试 |
 | [size-limit](https://github.com/ai/size-limit) | 体积检查 |
 
+### 小程序
+
+| 名称 | 说明 |
+| --- | --- |
+| [uni-app](https://uniapp.dcloud.net.cn/) | 跨端框架 |
+| [Vue](https://vuejs.org/) | 渐进式框架 |
+| [Pinia](https://pinia.vuejs.org/) | 状态管理 |
+| [pinia-plugin-persistedstate](https://prazdevs.github.io/pinia-plugin-persistedstate/) | 状态持久化 |
+| [TanStack Query](https://tanstack.com/query) | HTTP 查询 |
+| [@uni-helper/uni-use](https://uni-helper.js.org/uni-use/) | 组合式函数 |
+| [UnoCSS](https://unocss.dev/) | 原子 CSS |
+| [Wot UI](https://wot-ui.cn/) | UI 组件 |
+
 ## 命令
 
 | 命令 | 用途 |
@@ -117,7 +130,8 @@
 │   └── compose.yaml                 # 平台编排
 ├── apps                             # 应用
 │   ├── server                       # Server
-│   └── web                          # Web
+│   ├── web                          # Web
+│   └── miniapp                      # 小程序
 ├── packages                         # 共享包
 │   ├── python                       # Python
 │   │   ├── contracts                # 契约模型
