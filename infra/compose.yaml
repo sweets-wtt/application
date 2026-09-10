@@ -82,3 +82,29 @@ services:
     networks:
       # 数据内部网
       - "data-internal"
+
+  # Web
+  web:
+    # 镜像
+    image: "${WEB_IMAGE:?}"
+    # 重启策略
+    restart: unless-stopped
+    # 健康检查
+    healthcheck:
+      # 就绪探测
+      test:
+        - CMD-SHELL
+        - >-
+          wget -q -O /dev/null http://127.0.0.1:8080/
+      # 间隔
+      interval: "10s"
+      # 超时
+      timeout: "5s"
+      # 重试次数
+      retries: 5
+      # 启动宽限期
+      start_period: "30s"
+    # 网络
+    networks:
+      # 入口网
+      - "edge"

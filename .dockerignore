@@ -19,3 +19,7 @@ __pycache__/
 
 # 生成
 **/dist/
+.coverage
+coverage/
+test-results/
+playwright-report/
