@@ -5,9 +5,21 @@
 
 # 环境
 .venv/
+**/node_modules/
 
 # 缓存
 __pycache__/
 .pytest_cache
 .ruff_cache
 .hypothesis/
+.cache/
+.moon/cache
+.lycheecache
+*.tsbuildinfo
+
+# 生成
+**/dist/
+.coverage
+coverage/
+test-results/
+playwright-report/

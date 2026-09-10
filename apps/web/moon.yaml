@@ -1,0 +1,57 @@
+# moon 项目 - https://moonrepo.dev/docs/config/project
+
+# 语言
+language: "typescript"
+
+# 工具链
+toolchains:
+  javascript: {}
+  bun: {}
+
+# 标识
+id: "web"
+
+# 任务
+tasks:
+  # 构建
+  build:
+    command: "bun run vite build"
+    deps:
+      - "setup-typescript"
+    options:
+      cache: false
+
+  # 体积检查
+  size:
+    command: "bun run size-limit"
+    deps:
+      - "setup-typescript"
+      - "build"
+    options:
+      cache: false
+
+  # 端到端测试
+  e2e:
+    command: "bun run playwright test"
+    deps:
+      - "setup-typescript"
+      - "build"
+    options:
+      cache: false
+
+  # 镜像构建
+  image:
+    command: "docker buildx bake -f docker-bake.hcl web"
+    options:
+      cache: false
+      runFromWorkspaceRoot: true
+
+  # Web 聚合
+  web:
+    deps:
+      - "typecheck"
+      - "test"
+      - "size"
+      - "e2e"
+    options:
+      runInCI: true

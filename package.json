@@ -4,14 +4,32 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "packages/typescript/*"
+      "packages/typescript/*",
+      "apps/web"
     ],
     "catalog": {
       "@faker-js/faker": "^10.6.0",
+      "@playwright/test": "^1.63.0",
+      "@size-limit/file": "^13.0.3",
       "@tanstack/vue-query": "^5.102.8",
+      "@unocss/vite": "^66.10.1",
+      "@vitejs/plugin-vue": "^6.0.8",
+      "@vue/test-utils": "^2.5.0",
+      "@vueuse/core": "^14.4.0",
       "consola": "^3.4.2",
+      "jsdom": "^30.0.1",
       "msw": "^2.15.0",
+      "pinia": "^4.0.3",
+      "pinia-plugin-persistedstate": "^4.7.1",
+      "reka-ui": "^2.10.4",
+      "size-limit": "^13.0.3",
+      "unocss": "^66.10.1",
+      "unplugin-icons": "^23.0.1",
+      "unplugin-vue-components": "^32.1.0",
+      "vite": "^8.2.2",
+      "vitest": "^5.0.0",
       "vue": "^3.5.42",
+      "vue-router": "^5.3.1",
       "zod": "^4.5.4"
     }
   },

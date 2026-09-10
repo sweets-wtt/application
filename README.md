@@ -68,6 +68,22 @@
 | [Schemathesis](https://schemathesis.readthedocs.io/) | 契约模糊 |
 | [pydantic-settings](https://docs.pydantic.dev/concepts/pydantic_settings/) | 配置管理 |
 
+### Web
+
+| 名称 | 说明 |
+| --- | --- |
+| [Vue](https://vuejs.org/) | 渐进式框架 |
+| [VueUse](https://vueuse.org/) | 组合式工具 |
+| [Vite](https://vite.dev/) | 构建工具 |
+| [Vue Router](https://router.vuejs.org/) | 路由 |
+| [Pinia](https://pinia.vuejs.org/) | 状态管理 |
+| [pinia-plugin-persistedstate](https://prazdevs.github.io/pinia-plugin-persistedstate/) | 状态持久化 |
+| [TanStack Query](https://tanstack.com/query) | HTTP 查询 |
+| [UnoCSS](https://unocss.dev/) | 原子 CSS |
+| [Reka UI](https://reka-ui.com/) | UI 组件 |
+| [Playwright](https://playwright.dev/) | E2E 测试 |
+| [size-limit](https://github.com/ai/size-limit) | 体积检查 |
+
 ## 命令
 
 | 命令 | 用途 |
@@ -100,7 +116,8 @@
 │   ├── .env.example                 # 环境变量
 │   └── compose.yaml                 # 平台编排
 ├── apps                             # 应用
-│   └── server                       # Server
+│   ├── server                       # Server
+│   └── web                          # Web
 ├── packages                         # 共享包
 │   ├── python                       # Python
 │   │   ├── contracts                # 契约模型

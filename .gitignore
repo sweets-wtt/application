@@ -26,3 +26,5 @@ __pycache__/
 .moon/hooks
 .coverage
 dist/
+test-results/
+playwright-report/
