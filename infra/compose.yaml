@@ -5,6 +5,8 @@ name: application
 
 # 引入
 include:
+  # PostgreSQL
+  - "postgresql/compose.yaml"
 
 # 命名网络
 networks:
@@ -23,9 +25,15 @@ networks:
 
 # 命名卷
 volumes:
+  # PostgreSQL 数据
+  postgresql-data:
 
 # 密钥
 secrets:
+  # PostgreSQL 超管口令
+  postgres-password:
+    # 来源环境变量
+    environment: POSTGRES_PASSWORD
 
 # 服务
 services:

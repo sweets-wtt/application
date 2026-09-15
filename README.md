@@ -3,7 +3,7 @@
 ## 概览
 
 - 用途：框架模板
-- 状态：构建
+- 状态：平台
 
 ## 技术
 
@@ -48,6 +48,7 @@
 | --- | --- |
 | [Docker Compose](https://docs.docker.com/compose/) | 服务编排 |
 | [Docker Bake](https://docs.docker.com/build/bake/) | 构建编排 |
+| [PostgreSQL](https://www.postgresql.org/) | 关系数据库 |
 
 ### 共享包
 
@@ -127,7 +128,8 @@
 │       └── vacuum.yaml              # 契约检查
 ├── infra                            # 服务编排
 │   ├── .env.example                 # 环境变量
-│   └── compose.yaml                 # 平台编排
+│   ├── compose.yaml                 # 平台编排
+│   └── postgresql                   # PostgreSQL
 ├── apps                             # 应用
 │   ├── server                       # Server
 │   ├── web                          # Web
