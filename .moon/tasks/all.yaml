@@ -324,3 +324,46 @@ tasks:
     options:
       # CI 运行
       runInCI: false
+
+  # 镜像构建
+  images:
+    # 运行命令
+    command: "docker buildx bake -f docker-bake.hcl apps"
+    # 任务选项
+    options:
+      # 启用缓存
+      cache: false
+      # 从工作区根目录运行
+      runFromWorkspaceRoot: true
+
+  # 镜像误配扫描
+  image-check:
+    # 运行命令
+    command: "trivy fs --scanners misconfig --severity HIGH,CRITICAL --exit-code 1 --config trivy.yaml apps"
+    # 任务选项
+    options:
+      # CI 运行
+      runInCI: true
+      # 从工作区根目录运行
+      runFromWorkspaceRoot: true
+
+  # 镜像漏洞扫描
+  image-scan:
+    # 运行命令
+    command: "sh"
+    # 命令参数
+    args:
+      - -c
+      - >-
+        if [ -z "${IMAGE:-}" ] || [ -z "${DIGEST:-}" ]; then exit 0; fi
+        && exec trivy image --severity HIGH,CRITICAL --exit-code 1 --config trivy.yaml "${IMAGE}@${DIGEST}"
+    # 任务选项
+    options:
+      # 启用缓存
+      cache: false
+      # CI 运行
+      runInCI: true
+      # 经 shell 运行
+      shell: false
+      # 从工作区根目录运行
+      runFromWorkspaceRoot: true

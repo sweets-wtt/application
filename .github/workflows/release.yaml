@@ -7,6 +7,20 @@ name: release
 on:
   # 手动触发
   workflow_dispatch:
+    # 输入
+    inputs:
+      # 触发模式
+      mode:
+        # 描述
+        description: "release / rollback"
+        # 类型
+        type: choice
+        # 默认值
+        default: "release"
+        # 选项
+        options:
+          - release
+          - rollback
   # 推送
   push:
     # 标签
@@ -30,7 +44,7 @@ jobs:
   # 发版
   release:
     # 运行条件
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' && inputs.mode != 'rollback'
     # 运行环境
     runs-on: ubuntu-latest
     # 令牌权限
@@ -69,3 +83,179 @@ jobs:
         run: echo "tag=$(git describe --tags --abbrev=0)" >> "$GITHUB_OUTPUT"
       # 运行命令
       - run: git push origin main --tags
+
+  # 镜像构建
+  build:
+    # 前置作业
+    needs: release
+    # 运行条件
+    if: >-
+      always() &&
+      ((github.event_name == 'push') ||
+        (github.event_name == 'workflow_dispatch' && needs.release.result == 'success'))
+    # 运行环境
+    runs-on: ubuntu-latest
+    # 令牌权限
+    permissions:
+      # 内容
+      contents: read
+      # 包
+      packages: write
+    # 作业输出
+    outputs:
+      # 应用列表
+      apps: ${{ steps.digests.outputs.apps }}
+    # 步骤
+    steps:
+      # 检出仓库
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        # 动作输入
+        with:
+          # 凭据保留
+          persist-credentials: false
+      # 环境管理
+      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
+        # 动作输入
+        with:
+          # 版本
+          version: "2026.8.14"
+          # 启用缓存
+          cache: false
+      # 运行命令
+      - run: echo "REGISTRY=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_ENV"
+      # 运行命令
+      - env:
+          # 标签来源
+          TAG_SRC: ${{ needs.release.outputs.tag || github.ref_name }}
+        # 运行命令
+        run: echo "TAG=$TAG_SRC" >> "$GITHUB_ENV"
+      # 仓库登录
+      - uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        # 动作输入
+        with:
+          # 仓库地址
+          registry: ghcr.io
+          # 用户名
+          username: ${{ github.actor }}
+          # 密码
+          password: ${{ secrets.GITHUB_TOKEN }}
+      # 运行命令
+      - run: moon run :images
+      # 收集摘要
+      - id: digests
+        # 运行命令
+        run: |
+          apps=""
+          for app in $(docker buildx bake -f docker-bake.hcl apps --print | jq -r '.group.apps.targets[]'); do
+            digest=$(docker buildx imagetools inspect "$REGISTRY/$app:$TAG" --format '{{.Manifest.Digest}}')
+            apps="$apps $app=$REGISTRY/$app@$digest"
+          done
+          echo "apps=${apps# }" >> "$GITHUB_OUTPUT"
+
+  # 镜像扫描
+  image-scan:
+    # 前置作业
+    needs: build
+    # 运行环境
+    runs-on: ubuntu-latest
+    # 令牌权限
+    permissions:
+      # 内容
+      contents: read
+    # 步骤
+    steps:
+      # 检出仓库
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        # 动作输入
+        with:
+          # 凭据保留
+          persist-credentials: false
+      # 环境管理
+      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
+        # 动作输入
+        with:
+          # 版本
+          version: "2026.8.14"
+          # 启用缓存
+          cache: false
+      # 仓库登录
+      - uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        # 动作输入
+        with:
+          # 仓库地址
+          registry: ghcr.io
+          # 用户名
+          username: ${{ github.actor }}
+          # 密码
+          password: ${{ secrets.GITHUB_TOKEN }}
+      # 运行命令
+      - env:
+          # 应用列表
+          APPS: ${{ needs.build.outputs.apps }}
+        # 运行命令
+        run: |
+          for app in $APPS; do
+            IMAGE="${app%%@*}" DIGEST="${app#*@}" moon run :image-scan
+          done
+
+  # 应用发行
+  deploy:
+    # 前置作业
+    needs: [build, image-scan]
+    # 运行环境
+    runs-on: ubuntu-latest
+    # 令牌权限
+    permissions:
+      # 内容
+      contents: read
+    # 步骤
+    steps:
+      # 检出仓库
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        # 动作输入
+        with:
+          # 凭据保留
+          persist-credentials: false
+      # 环境管理
+      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
+        # 动作输入
+        with:
+          # 版本
+          version: "2026.8.14"
+          # 启用缓存
+          cache: false
+      # 运行命令
+      - env:
+          # 应用列表
+          APPS: ${{ needs.build.outputs.apps }}
+        # 运行命令
+        run: moon run :release
+
+  # 应用回滚
+  rollback:
+    # 运行条件
+    if: github.event_name == 'workflow_dispatch' && inputs.mode == 'rollback'
+    # 运行环境
+    runs-on: ubuntu-latest
+    # 令牌权限
+    permissions:
+      # 内容
+      contents: read
+    # 步骤
+    steps:
+      # 检出仓库
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        # 动作输入
+        with:
+          # 凭据保留
+          persist-credentials: false
+      # 环境管理
+      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
+        # 动作输入
+        with:
+          # 版本
+          version: "2026.8.14"
+          # 启用缓存
+          cache: false
+      # 运行命令
+      - run: moon run :release -- rollback
