@@ -76,6 +76,10 @@ services:
       postgresql:
         # 就绪条件
         condition: "service_healthy"
+      # PgBouncer
+      pgbouncer:
+        # 就绪条件
+        condition: "service_healthy"
 
   # Worker
   worker:
@@ -110,6 +114,10 @@ services:
     depends_on:
       # PostgreSQL
       postgresql:
+        # 就绪条件
+        condition: "service_healthy"
+      # PgBouncer
+      pgbouncer:
         # 就绪条件
         condition: "service_healthy"
 
