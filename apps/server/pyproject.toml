@@ -19,6 +19,8 @@ dependencies = [
   "schemathesis>=4.26.1",
   "app-contracts",
   "app-log",
+  "alembic>=1.20",
+  "app-db",
 ]
 
 # 构建系统
@@ -39,3 +41,5 @@ module-name = "server"
 app-contracts = { workspace = true }
 # 结构化日志
 app-log = { workspace = true }
+# 数据库会话
+app-db = { workspace = true }

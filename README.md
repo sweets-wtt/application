@@ -71,6 +71,7 @@
 | [pydantic-settings](https://docs.pydantic.dev/concepts/pydantic_settings/) | 配置管理 |
 | [SQLAlchemy](https://docs.sqlalchemy.org/) | ORM |
 | [asyncpg](https://magicstack.github.io/asyncpg/) | PostgreSQL 驱动 |
+| [Alembic](https://alembic.sqlalchemy.org/) | 数据库迁移 |
 
 ### Web
 

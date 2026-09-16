@@ -1,10 +1,20 @@
 """测试共享 fixture"""
 
+import os
+
 import pytest
 from fastapi import FastAPI
-from server.main import app as application
+
+
+def pytest_configure(config: pytest.Config) -> None:
+    """测试环境配置 engine 构造为惰性 不建立连接"""
+    os.environ.setdefault(
+        "DATABASE__URL", "postgresql+asyncpg://app:app@localhost:5432/app"
+    )
 
 
 @pytest.fixture(scope="session")
 def app() -> FastAPI:
+    from server.main import app as application
+
     return application

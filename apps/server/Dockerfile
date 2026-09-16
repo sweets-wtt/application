@@ -24,6 +24,10 @@ FROM python:3.12-slim
 
 # 虚拟环境
 COPY --from=builder /app/.venv /app/.venv
+# 迁移配置
+COPY --from=builder /app/apps/server/alembic.ini /app/alembic.ini
+# 迁移脚本
+COPY --from=builder /app/apps/server/alembic/ /app/alembic/
 
 # 环境变量
 ENV PATH="/app/.venv/bin:$PATH"

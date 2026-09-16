@@ -43,6 +43,10 @@ services:
     image: "${SERVER_IMAGE:?}"
     # 重启策略
     restart: unless-stopped
+    # 环境变量
+    environment:
+      # 数据库连接
+      DATABASE__URL: "${DATABASE__URL:?}"
     # 健康检查
     healthcheck:
       # 就绪探测
@@ -64,6 +68,12 @@ services:
       - "app-internal"
       # 数据内部网
       - "data-internal"
+    # 依赖
+    depends_on:
+      # PostgreSQL
+      postgresql:
+        # 就绪条件
+        condition: "service_healthy"
 
   # Worker
   worker:
@@ -71,6 +81,10 @@ services:
     image: "${SERVER_IMAGE:?}"
     # 重启策略
     restart: unless-stopped
+    # 环境变量
+    environment:
+      # 数据库连接
+      DATABASE__URL: "${DATABASE__URL:?}"
     # 健康检查
     healthcheck:
       # 就绪探测
@@ -90,6 +104,12 @@ services:
     networks:
       # 数据内部网
       - "data-internal"
+    # 依赖
+    depends_on:
+      # PostgreSQL
+      postgresql:
+        # 就绪条件
+        condition: "service_healthy"
 
   # Web
   web:

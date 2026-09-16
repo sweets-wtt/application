@@ -29,7 +29,32 @@ tasks:
     deps:
       - "typecheck"
       - "test"
+      - "migrate"
     # 任务选项
     options:
       # CI 运行
       runInCI: true
+
+  # 数据库迁移
+  migrate:
+    # 运行命令
+    command: "sh"
+    # 命令参数
+    args:
+      - -c
+      - >-
+        docker compose -f infra/compose.yaml --project-directory infra up -d --wait postgresql
+        && exec docker compose -f infra/compose.yaml --project-directory infra run --rm
+        api alembic upgrade head
+    # 任务选项
+    options:
+      # 启用缓存
+      cache: false
+      # CI 运行
+      runInCI: true
+      # 经 shell 运行
+      shell: false
+      # 虚拟资源互斥锁
+      mutex: "docker-compose"
+      # 从工作区根目录运行
+      runFromWorkspaceRoot: true
