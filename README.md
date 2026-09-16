@@ -49,6 +49,7 @@
 | [Docker Compose](https://docs.docker.com/compose/) | 服务编排 |
 | [Docker Bake](https://docs.docker.com/build/bake/) | 构建编排 |
 | [PostgreSQL](https://www.postgresql.org/) | 关系数据库 |
+| [PgBouncer](https://www.pgbouncer.org/) | 连接池 |
 
 ### 共享包
 
@@ -133,7 +134,8 @@
 ├── infra                            # 服务编排
 │   ├── .env.example                 # 环境变量
 │   ├── compose.yaml                 # 平台编排
-│   └── postgresql                   # PostgreSQL
+│   ├── postgresql                   # PostgreSQL
+│   └── pgbouncer                    # PgBouncer
 ├── apps                             # 应用
 │   ├── server                       # Server
 │   ├── web                          # Web
