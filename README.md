@@ -60,6 +60,7 @@
 | [app-contracts](packages/python/contracts) | 契约模型 |
 | [app-log](packages/python/log) | 结构化日志 |
 | [app-db](packages/python/db) | 数据库会话 |
+| [app-storage](packages/python/storage) | 对象存储客户端 |
 | [@app/contracts](packages/typescript/contracts) | 契约客户端 |
 | [@app/log](packages/typescript/log) | 结构化日志 |
 | [@app/state](packages/typescript/state) | 持久化状态 |
@@ -147,7 +148,8 @@
 │   ├── python                       # Python
 │   │   ├── contracts                # 契约模型
 │   │   ├── db                       # 数据库会话
-│   │   └── log                      # 结构化日志
+│   │   ├── log                      # 结构化日志
+│   │   └── storage                  # 对象存储客户端
 │   └── typescript                   # TypeScript
 │       ├── contracts                # 契约客户端
 │       ├── log                      # 结构化日志
