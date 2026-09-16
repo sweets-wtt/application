@@ -50,6 +50,8 @@
 | [Docker Bake](https://docs.docker.com/build/bake/) | 构建编排 |
 | [PostgreSQL](https://www.postgresql.org/) | 关系数据库 |
 | [PgBouncer](https://www.pgbouncer.org/) | 连接池 |
+| [Garage](https://garagehq.deuxfleurs.fr/) | 对象存储 |
+| [restic](https://restic.net/) | 归档备份 |
 
 ### 共享包
 
@@ -135,7 +137,8 @@
 │   ├── .env.example                 # 环境变量
 │   ├── compose.yaml                 # 平台编排
 │   ├── postgresql                   # PostgreSQL
-│   └── pgbouncer                    # PgBouncer
+│   ├── pgbouncer                    # PgBouncer
+│   └── garage                       # Garage
 ├── apps                             # 应用
 │   ├── server                       # Server
 │   ├── web                          # Web

@@ -1,0 +1,137 @@
+# Docker Compose - https://docs.docker.com/compose/
+
+# 服务
+services:
+  # Garage
+  garage:
+    # 镜像
+    image: "dxflrs/garage@sha256:866bd13ed2038ba7e7190e840482bc27234c4afaf77be8cfa439ae088c1e4690"
+    # 重启策略
+    restart: unless-stopped
+    # 启动命令
+    command: ["/garage", "server", "--single-node", "--default-bucket"]
+    # 环境变量
+    environment:
+      # RPC 密钥
+      GARAGE_RPC_SECRET: "${GARAGE_RPC_SECRET:?}"
+      # 默认桶访问密钥
+      GARAGE_DEFAULT_ACCESS_KEY: "${GARAGE_S3_ACCESS_KEY:?}"
+      # 默认桶秘密密钥
+      GARAGE_DEFAULT_SECRET_KEY: "${GARAGE_S3_SECRET_KEY:?}"
+      # 默认桶名
+      GARAGE_DEFAULT_BUCKET: "${GARAGE_DEFAULT_BUCKET:?}"
+    # 卷
+    volumes:
+      # 配置文件
+      - "./garage.toml:/etc/garage.toml:ro"
+      # 数据
+      - "garage-data:/var/lib/garage"
+    # 健康检查
+    healthcheck:
+      # 就绪探测
+      test:
+        - CMD
+        - "/garage"
+        - "status"
+      # 间隔
+      interval: "10s"
+      # 超时
+      timeout: "5s"
+      # 重试次数
+      retries: 5
+      # 启动宽限期
+      start_period: "30s"
+    # 网络
+    networks:
+      # 数据内部网
+      - "data-internal"
+
+  # Garage 初始化
+  garage-init:
+    # 镜像
+    image: "amazon/aws-cli@sha256:c43a4fc95ca09f53ff6bd56016f4dc91fb9b5f3b457a8934f997fc399ccc079e"
+    # 重启策略
+    restart: unless-stopped
+    # 入口
+    entrypoint: ["sh", "-c"]
+    # 初始化命令
+    command:
+      - >-
+        aws s3api create-bucket --bucket openobserve --endpoint-url http://garage:3900 2>/dev/null || true
+        && aws s3 ls --endpoint-url http://garage:3900
+        && sleep infinity
+    # 环境变量
+    environment:
+      # 访问密钥
+      AWS_ACCESS_KEY_ID: "${GARAGE_S3_ACCESS_KEY:?}"
+      # 秘密密钥
+      AWS_SECRET_ACCESS_KEY: "${GARAGE_S3_SECRET_KEY:?}"
+      # 区域
+      AWS_DEFAULT_REGION: garage
+    # 网络
+    networks:
+      # 数据内部网
+      - "data-internal"
+    # 依赖
+    depends_on:
+      # Garage
+      garage:
+        # 就绪条件
+        condition: "service_healthy"
+
+  # S3 客户端
+  s3-client:
+    # 镜像
+    image: "amazon/aws-cli@sha256:c43a4fc95ca09f53ff6bd56016f4dc91fb9b5f3b457a8934f997fc399ccc079e"
+    # 启用档
+    profiles: ["tools"]
+    # 环境变量
+    environment:
+      # 访问密钥
+      AWS_ACCESS_KEY_ID: "${GARAGE_S3_ACCESS_KEY:?}"
+      # 秘密密钥
+      AWS_SECRET_ACCESS_KEY: "${GARAGE_S3_SECRET_KEY:?}"
+      # 区域
+      AWS_DEFAULT_REGION: garage
+      # 端点地址
+      AWS_ENDPOINT_URL: "http://garage:3900"
+    # 入口
+    entrypoint: ["aws"]
+    # 默认命令
+    command: ["s3", "ls"]
+    # 网络
+    networks:
+      # 数据内部网
+      - "data-internal"
+    # 依赖
+    depends_on:
+      # Garage
+      garage:
+        # 就绪条件
+        condition: "service_healthy"
+
+  # Garage 归档
+  garage-backup:
+    # 镜像
+    image: "restic/restic@sha256:4cf4a61ef9786f4de53e9de8c8f5c040f33830eb0a10bf3d614410ee2fcb6120"
+    # 启用档
+    profiles: ["backup"]
+    # 环境变量
+    environment:
+      # 仓库路径
+      RESTIC_REPOSITORY: /srv/repo
+      # 仓库口令
+      RESTIC_PASSWORD: "${RESTIC_PASSWORD:?}"
+    # 卷
+    volumes:
+      # 数据
+      - "garage-data:/srv/data:ro"
+      # 仓库
+      - "garage-repo:/srv/repo"
+    # 入口
+    entrypoint: ["sh", "-c"]
+    # 启动命令（对象 RPO ≤ 60 min 恢复 RTO ≤ 4 h）
+    command:
+      - >-
+        restic snapshots --json >/dev/null 2>&1 || restic init -q
+        && exec restic backup /srv/data --host garage

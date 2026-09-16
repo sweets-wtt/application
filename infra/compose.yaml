@@ -9,6 +9,8 @@ include:
   - "postgresql/compose.yaml"
   # PgBouncer
   - "pgbouncer/compose.yaml"
+  # Garage
+  - "garage/compose.yaml"
 
 # 命名网络
 networks:
@@ -29,6 +31,10 @@ networks:
 volumes:
   # PostgreSQL 数据
   postgresql-data:
+  # Garage 数据
+  garage-data:
+  # 归档仓库
+  garage-repo:
 
 # 密钥
 secrets:
