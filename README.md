@@ -56,6 +56,7 @@
 | --- | --- |
 | [app-contracts](packages/python/contracts) | 契约模型 |
 | [app-log](packages/python/log) | 结构化日志 |
+| [app-db](packages/python/db) | 数据库会话 |
 | [@app/contracts](packages/typescript/contracts) | 契约客户端 |
 | [@app/log](packages/typescript/log) | 结构化日志 |
 | [@app/state](packages/typescript/state) | 持久化状态 |
@@ -68,6 +69,8 @@
 | [Granian](https://github.com/emmett-framework/granian) | ASGI 服务器 |
 | [Schemathesis](https://schemathesis.readthedocs.io/) | 契约模糊 |
 | [pydantic-settings](https://docs.pydantic.dev/concepts/pydantic_settings/) | 配置管理 |
+| [SQLAlchemy](https://docs.sqlalchemy.org/) | ORM |
+| [asyncpg](https://magicstack.github.io/asyncpg/) | PostgreSQL 驱动 |
 
 ### Web
 
@@ -137,6 +140,7 @@
 ├── packages                         # 共享包
 │   ├── python                       # Python
 │   │   ├── contracts                # 契约模型
+│   │   ├── db                       # 数据库会话
 │   │   └── log                      # 结构化日志
 │   └── typescript                   # TypeScript
 │       ├── contracts                # 契约客户端
