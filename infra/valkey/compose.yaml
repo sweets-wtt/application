@@ -1,0 +1,46 @@
+# Docker Compose - https://docs.docker.com/compose/
+
+# 服务
+services:
+  # Valkey
+  valkey:
+    # 镜像
+    image: "valkey/valkey@sha256:d2e18f3410b6f616de1417f570fa55261af2898b9c5b2cfb6781ce2373ea43d1"
+    # 重启策略
+    restart: unless-stopped
+    # 入口
+    entrypoint: ["sh", "-c"]
+    # 启动命令 生成 ACL 文件 禁用匿名默认用户
+    command:
+      - >-
+        printf 'user default off\nuser app on >%s ~* +@all\n' "$$VALKEY_APP_PASSWORD" > /tmp/users.acl
+        && exec valkey-server /etc/valkey/valkey.conf --aclfile /tmp/users.acl
+    # 环境变量
+    environment:
+      # ACL 口令
+      VALKEY_APP_PASSWORD: "${VALKEY_APP_PASSWORD:?}"
+    # 卷
+    volumes:
+      # 配置文件
+      - "./valkey.conf:/etc/valkey/valkey.conf:ro"
+      # 数据
+      - "valkey-data:/data"
+    # 健康检查
+    healthcheck:
+      # 就绪探测
+      test:
+        - CMD-SHELL
+        - >-
+          valkey-cli --no-auth-warning --user app -a "$$VALKEY_APP_PASSWORD" ping | grep -q PONG
+      # 间隔
+      interval: "10s"
+      # 超时
+      timeout: "5s"
+      # 重试次数
+      retries: 5
+      # 启动宽限期
+      start_period: "30s"
+    # 网络
+    networks:
+      # 数据内部网
+      - "data-internal"

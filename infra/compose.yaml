@@ -11,6 +11,8 @@ include:
   - "pgbouncer/compose.yaml"
   # Garage
   - "garage/compose.yaml"
+  # Valkey
+  - "valkey/compose.yaml"
 
 # 命名网络
 networks:
@@ -35,6 +37,8 @@ volumes:
   garage-data:
   # 归档仓库
   garage-repo:
+  # Valkey 数据
+  valkey-data:
 
 # 密钥
 secrets:

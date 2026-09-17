@@ -52,6 +52,7 @@
 | [PgBouncer](https://www.pgbouncer.org/) | 连接池 |
 | [Garage](https://garagehq.deuxfleurs.fr/) | 对象存储 |
 | [restic](https://restic.net/) | 归档备份 |
+| [Valkey](https://valkey.io/) | 缓存 |
 
 ### 共享包
 
@@ -139,7 +140,8 @@
 │   ├── compose.yaml                 # 平台编排
 │   ├── postgresql                   # PostgreSQL
 │   ├── pgbouncer                    # PgBouncer
-│   └── garage                       # Garage
+│   ├── garage                       # Garage
+│   └── valkey                       # Valkey
 ├── apps                             # 应用
 │   ├── server                       # Server
 │   ├── web                          # Web
