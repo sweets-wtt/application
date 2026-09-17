@@ -38,3 +38,35 @@ class DatabaseSettings(BaseSettings):
 
 
 db_settings = DatabaseSettings()
+
+
+class StorageConfig(BaseModel):
+    """对象存储连接配置"""
+
+    # 端点 URL
+    url: str
+
+    # 区域
+    region: str
+
+    # 访问密钥
+    access_key_id: str
+
+    # 秘密密钥
+    secret_access_key: str
+
+    # 桶名
+    bucket: str
+
+
+class StorageSettings(BaseSettings):
+    """对象存储环境配置"""
+
+    # 模型配置 官方双下划线嵌套分隔符 STORAGE__URL -> storage.url
+    model_config = {"env_nested_delimiter": "__"}
+
+    # 对象存储
+    storage: StorageConfig
+
+
+storage_settings = StorageSettings()

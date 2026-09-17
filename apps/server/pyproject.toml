@@ -16,11 +16,13 @@ dependencies = [
   "pydantic>=2.13.5",
   "pydantic-settings>=2.15.0",
   "granian>=2.8.2",
+  "python-multipart>=0.0.20",
   "schemathesis>=4.26.1",
   "app-contracts",
   "app-log",
   "alembic>=1.20",
   "app-db",
+  "app-storage",
 ]
 
 # 构建系统
@@ -43,3 +45,5 @@ app-contracts = { workspace = true }
 app-log = { workspace = true }
 # 数据库会话
 app-db = { workspace = true }
+# 对象存储客户端
+app-storage = { workspace = true }

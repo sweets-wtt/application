@@ -3,8 +3,10 @@
 from fastapi import FastAPI
 
 from server.routes.healthz import router as healthz_router
+from server.routes.storage import router as storage_router
 
 
 def include_routes(app: FastAPI) -> None:
     """注册全部路由"""
     app.include_router(healthz_router)
+    app.include_router(storage_router)
