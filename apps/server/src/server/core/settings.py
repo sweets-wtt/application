@@ -70,3 +70,43 @@ class StorageSettings(BaseSettings):
 
 
 storage_settings = StorageSettings()
+
+
+class CacheConfig(BaseModel):
+    """缓存连接配置"""
+
+    # 连接 URL
+    url: str
+
+
+class CacheSettings(BaseSettings):
+    """缓存环境配置"""
+
+    # 模型配置 官方双下划线嵌套分隔符 CACHE__URL -> cache.url
+    model_config = {"env_nested_delimiter": "__"}
+
+    # 缓存
+    cache: CacheConfig
+
+
+cache_settings = CacheSettings()
+
+
+class RealtimeConfig(BaseModel):
+    """实时配置"""
+
+    # 允许的 Origin 列表
+    origins: list[str] = []
+
+
+class RealtimeSettings(BaseSettings):
+    """实时环境配置"""
+
+    # 模型配置 官方双下划线嵌套分隔符 REALTIME__ORIGINS -> realtime.origins
+    model_config = {"env_nested_delimiter": "__"}
+
+    # 实时
+    realtime: RealtimeConfig
+
+
+realtime_settings = RealtimeSettings()

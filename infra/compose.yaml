@@ -69,6 +69,10 @@ services:
       STORAGE__SECRET_ACCESS_KEY: "${GARAGE_S3_SECRET_KEY:?}"
       # 对象存储桶名
       STORAGE__BUCKET: "${GARAGE_DEFAULT_BUCKET:?}"
+      # 缓存连接
+      CACHE__URL: "valkey://app:${VALKEY_APP_PASSWORD:?}@valkey:6379/0"
+      # 允许的实时 Origin
+      REALTIME__ORIGINS: "${REALTIME_ORIGINS:-[]}"
     # 健康检查
     healthcheck:
       # 就绪探测
@@ -104,6 +108,10 @@ services:
       garage:
         # 就绪条件
         condition: "service_healthy"
+      # Valkey
+      valkey:
+        # 就绪条件
+        condition: "service_healthy"
 
   # Worker
   worker:
@@ -125,6 +133,8 @@ services:
       STORAGE__SECRET_ACCESS_KEY: "${GARAGE_S3_SECRET_KEY:?}"
       # 对象存储桶名
       STORAGE__BUCKET: "${GARAGE_DEFAULT_BUCKET:?}"
+      # 缓存连接
+      CACHE__URL: "valkey://app:${VALKEY_APP_PASSWORD:?}@valkey:6379/0"
     # 健康检查
     healthcheck:
       # 就绪探测
@@ -156,6 +166,10 @@ services:
         condition: "service_healthy"
       # Garage
       garage:
+        # 就绪条件
+        condition: "service_healthy"
+      # Valkey
+      valkey:
         # 就绪条件
         condition: "service_healthy"
 

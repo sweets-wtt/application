@@ -16,6 +16,8 @@ def pytest_configure(config: pytest.Config) -> None:
     os.environ.setdefault("STORAGE__ACCESS_KEY_ID", "GKA000000000000000000")
     os.environ.setdefault("STORAGE__SECRET_ACCESS_KEY", "secret")
     os.environ.setdefault("STORAGE__BUCKET", "app")
+    os.environ.setdefault("CACHE__URL", "valkey://localhost:6379/0")
+    os.environ.setdefault("REALTIME__ORIGINS", '["https://app.example.com"]')
 
 
 @pytest.fixture(scope="session")
