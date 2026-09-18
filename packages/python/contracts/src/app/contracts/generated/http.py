@@ -3,9 +3,10 @@
 
 from __future__ import annotations
 
+from enum import StrEnum
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, RootModel
 
 
 class Data(BaseModel):
@@ -13,6 +14,13 @@ class Data(BaseModel):
         extra='forbid',
     )
     status: str
+
+
+class Data1(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    accepted: int
 
 
 class Response(BaseModel):
@@ -24,5 +32,44 @@ class Response(BaseModel):
     data: dict[str, Any]
 
 
+class Service(StrEnum):
+    web = 'web'
+    miniapp = 'miniapp'
+
+
+class Level(StrEnum):
+    error = 'error'
+    warn = 'warn'
+    info = 'info'
+
+
+class Context(RootModel[str]):
+    root: str = Field(..., max_length=256)
+
+
+class TelemetryEvent(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    level: Level
+    fingerprint: str = Field(..., max_length=64)
+    message: str = Field(..., max_length=512)
+    timestamp: AwareDatetime
+    context: dict[str, Context] | None = Field(None, max_length=16)
+
+
 class HealthzGetResponse(Response):
     data: Data
+
+
+class TelemetryEventsPostResponse(Response):
+    data: Data1
+
+
+class TelemetryEventsRequest(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    service: Service
+    release: str = Field(..., max_length=64)
+    events: list[TelemetryEvent] = Field(..., max_length=100)

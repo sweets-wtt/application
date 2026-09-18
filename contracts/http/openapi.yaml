@@ -48,6 +48,98 @@ components:
       # 禁止附加属性
       additionalProperties: false
 
+    # 遥测事件
+    TelemetryEvent:
+      # 类型
+      type: object
+      # 必填属性
+      required:
+        - level
+        - fingerprint
+        - message
+        - timestamp
+      # 属性
+      properties:
+        # 级别
+        level:
+          # 类型
+          type: string
+          # 枚举
+          enum:
+            - error
+            - warn
+            - info
+        # 指纹
+        fingerprint:
+          # 类型
+          type: string
+          # 最大长度
+          maxLength: 64
+        # 消息
+        message:
+          # 类型
+          type: string
+          # 最大长度
+          maxLength: 512
+        # 时间戳
+        timestamp:
+          # 类型
+          type: string
+          # 格式
+          format: date-time
+        # 上下文
+        context:
+          # 类型
+          type: object
+          # 键数上限
+          maxProperties: 16
+          # 附加属性
+          additionalProperties:
+            # 类型
+            type: string
+            # 最大长度
+            maxLength: 256
+      # 禁止附加属性
+      additionalProperties: false
+
+    # 遥测事件批量
+    TelemetryEventsRequest:
+      # 类型
+      type: object
+      # 必填属性
+      required:
+        - service
+        - release
+        - events
+      # 属性
+      properties:
+        # 服务
+        service:
+          # 类型
+          type: string
+          # 枚举
+          enum:
+            - web
+            - miniapp
+        # 版本号
+        release:
+          # 类型
+          type: string
+          # 最大长度
+          maxLength: 64
+        # 事件批量
+        events:
+          # 类型
+          type: array
+          # 条数上限
+          maxItems: 100
+          # 事件
+          items:
+            # 引用
+            $ref: "#/components/schemas/TelemetryEvent"
+      # 禁止附加属性
+      additionalProperties: false
+
 # 路径
 paths:
   # 存活探针
@@ -87,3 +179,63 @@ paths:
                             type: string
                         # 禁止附加属性
                         additionalProperties: false
+
+  # 遥测事件
+  /telemetry/events:
+    # 接收遥测事件
+    post:
+      # 操作标识
+      operationId: createTelemetryEvents
+      # 描述
+      description: 接收客户端批量遥测事件
+      # 请求体
+      requestBody:
+        # 必填
+        required: true
+        # 内容
+        content:
+          application/json:
+            # 模式
+            schema:
+              # 引用
+              $ref: "#/components/schemas/TelemetryEventsRequest"
+      # 响应
+      responses:
+        # 已接受
+        "202":
+          # 描述
+          description: 已接受
+          # 内容
+          content:
+            application/json:
+              # 模式
+              schema:
+                # 全部满足
+                allOf:
+                  # 标准响应
+                  - $ref: "#/components/schemas/Response"
+                  # 属性
+                  - properties:
+                      # 数据
+                      data:
+                        # 类型
+                        type: object
+                        # 必填属性
+                        required:
+                          - accepted
+                        # 属性
+                        properties:
+                          # 接受条数
+                          accepted:
+                            # 类型
+                            type: integer
+                        # 禁止附加属性
+                        additionalProperties: false
+        # 请求体超限
+        "413":
+          # 描述
+          description: 请求体超限
+        # 请求体非法
+        "400":
+          # 描述
+          description: 请求体无法解析
