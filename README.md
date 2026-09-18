@@ -18,6 +18,8 @@ flowchart TD
     lefthook -->|调用| cocogitto["cocogitto（提交检查）"]
     mise -->|执行环境| gitleaks["gitleaks（密钥扫描）"]
     just -->|调用| gitleaks["gitleaks（密钥扫描）"]
+    application -->|依赖| renovate["renovate（依赖更新）"]
+    renovate -->|版本更新| mise["mise（环境管理）"]
 ```
 
 ## 结构
@@ -34,5 +36,6 @@ flowchart TD
 ├── lefthook.yaml     # 钩子管理
 ├── mise.lock         # 工具版本
 ├── mise.toml         # 开发环境
+├── renovate.json5    # 依赖更新
 └── README.md         # 项目说明
 ```
