@@ -25,3 +25,7 @@ not_found_system_fallback = false
 "aqua:evilmartians/lefthook" = "2.1.14"
 # 密钥扫描 - https://github.com/gitleaks/gitleaks
 "aqua:gitleaks/gitleaks" = "8.30.1"
+# 密钥加密 - https://getsops.io/
+"aqua:getsops/sops" = "3.13.3"
+# 加密工具 - https://age-encryption.org/
+"aqua:FiloSottile/age" = "1.3.2"

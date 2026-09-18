@@ -20,6 +20,8 @@ flowchart TD
     just -->|调用| gitleaks["gitleaks（密钥扫描）"]
     application -->|依赖| renovate["renovate（依赖更新）"]
     renovate -->|版本更新| mise["mise（环境管理）"]
+    mise -->|执行环境| sops["sops（密钥加密）"]
+    sops -->|依赖| age["age（加密工具）"]
 ```
 
 ## 结构
@@ -30,6 +32,7 @@ flowchart TD
 ├── .gitattributes    # Git 属性
 ├── .gitignore        # Git 忽略
 ├── .gitleaks.toml    # 密钥扫描
+├── .sops.yaml        # 密钥加密
 ├── .typos.toml       # 拼写检查
 ├── cog.toml          # 提交检查
 ├── justfile          # 任务运行
