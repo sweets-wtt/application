@@ -13,6 +13,7 @@ flowchart TD
     application -->|工具链| mise["mise（环境管理）"]
     mise -->|执行环境| just["just（任务运行）"]
     mise -->|执行环境| typos["typos（拼写检查）"]
+    mise -->|执行环境| cocogitto["cocogitto（提交检查）"]
 ```
 
 ## 结构
@@ -23,6 +24,7 @@ flowchart TD
 ├── .gitattributes    # Git 属性
 ├── .gitignore        # Git 忽略
 ├── .typos.toml       # 拼写检查
+├── cog.toml          # 提交检查
 ├── justfile          # 任务运行
 ├── mise.lock         # 工具版本
 ├── mise.toml         # 开发环境

@@ -19,3 +19,5 @@ not_found_system_fallback = false
 "aqua:casey/just" = "1.58.0"
 # 拼写检查 - https://github.com/crate-ci/typos
 "aqua:crate-ci/typos" = "1.50.1"
+# 提交检查 - https://docs.cocogitto.io/
+"aqua:cocogitto/cocogitto" = "7.0.0"
