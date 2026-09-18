@@ -53,6 +53,8 @@
 | [Garage](https://garagehq.deuxfleurs.fr/) | 对象存储 |
 | [restic](https://restic.net/) | 归档备份 |
 | [Valkey](https://valkey.io/) | 缓存 |
+| [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/) | 遥测采集 |
+| [OpenObserve](https://openobserve.ai/docs/) | 观测存储 |
 
 ### 共享包
 
@@ -142,11 +144,13 @@
 │   ├── postgresql                   # PostgreSQL
 │   ├── pgbouncer                    # PgBouncer
 │   ├── garage                       # Garage
-│   └── valkey                       # Valkey
+│   ├── valkey                       # Valkey
+│   └── observe                      # 观测
 ├── apps                             # 应用
 │   ├── server                       # Server
 │   ├── web                          # Web
 │   └── miniapp                      # 小程序
+├── checks                           # 验收
 ├── packages                         # 共享包
 │   ├── python                       # Python
 │   │   ├── contracts                # 契约模型

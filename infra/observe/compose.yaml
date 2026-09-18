@@ -1,0 +1,89 @@
+# Docker Compose - https://docs.docker.com/compose/
+
+# 服务
+services:
+  # OpenObserve
+  openobserve:
+    # 镜像
+    image: "public.ecr.aws/zinclabs/openobserve@sha256:089921e511490ef5124fe1331dfd82b475326592a1a1dad6164289e88a8ace91"
+    # 重启策略
+    restart: unless-stopped
+    # 环境变量
+    environment:
+      # 根用户邮箱
+      ZO_ROOT_USER_EMAIL: "${OBSERVE_ROOT_EMAIL:?}"
+      # 根用户口令
+      ZO_ROOT_USER_PASSWORD: "${OBSERVE_ROOT_PASSWORD:?}"
+      # 数据目录
+      ZO_DATA_DIR: "/data"
+      # 单节点模式
+      ZO_LOCAL_MODE: "true"
+      # 本地模式存储后端
+      ZO_LOCAL_MODE_STORAGE: "s3"
+      # S3 提供商
+      ZO_S3_PROVIDER: "minio"
+      # S3 端点
+      ZO_S3_SERVER_URL: "http://garage:3900"
+      # S3 区域
+      ZO_S3_REGION_NAME: "garage"
+      # S3 桶名
+      ZO_S3_BUCKET_NAME: "openobserve"
+      # S3 访问密钥
+      ZO_S3_ACCESS_KEY: "${GARAGE_S3_ACCESS_KEY:?}"
+      # S3 秘密密钥
+      ZO_S3_SECRET_KEY: "${GARAGE_S3_SECRET_KEY:?}"
+      # 匿名遥测
+      ZO_TELEMETRY: "false"
+    # 卷
+    volumes:
+      # 数据
+      - "observe-data:/data"
+    # 端口
+    ports:
+      # 主机回环 验收与排障
+      - "127.0.0.1:5080:5080"
+    # 网络
+    networks:
+      # 管理网
+      - "management"
+      # 数据内部网
+      - "data-internal"
+
+  # Collector
+  collector:
+    # 镜像
+    image: "otel/opentelemetry-collector-contrib@sha256:9c247564e65ca19f97d891cca19a1a8d291ce631b890885b44e3503c5fdb3895"
+    # 重启策略
+    restart: unless-stopped
+    # 运行用户 读主机容器日志需 root
+    user: "0"
+    # 启动命令
+    command: ["--config=/etc/collector/collector.yaml"]
+    # 环境变量
+    environment:
+      # PostgreSQL 超管口令
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?}"
+      # 观测 Basic 凭据
+      OBSERVE_AUTH_BASIC: "${OBSERVE_AUTH_BASIC:?}"
+    # 卷
+    volumes:
+      # 配置文件
+      - "./collector.yaml:/etc/collector/collector.yaml:ro"
+      # 主机进程
+      - "/proc:/proc:ro"
+      # 主机系统
+      - "/sys:/sys:ro"
+      # 容器日志
+      - "/var/lib/docker/containers:/var/lib/docker/containers:ro"
+    # 网络
+    networks:
+      # 应用内部网
+      - "app-internal"
+      # 数据内部网
+      - "data-internal"
+    # 依赖
+    depends_on:
+      # OpenObserve
+      openobserve:
+        # 启动即依赖 镜像无健康检查工具
+        condition: "service_started"

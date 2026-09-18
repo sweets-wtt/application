@@ -13,6 +13,8 @@ include:
   - "garage/compose.yaml"
   # Valkey
   - "valkey/compose.yaml"
+  # 观测
+  - "observe/compose.yaml"
 
 # 命名网络
 networks:
@@ -39,6 +41,8 @@ volumes:
   garage-repo:
   # Valkey 数据
   valkey-data:
+  # 观测数据
+  observe-data:
 
 # 密钥
 secrets:

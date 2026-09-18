@@ -1,0 +1,125 @@
+# OpenTelemetry Collector 配置 - https://opentelemetry.io/docs/collector/configuration/
+
+# 接收器 数据进入 Collector 的入口
+receivers:
+  # OTLP 协议
+  otlp:
+    # 传输协议
+    protocols:
+      # gRPC
+      grpc:
+        # 监听地址
+        endpoint: "0.0.0.0:4317"
+      # HTTP
+      http:
+        # 监听地址
+        endpoint: "0.0.0.0:4318"
+  # 主机指标
+  hostmetrics:
+    # 采集间隔
+    collection_interval: "60s"
+    # 采集器
+    scrapers:
+      # CPU
+      cpu: {}
+      # 内存
+      memory: {}
+      # 磁盘
+      disk: {}
+      # 网络
+      network: {}
+      # 负载
+      load: {}
+  # PostgreSQL 指标
+  postgresql:
+    # 服务器地址与端口
+    endpoint: "postgresql:5432"
+    # 连接用户名
+    username: "postgres"
+    # 连接口令
+    password: "${env:POSTGRES_PASSWORD}"
+    # 采集统计的数据库
+    databases:
+      - "app"
+    # 采集间隔
+    collection_interval: "60s"
+    # 传输安全
+    tls:
+      insecure: true
+  # 文件日志
+  filelog:
+    # 包含的文件通配
+    include:
+      - "/var/lib/docker/containers/*/*-json.log"
+    # 起始读取位置
+    start_at: "end"
+    # 解析算子
+    operators:
+      # JSON 解析
+      - type: "json_parser"
+        parse_from: "body"
+      # 字段搬移
+      - type: "move"
+        from: "attributes.log"
+        to: "body"
+
+# 处理器 数据采集后的加工
+processors:
+  # 日志转换
+  transform/mask:
+    # 错误处理方式
+    error_mode: "ignore"
+    # 日志语句
+    log_statements:
+      # 日志上下文
+      - context: "log"
+        statements:
+          # 掩码敏感值
+          - 'replace_pattern(body, "(?i)(password|passwd|secret|token|api[_-]?key|authorization)\\s*[:=]\\s*\\S+", "***") where IsString(body)'
+          # 设置服务名
+          - 'set(resource.attributes["service.name"], "docker") where resource.attributes["service.name"] == nil'
+  # 批处理
+  batch:
+    # 发送间隔
+    timeout: "5s"
+
+# 导出器 数据送出 Collector 的出口
+exporters:
+  # OTLP over HTTP
+  otlphttp/openobserve:
+    # 目标端点
+    endpoint: "http://openobserve:5080/api/default"
+    # 请求头
+    headers:
+      # 认证头
+      Authorization: "Basic ${env:OBSERVE_AUTH_BASIC}"
+
+# 扩展 遥测之外的能力
+extensions:
+  # 健康检查
+  health_check:
+    # 监听地址
+    endpoint: "127.0.0.1:13133"
+
+# 服务 启用配置
+service:
+  # 启用的扩展
+  extensions:
+    - "health_check"
+  # 管道
+  pipelines:
+    # 指标
+    metrics:
+      receivers: ["otlp", "hostmetrics", "postgresql"]
+      processors: ["batch"]
+      exporters: ["otlphttp/openobserve"]
+    # 日志
+    logs:
+      receivers: ["otlp", "filelog"]
+      processors: ["transform/mask", "batch"]
+      exporters: ["otlphttp/openobserve"]
+    # 追踪
+    traces:
+      receivers: ["otlp"]
+      processors: ["batch"]
+      exporters: ["otlphttp/openobserve"]
