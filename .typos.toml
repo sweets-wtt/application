@@ -7,6 +7,10 @@ extend-exclude = ["*.lock"]
 
 # 拓展词
 [default.extend-words]
+# Recovery Point Objective
+RPO = "RPO"
+# Recovery Time Objective
+RTO = "RTO"
 
 # 拓展标识符
 [default.extend-identifiers]

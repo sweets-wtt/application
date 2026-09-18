@@ -21,6 +21,8 @@ services:
       POSTGRES_PASSWORD_FILE: /run/secrets/postgres-password
       # 应用角色口令（init.sql 经 psql \getenv 读取）
       POSTGRES_APP_PASSWORD: ${POSTGRES_APP_PASSWORD:?}
+      # Hatchet 角色口令
+      HATCHET_DB_PASSWORD: ${HATCHET_DB_PASSWORD:?}
     # 密钥
     secrets:
       # 超管口令

@@ -10,3 +10,12 @@ CREATE ROLE app LOGIN PASSWORD :'app_password';
 
 -- 应用库
 CREATE DATABASE app OWNER app;
+
+-- Hatchet 角色口令
+\getenv hatchet_password HATCHET_DB_PASSWORD
+
+-- Hatchet 角色
+CREATE ROLE hatchet LOGIN PASSWORD :'hatchet_password';
+
+-- Hatchet 库
+CREATE DATABASE hatchet OWNER hatchet;

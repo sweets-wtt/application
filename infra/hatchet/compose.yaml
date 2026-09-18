@@ -1,0 +1,79 @@
+# Hatchet Lite - https://docs.hatchet.run/self-hosting/hatchet-lite
+
+# 服务
+services:
+  # Hatchet Lite
+  hatchet-lite:
+    # 镜像
+    image: "ghcr.io/hatchet-dev/hatchet/hatchet-lite@sha256:db8fb8e009a5c892859e52e4aa50b17aa11ab1dd23801cd320492f2942db30d7"
+    # 重启策略
+    restart: unless-stopped
+    # 环境变量
+    environment:
+      # PostgreSQL 连接串
+      DATABASE_URL: "postgresql://hatchet:${HATCHET_DB_PASSWORD:?}@postgresql:5432/hatchet?sslmode=disable"
+      # PgBouncer 连接串
+      DATABASE_PGBOUNCER_URL: "postgresql://hatchet:${HATCHET_DB_PASSWORD:?}@pgbouncer:5432/hatchet?sslmode=disable"
+      # 消息队列类型
+      SERVER_MSGQUEUE_KIND: "postgres"
+      # Pub/Sub 类型
+      SERVER_MSGQUEUE_PUBSUB_KIND: "postgres"
+      # gRPC 绑定地址
+      SERVER_GRPC_BIND_ADDRESS: "0.0.0.0"
+      # gRPC 明文
+      SERVER_GRPC_INSECURE: "t"
+      # gRPC 广播地址
+      SERVER_GRPC_BROADCAST_ADDRESS: "hatchet-lite:7077"
+      # gRPC 端口
+      SERVER_GRPC_PORT: "7077"
+      # 内部客户端 gRPC 广播地址
+      SERVER_INTERNAL_CLIENT_INTERNAL_GRPC_BROADCAST_ADDRESS: "hatchet-lite:7077"
+      # 服务 URL
+      SERVER_URL: "http://localhost:8888"
+      # 认证 Cookie 域名
+      SERVER_AUTH_COOKIE_DOMAIN: "localhost"
+      # 认证 Cookie 非安全
+      SERVER_AUTH_COOKIE_INSECURE: "t"
+      # 设置邮箱已验证
+      SERVER_AUTH_SET_EMAIL_VERIFIED: "t"
+    # 卷
+    volumes:
+      # 配置目录
+      - "hatchet-config:/config"
+    # 端口
+    ports:
+      # Dashboard
+      - "127.0.0.1:8888:8888"
+    # 健康检查
+    healthcheck:
+      # 就绪探测
+      test:
+        - CMD-SHELL
+        - >-
+          wget -q -O /dev/null http://127.0.0.1:8888/ || exit 1
+      # 间隔
+      interval: "10s"
+      # 超时
+      timeout: "5s"
+      # 重试次数
+      retries: 5
+      # 启动宽限期
+      start_period: "60s"
+    # 网络
+    networks:
+      # 应用内部网
+      - "app-internal"
+      # 数据内部网
+      - "data-internal"
+      # 管理网
+      - "management"
+    # 依赖
+    depends_on:
+      # PostgreSQL
+      postgresql:
+        # 就绪条件
+        condition: "service_healthy"
+      # PgBouncer
+      pgbouncer:
+        # 就绪条件
+        condition: "service_healthy"

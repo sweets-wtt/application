@@ -84,7 +84,9 @@ def test_otlp_queue_full_drops_oldest() -> None:
 
     configure(endpoint="http://collector:4318", post=post)
     for index in range(logger_module.OTLP_QUEUE_MAX + 1):
-        logger_module._otlp_processor(None, "info", {"event": str(index), "level": "info"})
+        logger_module._otlp_processor(
+            None, "info", {"event": str(index), "level": "info"}
+        )
     logger_module._otlp_flush()
 
     payload = json.loads(posts[0][1])

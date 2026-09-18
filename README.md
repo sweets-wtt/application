@@ -55,6 +55,7 @@
 | [Valkey](https://valkey.io/) | 缓存 |
 | [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/) | 遥测采集 |
 | [OpenObserve](https://openobserve.ai/docs/) | 观测存储 |
+| [Hatchet Lite](https://docs.hatchet.run/self-hosting/hatchet-lite) | 工作流控制面 |
 
 ### 共享包
 
@@ -140,13 +141,14 @@
 │       ├── openapi.yaml             # 接口规范
 │       └── vacuum.yaml              # 契约检查
 ├── infra                            # 服务编排
-│   ├── .env.example                 # 环境变量
-│   ├── compose.yaml                 # 平台编排
-│   ├── postgresql                   # PostgreSQL
-│   ├── pgbouncer                    # PgBouncer
 │   ├── garage                       # Garage
+│   ├── hatchet                      # Hatchet
+│   ├── observe                      # OpenObserve
+│   ├── pgbouncer                    # PgBouncer
+│   ├── postgresql                   # PostgreSQL
 │   ├── valkey                       # Valkey
-│   └── observe                      # 观测
+│   ├── .env.example                 # 环境变量
+│   └── compose.yaml                 # 平台编排
 ├── apps                             # 应用
 │   ├── server                       # Server
 │   ├── web                          # Web

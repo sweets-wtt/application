@@ -11,7 +11,8 @@ import threading
 import time
 import urllib.error
 import urllib.request
-from typing import Any, Callable, cast
+from collections.abc import Callable
+from typing import Any, cast
 
 import structlog
 
@@ -96,7 +97,9 @@ def _otlp_processor(
         "timeUnixNano": str(time.time_ns()),
         "severityText": level,
         "severityNumber": OTLP_SEVERITY.get(level, 9),
-        "body": {"stringValue": json.dumps(event_dict, ensure_ascii=False, default=str)},
+        "body": {
+            "stringValue": json.dumps(event_dict, ensure_ascii=False, default=str)
+        },
     }
     try:
         _otlp_queue.put_nowait(json.dumps(record, ensure_ascii=False))

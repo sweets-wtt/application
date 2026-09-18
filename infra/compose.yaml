@@ -15,6 +15,8 @@ include:
   - "valkey/compose.yaml"
   # 观测
   - "observe/compose.yaml"
+  # Hatchet
+  - "hatchet/compose.yaml"
 
 # 命名网络
 networks:
@@ -43,6 +45,8 @@ volumes:
   valkey-data:
   # 观测数据
   observe-data:
+  # Hatchet 配置
+  hatchet-config:
 
 # 密钥
 secrets:
@@ -50,6 +54,10 @@ secrets:
   postgres-password:
     # 来源环境变量
     environment: POSTGRES_PASSWORD
+  # Hatchet 客户端令牌
+  hatchet-client-token:
+    # 来源环境变量
+    environment: HATCHET_CLIENT_TOKEN
 
 # 服务
 services:

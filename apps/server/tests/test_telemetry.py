@@ -8,7 +8,6 @@ from app.contracts.generated.http import TelemetryEventsRequest
 from app.log import configure
 from fastapi import FastAPI, HTTPException, Request
 from pydantic import ValidationError
-
 from server.routes.telemetry import (
     BODY_LIMIT,
     TelemetryEventsBody,
