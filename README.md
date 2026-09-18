@@ -22,6 +22,8 @@ flowchart TD
     renovate -->|版本更新| mise["mise（环境管理）"]
     mise -->|执行环境| sops["sops（密钥加密）"]
     sops -->|依赖| age["age（加密工具）"]
+    mise -->|执行环境| trivy["trivy（漏洞扫描）"]
+    just -->|调用| trivy["trivy（漏洞扫描）"]
 ```
 
 ## 结构

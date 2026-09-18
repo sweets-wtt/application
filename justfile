@@ -22,3 +22,7 @@ lint:
 # 钩子安装
 hooks:
     lefthook install
+
+# 漏洞扫描
+scan:
+    trivy fs --scanners vuln --severity HIGH,CRITICAL --exit-code 1 .
