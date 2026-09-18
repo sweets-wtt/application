@@ -23,3 +23,5 @@ not_found_system_fallback = false
 "aqua:cocogitto/cocogitto" = "7.0.0"
 # 钩子管理 - https://lefthook.dev/
 "aqua:evilmartians/lefthook" = "2.1.14"
+# 密钥扫描 - https://github.com/gitleaks/gitleaks
+"aqua:gitleaks/gitleaks" = "8.30.1"

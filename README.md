@@ -16,6 +16,8 @@ flowchart TD
     mise -->|执行环境| cocogitto["cocogitto（提交检查）"]
     mise -->|执行环境| lefthook["lefthook（钩子管理）"]
     lefthook -->|调用| cocogitto["cocogitto（提交检查）"]
+    mise -->|执行环境| gitleaks["gitleaks（密钥扫描）"]
+    just -->|调用| gitleaks["gitleaks（密钥扫描）"]
 ```
 
 ## 结构
@@ -25,6 +27,7 @@ flowchart TD
 ├── .editorconfig     # 代码风格
 ├── .gitattributes    # Git 属性
 ├── .gitignore        # Git 忽略
+├── .gitleaks.toml    # 密钥扫描
 ├── .typos.toml       # 拼写检查
 ├── cog.toml          # 提交检查
 ├── justfile          # 任务运行

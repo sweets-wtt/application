@@ -1,0 +1,17 @@
+# gitleaks - https://github.com/gitleaks/gitleaks
+
+# 扩展
+[extend]
+# 使用默认
+useDefault = true
+
+# 管道执行
+[[rules]]
+# 标识
+id = "pipe-to-shell"
+# 描述
+description = "检测 curl/wget 管道执行远程脚本"
+# 正则
+regex = '(?i)(curl|wget)[^|\n]*\|\s*(sudo\s+)?(sh|bash|zsh|ksh|dash)(\s|$)'
+# 关键词
+keywords = ["curl", "wget"]

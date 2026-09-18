@@ -17,6 +17,7 @@ setup:
 # 代码检查
 lint:
     typos
+    gitleaks git --config .gitleaks.toml .
 
 # 钩子安装
 hooks:
