@@ -14,6 +14,8 @@ flowchart TD
     mise -->|执行环境| just["just（任务运行）"]
     mise -->|执行环境| typos["typos（拼写检查）"]
     mise -->|执行环境| cocogitto["cocogitto（提交检查）"]
+    mise -->|执行环境| lefthook["lefthook（钩子管理）"]
+    lefthook -->|调用| cocogitto["cocogitto（提交检查）"]
 ```
 
 ## 结构
@@ -26,6 +28,7 @@ flowchart TD
 ├── .typos.toml       # 拼写检查
 ├── cog.toml          # 提交检查
 ├── justfile          # 任务运行
+├── lefthook.yaml     # 钩子管理
 ├── mise.lock         # 工具版本
 ├── mise.toml         # 开发环境
 └── README.md         # 项目说明

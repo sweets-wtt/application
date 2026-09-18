@@ -17,3 +17,7 @@ setup:
 # 代码检查
 lint:
     typos
+
+# 钩子安装
+hooks:
+    lefthook install
