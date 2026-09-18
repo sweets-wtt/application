@@ -77,6 +77,16 @@ services:
       CACHE__URL: "valkey://app:${VALKEY_APP_PASSWORD:?}@valkey:6379/0"
       # 允许的实时 Origin
       REALTIME__ORIGINS: "${REALTIME_ORIGINS:-[]}"
+      # OTLP 端点
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://collector:4318"
+      # 追踪端点
+      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: "http://collector:4318/v1/traces"
+      # 指标端点
+      OTEL_EXPORTER_OTLP_METRICS_ENDPOINT: "http://collector:4318/v1/metrics"
+      # 服务名
+      OTEL_SERVICE_NAME: "api"
+      # 追踪导出器
+      OTEL_TRACES_EXPORTER: "otlp"
     # 健康检查
     healthcheck:
       # 就绪探测
@@ -116,6 +126,10 @@ services:
       valkey:
         # 就绪条件
         condition: "service_healthy"
+      # Collector
+      collector:
+        # 就绪条件
+        condition: "service_started"
 
   # Worker
   worker:
@@ -139,6 +153,8 @@ services:
       STORAGE__BUCKET: "${GARAGE_DEFAULT_BUCKET:?}"
       # 缓存连接
       CACHE__URL: "valkey://app:${VALKEY_APP_PASSWORD:?}@valkey:6379/0"
+      # 允许的实时 Origin
+      REALTIME__ORIGINS: "${REALTIME_ORIGINS:-[]}"
     # 健康检查
     healthcheck:
       # 就绪探测
@@ -183,6 +199,10 @@ services:
     image: "${WEB_IMAGE:?}"
     # 重启策略
     restart: unless-stopped
+    # 环境变量
+    environment:
+      # 遥测端点
+      VITE_TELEMETRY_URL: "${TELEMETRY_URL:-}"
     # 健康检查
     healthcheck:
       # 就绪探测

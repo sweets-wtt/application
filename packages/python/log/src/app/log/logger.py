@@ -111,6 +111,9 @@ def _otlp_processor(
 def _otlp_serialize(records: list[str]) -> str:
     """组装 OTLP JSON 编码请求体"""
     attributes: list[dict[str, Any]] = []
+    service = os.environ.get("OTEL_SERVICE_NAME")
+    if service:
+        attributes.append({"key": "service.name", "value": {"stringValue": service}})
     if _otlp_release:
         attributes.append({"key": "release", "value": {"stringValue": _otlp_release}})
     payload = {

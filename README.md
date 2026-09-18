@@ -80,6 +80,7 @@
 | [SQLAlchemy](https://docs.sqlalchemy.org/) | ORM |
 | [asyncpg](https://magicstack.github.io/asyncpg/) | PostgreSQL 驱动 |
 | [Alembic](https://alembic.sqlalchemy.org/) | 数据库迁移 |
+| [OpenTelemetry](https://opentelemetry.io/docs/languages/python/) | 遥测 |
 
 ### Web
 
