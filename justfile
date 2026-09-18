@@ -1,0 +1,15 @@
+# justfile - https://github.com/casey/just
+
+# 不稳定特性
+set unstable
+
+# shell
+set shell := ["bash", "-cu"]
+
+# 默认任务
+default:
+    @just --list
+
+# 环境初始化
+setup:
+    mise install --locked
