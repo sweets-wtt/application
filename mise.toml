@@ -1,0 +1,17 @@
+# mise - https://mise.jdx.dev/
+
+# 设置
+[settings]
+# 锁文件
+lockfile = true
+# 严格锁定
+locked = true
+# 自动安装
+auto_install = false
+# 缺失自动安装
+not_found_auto_install = false
+# 系统回退
+not_found_system_fallback = false
+
+# 工具（命令： `mise use <tool>@<version>` ）
+[tools]
