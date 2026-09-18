@@ -13,3 +13,7 @@ default:
 # 环境初始化
 setup:
     mise install --locked
+
+# 代码检查
+lint:
+    typos

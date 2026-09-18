@@ -17,3 +17,5 @@ not_found_system_fallback = false
 [tools]
 # 任务运行 - https://github.com/casey/just
 "aqua:casey/just" = "1.58.0"
+# 拼写检查 - https://github.com/crate-ci/typos
+"aqua:crate-ci/typos" = "1.50.1"
