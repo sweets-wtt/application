@@ -25,6 +25,7 @@ flowchart TD
     mise -->|执行环境| trivy["trivy（漏洞扫描）"]
     just -->|调用| trivy["trivy（漏洞扫描）"]
     mise -->|执行环境| actionlint["actionlint（语法检查）"]
+    mise -->|执行环境| zizmor["zizmor（工作流审计）"]
 ```
 
 ## 结构
@@ -43,5 +44,6 @@ flowchart TD
 ├── mise.lock         # 工具版本
 ├── mise.toml         # 开发环境
 ├── renovate.json5    # 依赖更新
+├── zizmor.yaml       # 安全审计
 └── README.md         # 项目说明
 ```

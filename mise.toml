@@ -33,3 +33,5 @@ not_found_system_fallback = false
 "aqua:aquasecurity/trivy" = "0.74.0"
 # 语法检查 - https://rhysd.github.io/actionlint/
 "aqua:rhysd/actionlint" = "1.7.12"
+# 工作流审计 - https://docs.zizmor.sh/
+"aqua:zizmorcore/zizmor" = "1.30.0"
