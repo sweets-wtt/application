@@ -24,6 +24,7 @@ flowchart TD
     sops -->|依赖| age["age（加密工具）"]
     mise -->|执行环境| trivy["trivy（漏洞扫描）"]
     just -->|调用| trivy["trivy（漏洞扫描）"]
+    mise -->|执行环境| actionlint["actionlint（语法检查）"]
 ```
 
 ## 结构
