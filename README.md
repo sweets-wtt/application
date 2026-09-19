@@ -26,24 +26,31 @@ flowchart TD
     just -->|调用| trivy["trivy（漏洞扫描）"]
     mise -->|执行环境| actionlint["actionlint（语法检查）"]
     mise -->|执行环境| zizmor["zizmor（工作流审计）"]
+    just -->|调用| actionlint["actionlint（语法检查）"]
+    just -->|调用| zizmor["zizmor（工作流审计）"]
 ```
 
 ## 结构
 
 ```text
 .
-├── .editorconfig     # 代码风格
-├── .gitattributes    # Git 属性
-├── .gitignore        # Git 忽略
-├── .gitleaks.toml    # 密钥扫描
-├── .sops.yaml        # 密钥加密
-├── .typos.toml       # 拼写检查
-├── cog.toml          # 提交检查
-├── justfile          # 任务运行
-├── lefthook.yaml     # 钩子管理
-├── mise.lock         # 工具版本
-├── mise.toml         # 开发环境
-├── renovate.json5    # 依赖更新
-├── zizmor.yaml       # 安全审计
-└── README.md         # 项目说明
+├── .github                          # 持续集成
+│   └── workflows                    # 工作流
+│       ├── ci.yaml                  # 持续集成
+│       └── release.yaml             # 版本发行
+├── .editorconfig                    # 代码风格
+├── .gitattributes                   # Git 属性
+├── .gitignore                       # Git 忽略
+├── .gitleaks.toml                   # 密钥扫描
+├── .release-please-manifest.json    # 版本清单
+├── .sops.yaml                       # 密钥加密
+├── .typos.toml                      # 拼写检查
+├── cog.toml                         # 提交检查
+├── justfile                         # 任务运行
+├── lefthook.yaml                    # 钩子管理
+├── mise.lock                        # 工具版本
+├── mise.toml                        # 开发环境
+├── renovate.json5                   # 依赖更新
+├── zizmor.yaml                      # 安全审计
+└── README.md                        # 项目说明
 ```

@@ -18,6 +18,8 @@ setup:
 lint:
     typos
     gitleaks git --config .gitleaks.toml .
+    actionlint
+    zizmor .github/workflows
 
 # 钩子安装
 hooks:
@@ -26,3 +28,8 @@ hooks:
 # 漏洞扫描
 scan:
     trivy fs --scanners vuln --severity HIGH,CRITICAL --exit-code 1 .
+
+# 持续集成
+ci:
+    just lint
+    just scan
