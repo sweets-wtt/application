@@ -40,6 +40,10 @@ jobs:
         with:
           # 版本
           version: "2026.8.14"
+      # 环境准备
+      - run: mise exec -- just setup
+      # 环境变量
+      - run: sed 's/=$/=placeholder/' infra/.env.example > infra/.env
       # 运行命令
       - run: mise exec -- just ci
 

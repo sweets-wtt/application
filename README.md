@@ -3,7 +3,7 @@
 ## 概览
 
 - 用途：框架
-- 状态：契约
+- 状态：服务
 
 ## 架构
 
@@ -22,11 +22,14 @@ application（根项目）
 │   │   ├── 漏洞扫描：trivy
 │   │   ├── 语法检查：actionlint → github
 │   │   └── 工作流审计：zizmor → github
-│   └── 契约
-│       ├── 契约检查：vacuum → openapi
-│       └── 兼容检查：oasdiff → openapi
+│   ├── 契约
+│   │   ├── 契约检查：vacuum → openapi
+│   │   └── 兼容检查：oasdiff → openapi
+│   └── 测试
+│       └── HTTP 测试：hurl → docker
 ├── renovate（依赖更新）→ mise
-└── github（GitHub）
+├── github（GitHub）
+└── docker（容器平台）
 ```
 
 ## 结构
