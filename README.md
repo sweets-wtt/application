@@ -3,7 +3,7 @@
 ## 概览
 
 - 用途：框架
-- 状态：工具链
+- 状态：契约
 
 ## 架构
 
@@ -17,11 +17,14 @@ application（根项目）
 │   ├── 提交
 │   │   ├── 提交检查：cocogitto
 │   │   └── 钩子管理：lefthook → cocogitto
-│   └── 安全
-│       ├── 密钥扫描：gitleaks
-│       ├── 漏洞扫描：trivy
-│       ├── 语法检查：actionlint → github
-│       └── 工作流审计：zizmor → github
+│   ├── 安全
+│   │   ├── 密钥扫描：gitleaks
+│   │   ├── 漏洞扫描：trivy
+│   │   ├── 语法检查：actionlint → github
+│   │   └── 工作流审计：zizmor → github
+│   └── 契约
+│       ├── 契约检查：vacuum → openapi
+│       └── 兼容检查：oasdiff → openapi
 ├── renovate（依赖更新）→ mise
 └── github（GitHub）
 ```
@@ -34,6 +37,10 @@ application（根项目）
 │   └── workflows                    # 工作流
 │       ├── ci.yaml                  # 持续集成
 │       └── release.yaml             # 版本发行
+├── contracts                        # 契约
+│   └── http                         # HTTP
+│       ├── openapi.yaml             # 接口规范
+│       └── vacuum.yaml              # 契约检查
 ├── .editorconfig                    # 代码风格
 ├── .gitattributes                   # Git 属性
 ├── .gitignore                       # Git 忽略

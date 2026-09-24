@@ -53,3 +53,8 @@ ci:
     just lint
     # 安全扫描
     just audit
+
+# 契约
+contracts:
+    # 校验契约
+    vacuum lint --ruleset contracts/http/vacuum.yaml contracts/http/openapi.yaml
