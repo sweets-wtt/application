@@ -21,3 +21,7 @@ not_found_system_fallback = false
 "aqua:dprint/dprint" = "0.57.4"
 # 拼写检查 - `https://github.com/crate-ci/typos`
 "aqua:crate-ci/typos" = "1.50.1"
+# 提交检查 - `https://docs.cocogitto.io/`
+"aqua:cocogitto/cocogitto" = "7.0.0"
+# 钩子管理 - `https://lefthook.dev/`
+"aqua:evilmartians/lefthook" = "2.1.14"

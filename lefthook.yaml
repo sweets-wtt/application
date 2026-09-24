@@ -1,0 +1,19 @@
+# lefthook - `https://lefthook.dev/`
+
+# 提交前
+pre-commit:
+  # 命令
+  commands:
+    # 代码检查
+    lint:
+      # 运行命令
+      run: mise exec -- just lint
+
+# 提交信息
+commit-msg:
+  # 命令
+  commands:
+    # 提交检查
+    cog:
+      # 运行命令
+      run: mise exec -- cog verify --file {1}

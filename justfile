@@ -30,3 +30,8 @@ lint:
 format:
     # 格式化代码
     dprint fmt
+
+# 钩子
+hooks:
+    # 安装钩子
+    lefthook install
