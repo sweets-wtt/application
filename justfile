@@ -27,6 +27,10 @@ lint:
     typos
     # 密钥扫描
     gitleaks git --config .gitleaks.toml .
+    # 工作流语法
+    actionlint
+    # 工作流审计
+    zizmor .github/workflows
 
 # 格式化
 format:
@@ -42,3 +46,10 @@ hooks:
 audit:
     # 依赖漏洞
     trivy fs --scanners vuln --severity HIGH,CRITICAL --exit-code 1 .
+
+# 集成
+ci:
+    # 代码检查
+    just lint
+    # 安全扫描
+    just audit

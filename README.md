@@ -19,25 +19,34 @@ application（根项目）
 │   │   └── 钩子管理：lefthook → cocogitto
 │   └── 安全
 │       ├── 密钥扫描：gitleaks
-│       └── 漏洞扫描：trivy
-└── renovate（依赖更新）→ mise
+│       ├── 漏洞扫描：trivy
+│       ├── 语法检查：actionlint → github
+│       └── 工作流审计：zizmor → github
+├── renovate（依赖更新）→ mise
+└── github（GitHub）
 ```
 
 ## 结构
 
 ```text
 .
-├── .editorconfig     # 代码风格
-├── .gitattributes    # Git 属性
-├── .gitignore        # Git 忽略
-├── .gitleaks.toml    # 密钥扫描
-├── .typos.toml       # 拼写检查
-├── cog.toml          # 提交检查
-├── dprint.jsonc      # 代码格式
-├── justfile          # 任务运行
-├── lefthook.yaml     # 钩子管理
-├── mise.lock         # 工具版本
-├── mise.toml         # 开发环境
-├── renovate.jsonc    # 依赖更新
-└── README.md         # 项目说明
+├── .github                          # 持续集成
+│   └── workflows                    # 工作流
+│       ├── ci.yaml                  # 持续集成
+│       └── release.yaml             # 版本发行
+├── .editorconfig                    # 代码风格
+├── .gitattributes                   # Git 属性
+├── .gitignore                       # Git 忽略
+├── .gitleaks.toml                   # 密钥扫描
+├── .release-please-manifest.json    # 版本清单
+├── .typos.toml                      # 拼写检查
+├── cog.toml                         # 提交检查
+├── dprint.jsonc                     # 代码格式
+├── justfile                         # 任务运行
+├── lefthook.yaml                    # 钩子管理
+├── mise.lock                        # 工具版本
+├── mise.toml                        # 开发环境
+├── renovate.jsonc                   # 依赖更新
+├── zizmor.yaml                      # 安全审计
+└── README.md                        # 项目说明
 ```

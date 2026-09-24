@@ -1,0 +1,65 @@
+# GitHub Actions 持续集成 - https://docs.github.com/actions
+
+# 工作流名称
+name: ci
+
+# 触发事件
+on:
+  # 拉取请求
+  pull_request:
+  # 推送
+  push:
+    # 分支
+    branches:
+      - main
+
+# 令牌权限
+permissions:
+  # 内容
+  contents: read
+
+# 作业
+jobs:
+  # 持续集成
+  ci:
+    # 运行环境
+    runs-on: ubuntu-latest
+    # 步骤
+    steps:
+      # 检出仓库
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        # 动作输入
+        with:
+          # 检出深度
+          fetch-depth: 0
+          # 凭据保留
+          persist-credentials: false
+      # 环境管理
+      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
+        # 动作输入
+        with:
+          # 版本
+          version: "2026.8.14"
+      # 运行命令
+      - run: mise exec -- just ci
+
+  # 依赖更新配置校验
+  renovate:
+    # 运行环境
+    runs-on: ubuntu-latest
+    # 步骤
+    steps:
+      # 检出仓库
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        # 动作输入
+        with:
+          # 凭据保留
+          persist-credentials: false
+      # 运行时
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      # 配置校验
+      - uses: suzuki-shunsuke/github-action-renovate-config-validator@ee9f69e1f683ed0d08225086482b34fc9abe9300 # v2.1.0
+        # 动作输入
+        with:
+          # 配置路径
+          config_file_path: renovate.jsonc
