@@ -30,6 +30,10 @@ application（根项目）
 ├── renovate（依赖更新）→ mise
 ├── github（GitHub）
 └── docker（容器平台）
+    ├── 数据
+    │   └── postgresql（关系数据库）
+    └── 备份
+        └── restic（归档备份）→ postgresql
 ```
 
 ## 结构
@@ -44,6 +48,10 @@ application（根项目）
 │   └── http                         # HTTP
 │       ├── openapi.yaml             # 接口规范
 │       └── vacuum.yaml              # 契约检查
+├── infra                            # 服务编排
+│   ├── postgresql                   # PostgreSQL
+│   ├── .env.example                 # 环境变量
+│   └── compose.yaml                 # 容器编排
 ├── .editorconfig                    # 代码风格
 ├── .gitattributes                   # Git 属性
 ├── .gitignore                       # Git 忽略
