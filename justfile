@@ -25,6 +25,8 @@ lint:
     dprint check
     # 拼写检查
     typos
+    # 密钥扫描
+    gitleaks git --config .gitleaks.toml .
 
 # 格式化
 format:
