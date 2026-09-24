@@ -18,3 +18,13 @@ default:
 setup:
     # 安装工具
     mise install --locked
+
+# 检查
+lint:
+    # 检查格式
+    dprint check
+
+# 格式化
+format:
+    # 格式化代码
+    dprint fmt
