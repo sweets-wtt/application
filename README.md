@@ -10,6 +10,7 @@
 ```text
 application（根项目）
 └── mise（环境管理）
+    └── 任务运行：just
 ```
 
 ## 结构
@@ -19,6 +20,8 @@ application（根项目）
 ├── .editorconfig     # 代码风格
 ├── .gitattributes    # Git 属性
 ├── .gitignore        # Git 忽略
+├── justfile          # 任务运行
+├── mise.lock         # 工具版本
 ├── mise.toml         # 开发环境
 └── README.md         # 项目说明
 ```

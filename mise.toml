@@ -15,3 +15,5 @@ not_found_system_fallback = false
 
 # 工具（命令： `mise use <tool>@<version>` ）
 [tools]
+# 任务运行 - `https://github.com/casey/just`
+"aqua:casey/just" = "1.58.0"
