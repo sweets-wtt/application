@@ -12,7 +12,8 @@ application（根项目）
 └── mise（环境管理）
     ├── 任务运行：just
     └── 代码
-        └── 代码格式：dprint
+        ├── 代码格式：dprint
+        └── 拼写检查：typos
 ```
 
 ## 结构
@@ -22,6 +23,7 @@ application（根项目）
 ├── .editorconfig     # 代码风格
 ├── .gitattributes    # Git 属性
 ├── .gitignore        # Git 忽略
+├── .typos.toml       # 拼写检查
 ├── dprint.jsonc      # 代码格式
 ├── justfile          # 任务运行
 ├── mise.lock         # 工具版本

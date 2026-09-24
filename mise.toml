@@ -19,3 +19,5 @@ not_found_system_fallback = false
 "aqua:casey/just" = "1.58.0"
 # 格式化 - `https://dprint.dev/`
 "aqua:dprint/dprint" = "0.57.4"
+# 拼写检查 - `https://github.com/crate-ci/typos`
+"aqua:crate-ci/typos" = "1.50.1"

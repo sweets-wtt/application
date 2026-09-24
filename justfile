@@ -23,6 +23,8 @@ setup:
 lint:
     # 检查格式
     dprint check
+    # 拼写检查
+    typos
 
 # 格式化
 format:
