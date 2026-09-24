@@ -9,17 +9,18 @@
 
 ```text
 application（根项目）
-└── mise（环境管理）
-    ├── 任务运行：just
-    ├── 代码
-    │   ├── 代码格式：dprint
-    │   └── 拼写检查：typos
-    ├── 提交
-    │   ├── 提交检查：cocogitto
-    │   └── 钩子管理：lefthook → cocogitto
-    └── 安全
-        ├── 密钥扫描：gitleaks
-        └── 漏洞扫描：trivy
+├── mise（环境管理）
+│   ├── 任务运行：just
+│   ├── 代码
+│   │   ├── 代码格式：dprint
+│   │   └── 拼写检查：typos
+│   ├── 提交
+│   │   ├── 提交检查：cocogitto
+│   │   └── 钩子管理：lefthook → cocogitto
+│   └── 安全
+│       ├── 密钥扫描：gitleaks
+│       └── 漏洞扫描：trivy
+└── renovate（依赖更新）→ mise
 ```
 
 ## 结构
@@ -37,5 +38,6 @@ application（根项目）
 ├── lefthook.yaml     # 钩子管理
 ├── mise.lock         # 工具版本
 ├── mise.toml         # 开发环境
+├── renovate.jsonc    # 依赖更新
 └── README.md         # 项目说明
 ```
