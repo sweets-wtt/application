@@ -37,3 +37,8 @@ format:
 hooks:
     # 安装钩子
     lefthook install
+
+# 审计
+audit:
+    # 依赖漏洞
+    trivy fs --scanners vuln --severity HIGH,CRITICAL --exit-code 1 .

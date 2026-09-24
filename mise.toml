@@ -27,3 +27,5 @@ not_found_system_fallback = false
 "aqua:evilmartians/lefthook" = "2.1.14"
 # 密钥扫描 - `https://github.com/gitleaks/gitleaks`
 "aqua:gitleaks/gitleaks" = "8.30.1"
+# 漏洞扫描 - `https://trivy.dev/`
+"aqua:aquasecurity/trivy" = "0.74.0"

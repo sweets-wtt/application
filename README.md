@@ -18,7 +18,8 @@ application（根项目）
     │   ├── 提交检查：cocogitto
     │   └── 钩子管理：lefthook → cocogitto
     └── 安全
-        └── 密钥扫描：gitleaks
+        ├── 密钥扫描：gitleaks
+        └── 漏洞扫描：trivy
 ```
 
 ## 结构
