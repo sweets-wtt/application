@@ -56,13 +56,19 @@ application（根项目）
 │   └── 备份
 │       └── restic（归档备份）→ postgresql / garage
 └── packages（共享包）
-    └── python
-        ├── cache（缓存）→ valkey
-        ├── contracts（契约模型）→ pydantic
-        ├── db（数据库会话）→ sqlalchemy / asyncpg
-        ├── log（结构化日志）→ structlog
-        ├── storage（对象存储）→ aiobotocore
-        └── workflow（工作流）→ hatchet-sdk
+    ├── python
+    │   ├── cache（缓存）→ valkey
+    │   ├── contracts（契约模型）→ pydantic
+    │   ├── db（数据库会话）→ sqlalchemy / asyncpg
+    │   ├── log（结构化日志）→ structlog
+    │   ├── storage（对象存储）→ aiobotocore
+    │   └── workflow（工作流）→ hatchet-sdk
+    └── typescript
+        ├── auth（会话与令牌）→ state / zod
+        ├── contracts（契约客户端）→ vue-query / msw / zod
+        ├── log（结构化日志）→ consola
+        ├── realtime（实时）→ contracts / zod
+        └── state（持久化状态）→ zod
 ```
 
 ## 结构
@@ -89,13 +95,19 @@ application（根项目）
 │   ├── .env.example                 # 环境变量
 │   └── compose.yaml                 # 容器编排
 ├── packages                         # 共享包
-│   └── python                       # Python
-│       ├── cache                    # 缓存
-│       ├── contracts                # 契约模型
-│       ├── db                       # 数据库会话
+│   ├── python                       # Python
+│   │   ├── cache                    # 缓存
+│   │   ├── contracts                # 契约模型
+│   │   ├── db                       # 数据库会话
+│   │   ├── log                      # 结构化日志
+│   │   ├── storage                  # 对象存储
+│   │   └── workflow                 # 工作流
+│   └── typescript                   # TypeScript
+│       ├── auth                     # 会话与令牌
+│       ├── contracts                # 契约客户端
 │       ├── log                      # 结构化日志
-│       ├── storage                  # 对象存储
-│       └── workflow                 # 工作流
+│       ├── realtime                 # 实时
+│       └── state                    # 持久化状态
 ├── tests                            # 测试
 │   └── docker                       # 容器
 │       ├── observe.hurl             # 观测验收
