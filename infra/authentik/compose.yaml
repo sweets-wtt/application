@@ -1,0 +1,210 @@
+# Docker Compose - `https://docs.docker.com/compose/`
+
+# 服务
+services:
+  # authentik 服务端
+  authentik-server:
+    # 镜像
+    image: "ghcr.io/goauthentik/server@sha256:ab9b4e8cc4ab3f8d1198d2db6aeea66bafea1963b3f2843589e0d163f97d9849"
+    # 重启策略
+    restart: unless-stopped
+    # 启动命令
+    command: "server"
+    # 共享内存
+    shm_size: "512mb"
+    # 端口
+    ports:
+      # 验收回环
+      - "127.0.0.1:9000:9000"
+    # 环境变量
+    environment:
+      # 实例密钥
+      AUTHENTIK_SECRET_KEY: "${AUTHENTIK_SECRET_KEY:?}"
+      # PostgreSQL 主机
+      AUTHENTIK_POSTGRESQL__HOST: "postgresql"
+      # PostgreSQL 库名
+      AUTHENTIK_POSTGRESQL__NAME: "authentik"
+      # PostgreSQL 用户
+      AUTHENTIK_POSTGRESQL__USER: "postgres"
+      # PostgreSQL 口令
+      AUTHENTIK_POSTGRESQL__PASSWORD: "${POSTGRES_PASSWORD:?}"
+      # PostgreSQL SSL 模式
+      AUTHENTIK_POSTGRESQL__SSLMODE: "disable"
+      # 引导管理员口令
+      AUTHENTIK_BOOTSTRAP_PASSWORD: "${AUTHENTIK_BOOTSTRAP_PASSWORD:?}"
+      # 引导 API 令牌
+      AUTHENTIK_BOOTSTRAP_TOKEN: "${AUTHENTIK_BOOTSTRAP_TOKEN:?}"
+    # 数据卷
+    volumes:
+      # 数据目录
+      - "authentik-data:/data"
+    # 健康检查
+    healthcheck:
+      # 就绪探测
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:9000/-/health/ready/')\""]
+      # 间隔
+      interval: "10s"
+      # 超时
+      timeout: "5s"
+      # 重试次数
+      retries: 5
+      # 启动宽限期
+      start_period: "2m"
+    # 网络
+    networks:
+      # 入口网
+      - "edge"
+      # 应用内部网
+      - "app-internal"
+      # 数据内部网
+      - "data-internal"
+      # 管理网
+      - "management"
+    # 标签
+    labels:
+      # 启用路由
+      traefik.enable: "true"
+      # 界面路由
+      traefik.http.routers.authentik.rule: "Host(`${AUTHENTIK_DOMAIN}`)"
+      traefik.http.routers.authentik.service: "authentik"
+      traefik.http.routers.authentik.tls: "true"
+      traefik.http.routers.authentik.tls.certresolver: "le"
+      # Outpost 路由
+      traefik.http.routers.authentik-outpost.rule: "Host(`${AUTHENTIK_DOMAIN}`) && PathPrefix(`/outpost.goauthentik.io/`)"
+      traefik.http.routers.authentik-outpost.priority: "15"
+      traefik.http.routers.authentik-outpost.service: "authentik-outpost"
+      traefik.http.routers.authentik-outpost.tls: "true"
+      traefik.http.routers.authentik-outpost.tls.certresolver: "le"
+      # 服务端口
+      traefik.http.services.authentik.loadbalancer.server.port: "9000"
+      traefik.http.services.authentik-outpost.loadbalancer.server.port: "9000"
+    # 依赖
+    depends_on:
+      # PostgreSQL
+      postgresql:
+        # 条件
+        condition: "service_healthy"
+
+  # authentik 工作进程
+  authentik-worker:
+    # 镜像
+    image: "ghcr.io/goauthentik/server@sha256:ab9b4e8cc4ab3f8d1198d2db6aeea66bafea1963b3f2843589e0d163f97d9849"
+    # 重启策略
+    restart: unless-stopped
+    # 启动命令
+    command: "worker"
+    # 共享内存
+    shm_size: "512mb"
+    # 环境变量
+    environment:
+      # 实例密钥
+      AUTHENTIK_SECRET_KEY: "${AUTHENTIK_SECRET_KEY:?}"
+      # PostgreSQL 主机
+      AUTHENTIK_POSTGRESQL__HOST: "postgresql"
+      # PostgreSQL 库名
+      AUTHENTIK_POSTGRESQL__NAME: "authentik"
+      # PostgreSQL 用户
+      AUTHENTIK_POSTGRESQL__USER: "postgres"
+      # PostgreSQL 口令
+      AUTHENTIK_POSTGRESQL__PASSWORD: "${POSTGRES_PASSWORD:?}"
+      # PostgreSQL SSL 模式
+      AUTHENTIK_POSTGRESQL__SSLMODE: "disable"
+      # 引导管理员口令
+      AUTHENTIK_BOOTSTRAP_PASSWORD: "${AUTHENTIK_BOOTSTRAP_PASSWORD:?}"
+      # 引导 API 令牌
+      AUTHENTIK_BOOTSTRAP_TOKEN: "${AUTHENTIK_BOOTSTRAP_TOKEN:?}"
+    # 数据卷
+    volumes:
+      # 数据目录
+      - "authentik-data:/data"
+    # 健康检查
+    healthcheck:
+      # 就绪探测
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:9000/-/health/ready/')\""]
+      # 间隔
+      interval: "10s"
+      # 超时
+      timeout: "5s"
+      # 重试次数
+      retries: 5
+      # 启动宽限期
+      start_period: "2m"
+    # 网络
+    networks:
+      # 数据内部网
+      - "data-internal"
+    # 依赖
+    depends_on:
+      # PostgreSQL
+      postgresql:
+        # 条件
+        condition: "service_healthy"
+
+  # OIDC 验收
+  oidc-check:
+    # 镜像
+    image: "curlimages/curl@sha256:463eaf6072688fe96ac64fa623fe73e1dbe25d8ad6c34404a669ad3ce1f104b6"
+    # 重启策略
+    restart: unless-stopped
+    # 配置档
+    profiles: ["check"]
+    # 环境变量
+    environment:
+      # 引导 API 令牌
+      AUTHENTIK_BOOTSTRAP_TOKEN: "${AUTHENTIK_BOOTSTRAP_TOKEN:?}"
+      # 仪表板域名
+      TRAEFIK_DOMAIN: "${TRAEFIK_DOMAIN:-traefik.localhost}"
+      # 对外域名
+      AUTHENTIK_DOMAIN: "${AUTHENTIK_DOMAIN:-authentik.localhost}"
+    # 入口
+    entrypoint: ["sh", "-c"]
+    # 启动命令（幂等创建验收应用）
+    command:
+      - |
+        # 等待 authentik 就绪
+        until curl -sf http://authentik-server:9000/-/health/ready/ >/dev/null; do sleep 2; done
+
+        # 辅助函数
+        api()  { curl -sf -H "$$AUTH" "$$AK/$$1"; }
+        pk()   { api "$$1" | sed -n 's/.*"pk":\([^,}]*\).*/\1/p' | tr -d '"'; }
+        post() { api "$$1" | grep -q "\"pk\"" || \
+                   curl -sf -H "$$AUTH" -X POST -H "Content-Type: application/json" \
+                     -d "$$2" "$$AK/$$1"; }
+
+        # 配置
+        AUTH="Authorization: Bearer $$AUTHENTIK_BOOTSTRAP_TOKEN"
+        AK="http://authentik-server:9000/api/v3"
+
+        # 查找资源
+        FLOW=$$(pk "flows/instances/?slug=default-provider-authorization-implicit-consent")
+        INV=$$(pk "flows/instances/?slug=default-invalidation-flow")
+        KEY=$$(pk "crypto/certificatekeypairs/?name__iexact=authentik%20Self-signed%20Certificate")
+
+        # OIDC 提供者 + 应用
+        post "providers/oauth2/" '{"name":"check","authorization_flow":"'"$$FLOW"'","invalidation_flow":"'"$$INV"',"signing_key":"'"$$KEY"',"redirect_uris":[]}'
+        PROV=$$(pk "providers/oauth2/?name=check")
+        post "core/applications/" '{"name":"check","slug":"check","provider":'"$$PROV"'}'
+
+        # 代理提供者 + 应用
+        post "providers/proxy/" '{"name":"traefik","authorization_flow":"'"$$FLOW"'","invalidation_flow":"'"$$INV"',"external_host":"https://'"$$TRAEFIK_DOMAIN"'","internal_host":"http://authentik-server","mode":"forward_single"}'
+        PROXP=$$(pk "providers/proxy/?name=traefik")
+        post "core/applications/" '{"name":"traefik","slug":"traefik","provider":'"$$PROXP"'}'
+
+        # 外勤实例补丁
+        OUTP=$$(pk "outposts/instances/")
+        api "outposts/instances/$$OUTP/" | grep -q "traefik" || \
+        curl -sf -H "$$AUTH" -X PATCH -H "Content-Type: application/json" \
+          -d '{"providers":['"$$PROXP"'],"config":{"authentik_host":"https://'"$$AUTHENTIK_DOMAIN"'"}}' \
+          "$$AK/outposts/instances/$$OUTP/"
+
+        exec sleep infinity
+    # 网络
+    networks:
+      # 应用内部网
+      - "app-internal"
+    # 依赖
+    depends_on:
+      # authentik 服务端
+      authentik-server:
+        # 条件
+        condition: "service_healthy"

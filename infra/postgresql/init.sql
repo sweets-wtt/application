@@ -11,3 +11,6 @@ CREATE DATABASE app OWNER app;
 
 -- Hatchet 库
 CREATE DATABASE hatchet;
+
+-- authentik 库
+CREATE DATABASE authentik;

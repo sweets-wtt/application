@@ -85,3 +85,5 @@ down:
 verify:
     # 启动服务
     just up
+    # 执行测试
+    hurl --test --retry 15 --retry-interval 2000 --variables-file infra/.env tests/
