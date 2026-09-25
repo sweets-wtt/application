@@ -6,6 +6,16 @@ services:
     image: "${SERVER_IMAGE:?}"
     # 重启策略
     restart: unless-stopped
+    # 环境
+    environment:
+      # 数据源名称
+      APP_DATABASE__URL: "postgresql+asyncpg://app:${POSTGRES_APP_PASSWORD}@pgbouncer:5432/app"
+    # 依赖
+    depends_on:
+      # PostgreSQL
+      postgresql:
+        # 条件
+        condition: "service_healthy"
     # 健康检查
     healthcheck:
       # 就绪探测
@@ -34,6 +44,16 @@ services:
     image: "${SERVER_IMAGE:?}"
     # 重启策略
     restart: unless-stopped
+    # 环境
+    environment:
+      # 数据源名称
+      APP_DATABASE__URL: "postgresql+asyncpg://app:${POSTGRES_APP_PASSWORD}@pgbouncer:5432/app"
+    # 依赖
+    depends_on:
+      # PostgreSQL
+      postgresql:
+        # 条件
+        condition: "service_healthy"
     # 健康检查
     healthcheck:
       # 就绪探测

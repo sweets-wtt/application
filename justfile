@@ -125,3 +125,8 @@ format-workspace:
 test:
     # 运行测试
     uv run --locked --all-packages pytest
+
+# 迁移
+migrate:
+    # 执行迁移
+    uv run alembic upgrade head

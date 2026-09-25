@@ -28,7 +28,10 @@ dev = [
 # Ruff - https://docs.astral.sh/ruff/
 [tool.ruff]
 # 扩展排除
-extend-exclude = ["packages/python/contracts/src/app/contracts/generated"]
+extend-exclude = [
+  "packages/python/contracts/src/app/contracts/generated",
+  "apps/server/alembic",
+]
 
 [tool.ruff.lint]
 # 规则集

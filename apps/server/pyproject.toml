@@ -17,7 +17,9 @@ dependencies = [
   "pydantic-settings>=2.15.0",
   "granian>=2.8.2",
   "schemathesis>=4.26.1",
+  "alembic>=1.13",
   "app-contracts",
+  "app-db",
   "app-log",
 ]
 
@@ -37,5 +39,7 @@ module-name = "server"
 [tool.uv.sources]
 # 契约模型
 app-contracts = { workspace = true }
+# 数据库会话
+app-db = { workspace = true }
 # 结构化日志
 app-log = { workspace = true }
