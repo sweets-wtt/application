@@ -13,6 +13,8 @@ include:
   - "valkey/compose.yaml"
   # Garage
   - "garage/compose.yaml"
+  # Hatchet
+  - "hatchet/compose.yaml"
 
 # 命名网络
 networks:
@@ -41,6 +43,8 @@ volumes:
   garage-data:
   # Garage 仓库
   garage-repo:
+  # Hatchet 配置
+  hatchet-config:
 
 # 密钥
 secrets:
@@ -48,3 +52,15 @@ secrets:
   postgres:
     # 环境变量
     environment: POSTGRES_PASSWORD
+  # Hatchet 主密钥集
+  hatchet-master-keyset:
+    # 环境变量
+    environment: HATCHET_MASTER_KEYSET
+  # Hatchet JWT 公钥集
+  hatchet-jwt-public-keyset:
+    # 环境变量
+    environment: HATCHET_JWT_PUBLIC_KEYSET
+  # Hatchet JWT 私钥集
+  hatchet-jwt-private-keyset:
+    # 环境变量
+    environment: HATCHET_JWT_PRIVATE_KEYSET
