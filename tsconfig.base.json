@@ -1,0 +1,21 @@
+// TypeScript - https://www.typescriptlang.org/tsconfig/
+
+{
+  // 编译选项
+  "compilerOptions": {
+    // 严格
+    "strict": true,
+    // 索引未定义
+    "noUncheckedIndexedAccess": true,
+    // 精确可选
+    "exactOptionalPropertyTypes": true,
+    // 显式重写
+    "noImplicitOverride": true,
+    // switch 贯穿
+    "noFallthroughCasesInSwitch": true,
+    // 原样模块语法
+    "verbatimModuleSyntax": true,
+    // 跳过库检查
+    "skipLibCheck": true
+  }
+}

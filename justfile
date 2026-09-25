@@ -23,6 +23,8 @@ setup:
     mise install --locked
     # Python 依赖
     uv sync --locked --all-packages
+    # Typescript 依赖
+    bun install --frozen-lockfile
 
 # 检查
 lint:
@@ -107,8 +109,14 @@ lint-workspace:
     uv run ruff check .
     # 类型检查
     uv run ty check .
+    # TS 格式校验
+    bunx oxfmt --check --no-error-on-unmatched-pattern '**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs}'
+    # TS 代码检查
+    bunx oxlint --no-error-on-unmatched-pattern
 
 # 工作区格式化
 format-workspace:
     # 格式化代码
     uv run ruff format .
+    # TS 格式化
+    bunx oxfmt --no-error-on-unmatched-pattern '**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs}'
