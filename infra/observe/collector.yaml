@@ -1,0 +1,138 @@
+# OpenTelemetry Collector 配置 - `https://opentelemetry.io/docs/collector/configuration/`
+
+# 扩展
+extensions:
+  # 文件存储
+  file_storage:
+    # 存储目录
+    directory: /var/lib/otelcol
+
+# 接收器
+receivers:
+  # OTLP
+  otlp:
+    # 协议
+    protocols:
+      # gRPC
+      grpc:
+        # 监听地址
+        endpoint: 0.0.0.0:4317
+      # HTTP
+      http:
+        # 监听地址
+        endpoint: 0.0.0.0:4318
+
+  # 主机指标
+  hostmetrics:
+    # 采集间隔
+    collection_interval: 1m
+    # 采集器
+    scrapers:
+      # CPU
+      cpu:
+      # 内存
+      memory:
+      # 负载
+      load:
+      # 网络
+      network:
+      # 磁盘 I/O
+      disk:
+      # 文件系统
+      filesystem:
+      # 交换分区
+      paging:
+
+  # 文件日志
+  filelog:
+    # 容器日志
+    include: [/var/lib/docker/containers/*/*.log]
+    # 存储扩展
+    storage: file_storage
+    # 操作器
+    operators:
+      # JSON 解析
+      - type: json_parser
+      # 正文字段
+      - type: move
+        from: attributes.log
+        to: body
+      # 时间戳
+      - type: time_parser
+        parse_from: attributes.time
+        layout_type: gotime
+        layout: "2006-01-02T15:04:05.999999999Z07:00"
+
+  # PostgreSQL
+  postgresql:
+    # 端点地址
+    endpoint: postgresql:5432
+    # 用户名
+    username: postgres
+    # 口令
+    password: ${env:POSTGRES_PASSWORD}
+    # 采集间隔
+    collection_interval: 1m
+    # 传输安全
+    tls:
+      # 关闭加密
+      insecure: true
+
+# 处理器
+processors:
+  # 脱敏
+  redaction:
+    # 保留全部键
+    allow_all_keys: true
+    # 阻断值
+    blocked_values:
+      # 口令键值对
+      - '(?i)(password|passwd|secret|token|api[_-]?key|authorization|credential)[=:]\s*\S+'
+      # Bearer 令牌
+      - '(?i)bearer\s+[a-z0-9._~+/-]+=*'
+      # AWS 访问密钥
+      - 'AKIA[0-9A-Z]{16}'
+    # 摘要
+    summary: silent
+
+# 导出器
+exporters:
+  # OpenObserve
+  otlphttp/openobserve:
+    # 端点地址
+    endpoint: http://openobserve:5080/api/default
+    # 请求头
+    headers:
+      # 认证
+      Authorization: ${env:OPENOBSERVE_AUTHORIZATION}
+
+# 服务
+service:
+  # 扩展
+  extensions: [file_storage]
+  # 管道
+  pipelines:
+    # 指标
+    metrics:
+      # 接收器
+      receivers: [otlp, hostmetrics, postgresql]
+      # 处理器
+      processors: [redaction]
+      # 导出器
+      exporters: [otlphttp/openobserve]
+    # 日志
+    logs:
+      # 接收器
+      receivers: [otlp, filelog]
+      # 处理器
+      processors: [redaction]
+      # 导出器
+      exporters: [otlphttp/openobserve]
+    # 追踪
+    traces:
+      # 接收器
+      receivers: [otlp]
+      # 处理器
+      processors: [redaction]
+      # 导出器
+      exporters: [otlphttp/openobserve]

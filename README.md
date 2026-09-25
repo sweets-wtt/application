@@ -38,6 +38,9 @@ application（根项目）
     ├── 平台
     │   ├── hatchet（工作流）→ postgresql / pgbouncer
     │   └── authentik（身份认证）→ postgresql
+    ├── 观测
+    │   ├── collector（遥测采集）→ postgresql / openobserve
+    │   └── openobserve（观测存储）→ garage
     └── 备份
         └── restic（归档备份）→ postgresql / garage
 ```
@@ -58,6 +61,7 @@ application（根项目）
 │   ├── authentik                    # authentik
 │   ├── garage                       # Garage
 │   ├── hatchet                      # Hatchet
+│   ├── observe                      # OpenObserve
 │   ├── pgbouncer                    # PgBouncer
 │   ├── postgresql                   # PostgreSQL
 │   ├── valkey                       # Valkey
@@ -65,6 +69,7 @@ application（根项目）
 │   └── compose.yaml                 # 容器编排
 ├── tests                            # 测试
 │   └── docker                       # 容器
+│       ├── observe.hurl             # 观测验收
 │       └── oidc.hurl                # OIDC 验收
 ├── .editorconfig                    # 代码风格
 ├── .gitattributes                   # Git 属性
