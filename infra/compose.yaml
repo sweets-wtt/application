@@ -7,6 +7,8 @@ name: application
 include:
   # PostgreSQL
   - "postgresql/compose.yaml"
+  # PgBouncer
+  - "pgbouncer/compose.yaml"
 
 # 命名网络
 networks:

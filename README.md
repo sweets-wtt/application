@@ -31,7 +31,8 @@ application（根项目）
 ├── github（GitHub）
 └── docker（容器平台）
     ├── 数据
-    │   └── postgresql（关系数据库）
+    │   ├── postgresql（关系数据库）
+    │   └── pgbouncer（连接池）→ postgresql
     └── 备份
         └── restic（归档备份）→ postgresql
 ```
@@ -49,6 +50,7 @@ application（根项目）
 │       ├── openapi.yaml             # 接口规范
 │       └── vacuum.yaml              # 契约检查
 ├── infra                            # 服务编排
+│   ├── pgbouncer                    # PgBouncer
 │   ├── postgresql                   # PostgreSQL
 │   ├── .env.example                 # 环境变量
 │   └── compose.yaml                 # 容器编排
