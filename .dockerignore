@@ -6,6 +6,7 @@
 # 环境
 .env
 .env.*
+.venv/
 
 # 日志
 *.log
@@ -13,3 +14,9 @@
 
 # 缓存
 .cache/
+__pycache__/
+.pytest_cache
+.ruff_cache
+
+# 生成
+.coverage
