@@ -37,7 +37,8 @@ application（根项目）
     │   └── garage（对象存储）
     ├── 平台
     │   ├── hatchet（工作流）→ postgresql / pgbouncer
-    │   └── authentik（身份认证）→ postgresql
+    │   ├── authentik（身份认证）→ postgresql
+    │   └── traefik（入口代理）→ authentik
     ├── 观测
     │   ├── collector（遥测采集）→ postgresql / openobserve
     │   └── openobserve（观测存储）→ garage
@@ -64,13 +65,15 @@ application（根项目）
 │   ├── observe                      # OpenObserve
 │   ├── pgbouncer                    # PgBouncer
 │   ├── postgresql                   # PostgreSQL
+│   ├── traefik                      # Traefik
 │   ├── valkey                       # Valkey
 │   ├── .env.example                 # 环境变量
 │   └── compose.yaml                 # 容器编排
 ├── tests                            # 测试
 │   └── docker                       # 容器
 │       ├── observe.hurl             # 观测验收
-│       └── oidc.hurl                # OIDC 验收
+│       ├── oidc.hurl                # OIDC 验收
+│       └── tls.hurl                 # TLS 验收
 ├── .editorconfig                    # 代码风格
 ├── .gitattributes                   # Git 属性
 ├── .gitignore                       # Git 忽略
