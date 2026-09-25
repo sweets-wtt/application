@@ -17,6 +17,8 @@ include:
   - "hatchet/compose.yaml"
   # authentik
   - "authentik/compose.yaml"
+  # OpenObserve
+  - "observe/compose.yaml"
 
 # 命名网络
 networks:
@@ -49,6 +51,10 @@ volumes:
   hatchet-config:
   # authentik 数据
   authentik-data:
+  # OpenObserve 数据
+  openobserve-data:
+  # Collector 存储
+  collector-storage:
 
 # 密钥
 secrets:

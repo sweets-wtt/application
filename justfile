@@ -87,3 +87,8 @@ verify:
     just up
     # 执行测试
     hurl --test --retry 15 --retry-interval 2000 --variables-file infra/.env tests/
+
+# 观测
+observe:
+    # 观测验收
+    hurl --test --retry 15 --retry-interval 2000 --variables-file infra/.env tests/docker/observe.hurl
