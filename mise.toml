@@ -39,3 +39,7 @@ not_found_system_fallback = false
 "github:tufin/oasdiff" = "v1.31.0"
 # HTTP 测试 - `https://hurl.dev/`
 "aqua:Orange-OpenSource/hurl" = "8.0.1"
+# Python 运行时 - `https://www.python.org/`
+python = "3.12.14"
+# Python 依赖管理 - `https://docs.astral.sh/uv/`
+"aqua:astral-sh/uv" = "0.12.10"

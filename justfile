@@ -21,6 +21,8 @@ default:
 setup:
     # 安装工具
     mise install --locked
+    # Python 依赖
+    uv sync --locked --all-packages
 
 # 检查
 lint:
@@ -36,11 +38,15 @@ lint:
     zizmor .github/workflows
     # 编排校验
     just check
+    # 工作区检查
+    just lint-workspace
 
 # 格式化
 format:
     # 格式化代码
     dprint fmt
+    # 工作区格式化
+    just format-workspace
 
 # 钩子
 hooks:
@@ -92,3 +98,17 @@ verify:
 observe:
     # 观测验收
     hurl --test --retry 15 --retry-interval 2000 --variables-file infra/.env tests/docker/observe.hurl
+
+# 工作区检查
+lint-workspace:
+    # 格式校验
+    uv run ruff format --check .
+    # 静态检查
+    uv run ruff check .
+    # 类型检查
+    uv run ty check .
+
+# 工作区格式化
+format-workspace:
+    # 格式化代码
+    uv run ruff format .

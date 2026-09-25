@@ -5,6 +5,7 @@
 .env.*
 !.env.example
 !.env.*.example
+.venv/
 
 # 日志
 *.log
@@ -12,3 +13,9 @@
 
 # 缓存
 .cache/
+__pycache__/
+.ruff_cache
+.pytest_cache
+
+# 生成
+.coverage
