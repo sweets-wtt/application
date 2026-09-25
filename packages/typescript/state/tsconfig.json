@@ -1,0 +1,19 @@
+// TypeScript - https://www.typescriptlang.org/tsconfig/
+
+{
+  // 继承
+  "extends": "../../../tsconfig.base.json",
+
+  // 编译选项
+  "compilerOptions": {
+    // 复合
+    "composite": true,
+    // 输出目录
+    "outDir": "dist",
+    // 声明目录
+    "declarationDir": "dist"
+  },
+
+  // 包含
+  "include": ["src", "tests"]
+}

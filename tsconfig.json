@@ -11,5 +11,11 @@
   "include": [],
 
   // 引用
-  "references": []
+  "references": [
+    { "path": "./packages/typescript/auth" },
+    { "path": "./packages/typescript/contracts" },
+    { "path": "./packages/typescript/log" },
+    { "path": "./packages/typescript/realtime" },
+    { "path": "./packages/typescript/state" }
+  ]
 }

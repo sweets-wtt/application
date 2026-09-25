@@ -114,7 +114,7 @@ lint-workspace:
     # TS 代码检查
     bunx oxlint --no-error-on-unmatched-pattern
     # TS 类型检查
-    bunx tsc --noEmit
+    bunx tsc -b --noEmit
 
 # 工作区格式化
 format-workspace:
