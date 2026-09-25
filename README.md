@@ -3,7 +3,7 @@
 ## 概览
 
 - 用途：框架
-- 状态：工作区
+- 状态：共享包
 
 ## 架构
 
@@ -40,21 +40,29 @@ application（根项目）
 │               └── 代码格式化：oxfmt → bun
 ├── renovate（依赖更新）→ mise
 ├── github（GitHub）
-└── docker（容器平台）
-    ├── 数据
-    │   ├── postgresql（关系数据库）
-    │   ├── pgbouncer（连接池）→ postgresql
-    │   ├── valkey（缓存）
-    │   └── garage（对象存储）
-    ├── 平台
-    │   ├── hatchet（工作流）→ postgresql / pgbouncer
-    │   ├── authentik（身份认证）→ postgresql
-    │   └── traefik（入口代理）→ authentik
-    ├── 观测
-    │   ├── collector（遥测采集）→ postgresql / openobserve
-    │   └── openobserve（观测存储）→ garage
-    └── 备份
-        └── restic（归档备份）→ postgresql / garage
+├── docker（容器平台）
+│   ├── 数据
+│   │   ├── postgresql（关系数据库）
+│   │   ├── pgbouncer（连接池）→ postgresql
+│   │   ├── valkey（缓存）
+│   │   └── garage（对象存储）
+│   ├── 平台
+│   │   ├── hatchet（工作流）→ postgresql / pgbouncer
+│   │   ├── authentik（身份认证）→ postgresql
+│   │   └── traefik（入口代理）→ authentik
+│   ├── 观测
+│   │   ├── collector（遥测采集）→ postgresql / openobserve
+│   │   └── openobserve（观测存储）→ garage
+│   └── 备份
+│       └── restic（归档备份）→ postgresql / garage
+└── packages（共享包）
+    └── python
+        ├── cache（缓存）→ valkey
+        ├── contracts（契约模型）→ pydantic
+        ├── db（数据库会话）→ sqlalchemy / asyncpg
+        ├── log（结构化日志）→ structlog
+        ├── storage（对象存储）→ aiobotocore
+        └── workflow（工作流）→ hatchet-sdk
 ```
 
 ## 结构
@@ -80,6 +88,14 @@ application（根项目）
 │   ├── valkey                       # Valkey
 │   ├── .env.example                 # 环境变量
 │   └── compose.yaml                 # 容器编排
+├── packages                         # 共享包
+│   └── python                       # Python
+│       ├── cache                    # 缓存
+│       ├── contracts                # 契约模型
+│       ├── db                       # 数据库会话
+│       ├── log                      # 结构化日志
+│       ├── storage                  # 对象存储
+│       └── workflow                 # 工作流
 ├── tests                            # 测试
 │   └── docker                       # 容器
 │       ├── observe.hurl             # 观测验收

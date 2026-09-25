@@ -12,7 +12,7 @@ requires-python = ">=3.12"
 # uv 工作区
 [tool.uv.workspace]
 # 成员
-members = []
+members = ["packages/python/*"]
 
 # 依赖组
 [dependency-groups]
@@ -28,7 +28,7 @@ dev = [
 # Ruff - https://docs.astral.sh/ruff/
 [tool.ruff]
 # 扩展排除
-extend-exclude = []
+extend-exclude = ["packages/python/contracts/src/app/contracts/generated"]
 
 [tool.ruff.lint]
 # 规则集

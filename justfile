@@ -120,3 +120,8 @@ format-workspace:
     uv run ruff format .
     # TS 格式化
     bunx oxfmt --no-error-on-unmatched-pattern '**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs}'
+
+# 测试
+test:
+    # 运行测试
+    uv run --locked --all-packages pytest
