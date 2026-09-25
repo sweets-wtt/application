@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "application",
+  "private": true,
+  "workspaces": {
+    "packages": [],
+    "catalog": {}
+  },
+  "devDependencies": {
+    "oxfmt": "^0.70.0",
+    "oxlint": "1.85.0",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.0"
+  },
+  "trustedDependencies": []
+}

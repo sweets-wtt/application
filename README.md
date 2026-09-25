@@ -29,16 +29,24 @@ application（根项目）
 │   │   └── HTTP 测试：hurl → docker
 │   └── 工作区
 │       ├── 运行时：python
-│       └── 依赖管理：uv → python
+│       ├── 依赖管理：uv → python
+│       │   ├── 测试
+│       │   │   ├── 测试框架：pytest → uv
+│       │   │   ├── 异步测试：pytest-asyncio → uv
+│       │   │   └── 覆盖率：pytest-cov → uv
+│       │   ├── HTTP
+│       │   │   └── 客户端：httpx2 → uv
+│       │   └── 代码
+│       │       ├── 代码检查：ruff → uv
+│       │       └── 类型检查：ty → uv
+│       ├── 运行时：node
+│       └── 依赖管理：bun → node
 │           ├── 测试
-│           │   ├── 测试框架：pytest → uv
-│           │   ├── 异步测试：pytest-asyncio → uv
-│           │   └── 覆盖率：pytest-cov → uv
-│           ├── HTTP
-│           │   └── 客户端：httpx2 → uv
+│           │   └── 测试框架：vitest → bun
 │           └── 代码
-│               ├── 代码检查：ruff → uv
-│               └── 类型检查：ty → uv
+│               ├── 代码检查：oxlint → bun
+│               ├── 代码格式化：oxfmt → bun
+│               └── 类型检查：typescript → bun
 ├── renovate（依赖更新）→ mise
 ├── github（GitHub）
 └── docker（容器平台）
@@ -90,16 +98,21 @@ application（根项目）
 ├── .gitattributes                   # Git 属性
 ├── .gitignore                       # Git 忽略
 ├── .gitleaks.toml                   # 密钥扫描
+├── .oxlintrc.json                   # JavaScript 代码检查
 ├── .release-please-manifest.json    # 版本清单
 ├── .typos.toml                      # 拼写检查
+├── bun.lock                         # JavaScript 依赖
 ├── cog.toml                         # 提交检查
 ├── dprint.jsonc                     # 代码格式
 ├── justfile                         # 任务运行
 ├── lefthook.yaml                    # 钩子管理
 ├── mise.lock                        # 工具版本
 ├── mise.toml                        # 开发环境
+├── package.json                     # JavaScript 包
 ├── pyproject.toml                   # Python 配置
 ├── renovate.jsonc                   # 依赖更新
+├── tsconfig.base.json               # JavaScript 基础
+├── tsconfig.json                    # JavaScript 配置
 ├── uv.lock                          # Python 依赖
 ├── zizmor.yaml                      # 安全审计
 └── README.md                        # 项目说明
