@@ -1,0 +1,79 @@
+# Docker Compose - `https://docs.docker.com/compose/`
+
+# 服务
+services:
+  # Traefik
+  traefik:
+    # 镜像
+    image: "traefik:v3.7.13@sha256:1c32e7c368204fd72812152ebdd2ac0425993df6fd982317deb02e48f2d5423c"
+    # 重启策略
+    restart: unless-stopped
+    # 启动命令
+    command:
+      # Docker 发现
+      - "--providers.docker=true"
+      - "--providers.docker.exposedByDefault=false"
+      # 容器多网络时默认路由网
+      - "--providers.docker.network=application_edge"
+      # HTTP 入口
+      - "--entrypoints.web.address=:80"
+      # HTTPS 重定向
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      # HTTPS 入口
+      - "--entrypoints.websecure.address=:443"
+      # ACME 证书
+      - "--certificatesresolvers.le.acme.email=${ACME_EMAIL:?}"
+      - "--certificatesresolvers.le.acme.storage=/acme/acme.json"
+      - "--certificatesresolvers.le.acme.httpchallenge=true"
+      - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
+      # 仪表板
+      - "--api.dashboard=true"
+      # 健康检查
+      - "--ping=true"
+    # 端口
+    ports:
+      # HTTP 入口
+      - "80:80"
+      # HTTPS 入口
+      - "443:443"
+    # 数据卷
+    volumes:
+      # Docker 套接字
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      # ACME 证书
+      - "traefik-acme:/acme"
+    # 健康检查
+    healthcheck:
+      # 就绪探测
+      test: ["CMD", "traefik", "healthcheck", "--ping"]
+      # 间隔
+      interval: "10s"
+      # 超时
+      timeout: "5s"
+      # 重试次数
+      retries: 5
+      # 启动宽限期
+      start_period: "30s"
+    # 网络
+    networks:
+      # 入口网
+      - "edge"
+    # 标签
+    labels:
+      # 启用路由
+      traefik.enable: "true"
+      # 仪表板路由
+      traefik.http.routers.dashboard.rule: "Host(`${TRAEFIK_DOMAIN}`)"
+      traefik.http.routers.dashboard.service: "api@internal"
+      traefik.http.routers.dashboard.middlewares: "authentik,ratelimit"
+      traefik.http.routers.dashboard.tls: "true"
+      traefik.http.routers.dashboard.tls.certresolver: "le"
+      # forward-auth 中间件
+      traefik.http.middlewares.authentik.forwardauth.address: "http://authentik-server:9000/outpost.goauthentik.io/auth/traefik"
+      traefik.http.middlewares.authentik.forwardauth.trustForwardHeader: "true"
+      traefik.http.middlewares.authentik.forwardauth.authResponseHeaders: "X-authentik-username,X-authentik-groups,X-authentik-entitlements,X-authentik-email,X-authentik-name,X-authentik-uid,X-authentik-jwt,X-authentik-meta-jwks,X-authentik-meta-outpost,X-authentik-meta-provider,X-authentik-meta-app,X-authentik-meta-version"
+      # 限流中间件
+      traefik.http.middlewares.ratelimit.ratelimit.average: "100"
+      traefik.http.middlewares.ratelimit.ratelimit.period: "1m"
+      traefik.http.middlewares.ratelimit.ratelimit.burst: "50"

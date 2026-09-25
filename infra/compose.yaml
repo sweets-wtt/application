@@ -19,6 +19,8 @@ include:
   - "authentik/compose.yaml"
   # OpenObserve
   - "observe/compose.yaml"
+  # Traefik
+  - "traefik/compose.yaml"
 
 # 命名网络
 networks:
@@ -55,6 +57,8 @@ volumes:
   openobserve-data:
   # Collector 存储
   collector-storage:
+  # Traefik 证书
+  traefik-acme:
 
 # 密钥
 secrets:
