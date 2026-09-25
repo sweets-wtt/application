@@ -21,6 +21,8 @@ include:
   - "observe/compose.yaml"
   # Traefik
   - "traefik/compose.yaml"
+  # Server
+  - "../apps/server/compose.yaml"
 
 # 命名网络
 networks:

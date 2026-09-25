@@ -3,7 +3,7 @@
 ## 概览
 
 - 用途：框架
-- 状态：共享包
+- 状态：应用
 
 ## 架构
 
@@ -55,20 +55,24 @@ application（根项目）
 │   │   └── openobserve（观测存储）→ garage
 │   └── 备份
 │       └── restic（归档备份）→ postgresql / garage
-└── packages（共享包）
-    ├── python
-    │   ├── cache（缓存）→ valkey
-    │   ├── contracts（契约模型）→ pydantic
-    │   ├── db（数据库会话）→ sqlalchemy / asyncpg
-    │   ├── log（结构化日志）→ structlog
-    │   ├── storage（对象存储）→ aiobotocore
-    │   └── workflow（工作流）→ hatchet-sdk
-    └── typescript
-        ├── auth（会话与令牌）→ state / zod
-        ├── contracts（契约客户端）→ vue-query / msw / zod
-        ├── log（结构化日志）→ consola
-        ├── realtime（实时）→ contracts / zod
-        └── state（持久化状态）→ zod
+├── packages（共享包）
+│   ├── python
+│   │   ├── cache（缓存）→ valkey
+│   │   ├── contracts（契约模型）→ pydantic
+│   │   ├── db（数据库会话）→ sqlalchemy / asyncpg
+│   │   ├── log（结构化日志）→ structlog
+│   │   ├── storage（对象存储）→ aiobotocore
+│   │   └── workflow（工作流）→ hatchet-sdk
+│   └── typescript
+│       ├── auth（会话与令牌）→ state / zod
+│       ├── contracts（契约客户端）→ vue-query / msw / zod
+│       ├── log（结构化日志）→ consola
+│       ├── realtime（实时）→ contracts / zod
+│       └── state（持久化状态）→ zod
+└── apps（应用）
+    └── server（Server 应用）→ contracts / log
+        ├── api → docker
+        └── worker → docker
 ```
 
 ## 结构
@@ -79,6 +83,8 @@ application（根项目）
 │   └── workflows                    # 工作流
 │       ├── ci.yaml                  # 持续集成
 │       └── release.yaml             # 版本发行
+├── apps                             # 应用
+│   └── server                       # Server
 ├── contracts                        # 契约
 │   └── http                         # HTTP
 │       ├── openapi.yaml             # 接口规范
@@ -130,6 +136,7 @@ application（根项目）
 ├── package.json                     # JavaScript 包
 ├── pyproject.toml                   # Python 配置
 ├── renovate.jsonc                   # 依赖更新
+├── schemathesis.toml                # 契约模糊测试
 ├── tsconfig.base.json               # JavaScript 基础
 ├── tsconfig.json                    # JavaScript 配置
 ├── uv.lock                          # Python 依赖
