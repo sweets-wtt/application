@@ -35,6 +35,8 @@ application（根项目）
     │   ├── pgbouncer（连接池）→ postgresql
     │   ├── valkey（缓存）
     │   └── garage（对象存储）
+    ├── 平台
+    │   └── hatchet（工作流）→ postgresql / pgbouncer
     └── 备份
         └── restic（归档备份）→ postgresql / garage
 ```
@@ -53,6 +55,7 @@ application（根项目）
 │       └── vacuum.yaml              # 契约检查
 ├── infra                            # 服务编排
 │   ├── garage                       # Garage
+│   ├── hatchet                      # Hatchet
 │   ├── pgbouncer                    # PgBouncer
 │   ├── postgresql                   # PostgreSQL
 │   ├── valkey                       # Valkey
