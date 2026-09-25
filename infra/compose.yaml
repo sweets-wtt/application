@@ -9,6 +9,8 @@ include:
   - "postgresql/compose.yaml"
   # PgBouncer
   - "pgbouncer/compose.yaml"
+  # Valkey
+  - "valkey/compose.yaml"
 
 # 命名网络
 networks:
@@ -31,6 +33,8 @@ volumes:
   postgresql-data:
   # PostgreSQL 仓库
   postgresql-repo:
+  # Valkey 数据
+  valkey-data:
 
 # 密钥
 secrets:
