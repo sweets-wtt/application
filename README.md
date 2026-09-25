@@ -36,7 +36,8 @@ application（根项目）
     │   ├── valkey（缓存）
     │   └── garage（对象存储）
     ├── 平台
-    │   └── hatchet（工作流）→ postgresql / pgbouncer
+    │   ├── hatchet（工作流）→ postgresql / pgbouncer
+    │   └── authentik（身份认证）→ postgresql
     └── 备份
         └── restic（归档备份）→ postgresql / garage
 ```
@@ -54,6 +55,7 @@ application（根项目）
 │       ├── openapi.yaml             # 接口规范
 │       └── vacuum.yaml              # 契约检查
 ├── infra                            # 服务编排
+│   ├── authentik                    # authentik
 │   ├── garage                       # Garage
 │   ├── hatchet                      # Hatchet
 │   ├── pgbouncer                    # PgBouncer
@@ -61,6 +63,9 @@ application（根项目）
 │   ├── valkey                       # Valkey
 │   ├── .env.example                 # 环境变量
 │   └── compose.yaml                 # 容器编排
+├── tests                            # 测试
+│   └── docker                       # 容器
+│       └── oidc.hurl                # OIDC 验收
 ├── .editorconfig                    # 代码风格
 ├── .gitattributes                   # Git 属性
 ├── .gitignore                       # Git 忽略
