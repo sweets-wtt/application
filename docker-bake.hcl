@@ -14,7 +14,7 @@ variable "TAG" {
 
 // 应用组
 group "apps" {
-	targets = ["server"]
+	targets = ["server", "web"]
 }
 
 // Server
@@ -25,4 +25,14 @@ target "server" {
 	dockerfile = "apps/server/Dockerfile"
 	// 标签
 	tags = ["${REGISTRY}server:${TAG}"]
+}
+
+// Web
+target "web" {
+	// 上下文
+	context = "."
+	// Dockerfile
+	dockerfile = "apps/web/Dockerfile"
+	// 标签
+	tags = ["${REGISTRY}web:${TAG}"]
 }

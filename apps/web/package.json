@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@app/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "typecheck": "tsc -b --noEmit"
+  },
+  "dependencies": {
+    "@app/auth": "workspace:*",
+    "@app/contracts": "workspace:*",
+    "@app/log": "workspace:*",
+    "@app/realtime": "workspace:*",
+    "@app/state": "workspace:*",
+    "@tanstack/vue-query": "catalog:",
+    "@vueuse/core": "catalog:",
+    "pinia": "catalog:",
+    "pinia-plugin-persistedstate": "catalog:",
+    "reka-ui": "catalog:",
+    "vue": "catalog:",
+    "vue-router": "catalog:"
+  },
+  "devDependencies": {
+    "@iconify-json/carbon": "catalog:",
+    "@playwright/test": "catalog:",
+    "@size-limit/file": "catalog:",
+    "@types/node": "catalog:",
+    "@unocss/preset-icons": "catalog:",
+    "@vitejs/plugin-vue": "catalog:",
+    "@vue/test-utils": "catalog:",
+    "jsdom": "catalog:",
+    "playwright": "catalog:",
+    "size-limit": "catalog:",
+    "unocss": "catalog:",
+    "unplugin-icons": "catalog:",
+    "unplugin-vue-components": "catalog:",
+    "vite": "catalog:"
+  },
+  "size-limit": [
+    {
+      "path": "dist/assets/index-*.js",
+      "limit": "200 KB"
+    }
+  ]
+}

@@ -179,3 +179,75 @@ describe("断线重连", () => {
     expect(client.status).toBe("disconnected");
   });
 });
+
+describe("主题订阅与发布", () => {
+  it("subscribe 发送订阅信封并接收事件", async () => {
+    const { client, transports } = harness();
+
+    await ready(client);
+    const handler = vi.fn();
+    client.subscribe("room:1", handler);
+
+    const sent = (transports[0] as FakeTransport).sent;
+    expect(sent).toContain(JSON.stringify({ type: "subscribe", topic: "room:1" }));
+
+    (transports[0] as FakeTransport).emit(
+      JSON.stringify({ type: "event", topic: "room:1", payload: { msg: "hi" } }),
+    );
+
+    expect(handler).toHaveBeenCalledWith({ msg: "hi" });
+  });
+
+  it("未订阅主题不触发处理器", async () => {
+    const { client, transports } = harness();
+
+    await ready(client);
+    const handler = vi.fn();
+    client.subscribe("room:1", handler);
+
+    (transports[0] as FakeTransport).emit(
+      JSON.stringify({ type: "event", topic: "room:2", payload: { msg: "hi" } }),
+    );
+
+    expect(handler).not.toHaveBeenCalled();
+  });
+
+  it("unsubscribe 发送取消信封并停止接收", async () => {
+    const { client, transports } = harness();
+
+    await ready(client);
+    const handler = vi.fn();
+    const unsub = client.subscribe("room:1", handler);
+    unsub();
+
+    const sent = (transports[0] as FakeTransport).sent;
+    expect(sent).toContain(JSON.stringify({ type: "unsubscribe", topic: "room:1" }));
+
+    (transports[0] as FakeTransport).emit(
+      JSON.stringify({ type: "event", topic: "room:1", payload: { msg: "hi" } }),
+    );
+
+    expect(handler).not.toHaveBeenCalled();
+  });
+
+  it("publish 发送发布信封", async () => {
+    const { client, transports } = harness();
+
+    await ready(client);
+    client.publish("room:1", { msg: "hello" });
+
+    const sent = (transports[0] as FakeTransport).sent;
+    expect(sent).toContain(
+      JSON.stringify({ type: "publish", topic: "room:1", payload: { msg: "hello" } }),
+    );
+  });
+
+  it("pong 心跳应答被忽略", async () => {
+    const { client, transports, onEvent } = harness();
+
+    await ready(client);
+    (transports[0] as FakeTransport).emit("pong");
+
+    expect(onEvent).not.toHaveBeenCalled();
+  });
+});

@@ -23,6 +23,8 @@ include:
   - "traefik/compose.yaml"
   # Server
   - "../apps/server/compose.yaml"
+  # Web
+  - "../apps/web/compose.yaml"
 
 # 命名网络
 networks:

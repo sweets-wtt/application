@@ -1,6 +1,20 @@
 /** 传输无关实时客户端 */
 import { Response } from "@app/contracts/src/schemas";
 
+// 信封类型
+export type EnvelopeType = "subscribe" | "unsubscribe" | "publish" | "event" | "error";
+
+// 实时信封
+export interface Envelope {
+  type: EnvelopeType;
+  topic: string;
+  payload?: unknown;
+  id?: string;
+}
+
+// 主题处理器
+export type TopicHandler = (payload: unknown) => void;
+
 // 状态
 export type Status = "disconnected" | "connecting" | "connected";
 
@@ -34,7 +48,7 @@ export interface RealtimeOptions {
   acquireTicket: () => Promise<Ticket>;
   // 票据应用：连接时与续用时调用
   applyTicket: (transport: Transport, ticket: string) => void;
-  // 契约事件回调
+  // 契约事件回调（向后兼容）
   onEvent?: (event: unknown) => void;
   // 心跳间隔毫秒
   heartbeatIntervalMs?: number;
@@ -91,6 +105,8 @@ export class RealtimeClient {
   private reconnectTimer: Timer | undefined;
   // 票据续用定时器
   private ticketTimer: Timer | undefined;
+  // 主题处理器注册表
+  private readonly handlers = new Map<string, Set<TopicHandler>>();
 
   constructor(options: RealtimeOptions) {
     this.transportFactory = options.transport;
@@ -130,6 +146,44 @@ export class RealtimeClient {
       .catch(() => this.scheduleReconnect());
   }
 
+  /** 订阅主题 - 返回取消订阅函数 */
+  subscribe(topic: string, handler: TopicHandler): () => void {
+    let handlers = this.handlers.get(topic);
+    if (handlers === undefined) {
+      handlers = new Set();
+      this.handlers.set(topic, handlers);
+    }
+    handlers.add(handler);
+
+    this.send(JSON.stringify({ type: "subscribe", topic } satisfies Envelope));
+
+    return () => {
+      this.unsubscribe(topic, handler);
+    };
+  }
+
+  /** 取消订阅 - 指定处理器或清空主题 */
+  unsubscribe(topic: string, handler?: TopicHandler): void {
+    const handlers = this.handlers.get(topic);
+    if (handlers === undefined) {
+      return;
+    }
+    if (handler !== undefined) {
+      handlers.delete(handler);
+    } else {
+      handlers.clear();
+    }
+    if (handlers.size === 0) {
+      this.handlers.delete(topic);
+      this.send(JSON.stringify({ type: "unsubscribe", topic } satisfies Envelope));
+    }
+  }
+
+  /** 发布消息到主题 */
+  publish(topic: string, payload: unknown): void {
+    this.send(JSON.stringify({ type: "publish", topic, payload } satisfies Envelope));
+  }
+
   /** 发送：已连接直发，否则入有界队列 */
   send(data: string): void {
     if (this.status === "connected" && this.transport !== undefined) {
@@ -149,12 +203,40 @@ export class RealtimeClient {
     this.transport?.close();
     this.transport = undefined;
     this.status = "disconnected";
+    this.handlers.clear();
   }
 
-  /** 接收：契约事件校验，非契约事件丢弃 */
+  /** 接收：信封分发 - event 按主题派发，其余兼容契约事件 */
   private receive(data: string): void {
+    // 心跳应答
+    if (data === "pong") {
+      return;
+    }
+
+    let parsed: unknown;
     try {
-      this.onEvent?.(Response.parse(JSON.parse(data) as unknown));
+      parsed = JSON.parse(data);
+    } catch {
+      // 非 JSON 丢弃
+      return;
+    }
+
+    // 信封分发
+    if (isEnvelope(parsed) && parsed.type === "event") {
+      const handlers = this.handlers.get(parsed.topic);
+      handlers?.forEach((handler) => {
+        try {
+          handler(parsed.payload);
+        } catch {
+          // 处理器异常不影响分发
+        }
+      });
+      return;
+    }
+
+    // 向后兼容：契约事件
+    try {
+      this.onEvent?.(Response.parse(parsed));
     } catch {
       // 非契约事件丢弃
     }
@@ -240,4 +322,13 @@ export class RealtimeClient {
         });
     }, delay);
   }
+}
+
+/** 类型守卫：是否为实时信封 */
+function isEnvelope(value: unknown): value is Envelope {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const obj = value as Record<string, unknown>;
+  return typeof obj.type === "string" && typeof obj.topic === "string";
 }

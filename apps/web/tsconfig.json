@@ -1,0 +1,29 @@
+// TypeScript - https://www.typescriptlang.org/tsconfig/
+
+{
+  // 继承
+  "extends": "../../tsconfig.base.json",
+
+  // 编译选项
+  "compilerOptions": {
+    // 不输出（应用仅类型检查）
+    "noEmit": true,
+    // JSX
+    "jsx": "preserve",
+    // 模块解析
+    "moduleResolution": "bundler",
+    // 模块
+    "module": "ESNext",
+    // 目标
+    "target": "ESNext",
+    // 类型
+    "types": ["node", "vitest/globals"],
+    // 路径别名
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+
+  // 包含
+  "include": ["src", "tests"]
+}

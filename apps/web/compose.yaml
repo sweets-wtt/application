@@ -1,0 +1,56 @@
+# 服务
+services:
+  # Web
+  web:
+    # 镜像
+    image: "${WEB_IMAGE:?}"
+    # 重启策略
+    restart: unless-stopped
+    # 构建参数（VITE_* 为构建时注入）
+    build:
+      context: "../.."
+      dockerfile: "apps/web/Dockerfile"
+      args:
+        # 遥测端点
+        VITE_TELEMETRY_URL: "${VITE_TELEMETRY_URL:-}"
+        # OIDC 发行方
+        VITE_OIDC_ISSUER: "${VITE_OIDC_ISSUER:-}"
+        # OIDC 客户端 ID
+        VITE_OIDC_CLIENT_ID: "${VITE_OIDC_CLIENT_ID:-}"
+        # API 基地址
+        VITE_API_BASE_URL: "${VITE_API_BASE_URL:-}"
+        # 心跳间隔
+        VITE_HEARTBEAT_INTERVAL: "${VITE_HEARTBEAT_INTERVAL:-}"
+    # 依赖
+    depends_on:
+      # authentik
+      authentik-server:
+        # 条件
+        condition: "service_healthy"
+    # 健康检查
+    healthcheck:
+      # 就绪探测
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/ | grep -q app"]
+      # 间隔
+      interval: "10s"
+      # 超时
+      timeout: "5s"
+      # 重试次数
+      retries: 5
+      # 启动宽限期
+      start_period: "10s"
+    # 网络
+    networks:
+      # 入口网
+      - "edge"
+    # 标签
+    labels:
+      # 启用路由
+      traefik.enable: "true"
+      # HTTP 路由
+      traefik.http.routers.web.rule: "Host(`${WEB_DOMAIN}`)"
+      traefik.http.routers.web.entrypoints: "websecure"
+      traefik.http.routers.web.tls: "true"
+      traefik.http.routers.web.tls.certresolver: "le"
+      traefik.http.routers.web.service: "web"
+      traefik.http.services.web.loadbalancer.server.port: "80"

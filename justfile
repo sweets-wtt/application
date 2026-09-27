@@ -115,6 +115,8 @@ lint-workspace:
     bunx oxlint --no-error-on-unmatched-pattern
     # TS 类型检查
     bunx tsc -b --noEmit
+    # 应用类型检查
+    bun run --filter @app/web typecheck
 
 # 工作区格式化
 format-workspace:
