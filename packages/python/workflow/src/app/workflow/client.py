@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, Self
 
 from hatchet_sdk import Hatchet
+from hatchet_sdk.config import ClientConfig
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -35,4 +36,7 @@ def create_client(
 
     client_factory 供测试注入
     """
-    return client_factory(token=settings.token, server_url=settings.server_url)
+    # SDK V1 经 ClientConfig 装配 - token 与 server_url 显式传入覆盖环境变量
+    config = ClientConfig(token=settings.token, server_url=settings.server_url)
+
+    return client_factory(config=config)

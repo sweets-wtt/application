@@ -1,0 +1,25 @@
+# Schemathesis - https://schemathesis.readthedocs.io/
+
+# 固定种子
+seed = 42
+
+# 生成
+[generation]
+# 确定性
+deterministic = true
+
+# 示例阶段
+[phases.examples]
+enabled = true
+
+# 覆盖阶段
+[phases.coverage]
+enabled = true
+
+# 模糊阶段
+[phases.fuzzing]
+enabled = true
+
+# 状态阶段
+[phases.stateful]
+enabled = true

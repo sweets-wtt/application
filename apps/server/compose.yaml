@@ -1,0 +1,167 @@
+# 服务
+services:
+  # API
+  api:
+    # 镜像
+    image: "${SERVER_IMAGE:?}"
+    # 重启策略
+    restart: unless-stopped
+    # 环境
+    environment:
+      # 数据源名称
+      APP_DATABASE__URL: "postgresql+asyncpg://app:${POSTGRES_APP_PASSWORD}@pgbouncer:5432/app"
+      # 对象存储端点地址
+      APP_STORAGE__ENDPOINT_URL: "http://garage:3900"
+      # 对象存储访问密钥
+      APP_STORAGE__ACCESS_KEY_ID: "${GARAGE_S3_ACCESS_KEY:?}"
+      # 对象存储秘密密钥
+      APP_STORAGE__SECRET_ACCESS_KEY: "${GARAGE_S3_SECRET_KEY:?}"
+      # 对象存储区域
+      APP_STORAGE__REGION_NAME: "garage"
+      # 对象存储桶名
+      APP_STORAGE__BUCKET: "${GARAGE_DEFAULT_BUCKET:?}"
+      # 缓存地址
+      APP_CACHE__URL: "valkey://app:${VALKEY_APP_PASSWORD:?}@valkey:6379/0"
+      # 实时地址
+      APP_REALTIME__URL: "valkey://app:${VALKEY_APP_PASSWORD:?}@valkey:6379/0"
+      # 实时来源允许列表
+      APP_REALTIME__ORIGINS: "[]"
+      # OTLP 端点
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://collector:4318"
+      # OTLP 追踪端点
+      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: "http://collector:4318/v1/traces"
+      # OTLP 指标端点
+      OTEL_EXPORTER_OTLP_METRICS_ENDPOINT: "http://collector:4318/v1/metrics"
+      # 服务名
+      OTEL_SERVICE_NAME: "api"
+      # 追踪导出器
+      OTEL_TRACES_EXPORTER: "otlp"
+      # 指标导出间隔
+      OTEL_METRIC_EXPORT_INTERVAL: "5000"
+      # 工作流令牌
+      APP_WORKFLOW__TOKEN: "${HATCHET_CLIENT_TOKEN:?}"
+      # 工作流服务地址
+      APP_WORKFLOW__SERVER_URL: "http://hatchet-lite:7077"
+      # Hatchet TLS 策略
+      HATCHET_CLIENT_TLS_STRATEGY: "none"
+    # 依赖
+    depends_on:
+      # PostgreSQL
+      postgresql:
+        # 条件
+        condition: "service_healthy"
+      # Garage
+      garage:
+        # 条件
+        condition: "service_healthy"
+      # Valkey
+      valkey:
+        # 条件
+        condition: "service_healthy"
+      # 采集器
+      collector:
+        # 条件
+        condition: "service_healthy"
+      # Hatchet
+      hatchet-lite:
+        # 条件
+        condition: "service_healthy"
+    # 健康检查
+    healthcheck:
+      # 就绪探测
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz')\""]
+      # 间隔
+      interval: "10s"
+      # 超时
+      timeout: "5s"
+      # 重试次数
+      retries: 5
+      # 启动宽限期
+      start_period: "30s"
+    # 网络
+    networks:
+      # 应用内部网
+      - "app-internal"
+      # 数据内部网
+      - "data-internal"
+
+  # Worker
+  worker:
+    # 镜像
+    image: "${SERVER_IMAGE:?}"
+    # 重启策略
+    restart: unless-stopped
+    # 入口 - 独立进程,与 api 分离
+    command: "python -m server.worker"
+    # 环境
+    environment:
+      # 数据源名称
+      APP_DATABASE__URL: "postgresql+asyncpg://app:${POSTGRES_APP_PASSWORD}@pgbouncer:5432/app"
+      # 对象存储端点地址
+      APP_STORAGE__ENDPOINT_URL: "http://garage:3900"
+      # 对象存储访问密钥
+      APP_STORAGE__ACCESS_KEY_ID: "${GARAGE_S3_ACCESS_KEY:?}"
+      # 对象存储秘密密钥
+      APP_STORAGE__SECRET_ACCESS_KEY: "${GARAGE_S3_SECRET_KEY:?}"
+      # 对象存储区域
+      APP_STORAGE__REGION_NAME: "garage"
+      # 对象存储桶名
+      APP_STORAGE__BUCKET: "${GARAGE_DEFAULT_BUCKET:?}"
+      # 缓存地址
+      APP_CACHE__URL: "valkey://app:${VALKEY_APP_PASSWORD:?}@valkey:6379/0"
+      # 工作流令牌
+      APP_WORKFLOW__TOKEN: "${HATCHET_CLIENT_TOKEN:?}"
+      # 工作流服务地址
+      APP_WORKFLOW__SERVER_URL: "http://hatchet-lite:7077"
+      # Hatchet TLS 策略
+      HATCHET_CLIENT_TLS_STRATEGY: "none"
+      # OTLP 端点
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://collector:4318"
+      # OTLP 追踪端点
+      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: "http://collector:4318/v1/traces"
+      # OTLP 指标端点
+      OTEL_EXPORTER_OTLP_METRICS_ENDPOINT: "http://collector:4318/v1/metrics"
+      # 服务名
+      OTEL_SERVICE_NAME: "worker"
+      # 追踪导出器
+      OTEL_TRACES_EXPORTER: "otlp"
+      # 指标导出间隔
+      OTEL_METRIC_EXPORT_INTERVAL: "5000"
+    # 依赖
+    depends_on:
+      # PostgreSQL
+      postgresql:
+        # 条件
+        condition: "service_healthy"
+      # Garage
+      garage:
+        # 条件
+        condition: "service_healthy"
+      # Valkey
+      valkey:
+        # 条件
+        condition: "service_healthy"
+      # 采集器
+      collector:
+        # 条件
+        condition: "service_healthy"
+      # Hatchet
+      hatchet-lite:
+        # 条件
+        condition: "service_healthy"
+    # 健康检查 - 进程级探活,worker 不监听 HTTP
+    healthcheck:
+      # 就绪探测
+      test: ["CMD-SHELL", "python -c \"import server.worker\""]
+      # 间隔
+      interval: "10s"
+      # 超时
+      timeout: "5s"
+      # 重试次数
+      retries: 5
+      # 启动宽限期
+      start_period: "30s"
+    # 网络
+    networks:
+      # 数据内部网
+      - "data-internal"

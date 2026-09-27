@@ -11,3 +11,18 @@ variable "TAG" {
 	// 默认（latest）
 	default = "latest"
 }
+
+// 应用组
+group "apps" {
+	targets = ["server"]
+}
+
+// Server
+target "server" {
+	// 上下文
+	context = "."
+	// Dockerfile
+	dockerfile = "apps/server/Dockerfile"
+	// 标签
+	tags = ["${REGISTRY}server:${TAG}"]
+}

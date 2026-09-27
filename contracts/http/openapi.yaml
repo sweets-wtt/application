@@ -48,6 +48,173 @@ components:
       # 禁止附加属性
       additionalProperties: false
 
+    # 遥测事件
+    TelemetryEvent:
+      # 类型
+      type: object
+      # 必填属性
+      required:
+        - level
+        - fingerprint
+        - message
+        - timestamp
+      # 属性
+      properties:
+        # 级别
+        level:
+          # 类型
+          type: string
+          # 枚举
+          enum:
+            - debug
+            - info
+            - warn
+            - error
+        # 指纹
+        fingerprint:
+          # 类型
+          type: string
+          # 最大长度
+          maxLength: 1024
+        # 消息
+        message:
+          # 类型
+          type: string
+          # 最大长度
+          maxLength: 8192
+        # 时间戳（Unix 毫秒）
+        timestamp:
+          # 类型
+          type: integer
+        # 上下文
+        context:
+          # 类型
+          type: object
+      # 禁止附加属性
+      additionalProperties: false
+
+    # 遥测批量载荷
+    TelemetryIngest:
+      # 类型
+      type: object
+      # 必填属性
+      required:
+        - service
+        - release
+        - events
+      # 属性
+      properties:
+        # 端类型
+        service:
+          # 类型
+          type: string
+          # 枚举
+          enum:
+            - web
+            - miniapp
+        # 发布版本
+        release:
+          # 类型
+          type: string
+          # 最大长度
+          maxLength: 128
+        # 批量事件
+        events:
+          # 类型
+          type: array
+          # 条数上限
+          maxItems: 100
+          # 元素
+          items:
+            $ref: "#/components/schemas/TelemetryEvent"
+      # 禁止附加属性
+      additionalProperties: false
+
+    # 遥测受理
+    TelemetryAccepted:
+      # 类型
+      type: object
+      # 必填属性
+      required:
+        - accepted
+      # 属性
+      properties:
+        # 受理条数
+        accepted:
+          # 类型
+          type: integer
+      # 禁止附加属性
+      additionalProperties: false
+
+    # 工作流请求输入
+    RequestInput:
+      # 类型
+      type: object
+      # 必填属性
+      required:
+        - message
+      # 属性
+      properties:
+        # 消息
+        message:
+          # 类型
+          type: string
+          # 最大长度
+          maxLength: 8192
+      # 禁止附加属性
+      additionalProperties: false
+
+    # 工作流 run 受理
+    WorkflowRunAccepted:
+      # 类型
+      type: object
+      # 必填属性
+      required:
+        - run_id
+        - status
+      # 属性
+      properties:
+        # 运行标识
+        run_id:
+          # 类型
+          type: string
+        # 状态
+        status:
+          # 类型
+          type: string
+          # 枚举
+          enum:
+            - submitted
+      # 禁止附加属性
+      additionalProperties: false
+
+    # 工作流 run 状态
+    WorkflowRunStatus:
+      # 类型
+      type: object
+      # 必填属性
+      required:
+        - run_id
+        - status
+      # 属性
+      properties:
+        # 运行标识
+        run_id:
+          # 类型
+          type: string
+        # 状态
+        status:
+          # 类型
+          type: string
+          # 枚举
+          enum:
+            - submitted
+            - running
+            - succeeded
+            - failed
+      # 禁止附加属性
+      additionalProperties: false
+
 # 路径
 paths:
   # 存活探针
@@ -87,3 +254,262 @@ paths:
                             type: string
                         # 禁止附加属性
                         additionalProperties: false
+  # 遥测接收
+  /telemetry/events:
+    # 批量接收前端遥测事件
+    post:
+      # 操作标识
+      operationId: telemetryEvents
+      # 请求体
+      requestBody:
+        # 必需
+        required: true
+        # 内容
+        content:
+          application/json:
+            # 模式
+            schema:
+              $ref: "#/components/schemas/TelemetryIngest"
+      # 响应
+      responses:
+        # 受理响应
+        "202":
+          # 描述
+          description: 已受理
+          # 内容
+          content:
+            application/json:
+              # 模式
+              schema:
+                # 全部满足
+                allOf:
+                  - $ref: "#/components/schemas/Response"
+                  # 属性
+                  - properties:
+                      # 数据
+                      data:
+                        $ref: "#/components/schemas/TelemetryAccepted"
+        # 请求体解析失败
+        "400":
+          # 描述
+          description: 请求体解析失败
+          # 内容
+          content:
+            application/json:
+              # 模式
+              schema:
+                # 类型
+                type: object
+                # 必填属性
+                required:
+                  - detail
+                # 属性
+                properties:
+                  # 明细
+                  detail:
+                    # 类型
+                    type: string
+                # 禁止附加属性
+                additionalProperties: false
+        # 请求体超限
+        "413":
+          # 描述
+          description: 请求体超过上限
+          # 内容
+          content:
+            application/json:
+              # 模式
+              schema:
+                # 类型
+                type: object
+                # 必填属性
+                required:
+                  - detail
+                # 属性
+                properties:
+                  # 明细
+                  detail:
+                    # 类型
+                    type: string
+                # 禁止附加属性
+                additionalProperties: false
+        # 校验失败
+        "422":
+          # 描述
+          description: 请求校验失败
+          # 内容
+          content:
+            application/json:
+              # 模式
+              schema:
+                # 类型
+                type: object
+                # 必填属性
+                required:
+                  - detail
+                # 属性
+                properties:
+                  # 明细
+                  detail:
+                    # 类型
+                    type: array
+                    # 元素
+                    items:
+                      # 类型
+                      type: object
+                # 禁止附加属性
+                additionalProperties: false
+  # 提交工作流 run
+  /workflow/runs:
+    # 提交工作流 run
+    post:
+      # 操作标识
+      operationId: workflowRuns
+      # 参数
+      parameters:
+        # 幂等键
+        - name: Idempotency-Key
+          # 位置
+          in: header
+          # 必需
+          required: true
+          # 模式
+          schema:
+            # 类型
+            type: string
+      # 请求体
+      requestBody:
+        # 必需
+        required: true
+        # 内容
+        content:
+          application/json:
+            # 模式
+            schema:
+              $ref: "#/components/schemas/RequestInput"
+      # 响应
+      responses:
+        # 受理响应
+        "202":
+          # 描述
+          description: 已受理
+          # 内容
+          content:
+            application/json:
+              # 模式
+              schema:
+                # 全部满足
+                allOf:
+                  - $ref: "#/components/schemas/Response"
+                  # 属性
+                  - properties:
+                      # 数据
+                      data:
+                        $ref: "#/components/schemas/WorkflowRunAccepted"
+        # 请求体解析失败
+        "400":
+          # 描述
+          description: 请求体解析失败
+          # 内容
+          content:
+            application/json:
+              # 模式
+              schema:
+                # 类型
+                type: object
+                # 必填属性
+                required:
+                  - detail
+                # 属性
+                properties:
+                  # 明细
+                  detail:
+                    # 类型
+                    type: string
+                # 禁止附加属性
+                additionalProperties: false
+        # 校验失败
+        "422":
+          # 描述
+          description: 请求校验失败
+          # 内容
+          content:
+            application/json:
+              # 模式
+              schema:
+                # 类型
+                type: object
+                # 必填属性
+                required:
+                  - detail
+                # 属性
+                properties:
+                  # 明细
+                  detail:
+                    # 类型
+                    type: array
+                    # 元素
+                    items:
+                      # 类型
+                      type: object
+                # 禁止附加属性
+                additionalProperties: false
+  # 查询工作流 run
+  /workflow/runs/{run_id}:
+    # 查询工作流 run
+    get:
+      # 操作标识
+      operationId: workflowRun
+      # 参数
+      parameters:
+        # 运行标识
+        - name: run_id
+          # 位置
+          in: path
+          # 必需
+          required: true
+          # 模式
+          schema:
+            # 类型
+            type: string
+      # 响应
+      responses:
+        # 查询响应
+        "200":
+          # 描述
+          description: 查询成功
+          # 内容
+          content:
+            application/json:
+              # 模式
+              schema:
+                # 全部满足
+                allOf:
+                  - $ref: "#/components/schemas/Response"
+                  # 属性
+                  - properties:
+                      # 数据
+                      data:
+                        $ref: "#/components/schemas/WorkflowRunStatus"
+        # 不存在
+        "404":
+          # 描述
+          description: run 不存在
+          # 内容
+          content:
+            application/json:
+              # 模式
+              schema:
+                # 类型
+                type: object
+                # 必填属性
+                required:
+                  - detail
+                # 属性
+                properties:
+                  # 明细
+                  detail:
+                    # 类型
+                    type: string
+                # 禁止附加属性
+                additionalProperties: false

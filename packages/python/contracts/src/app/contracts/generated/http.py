@@ -3,9 +3,9 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class Data(BaseModel):
@@ -26,3 +26,65 @@ class Response(BaseModel):
 
 class HealthzGetResponse(Response):
     data: Data
+
+
+class TelemetryEvent(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    level: Literal['debug', 'info', 'warn', 'error']
+    fingerprint: str = Field(max_length=1024)
+    message: str = Field(max_length=8192)
+    timestamp: int = Field(strict=True)
+    context: dict[str, Any] = Field(default_factory=dict)
+
+
+class TelemetryIngest(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    service: Literal['web', 'miniapp']
+    release: str = Field(max_length=128)
+    events: list[TelemetryEvent] = Field(max_length=100)
+
+
+class TelemetryAccepted(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    accepted: int
+
+
+class TelemetryEventsPostResponse(Response):
+    data: TelemetryAccepted
+
+
+class RequestInput(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    message: str = Field(max_length=8192)
+
+
+class WorkflowRunAccepted(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    run_id: str
+    status: Literal['submitted']
+
+
+class WorkflowRunStatus(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    run_id: str
+    status: Literal['submitted', 'running', 'succeeded', 'failed']
+
+
+class WorkflowRunsPostResponse(Response):
+    data: WorkflowRunAccepted
+
+
+class WorkflowRunGetResponse(Response):
+    data: WorkflowRunStatus
