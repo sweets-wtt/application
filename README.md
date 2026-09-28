@@ -10,6 +10,7 @@
 ```text
 application（根）
 └── mise（环境管理）
+    └── 代码格式：dprint
 ```
 
 ## 结构
@@ -19,6 +20,8 @@ application（根）
 ├── .editorconfig     # 代码风格
 ├── .gitattributes    # Git 属性
 ├── .gitignore        # Git 忽略
+├── dprint.jsonc      # 代码格式
+├── mise.lock         # 工具版本
 ├── mise.toml         # 环境管理
 └── README.md         # 项目说明
 ```

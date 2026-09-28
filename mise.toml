@@ -8,6 +8,7 @@ lockfile = true
 
 # === 工具 ===
 [tools]
+dprint = "latest"
 
 # === 任务 ===
 [tasks.list]
@@ -35,4 +36,16 @@ run = [
   "mise upgrade",
   "mise lock --bump",
   "mise install --locked",
+]
+
+[tasks.lint]
+description = "代码检查"
+run = [
+  "dprint check",
+]
+
+[tasks.format]
+description = "代码格式化"
+run = [
+  "dprint fmt",
 ]

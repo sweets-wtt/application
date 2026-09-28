@@ -1,0 +1,16 @@
+// dprint - `https://dprint.dev/`
+
+{
+  // === 插件 ===
+  "plugins": [
+    "https://plugins.dprint.dev/markdown-0.24.0.wasm",
+    "https://plugins.dprint.dev/toml-0.8.0.wasm",
+    "https://plugins.dprint.dev/json-0.24.0.wasm",
+    "https://plugins.dprint.dev/g-plane/pretty_yaml-v0.6.0.wasm"
+  ],
+
+  // === 规则 ===
+  "lineWidth": 80,
+  "indentWidth": 2,
+  "useTabs": false
+}
