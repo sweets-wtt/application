@@ -1,0 +1,5 @@
+# typos - `https://github.com/crate-ci/typos`
+
+# === 文件 ===
+[files]
+extend-exclude = ["*.lock"]
