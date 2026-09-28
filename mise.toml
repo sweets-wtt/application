@@ -12,6 +12,7 @@ lockfile = true
 # 工具
 [tools]
 dprint = "latest"
+typos = "latest"
 
 # 任务
 [tasks.list]
@@ -37,6 +38,7 @@ run = [
 description = "代码检查"
 run = [
   "dprint check",
+  "typos",
 ]
 
 [tasks.format]
