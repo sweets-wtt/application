@@ -1,0 +1,15 @@
+# OpenAPI - `https://spec.openapis.org/`
+
+# === 存活数据 ===
+Health:
+  description: 服务存活状态
+  type: object
+  required:
+    - status
+  properties:
+    status:
+      type: string
+      enum: [ok]
+      examples:
+        - ok
+  additionalProperties: false

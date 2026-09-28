@@ -12,6 +12,7 @@ cocogitto = "latest"
 dprint = "latest"
 lefthook = "latest"
 typos = "latest"
+vacuum = "latest"
 
 # === 任务 ===
 [tasks.list]
@@ -52,4 +53,10 @@ run = [
 description = "代码格式化"
 run = [
   "dprint fmt",
+]
+
+[tasks.contracts]
+description = "检查契约"
+run = [
+  "vacuum lint --ruleset contracts/http/vacuum.yaml contracts/http/openapi.yaml",
 ]

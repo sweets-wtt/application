@@ -1,0 +1,24 @@
+# OpenAPI - `https://spec.openapis.org/`
+
+# === 响应信封 ===
+Response:
+  description: 标准响应格式
+  type: object
+  required:
+    - code
+    - message
+    - data
+  properties:
+    code:
+      type: integer
+      examples:
+        - 0
+    message:
+      type: string
+      examples:
+        - ok
+    data:
+      type: object
+      examples:
+        - status: ok
+  additionalProperties: false

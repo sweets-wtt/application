@@ -1,0 +1,24 @@
+# OpenAPI - `https://spec.openapis.org/`
+
+# === 规范版本 ===
+openapi: 3.1.2
+
+# === 接口信息 ===
+info:
+  title: API
+  description: HTTP 契约
+  version: 0.1.0
+
+# === 服务器 ===
+servers:
+  - url: /
+
+# === 标签 ===
+tags:
+  - name: health
+    description: 健康检查
+
+# === 路径 ===
+paths:
+  /healthz:
+    $ref: "paths/health.yaml#/healthz"
