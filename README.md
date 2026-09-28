@@ -16,7 +16,8 @@
 │   ├── 钩子管理: lefthook → cocogitto
 │   ├── 语法检查: actionlint → github
 │   └── 工作流审计: zizmor → github
-└── GitHub: github
+├── GitHub: github
+└── 依赖更新: renovate → mise
 ```
 
 ## 结构
@@ -34,5 +35,6 @@
 ├── lefthook.yaml      # 钩子管理
 ├── mise.lock          # 工具版本
 ├── mise.toml          # 环境管理
+├── renovate.jsonc     # 依赖更新
 └── README.md          # 项目说明
 ```
