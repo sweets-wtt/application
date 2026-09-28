@@ -8,7 +8,9 @@ lockfile = true
 
 # === 工具 ===
 [tools]
+cocogitto = "latest"
 dprint = "latest"
+lefthook = "latest"
 typos = "latest"
 
 # === 任务 ===
