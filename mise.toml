@@ -11,10 +11,12 @@ lockfile = true
 
 # 工具
 [tools]
+actionlint = "latest"
 cocogitto = "latest"
 dprint = "latest"
 lefthook = "latest"
 typos = "latest"
+zizmor = "latest"
 
 # 任务
 [tasks.list]
@@ -41,6 +43,8 @@ description = "代码检查"
 run = [
   "dprint check",
   "typos",
+  "actionlint",
+  "zizmor .",
 ]
 
 [tasks.format]
