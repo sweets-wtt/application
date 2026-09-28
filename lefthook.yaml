@@ -1,0 +1,22 @@
+# lefthook - `https://lefthook.dev/`
+
+# 提交前
+pre-commit:
+  jobs:
+    - name: dprint
+      glob: "*.{md,toml,json,jsonc,yaml,yml}"
+      run: mise exec -- dprint check --allow-no-files "{staged_files}"
+    - name: typos
+      run: mise exec -- typos --force-exclude "{staged_files}"
+
+# 提交信息
+commit-msg:
+  jobs:
+    - name: cog
+      run: mise exec -- cog verify --file {1}
+
+# 推送前
+pre-push:
+  jobs:
+    - name: lint
+      run: mise run lint
