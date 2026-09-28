@@ -1,0 +1,38 @@
+# mise - `https://mise.jdx.dev/`
+
+# === 设置 ===
+[settings]
+auto_install = false
+locked = true
+lockfile = true
+
+# === 工具 ===
+[tools]
+
+# === 任务 ===
+[tasks.list]
+description = "列出任务"
+run = [
+  "mise tasks ls",
+]
+
+[tasks.lock]
+description = "锁定版本"
+run = [
+  "mise lock",
+]
+
+[tasks.install]
+description = "安装工具"
+depends = ["lock"]
+run = [
+  "mise install --locked",
+]
+
+[tasks.upgrade]
+description = "更新版本"
+run = [
+  "mise upgrade",
+  "mise lock --bump",
+  "mise install --locked",
+]
