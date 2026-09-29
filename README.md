@@ -27,7 +27,8 @@
 └── 容器平台: docker
     ├── 归档备份: restic → postgresql
     ├── 关系数据库: postgresql
-    └── 连接池: pgbouncer → postgresql
+    ├── 连接池: pgbouncer → postgresql
+    └── 数据缓存: valkey
 ```
 
 ## 结构
@@ -46,6 +47,7 @@
 ├── infra                   # 服务编排
 │   ├── pgbouncer           # PgBouncer
 │   ├── postgresql          # PostgreSQL
+│   ├── valkey              # Valkey
 │   ├── .env.example        # 环境变量
 │   └── compose.yaml        # 容器编排
 ├── .dockerignore           # 构建排除
