@@ -5,6 +5,14 @@ name: application
 
 # 引入
 include:
+  - "postgresql/compose.yaml"
+  - "pgbouncer/compose.yaml"
+  - "valkey/compose.yaml"
+  - "garage/compose.yaml"
+  - "hatchet/compose.yaml"
+  - "authentik/compose.yaml"
+  - "observe/compose.yaml"
+  - "traefik/compose.yaml"
 
 # 网络
 networks:
@@ -18,7 +26,25 @@ networks:
   egress:
 
 # 卷
-volumes: {}
+volumes:
+  postgresql-data:
+  postgresql-repo:
+  valkey-data:
+  garage-data:
+  garage-repo:
+  hatchet-config:
+  authentik-data:
+  openobserve-data:
+  collector-storage:
+  traefik-acme:
 
 # 密钥
-secrets: {}
+secrets:
+  postgres:
+    environment: POSTGRES_PASSWORD
+  hatchet-master-keyset:
+    environment: HATCHET_MASTER_KEYSET
+  hatchet-jwt-public-keyset:
+    environment: HATCHET_JWT_PUBLIC_KEYSET
+  hatchet-jwt-private-keyset:
+    environment: HATCHET_JWT_PRIVATE_KEYSET

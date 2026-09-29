@@ -1,0 +1,86 @@
+# Docker Compose - `https://docs.docker.com/compose/`
+
+# 服务
+services:
+  # OpenObserve
+  openobserve:
+    image: "public.ecr.aws/zinclabs/openobserve@sha256:600f92cafd2a0697abf2cb443f8ab533e06f7d2d3c031986210fce8339b214d9"
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5080:5080"
+    environment:
+      # root 用户邮箱
+      ZO_ROOT_USER_EMAIL: "${ZO_ROOT_USER_EMAIL:?}"
+      # root 用户口令
+      ZO_ROOT_USER_PASSWORD: "${ZO_ROOT_USER_PASSWORD:?}"
+      # 数据目录
+      ZO_DATA_DIR: "/data"
+      # 单节点模式
+      ZO_LOCAL_MODE: "true"
+      # 单节点数据存储
+      ZO_LOCAL_MODE_STORAGE: "s3"
+      # S3 提供方
+      ZO_S3_PROVIDER: "minio"
+      # S3 端点地址
+      ZO_S3_SERVER_URL: "http://garage:3900"
+      # S3 区域
+      ZO_S3_REGION_NAME: "garage"
+      # S3 桶名
+      ZO_S3_BUCKET_NAME: "openobserve"
+      # S3 访问密钥
+      ZO_S3_ACCESS_KEY: "${GARAGE_S3_ACCESS_KEY:?}"
+      # S3 秘密密钥
+      ZO_S3_SECRET_KEY: "${GARAGE_S3_SECRET_KEY:?}"
+      # 匿名遥测
+      ZO_TELEMETRY: "false"
+    volumes:
+      # 数据目录
+      - "openobserve-data:/data"
+    networks:
+      # 数据内部网
+      - "data-internal"
+      # 管理网
+      - "management"
+
+  # 采集器
+  collector:
+    image: "otel/opentelemetry-collector-contrib@sha256:fd328de2552466ad78385e1b1289c3f2402b1c45f265b252aab1955b42845ac1"
+    restart: unless-stopped
+    # 运行用户
+    user: "0:0"
+    command: ["--config", "/etc/otelcol-contrib/config.yaml"]
+    environment:
+      # PostgreSQL 口令
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?}"
+      # OpenObserve 认证头
+      OPENOBSERVE_AUTHORIZATION: "${OPENOBSERVE_AUTHORIZATION:?}"
+    volumes:
+      # 配置文件
+      - "./collector.yaml:/etc/otelcol-contrib/config.yaml:ro"
+      # 主机进程
+      - "/proc:/proc:ro"
+      # 主机系统
+      - "/sys:/sys:ro"
+      # 容器日志
+      - "/var/lib/docker/containers:/var/lib/docker/containers:ro"
+      # 偏移存储
+      - "collector-storage:/var/lib/otelcol"
+    # 健康检查
+    healthcheck:
+      test: ["CMD", "/otelcol-contrib", "validate", "--config=/etc/otelcol-contrib/config.yaml"]
+      interval: "10s"
+      timeout: "5s"
+      retries: 5
+      start_period: "2m"
+    networks:
+      # 应用内部网
+      - "app-internal"
+      # 数据内部网
+      - "data-internal"
+      # 管理网
+      - "management"
+    depends_on:
+      openobserve:
+        condition: "service_started"
+      postgresql:
+        condition: "service_healthy"

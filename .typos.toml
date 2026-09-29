@@ -4,3 +4,7 @@
 [files]
 # 拓展排除
 extend-exclude = ["*.lock"]
+
+# 拓展词
+[default.extend-words]
+RTO = "RTO"

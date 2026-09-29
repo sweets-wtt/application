@@ -25,6 +25,16 @@
 │   ├── 契约检查: vacuum → openapi
 │   └── 兼容检查: oasdiff → openapi
 └── 容器平台: docker
+    ├── 归档备份: restic → postgresql / garage
+    ├── 关系数据库: postgresql
+    ├── 连接池: pgbouncer → postgresql
+    ├── 数据缓存: valkey
+    ├── 对象存储: garage
+    ├── 工作流: hatchet → postgresql / pgbouncer
+    ├── 身份认证: authentik → postgresql
+    ├── 遥测采集: collector → postgresql / openobserve
+    ├── 观测存储: openobserve → garage
+    └── 入口代理: traefik → authentik
 ```
 
 ## 结构
@@ -41,8 +51,21 @@
 │       ├── openapi.yaml    # 接口规范
 │       └── vacuum.yaml     # 契约检查
 ├── infra                   # 服务编排
+│   ├── authentik           # authentik
+│   ├── garage              # Garage
+│   ├── hatchet             # Hatchet
+│   ├── observe             # OpenObserve
+│   ├── pgbouncer           # PgBouncer
+│   ├── postgresql          # PostgreSQL
+│   ├── traefik             # Traefik
+│   ├── valkey              # Valkey
 │   ├── .env.example        # 环境变量
 │   └── compose.yaml        # 容器编排
+├── tests                   # 测试
+│   └── docker              # 容器
+│       ├── observe.hurl    # 观测验收
+│       ├── oidc.hurl       # OIDC 验收
+│       └── tls.hurl        # TLS 验收
 ├── .dockerignore           # 构建排除
 ├── .editorconfig           # 代码风格
 ├── .gitattributes          # Git 属性

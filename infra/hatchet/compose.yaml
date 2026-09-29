@@ -1,0 +1,63 @@
+# Docker Compose - `https://docs.docker.com/compose/`
+
+# 服务
+services:
+  # Hatchet
+  hatchet-lite:
+    image: "ghcr.io/hatchet-dev/hatchet/hatchet-lite@sha256:db8fb8e009a5c892859e52e4aa50b17aa11ab1dd23801cd320492f2942db30d7"
+    restart: unless-stopped
+    environment:
+      # 数据库直连
+      DATABASE_URL: "postgresql://postgres:${POSTGRES_PASSWORD:?}@postgresql:5432/hatchet?sslmode=disable"
+      # PgBouncer 连接
+      DATABASE_PGBOUNCER_URL: "postgresql://postgres:${POSTGRES_PASSWORD:?}@pgbouncer:5432/hatchet?sslmode=disable"
+      # 消息队列
+      SERVER_MSGQUEUE_KIND: "postgres"
+      # 服务器地址
+      SERVER_URL: "http://hatchet-lite:8888"
+      # Cookie 域
+      SERVER_AUTH_COOKIE_DOMAIN: "hatchet-lite:8888"
+      # Cookie 密钥
+      SERVER_AUTH_COOKIE_SECRETS: "${HATCHET_AUTH_COOKIE_SECRETS:?}"
+      # Cookie 不安全模式
+      SERVER_AUTH_COOKIE_INSECURE: "t"
+      # gRPC 不安全模式
+      SERVER_GRPC_INSECURE: "t"
+      # gRPC 绑定地址
+      SERVER_GRPC_BIND_ADDRESS: "0.0.0.0"
+      # gRPC 端口
+      SERVER_GRPC_PORT: "7077"
+      # gRPC 广播地址
+      SERVER_GRPC_BROADCAST_ADDRESS: "hatchet-lite:7077"
+      # 主密钥集
+      SERVER_ENCRYPTION_MASTER_KEYSET_FILE: "/run/secrets/hatchet-master-keyset"
+      # JWT 公钥集
+      SERVER_ENCRYPTION_JWT_PUBLIC_KEYSET_FILE: "/run/secrets/hatchet-jwt-public-keyset"
+      # JWT 私钥集
+      SERVER_ENCRYPTION_JWT_PRIVATE_KEYSET_FILE: "/run/secrets/hatchet-jwt-private-keyset"
+    secrets:
+      - "hatchet-master-keyset"
+      - "hatchet-jwt-public-keyset"
+      - "hatchet-jwt-private-keyset"
+    volumes:
+      # 配置目录
+      - "hatchet-config:/config"
+    # 健康检查
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8733/ready"]
+      interval: "10s"
+      timeout: "5s"
+      retries: 5
+      start_period: "5m"
+    networks:
+      # 应用内部网
+      - "app-internal"
+      # 数据内部网
+      - "data-internal"
+      # 管理网
+      - "management"
+    depends_on:
+      postgresql:
+        condition: "service_healthy"
+      pgbouncer:
+        condition: "service_healthy"
