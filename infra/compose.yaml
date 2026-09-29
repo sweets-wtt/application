@@ -1,0 +1,24 @@
+# Docker Compose - `https://docs.docker.com/compose/`
+
+# 项目名
+name: application
+
+# 引入
+include:
+
+# 网络
+networks:
+  edge:
+  app-internal:
+    internal: true
+  data-internal:
+    internal: true
+  management:
+    internal: true
+  egress:
+
+# 卷
+volumes: {}
+
+# 密钥
+secrets: {}

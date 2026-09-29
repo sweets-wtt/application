@@ -1,0 +1,15 @@
+# Dockerignore - `https://docs.docker.com/build/concepts/context/#dockerignore-files`
+
+# 版本控制
+.git/
+
+# 环境
+.env
+.env.*
+
+# 日志
+*.log
+*.log.*
+
+# 缓存
+.cache/

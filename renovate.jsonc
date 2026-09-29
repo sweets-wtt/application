@@ -8,7 +8,7 @@
   "extends": ["config:best-practices"],
 
   // 启用的管理器
-  "enabledManagers": ["mise"],
+  "enabledManagers": ["mise", "dockerfile", "docker-compose"],
 
   // 锁文件维护
   "lockFileMaintenance": { "enabled": true },

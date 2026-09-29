@@ -16,6 +16,7 @@ cocogitto = "latest"
 dprint = "latest"
 "github:tufin/oasdiff" = "latest"
 gitleaks = "latest"
+hurl = "latest"
 lefthook = "latest"
 trivy = "latest"
 typos = "latest"
@@ -63,4 +64,31 @@ description = "契约检查"
 dir = "contracts/http"
 run = [
   "vacuum lint --ruleset vacuum.yaml openapi.yaml",
+]
+
+[tasks.check]
+description = "编排校验"
+dir = "infra"
+run = [
+  "docker compose config --quiet",
+]
+
+[tasks.up]
+description = "启动服务"
+dir = "infra"
+run = [
+  "docker compose --profile check up -d --remove-orphans --wait",
+]
+
+[tasks.down]
+description = "停止服务"
+dir = "infra"
+run = [
+  "docker compose down --remove-orphans",
+]
+
+[tasks.audit]
+description = "安全审计"
+run = [
+  "trivy fs --scanners misconfig --severity HIGH,CRITICAL --exit-code 1 .",
 ]
