@@ -30,7 +30,8 @@
     ├── 连接池: pgbouncer → postgresql
     ├── 数据缓存: valkey
     ├── 对象存储: garage
-    └── 工作流: hatchet → postgresql / pgbouncer
+    ├── 工作流: hatchet → postgresql / pgbouncer
+    └── 身份认证: authentik → postgresql
 ```
 
 ## 结构
@@ -47,6 +48,7 @@
 │       ├── openapi.yaml    # 接口规范
 │       └── vacuum.yaml     # 契约检查
 ├── infra                   # 服务编排
+│   ├── authentik           # authentik
 │   ├── garage              # Garage
 │   ├── hatchet             # Hatchet
 │   ├── pgbouncer           # PgBouncer
@@ -54,6 +56,9 @@
 │   ├── valkey              # Valkey
 │   ├── .env.example        # 环境变量
 │   └── compose.yaml        # 容器编排
+├── tests                   # 测试
+│   └── docker              # 容器
+│       └── oidc.hurl       # OIDC 验收
 ├── .dockerignore           # 构建排除
 ├── .editorconfig           # 代码风格
 ├── .gitattributes          # Git 属性

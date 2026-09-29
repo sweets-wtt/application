@@ -10,6 +10,7 @@ include:
   - "valkey/compose.yaml"
   - "garage/compose.yaml"
   - "hatchet/compose.yaml"
+  - "authentik/compose.yaml"
 
 # 网络
 networks:
@@ -30,6 +31,7 @@ volumes:
   garage-data:
   garage-repo:
   hatchet-config:
+  authentik-data:
 
 # 密钥
 secrets:
