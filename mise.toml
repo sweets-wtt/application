@@ -16,6 +16,7 @@ cocogitto = "latest"
 dprint = "latest"
 gitleaks = "latest"
 lefthook = "latest"
+trivy = "latest"
 typos = "latest"
 zizmor = "latest"
 

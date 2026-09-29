@@ -16,7 +16,8 @@
 │   ├── 钩子管理: lefthook → cocogitto
 │   ├── 语法检查: actionlint → github
 │   ├── 工作流审计: zizmor → github
-│   └── 密钥扫描: gitleaks
+│   ├── 密钥扫描: gitleaks
+│   └── 漏洞扫描: trivy
 ├── GitHub: github
 └── 依赖更新: renovate → mise
 ```
