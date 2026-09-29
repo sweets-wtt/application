@@ -8,6 +8,8 @@ pre-commit:
       run: mise exec -- dprint check --allow-no-files "{staged_files}"
     - name: typos
       run: mise exec -- typos --force-exclude "{staged_files}"
+    - name: gitleaks
+      run: mise exec -- gitleaks git --pre-commit --staged --redact
 
 # 提交信息
 commit-msg:

@@ -15,7 +15,8 @@
 │   ├── 提交检查: cocogitto
 │   ├── 钩子管理: lefthook → cocogitto
 │   ├── 语法检查: actionlint → github
-│   └── 工作流审计: zizmor → github
+│   ├── 工作流审计: zizmor → github
+│   └── 密钥扫描: gitleaks
 ├── GitHub: github
 └── 依赖更新: renovate → mise
 ```
@@ -30,6 +31,7 @@
 ├── .editorconfig      # 代码风格
 ├── .gitattributes     # Git 属性
 ├── .gitignore         # Git 忽略
+├── .gitleaks.toml     # 密钥扫描
 ├── .typos.toml        # 拼写检查
 ├── dprint.jsonc       # 代码格式
 ├── lefthook.yaml      # 钩子管理
