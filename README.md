@@ -3,7 +3,7 @@
 ## 概览
 
 - 用途: 框架
-- 状态: 工具链
+- 状态: 契约
 
 ## 架构
 
@@ -19,25 +19,34 @@
 │   ├── 密钥扫描: gitleaks
 │   └── 漏洞扫描: trivy
 ├── GitHub: github
-└── 依赖更新: renovate → mise
+├── 依赖更新: renovate → mise
+└── 接口规范: openapi
+    ├── 契约检查: vacuum → openapi
+    └── 兼容检查: oasdiff → openapi
 ```
 
 ## 结构
 
 ```text
 .
-├── .github            # GitHub
-│   └── workflows      # 工作流
-│       └── ci.yaml    # 持续集成
-├── .editorconfig      # 代码风格
-├── .gitattributes     # Git 属性
-├── .gitignore         # Git 忽略
-├── .gitleaks.toml     # 密钥扫描
-├── .typos.toml        # 拼写检查
-├── dprint.jsonc       # 代码格式
-├── lefthook.yaml      # 钩子管理
-├── mise.lock          # 工具版本
-├── mise.toml          # 环境管理
-├── renovate.jsonc     # 依赖更新
-└── README.md          # 项目说明
+├── .github                 # GitHub
+│   └── workflows           # 工作流
+│       └── ci.yaml         # 持续集成
+├── contracts               # 契约
+│   └── http                # HTTP
+│       ├── paths           # 接口定义
+│       ├── schemas         # 数据模式
+│       ├── openapi.yaml    # 接口规范
+│       └── vacuum.yaml     # 契约检查
+├── .editorconfig           # 代码风格
+├── .gitattributes          # Git 属性
+├── .gitignore              # Git 忽略
+├── .gitleaks.toml          # 密钥扫描
+├── .typos.toml             # 拼写检查
+├── dprint.jsonc            # 代码格式
+├── lefthook.yaml           # 钩子管理
+├── mise.lock               # 工具版本
+├── mise.toml               # 环境管理
+├── renovate.jsonc          # 依赖更新
+└── README.md               # 项目说明
 ```

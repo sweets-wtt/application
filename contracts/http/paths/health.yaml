@@ -1,0 +1,19 @@
+# OpenAPI - `https://spec.openapis.org/`
+
+# 存活探针
+healthz:
+  get:
+    operationId: healthz
+    summary: 检查存活
+    tags: [health]
+    responses:
+      "200":
+        description: 服务存活
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "schemas/response.yaml#/Response"
+                - properties:
+                    data:
+                      $ref: "schemas/health.yaml#/Health"

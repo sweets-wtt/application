@@ -14,10 +14,12 @@ lockfile = true
 actionlint = "latest"
 cocogitto = "latest"
 dprint = "latest"
+"github:tufin/oasdiff" = "latest"
 gitleaks = "latest"
 lefthook = "latest"
 trivy = "latest"
 typos = "latest"
+vacuum = "latest"
 zizmor = "latest"
 
 # 任务
@@ -54,4 +56,11 @@ run = [
 description = "代码格式化"
 run = [
   "dprint fmt",
+]
+
+[tasks.contracts]
+description = "契约检查"
+dir = "contracts/http"
+run = [
+  "vacuum lint --ruleset vacuum.yaml openapi.yaml",
 ]
