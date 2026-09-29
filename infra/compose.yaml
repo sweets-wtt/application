@@ -5,6 +5,7 @@ name: application
 
 # 引入
 include:
+  - "postgresql/compose.yaml"
 
 # 网络
 networks:
@@ -18,7 +19,11 @@ networks:
   egress:
 
 # 卷
-volumes: {}
+volumes:
+  postgresql-data:
+  postgresql-repo:
 
 # 密钥
-secrets: {}
+secrets:
+  postgres:
+    environment: POSTGRES_PASSWORD

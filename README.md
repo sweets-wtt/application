@@ -25,6 +25,8 @@
 │   ├── 契约检查: vacuum → openapi
 │   └── 兼容检查: oasdiff → openapi
 └── 容器平台: docker
+    ├── 归档备份: restic → postgresql
+    └── 关系数据库: postgresql
 ```
 
 ## 结构
@@ -41,6 +43,7 @@
 │       ├── openapi.yaml    # 接口规范
 │       └── vacuum.yaml     # 契约检查
 ├── infra                   # 服务编排
+│   ├── postgresql          # PostgreSQL
 │   ├── .env.example        # 环境变量
 │   └── compose.yaml        # 容器编排
 ├── .dockerignore           # 构建排除
