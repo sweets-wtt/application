@@ -12,6 +12,7 @@ include:
   - "hatchet/compose.yaml"
   - "authentik/compose.yaml"
   - "observe/compose.yaml"
+  - "traefik/compose.yaml"
 
 # 网络
 networks:
@@ -35,6 +36,7 @@ volumes:
   authentik-data:
   openobserve-data:
   collector-storage:
+  traefik-acme:
 
 # 密钥
 secrets:
