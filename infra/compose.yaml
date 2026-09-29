@@ -6,6 +6,7 @@ name: application
 # 引入
 include:
   - "postgresql/compose.yaml"
+  - "pgbouncer/compose.yaml"
 
 # 网络
 networks:
