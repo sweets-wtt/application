@@ -1,0 +1,86 @@
+# Docker Compose - `https://docs.docker.com/compose/`
+
+# 服务
+services:
+  # Garage
+  garage:
+    image: "dxflrs/garage@sha256:866bd13ed2038ba7e7190e840482bc27234c4afaf77be8cfa439ae088c1e4690"
+    restart: unless-stopped
+    command: "/garage server --single-node --default-bucket"
+    environment:
+      # RPC 密钥
+      GARAGE_RPC_SECRET: "${GARAGE_RPC_SECRET:?}"
+      # 默认桶访问密钥
+      GARAGE_DEFAULT_ACCESS_KEY: "${GARAGE_S3_ACCESS_KEY:?}"
+      # 默认桶秘密密钥
+      GARAGE_DEFAULT_SECRET_KEY: "${GARAGE_S3_SECRET_KEY:?}"
+      # 默认桶名
+      GARAGE_DEFAULT_BUCKET: "${GARAGE_DEFAULT_BUCKET:?}"
+    volumes:
+      # 配置文件
+      - "./garage.toml:/etc/garage.toml:ro"
+      # 数据目录
+      - "garage-data:/var/lib/garage"
+    # 健康检查
+    healthcheck:
+      test: ["CMD", "/garage", "status"]
+      interval: "10s"
+      timeout: "5s"
+      retries: 5
+      start_period: "30s"
+    networks:
+      # 数据内部网
+      - "data-internal"
+
+  # Garage 备份
+  garage-backup:
+    image: "restic/restic@sha256:4cf4a61ef9786f4de53e9de8c8f5c040f33830eb0a10bf3d614410ee2fcb6120"
+    restart: unless-stopped
+    # 备份档
+    profiles: ["backup"]
+    environment:
+      # 仓库路径
+      RESTIC_REPOSITORY: /srv/repo
+      # 仓库口令
+      RESTIC_PASSWORD: "${RESTIC_PASSWORD:?}"
+    volumes:
+      # 数据目录
+      - "garage-data:/srv/data:ro"
+      # 备份仓库
+      - "garage-repo:/srv/repo"
+    # 启动命令（对象 RPO ≤ 60 min 恢复 RTO ≤ 4 h）
+    command:
+      - "sh"
+      - "-c"
+      - |
+        restic snapshots --json >/dev/null 2>&1 || restic init -q
+        while true; do
+          restic backup /srv/data --host garage
+          sleep 3600
+        done
+    networks:
+      # 数据内部网
+      - "data-internal"
+
+  # S3 客户端
+  s3-client:
+    image: "amazon/aws-cli@sha256:c43a4fc95ca09f53ff6bd56016f4dc91fb9b5f3b457a8934f997fc399ccc079e"
+    # 工具档
+    profiles: ["tools"]
+    environment:
+      # 访问密钥
+      AWS_ACCESS_KEY_ID: "${GARAGE_S3_ACCESS_KEY:?}"
+      # 秘密密钥
+      AWS_SECRET_ACCESS_KEY: "${GARAGE_S3_SECRET_KEY:?}"
+      # 区域
+      AWS_DEFAULT_REGION: garage
+      # 端点地址
+      AWS_ENDPOINT_URL: "http://garage:3900"
+    # 默认命令
+    command: "s3 ls"
+    networks:
+      # 数据内部网
+      - "data-internal"
+    depends_on:
+      garage:
+        condition: "service_healthy"

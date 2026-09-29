@@ -25,10 +25,11 @@
 │   ├── 契约检查: vacuum → openapi
 │   └── 兼容检查: oasdiff → openapi
 └── 容器平台: docker
-    ├── 归档备份: restic → postgresql
+    ├── 归档备份: restic → postgresql / garage
     ├── 关系数据库: postgresql
     ├── 连接池: pgbouncer → postgresql
-    └── 数据缓存: valkey
+    ├── 数据缓存: valkey
+    └── 对象存储: garage
 ```
 
 ## 结构
@@ -45,6 +46,7 @@
 │       ├── openapi.yaml    # 接口规范
 │       └── vacuum.yaml     # 契约检查
 ├── infra                   # 服务编排
+│   ├── garage              # Garage
 │   ├── pgbouncer           # PgBouncer
 │   ├── postgresql          # PostgreSQL
 │   ├── valkey              # Valkey

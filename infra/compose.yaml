@@ -8,6 +8,7 @@ include:
   - "postgresql/compose.yaml"
   - "pgbouncer/compose.yaml"
   - "valkey/compose.yaml"
+  - "garage/compose.yaml"
 
 # 网络
 networks:
@@ -25,6 +26,8 @@ volumes:
   postgresql-data:
   postgresql-repo:
   valkey-data:
+  garage-data:
+  garage-repo:
 
 # 密钥
 secrets:
