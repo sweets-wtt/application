@@ -31,7 +31,9 @@
     ├── 数据缓存: valkey
     ├── 对象存储: garage
     ├── 工作流: hatchet → postgresql / pgbouncer
-    └── 身份认证: authentik → postgresql
+    ├── 身份认证: authentik → postgresql
+    ├── 遥测采集: collector → postgresql / openobserve
+    └── 观测存储: openobserve → garage
 ```
 
 ## 结构
@@ -51,6 +53,7 @@
 │   ├── authentik           # authentik
 │   ├── garage              # Garage
 │   ├── hatchet             # Hatchet
+│   ├── observe             # OpenObserve
 │   ├── pgbouncer           # PgBouncer
 │   ├── postgresql          # PostgreSQL
 │   ├── valkey              # Valkey
@@ -58,6 +61,7 @@
 │   └── compose.yaml        # 容器编排
 ├── tests                   # 测试
 │   └── docker              # 容器
+│       ├── observe.hurl    # 观测验收
 │       └── oidc.hurl       # OIDC 验收
 ├── .dockerignore           # 构建排除
 ├── .editorconfig           # 代码风格
