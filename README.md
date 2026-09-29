@@ -29,7 +29,8 @@
     ├── 关系数据库: postgresql
     ├── 连接池: pgbouncer → postgresql
     ├── 数据缓存: valkey
-    └── 对象存储: garage
+    ├── 对象存储: garage
+    └── 工作流: hatchet → postgresql / pgbouncer
 ```
 
 ## 结构
@@ -47,6 +48,7 @@
 │       └── vacuum.yaml     # 契约检查
 ├── infra                   # 服务编排
 │   ├── garage              # Garage
+│   ├── hatchet             # Hatchet
 │   ├── pgbouncer           # PgBouncer
 │   ├── postgresql          # PostgreSQL
 │   ├── valkey              # Valkey

@@ -8,3 +8,6 @@ CREATE ROLE app LOGIN PASSWORD :'app_password';
 
 -- 应用库
 CREATE DATABASE app OWNER app;
+
+-- Hatchet 库
+CREATE DATABASE hatchet;

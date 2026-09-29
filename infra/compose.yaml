@@ -9,6 +9,7 @@ include:
   - "pgbouncer/compose.yaml"
   - "valkey/compose.yaml"
   - "garage/compose.yaml"
+  - "hatchet/compose.yaml"
 
 # 网络
 networks:
@@ -28,8 +29,15 @@ volumes:
   valkey-data:
   garage-data:
   garage-repo:
+  hatchet-config:
 
 # 密钥
 secrets:
   postgres:
     environment: POSTGRES_PASSWORD
+  hatchet-master-keyset:
+    environment: HATCHET_MASTER_KEYSET
+  hatchet-jwt-public-keyset:
+    environment: HATCHET_JWT_PUBLIC_KEYSET
+  hatchet-jwt-private-keyset:
+    environment: HATCHET_JWT_PRIVATE_KEYSET
