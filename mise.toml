@@ -12,6 +12,7 @@ not_found_auto_install = false
 # 工具
 [tools]
 "aqua:Boeing/config-file-validator" = "2.3.0"
+"aqua:dprint/dprint" = "0.58.0"
 
 # 任务
 [tasks.install]
@@ -30,10 +31,29 @@ run = [
 description = "检查"
 depends = [
   "lint:validate",
+  "lint:format",
 ]
 
 [tasks."lint:validate"]
 description = "配置校验"
 run = [
   "validator",
+]
+
+[tasks."lint:format"]
+description = "格式检查"
+run = [
+  "dprint check --allow-no-files",
+]
+
+[tasks.format]
+description = "格式化"
+depends = [
+  "format:dprint",
+]
+
+[tasks."format:dprint"]
+description = "代码格式"
+run = [
+  "dprint fmt",
 ]
