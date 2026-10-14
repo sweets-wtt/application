@@ -1,0 +1,21 @@
+# 提交前
+pre-commit:
+  jobs:
+    - name: lint:validate
+      run: mise run lint:validate {staged_files}
+    - name: lint:format
+      run: mise run lint:format {staged_files}
+    - name: lint:spell
+      run: mise run lint:spell {staged_files}
+
+# 提交信息
+commit-msg:
+  jobs:
+    - name: verify
+      run: mise exec -- cog verify --file {1}
+
+# 推送前
+pre-push:
+  jobs:
+    - name: lint
+      run: mise run lint
