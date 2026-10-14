@@ -11,6 +11,7 @@ not_found_auto_install = false
 
 # 工具
 [tools]
+"aqua:Boeing/config-file-validator" = "2.3.0"
 
 # 任务
 [tasks.install]
@@ -23,4 +24,16 @@ depends = [
 description = "安装工具"
 run = [
   "mise install --locked",
+]
+
+[tasks.lint]
+description = "检查"
+depends = [
+  "lint:validate",
+]
+
+[tasks."lint:validate"]
+description = "配置校验"
+run = [
+  "validator",
 ]
