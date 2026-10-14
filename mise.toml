@@ -1,0 +1,26 @@
+# 设置
+[settings]
+# 锁文件
+lockfile = true
+# 严格模式
+locked = true
+# 自动安装
+auto_install = false
+# 缺失自动安装
+not_found_auto_install = false
+
+# 工具
+[tools]
+
+# 任务
+[tasks.install]
+description = "安装"
+depends = [
+  "install:tools",
+]
+
+[tasks."install:tools"]
+description = "安装工具"
+run = [
+  "mise install --locked",
+]
