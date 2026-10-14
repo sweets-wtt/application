@@ -63,6 +63,46 @@ url_api = "https://api.github.com/repos/Boeing/config-file-validator/releases/as
 [tools."aqua:Boeing/config-file-validator"."platforms.windows-x64".provenance.slsa]
 url = "https://github.com/Boeing/config-file-validator/releases/download/v2.3.0/multiple.intoto.jsonl"
 
+[[tools."aqua:crate-ci/typos"]]
+version = "1.51.1"
+backend = "aqua:crate-ci/typos"
+specifiers = ["1.51.1"]
+
+[tools."aqua:crate-ci/typos"."platforms.linux-arm64"]
+checksum = "sha256:2ac5e37b3236b3c07dec5cdf1527acf143aec4674a6089b0bf424d021b35e099"
+url = "https://github.com/crate-ci/typos/releases/download/v1.51.1/typos-v1.51.1-aarch64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/616652747"
+
+[tools."aqua:crate-ci/typos"."platforms.linux-arm64-musl"]
+checksum = "sha256:2ac5e37b3236b3c07dec5cdf1527acf143aec4674a6089b0bf424d021b35e099"
+url = "https://github.com/crate-ci/typos/releases/download/v1.51.1/typos-v1.51.1-aarch64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/616652747"
+
+[tools."aqua:crate-ci/typos"."platforms.linux-x64"]
+checksum = "sha256:93c301fd4120ff076e2cc2a6d6a61cab4a4bdb81899287c0938b452e56d1f454"
+url = "https://github.com/crate-ci/typos/releases/download/v1.51.1/typos-v1.51.1-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/616653682"
+
+[tools."aqua:crate-ci/typos"."platforms.linux-x64-musl"]
+checksum = "sha256:93c301fd4120ff076e2cc2a6d6a61cab4a4bdb81899287c0938b452e56d1f454"
+url = "https://github.com/crate-ci/typos/releases/download/v1.51.1/typos-v1.51.1-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/616653682"
+
+[tools."aqua:crate-ci/typos"."platforms.macos-arm64"]
+checksum = "sha256:316d50a32c3726a80ab39c6d12141b70080498973c5e8a9b068b12cde78b10c1"
+url = "https://github.com/crate-ci/typos/releases/download/v1.51.1/typos-v1.51.1-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/616656668"
+
+[tools."aqua:crate-ci/typos"."platforms.macos-x64"]
+checksum = "sha256:f3451079971633a7f769fb958fe06b0d64b5f1dc46df0854aa1ddb9a6f4031d6"
+url = "https://github.com/crate-ci/typos/releases/download/v1.51.1/typos-v1.51.1-x86_64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/616660774"
+
+[tools."aqua:crate-ci/typos"."platforms.windows-x64"]
+checksum = "sha256:518f759fba43205f17a717656054c1d25bc883455a6296989e9d021c6edb7c59"
+url = "https://github.com/crate-ci/typos/releases/download/v1.51.1/typos-v1.51.1-x86_64-pc-windows-msvc.zip"
+url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/616657506"
+
 [[tools."aqua:dprint/dprint"]]
 version = "0.58.0"
 backend = "aqua:dprint/dprint"
