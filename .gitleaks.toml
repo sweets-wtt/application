@@ -1,0 +1,11 @@
+# 扩展
+[extend]
+# 使用默认规则
+useDefault = true
+
+# 规则
+[[rules]]
+id = "pipe-to-shell"
+description = "管道执行"
+regex = '(?i)(curl|wget)[^|\n]*\|\s*(sudo\s+)?(sh|bash|zsh|ksh|dash)(\s|$)'
+keywords = ["curl", "wget"]
