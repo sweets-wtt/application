@@ -9,6 +9,9 @@ pre-commit:
       run: mise run lint:spell {staged_files}
     - name: lint:secret
       run: mise run lint:secret
+    - name: lint:openapi
+      run: mise run lint:openapi
+      glob: ["contracts/**/*.yaml"]
 
 # 提交信息
 commit-msg:

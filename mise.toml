@@ -18,6 +18,8 @@ not_found_auto_install = false
 "aqua:evilmartians/lefthook" = "2.2.1"
 "aqua:gitleaks/gitleaks" = "8.30.1"
 "aqua:aquasecurity/trivy" = "0.74.0"
+"aqua:daveshanley/vacuum" = "0.33.0"
+"github:tufin/oasdiff" = "1.33.0"
 
 # 任务
 [tasks.install]
@@ -40,6 +42,8 @@ depends = [
   "lint:format",
   "lint:spell",
   "lint:secret",
+  "lint:openapi",
+  "lint:compat",
 ]
 
 [tasks."lint:validate"]
@@ -70,6 +74,21 @@ run = [
 description = "漏洞扫描"
 run = [
   "trivy fs --scanners vuln,misconfig --severity HIGH,CRITICAL --exit-code 1 .",
+]
+
+[tasks."lint:openapi"]
+description = "契约检查"
+dir = "contracts/http"
+run = [
+  "vacuum lint --ruleset vacuum.yaml openapi.yaml",
+]
+
+[tasks."lint:compat"]
+description = "兼容性检查"
+dir = "contracts/http"
+shell = "bash -c"
+run = [
+  "git show origin/main:contracts/http/openapi.yaml 2>/dev/null | oasdiff breaking --fail-on ERR - openapi.yaml",
 ]
 
 [tasks.format]
