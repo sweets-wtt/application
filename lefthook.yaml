@@ -21,3 +21,5 @@ pre-push:
   jobs:
     - name: lint
       run: mise run lint
+    - name: lint:audit
+      run: mise run lint:audit

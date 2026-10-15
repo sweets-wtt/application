@@ -14,7 +14,8 @@
 ├── 拼写检查: typos
 ├── 提交检查: cocogitto
 ├── 钩子管理: lefthook → cocogitto
-└── 密钥检查: gitleaks
+├── 密钥检查: gitleaks
+└── 漏洞扫描: trivy
 ```
 
 ## 结构
