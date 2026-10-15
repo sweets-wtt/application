@@ -20,6 +20,7 @@ not_found_auto_install = false
 "aqua:aquasecurity/trivy" = "0.74.0"
 "aqua:daveshanley/vacuum" = "0.33.0"
 "github:tufin/oasdiff" = "1.33.0"
+"aqua:Orange-OpenSource/hurl" = "8.0.1"
 
 # 任务
 [tasks.install]
@@ -44,6 +45,7 @@ depends = [
   "lint:secret",
   "lint:openapi",
   "lint:compat",
+  "lint:compose",
 ]
 
 [tasks."lint:validate"]
@@ -91,6 +93,13 @@ run = [
   "git show origin/main:contracts/http/openapi.yaml 2>/dev/null | oasdiff breaking --fail-on ERR - openapi.yaml",
 ]
 
+[tasks."lint:compose"]
+description = "编排校验"
+dir = "infra"
+run = [
+  "docker compose config --quiet",
+]
+
 [tasks.format]
 description = "格式化"
 depends = [
@@ -101,4 +110,18 @@ depends = [
 description = "代码格式"
 run = [
   "dprint fmt",
+]
+
+[tasks."compose:up"]
+description = "启动服务"
+dir = "infra"
+run = [
+  "docker compose --profile check up -d --remove-orphans --wait",
+]
+
+[tasks."compose:down"]
+description = "停止服务"
+dir = "infra"
+run = [
+  "docker compose down --remove-orphans",
 ]

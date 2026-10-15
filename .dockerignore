@@ -1,0 +1,15 @@
+# 版本控制
+.git/
+
+# 环境
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# 日志
+*.log
+*.log.*
+
+# 缓存
+.cache/

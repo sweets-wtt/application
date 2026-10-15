@@ -2,7 +2,7 @@
 
 ## 概览
 
-- 状态: 契约
+- 状态: 服务
 
 ## 架构
 
@@ -17,7 +17,9 @@
 ├── 密钥检查: gitleaks
 ├── 漏洞扫描: trivy
 ├── 兼容性检查: oasdiff
-└── HTTP 契约: vacuum
+├── HTTP 契约: vacuum
+├── 服务编排: docker
+└── HTTP 测试: hurl → docker
 ```
 
 ## 结构
@@ -30,11 +32,16 @@
 │     ├── schemas         # 模型定义
 │     ├── openapi.yaml    # OpenAPI
 │     └── vacuum.yaml     # 规则集
+├── infra                 # 服务编排
+│  ├── .env.example       # 环境变量
+│  └── compose.yaml       # 容器编排
+├── .dockerignore         # 构建排除
 ├── .editorconfig         # 代码风格
 ├── .gitattributes        # Git 属性
 ├── .gitignore            # Git 忽略
 ├── .gitleaks.toml        # 密钥检查
 ├── .typos.toml           # 拼写检查
+├── docker-bake.hcl       # 镜像构建
 ├── dprint.jsonc          # 代码格式
 ├── lefthook.yaml         # 钩子管理
 ├── mise.lock             # 工具锁
