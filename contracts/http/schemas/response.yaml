@@ -1,0 +1,27 @@
+# 响应信封
+Response:
+  description: 标准响应格式
+  type: object
+  required:
+    - code
+    - message
+    - data
+  properties:
+    code:
+      description: 业务码
+      type: integer
+      examples:
+        - 0
+    message:
+      description: 提示信息
+      type: string
+      examples:
+        - ok
+    data:
+      description: 业务数据
+      type:
+        - object
+        - array
+      examples:
+        - status: ok
+  additionalProperties: false
