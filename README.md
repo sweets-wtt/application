@@ -2,7 +2,7 @@
 
 ## 概览
 
-- 状态: 契约
+- 状态: 本地编排
 
 ## 架构
 
@@ -16,7 +16,8 @@
 ├── 钩子管理: lefthook → cocogitto
 ├── 密钥检查: gitleaks
 ├── 兼容性检查: oasdiff
-└── HTTP 契约: vacuum
+├── HTTP 契约: vacuum
+└── 本地编排: process-compose
 ```
 
 ## 结构
@@ -29,6 +30,16 @@
 │     ├── schemas         # 模型定义
 │     ├── openapi.yaml    # OpenAPI
 │     └── vacuum.yaml     # 规则集
+├── infra                 # 本地编排
+│  ├── .env.example       # 环境变量
+│  ├── garage             # Garage
+│  │  └── garage.toml     # Garage 配置
+│  ├── observe            # 观测
+│  │  └── collector.yaml  # 采集器配置
+│  ├── postgresql         # PostgreSQL
+│  │  └── init.sql        # 初始化脚本
+│  └── traefik            # Traefik
+│     └── dynamic.yaml    # 动态配置
 ├── .editorconfig         # 代码风格
 ├── .gitattributes        # Git 属性
 ├── .gitignore            # Git 忽略
@@ -38,5 +49,6 @@
 ├── lefthook.yaml         # 钩子管理
 ├── mise.lock             # 工具锁
 ├── mise.toml             # 环境管理
+├── process-compose.yaml  # 本地编排
 └── README.md             # 项目说明
 ```

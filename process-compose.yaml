@@ -1,0 +1,302 @@
+# 版本
+version: 0.5
+
+# 全局环境
+environment:
+  - MSYS_NO_PATHCONV=1
+
+# 进程
+processes:
+  # 编排网络
+  network:
+    command: >-
+      docker network inspect application >nul 2>&1
+      || docker network create application
+    availability:
+      restart: no
+
+  # PostgreSQL
+  postgresql:
+    command: >-
+      docker run --rm --name postgresql --network application
+      -p 127.0.0.1:15432:5432
+      -v .local/postgresql-data:/var/lib/postgresql
+      -v ./infra/postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      --env-file infra/.env
+      postgres:18@sha256:4ef4dbc939d61acea57712655ddb4b4ab27419c913f94cca0cd57cb3ea3c2280
+    availability:
+      restart: on_failure
+    depends_on:
+      network:
+        condition: process_started
+    readiness_probe:
+      exec:
+        command: docker exec postgresql pg_isready -U postgres -d postgres
+      initial_delay_seconds: 2
+      period_seconds: 5
+      failure_threshold: 60
+    shutdown:
+      command: docker stop postgresql
+      timeout_seconds: 20
+
+  # PgBouncer
+  pgbouncer:
+    command: >-
+      docker run --rm --name pgbouncer --network application
+      -p 127.0.0.1:15433:5432
+      --env-file infra/.env
+      -e DB_USER=postgres
+      -e DB_HOST=postgresql
+      -e POOL_MODE=transaction
+      -e AUTH_TYPE=scram-sha-256
+      -e ADMIN_USERS=postgres
+      -e IGNORE_STARTUP_PARAMETERS=extra_float_digits
+      edoburu/pgbouncer@sha256:7d7a27d9e90985cab5cf42256f5c13a3120baa4b055b69df37beb272b89b2340
+    availability:
+      restart: on_failure
+    depends_on:
+      postgresql:
+        condition: process_healthy
+    readiness_probe:
+      exec:
+        command: docker exec pgbouncer pg_isready -h 127.0.0.1 -p 5432
+      initial_delay_seconds: 2
+      period_seconds: 5
+      failure_threshold: 30
+    shutdown:
+      command: docker stop pgbouncer
+      timeout_seconds: 20
+
+  # Valkey
+  valkey:
+    command: >-
+      docker run --rm --name valkey --network application
+      -v .local/valkey-data:/data
+      valkey/valkey@sha256:d2e18f3410b6f616de1417f570fa55261af2898b9c5b2cfb6781ce2373ea43d1
+      valkey-server --bind 0.0.0.0 --protected-mode no --dir /data --appendonly yes
+    availability:
+      restart: on_failure
+    depends_on:
+      network:
+        condition: process_started
+    readiness_probe:
+      exec:
+        command: docker exec valkey valkey-cli ping
+      initial_delay_seconds: 2
+      period_seconds: 5
+      failure_threshold: 30
+    shutdown:
+      command: docker stop valkey
+      timeout_seconds: 20
+
+  # Garage
+  garage:
+    command: >-
+      docker run --rm --name garage --network application
+      -p 127.0.0.1:3900:3900
+      -v .local/garage-data:/var/lib/garage
+      -v ./infra/garage/garage.toml:/etc/garage.toml:ro
+      --env-file infra/.env
+      dxflrs/garage@sha256:866bd13ed2038ba7e7190e840482bc27234c4afaf77be8cfa439ae088c1e4690
+      /garage server --single-node --default-bucket
+    availability:
+      restart: on_failure
+    depends_on:
+      network:
+        condition: process_started
+    readiness_probe:
+      exec:
+        command: docker exec garage /garage status
+      initial_delay_seconds: 2
+      period_seconds: 5
+      failure_threshold: 30
+    shutdown:
+      command: docker stop garage
+      timeout_seconds: 20
+
+  # Hatchet
+  hatchet-lite:
+    command: >-
+      docker run --rm --name hatchet-lite --network application
+      -p 127.0.0.1:7077:7077
+      -p 127.0.0.1:8888:8888
+      -v .local/hatchet-config:/config
+      -v .local/hatchet/master-keyset:/run/secrets/hatchet-master-keyset:ro
+      -v .local/hatchet/jwt-public-keyset:/run/secrets/hatchet-jwt-public-keyset:ro
+      -v .local/hatchet/jwt-private-keyset:/run/secrets/hatchet-jwt-private-keyset:ro
+      --env-file infra/.env
+      --env-file infra/.env.hatchet
+      -e SERVER_MSGQUEUE_KIND=postgres
+      -e SERVER_MSGQUEUE_PUBSUB_KIND=postgres
+      -e SERVER_URL=http://hatchet-lite:8888
+      -e SERVER_AUTH_COOKIE_DOMAIN=hatchet-lite:8888
+      -e SERVER_AUTH_COOKIE_INSECURE=t
+      -e SERVER_GRPC_INSECURE=t
+      -e SERVER_GRPC_BIND_ADDRESS=0.0.0.0
+      -e SERVER_GRPC_PORT=7077
+      -e SERVER_GRPC_BROADCAST_ADDRESS=hatchet-lite:7077
+      ghcr.io/hatchet-dev/hatchet/hatchet-lite@sha256:db8fb8e009a5c892859e52e4aa50b17aa11ab1dd23801cd320492f2942db30d7
+    availability:
+      restart: on_failure
+    depends_on:
+      postgresql:
+        condition: process_healthy
+      pgbouncer:
+        condition: process_healthy
+    readiness_probe:
+      exec:
+        command: docker exec hatchet-lite wget -qO- http://127.0.0.1:8733/ready
+      initial_delay_seconds: 60
+      period_seconds: 10
+      failure_threshold: 60
+    shutdown:
+      command: docker stop hatchet-lite
+      timeout_seconds: 30
+
+  # authentik 服务端
+  authentik-server:
+    command: >-
+      docker run --rm --name authentik-server --network application
+      --shm-size 512mb
+      -p 127.0.0.1:9000:9000
+      -v .local/authentik-data:/data
+      --env-file infra/.env
+      -e AUTHENTIK_POSTGRESQL__HOST=postgresql
+      -e AUTHENTIK_POSTGRESQL__NAME=authentik
+      -e AUTHENTIK_POSTGRESQL__USER=postgres
+      -e AUTHENTIK_POSTGRESQL__SSLMODE=disable
+      ghcr.io/goauthentik/server@sha256:ab9b4e8cc4ab3f8d1198d2db6aeea66bafea1963b3f2843589e0d163f97d9849
+      server
+    availability:
+      restart: on_failure
+    depends_on:
+      postgresql:
+        condition: process_healthy
+    readiness_probe:
+      exec:
+        command: curl -sf http://127.0.0.1:9000/-/health/ready/
+      initial_delay_seconds: 30
+      period_seconds: 10
+      failure_threshold: 40
+    shutdown:
+      command: docker stop authentik-server
+      timeout_seconds: 30
+
+  # authentik 工作进程
+  authentik-worker:
+    command: >-
+      docker run --rm --name authentik-worker --network application
+      --shm-size 512mb
+      -v .local/authentik-data:/data
+      --env-file infra/.env
+      -e AUTHENTIK_POSTGRESQL__HOST=postgresql
+      -e AUTHENTIK_POSTGRESQL__NAME=authentik
+      -e AUTHENTIK_POSTGRESQL__USER=postgres
+      -e AUTHENTIK_POSTGRESQL__SSLMODE=disable
+      ghcr.io/goauthentik/server@sha256:ab9b4e8cc4ab3f8d1198d2db6aeea66bafea1963b3f2843589e0d163f97d9849
+      worker
+    availability:
+      restart: on_failure
+    depends_on:
+      postgresql:
+        condition: process_healthy
+    shutdown:
+      command: docker stop authentik-worker
+      timeout_seconds: 30
+
+  # OpenObserve
+  openobserve:
+    command: >-
+      docker run --rm --name openobserve --network application
+      -p 127.0.0.1:5080:5080
+      -v .local/openobserve-data:/data
+      --env-file infra/.env
+      -e ZO_DATA_DIR=/data
+      -e ZO_LOCAL_MODE=true
+      -e ZO_LOCAL_MODE_STORAGE=s3
+      -e ZO_S3_PROVIDER=minio
+      -e ZO_S3_SERVER_URL=http://garage:3900
+      -e ZO_S3_REGION_NAME=garage
+      -e ZO_TELEMETRY=false
+      public.ecr.aws/zinclabs/openobserve@sha256:600f92cafd2a0697abf2cb443f8ab533e06f7d2d3c031986210fce8339b214d9
+    availability:
+      restart: on_failure
+    depends_on:
+      garage:
+        condition: process_healthy
+    readiness_probe:
+      exec:
+        command: curl -sf http://127.0.0.1:5080/healthz
+      initial_delay_seconds: 10
+      period_seconds: 10
+      failure_threshold: 40
+    shutdown:
+      command: docker stop openobserve
+      timeout_seconds: 20
+
+  # OpenTelemetry 采集器
+  collector:
+    command: >-
+      docker run --rm --name collector --network application
+      --user 0:0
+      -p 127.0.0.1:4317:4317
+      -p 127.0.0.1:4318:4318
+      -v ./infra/observe/collector.yaml:/etc/otelcol-contrib/config.yaml:ro
+      -v /proc:/proc:ro
+      -v /sys:/sys:ro
+      -v /var/lib/docker/containers:/var/lib/docker/containers:ro
+      -v .local/collector-storage:/var/lib/otelcol
+      --env-file infra/.env
+      otel/opentelemetry-collector-contrib@sha256:fd328de2552466ad78385e1b1289c3f2402b1c45f265b252aab1955b42845ac1
+      --config /etc/otelcol-contrib/config.yaml
+    availability:
+      restart: on_failure
+    depends_on:
+      openobserve:
+        condition: process_started
+      postgresql:
+        condition: process_healthy
+    readiness_probe:
+      exec:
+        command: docker exec collector /otelcol-contrib validate --config=/etc/otelcol-contrib/config.yaml
+      initial_delay_seconds: 10
+      period_seconds: 10
+      failure_threshold: 40
+    shutdown:
+      command: docker stop collector
+      timeout_seconds: 20
+
+  # Traefik
+  traefik:
+    command: >-
+      docker run --rm --name traefik --network application
+      -p 80:80
+      -p 443:443
+      -v /var/run/docker.sock:/var/run/docker.sock:ro
+      -v .local/traefik-acme:/acme
+      -v ./infra/traefik/dynamic.yaml:/etc/traefik/dynamic/dynamic.yaml:ro
+      traefik:v3.7.13@sha256:1c32e7c368204fd72812152ebdd2ac0425993df6fd982317deb02e48f2d5423c
+      --providers.docker=true
+      --providers.docker.exposedByDefault=false
+      --providers.docker.network=application
+      --providers.file.directory=/etc/traefik/dynamic
+      --entrypoints.web.address=:80
+      --entrypoints.web.http.redirections.entrypoint.to=websecure
+      --entrypoints.web.http.redirections.entrypoint.scheme=https
+      --entrypoints.websecure.address=:443
+      --api.dashboard=true
+      --ping=true
+    availability:
+      restart: on_failure
+    depends_on:
+      network:
+        condition: process_started
+    readiness_probe:
+      exec:
+        command: docker exec traefik traefik healthcheck --ping
+      initial_delay_seconds: 5
+      period_seconds: 10
+      failure_threshold: 30
+    shutdown:
+      command: docker stop traefik
+      timeout_seconds: 30

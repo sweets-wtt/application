@@ -1,0 +1,115 @@
+# 扩展
+extensions:
+  # 文件存储
+  file_storage:
+    # 存储目录
+    directory: /var/lib/otelcol
+
+# 接收器
+receivers:
+  # OTLP 接收
+  otlp:
+    # 协议
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+  # 主机指标
+  hostmetrics:
+    # 采集间隔
+    collection_interval: 1m
+    # 采集项
+    scrapers:
+      cpu:
+      memory:
+      load:
+      network:
+      disk:
+      filesystem:
+      paging:
+
+  # 容器文件日志
+  filelog:
+    # 容器日志路径
+    include: [/var/lib/docker/containers/*/*.log]
+    # 存储扩展
+    storage: file_storage
+    # 处理操作
+    operators:
+      # JSON 解析
+      - type: json_parser
+      # 正文字段
+      - type: move
+        from: attributes.log
+        to: body
+      # 时间戳
+      - type: time_parser
+        parse_from: attributes.time
+        layout_type: gotime
+        layout: "2006-01-02T15:04:05.999999999Z07:00"
+
+  # PostgreSQL 指标
+  postgresql:
+    # 端点地址
+    endpoint: postgresql:5432
+    # 用户名
+    username: postgres
+    # 口令
+    password: ${env:POSTGRES_PASSWORD}
+    # 采集间隔
+    collection_interval: 1m
+    # 传输安全
+    tls:
+      insecure: true
+
+# 处理器
+processors:
+  # 脱敏
+  redaction:
+    # 保留全部键
+    allow_all_keys: true
+    # 阻断值
+    blocked_values:
+      # 口令键值对
+      - '(?i)(password|passwd|secret|token|api[_-]?key|authorization|credential)[=:]\s*\S+'
+      # Bearer 令牌
+      - '(?i)bearer\s+[a-z0-9._~+/-]+=*'
+      # AWS 访问密钥
+      - "AKIA[0-9A-Z]{16}"
+    # 摘要
+    summary: silent
+
+# 导出器
+exporters:
+  # OpenObserve
+  otlphttp/openobserve:
+    # 端点地址
+    endpoint: http://openobserve:5080/api/default
+    # 请求头
+    headers:
+      # 认证
+      Authorization: ${env:OPENOBSERVE_AUTHORIZATION}
+
+# 服务管道
+service:
+  # 扩展
+  extensions: [file_storage]
+  # 数据管道
+  pipelines:
+    # 指标
+    metrics:
+      receivers: [otlp, hostmetrics, postgresql]
+      processors: [redaction]
+      exporters: [otlphttp/openobserve]
+    # 日志
+    logs:
+      receivers: [otlp, filelog]
+      processors: [redaction]
+      exporters: [otlphttp/openobserve]
+    # 追踪
+    traces:
+      receivers: [otlp]
+      processors: [redaction]
+      exporters: [otlphttp/openobserve]

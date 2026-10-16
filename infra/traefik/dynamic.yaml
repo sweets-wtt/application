@@ -1,0 +1,67 @@
+# HTTP
+http:
+  # 路由器
+  routers:
+    # authentik 界面
+    authentik:
+      rule: "Host(`authentik.localhost`)"
+      service: authentik
+      tls: {}
+
+    # authentik Outpost
+    authentik-outpost:
+      rule: "Host(`authentik.localhost`) && PathPrefix(`/outpost.goauthentik.io/`)"
+      priority: 15
+      service: authentik-outpost
+      tls: {}
+
+    # 仪表板
+    dashboard:
+      rule: "Host(`traefik.localhost`)"
+      service: api@internal
+      middlewares:
+        - authentik
+        - ratelimit
+      tls: {}
+
+  # 上游服务
+  services:
+    # authentik 界面上游
+    authentik:
+      loadBalancer:
+        servers:
+          - url: "http://authentik-server:9000"
+
+    # authentik Outpost 上游
+    authentik-outpost:
+      loadBalancer:
+        servers:
+          - url: "http://authentik-server:9000"
+
+  # 中间件
+  middlewares:
+    # Forward Auth 认证
+    authentik:
+      forwardAuth:
+        address: "http://authentik-server:9000/outpost.goauthentik.io/auth/traefik"
+        trustForwardHeader: true
+        authResponseHeaders:
+          - X-authentik-username
+          - X-authentik-groups
+          - X-authentik-entitlements
+          - X-authentik-email
+          - X-authentik-name
+          - X-authentik-uid
+          - X-authentik-jwt
+          - X-authentik-meta-jwks
+          - X-authentik-meta-outpost
+          - X-authentik-meta-provider
+          - X-authentik-meta-app
+          - X-authentik-meta-version
+
+    # 限流
+    ratelimit:
+      rateLimit:
+        average: 100
+        period: 1m
+        burst: 50
