@@ -15,3 +15,5 @@ not_found_auto_install = false
 "aqua:go-task/task" = "3.54.0"
 # 配置校验
 "aqua:Boeing/config-file-validator" = "2.3.0"
+# 配置格式
+"aqua:dprint/dprint" = "0.58.0"

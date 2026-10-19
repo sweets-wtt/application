@@ -6,7 +6,8 @@
 根: application
 └── 环境管理: mise
     ├── 任务运行: task
-    └── 配置校验: config-file-validator
+    ├── 配置校验: config-file-validator
+    └── 配置格式: dprint
 ```
 
 ## 结构
@@ -17,6 +18,7 @@
 ├── .editorconfig     # 代码风格
 ├── .gitattributes    # Git 属性
 ├── .gitignore        # Git 忽略
+├── dprint.jsonc      # 配置格式
 ├── mise.lock         # 工具锁定
 ├── mise.toml         # 环境管理
 ├── README.md         # 项目说明

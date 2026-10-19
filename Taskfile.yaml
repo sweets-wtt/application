@@ -37,8 +37,24 @@ tasks:
     desc: 检查
     cmds:
       - task: check:validate
+      - task: check:format
 
   check:validate:
     desc: 校验检查
     cmds:
       - validator .
+
+  check:format:
+    desc: 格式检查
+    cmds:
+      - dprint check --allow-no-files
+
+  format:
+    desc: 格式化
+    cmds:
+      - task: format:config
+
+  format:config:
+    desc: 配置格式
+    cmds:
+      - dprint fmt
