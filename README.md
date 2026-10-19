@@ -5,6 +5,7 @@
 ```text
 根: application
 └── 环境管理: mise
+    └── 任务运行: task
 ```
 
 ## 结构
@@ -14,6 +15,8 @@
 ├── .editorconfig     # 代码风格
 ├── .gitattributes    # Git 属性
 ├── .gitignore        # Git 忽略
+├── mise.lock         # 工具锁定
 ├── mise.toml         # 环境管理
-└── README.md         # 项目说明
+├── README.md         # 项目说明
+└── Taskfile.yaml     # 任务定义
 ```

@@ -11,3 +11,5 @@ not_found_auto_install = false
 
 # 工具
 [tools]
+# 任务运行
+"aqua:go-task/task" = "3.54.0"

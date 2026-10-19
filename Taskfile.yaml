@@ -1,0 +1,34 @@
+# 任务
+version: "3"
+
+# 任务
+tasks:
+  install:
+    desc: 安装
+    cmds:
+      - task: install:tools
+
+  install:tools:
+    desc: 安装工具
+    cmds:
+      - mise install --locked
+
+  outdated:
+    desc: 更新
+    cmds:
+      - task: outdated:tools
+
+  outdated:tools:
+    desc: 更新工具
+    cmds:
+      - mise outdated
+
+  upgrade:
+    desc: 升级
+    cmds:
+      - task: upgrade:tools
+
+  upgrade:tools:
+    desc: 升级工具
+    cmds:
+      - mise upgrade --locked
