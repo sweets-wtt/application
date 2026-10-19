@@ -32,3 +32,13 @@ tasks:
     desc: 升级工具
     cmds:
       - mise upgrade --locked
+
+  check:
+    desc: 检查
+    cmds:
+      - task: check:validate
+
+  check:validate:
+    desc: 校验检查
+    cmds:
+      - validator .

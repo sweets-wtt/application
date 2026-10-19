@@ -1,0 +1,5 @@
+# 跳过 Git 忽略
+gitignore = true
+
+# 类型映射
+[type-map]

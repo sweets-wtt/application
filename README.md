@@ -5,13 +5,15 @@
 ```text
 根: application
 └── 环境管理: mise
-    └── 任务运行: task
+    ├── 任务运行: task
+    └── 配置校验: config-file-validator
 ```
 
 ## 结构
 
 ```text
 .
+├── .cfv.toml         # 校验配置
 ├── .editorconfig     # 代码风格
 ├── .gitattributes    # Git 属性
 ├── .gitignore        # Git 忽略
