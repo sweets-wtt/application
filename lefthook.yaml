@@ -7,6 +7,8 @@ pre-commit:
   jobs:
     - name: check
       run: "{task} check:validate check:format check:spell --parallel -- {staged_files}"
+    - name: check:secret
+      run: "{task} check:secret"
 
 # 提交信息
 commit-msg:
@@ -19,3 +21,5 @@ pre-push:
   jobs:
     - name: check
       run: "{task} check"
+    - name: check:audit
+      run: "{task} check:audit"

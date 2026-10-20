@@ -61,6 +61,16 @@ tasks:
     cmds:
       - typos --force-exclude
 
+  check:secret:
+    desc: 密钥检查
+    cmds:
+      - trivy fs --scanners secret --exit-code 1 .
+
+  check:audit:
+    desc: 安全检查
+    cmds:
+      - trivy fs --scanners vuln,misconfig,secret --severity HIGH,CRITICAL --exit-code 1 .
+
   format:
     desc: 格式化
     cmds:

@@ -1,0 +1,8 @@
+# 排除
+scan:
+  # 跳过文件
+  skip-files:
+    - "**/mise.lock"
+
+  # 跳过目录
+  skip-dirs: []
