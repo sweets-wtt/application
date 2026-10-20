@@ -185,6 +185,53 @@ checksum = "sha256:518f759fba43205f17a717656054c1d25bc883455a6296989e9d021c6edb7
 url = "https://github.com/crate-ci/typos/releases/download/v1.51.1/typos-v1.51.1-x86_64-pc-windows-msvc.zip"
 url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/616657506"
 
+[[tools."aqua:daveshanley/vacuum"]]
+version = "0.33.1"
+backend = "aqua:daveshanley/vacuum"
+specifiers = ["0.33.1"]
+
+[tools."aqua:daveshanley/vacuum"."platforms.linux-arm64"]
+checksum = "sha256:79ee040106d7e777c3a2dc2e48333f1e09ad9b57e4f9ced98f6b1c6cd9e01cd3"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.33.1/vacuum_0.33.1_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/644471606"
+provenance = "cosign"
+
+[tools."aqua:daveshanley/vacuum"."platforms.linux-arm64-musl"]
+checksum = "sha256:79ee040106d7e777c3a2dc2e48333f1e09ad9b57e4f9ced98f6b1c6cd9e01cd3"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.33.1/vacuum_0.33.1_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/644471606"
+provenance = "cosign"
+
+[tools."aqua:daveshanley/vacuum"."platforms.linux-x64"]
+checksum = "sha256:3e4c7c96baa2716ee26a8aa34c92dd8ff5fee7e57d045c7e884b0f546cd918b6"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.33.1/vacuum_0.33.1_linux_x86_64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/644471587"
+provenance = "cosign"
+
+[tools."aqua:daveshanley/vacuum"."platforms.linux-x64-musl"]
+checksum = "sha256:3e4c7c96baa2716ee26a8aa34c92dd8ff5fee7e57d045c7e884b0f546cd918b6"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.33.1/vacuum_0.33.1_linux_x86_64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/644471587"
+provenance = "cosign"
+
+[tools."aqua:daveshanley/vacuum"."platforms.macos-arm64"]
+checksum = "sha256:b349eea5d2078821398642db80942d42f3d9a2bbfe0b87dfcb6f6cfcffc71439"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.33.1/vacuum_0.33.1_darwin_arm64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/644471447"
+provenance = "cosign"
+
+[tools."aqua:daveshanley/vacuum"."platforms.macos-x64"]
+checksum = "sha256:071ae2fd060d7985ecf85cacee70bd3ad6ed1f28da1c1f9d9174d8c7830089ce"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.33.1/vacuum_0.33.1_darwin_x86_64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/644471455"
+provenance = "cosign"
+
+[tools."aqua:daveshanley/vacuum"."platforms.windows-x64"]
+checksum = "sha256:f16a0e46a844d595767e22c668e580bc915d62ded44aeb126c87b11f441be558"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.33.1/vacuum_0.33.1_windows_x86_64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/644471614"
+provenance = "cosign"
+
 [[tools."aqua:dprint/dprint"]]
 version = "0.58.0"
 backend = "aqua:dprint/dprint"
@@ -318,3 +365,43 @@ url_api = "https://api.github.com/repos/go-task/task/releases/assets/604090006"
 checksum = "sha256:837f42f71899ea41d07a47acc81d4d6ea80cb41c68292345f915c656473efcb7"
 url = "https://github.com/go-task/task/releases/download/v3.54.0/task_windows_amd64.zip"
 url_api = "https://api.github.com/repos/go-task/task/releases/assets/604090005"
+
+[[tools."github:tufin/oasdiff"]]
+version = "1.33.0"
+backend = "github:tufin/oasdiff"
+specifiers = ["1.33.0"]
+
+[tools."github:tufin/oasdiff"."platforms.linux-arm64"]
+checksum = "sha256:4ae3c362d6074d919aada2dea82d0ee84366591600384455d0bdc658ddf8f7ae"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.33.0/oasdiff_1.33.0_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/603658994"
+
+[tools."github:tufin/oasdiff"."platforms.linux-arm64-musl"]
+checksum = "sha256:4ae3c362d6074d919aada2dea82d0ee84366591600384455d0bdc658ddf8f7ae"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.33.0/oasdiff_1.33.0_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/603658994"
+
+[tools."github:tufin/oasdiff"."platforms.linux-x64"]
+checksum = "sha256:43a4e328e2d13ba1552d760aa68d2485c75c5621f309f6ff64ae895188345247"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.33.0/oasdiff_1.33.0_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/603658995"
+
+[tools."github:tufin/oasdiff"."platforms.linux-x64-musl"]
+checksum = "sha256:43a4e328e2d13ba1552d760aa68d2485c75c5621f309f6ff64ae895188345247"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.33.0/oasdiff_1.33.0_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/603658995"
+
+[tools."github:tufin/oasdiff"."platforms.macos-arm64"]
+checksum = "sha256:2a479337c15afdcbf0b1e89c0b4d0cf0176472dbc11483358fed1f831d1e46c5"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.33.0/oasdiff_1.33.0_darwin_all.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/603659023"
+
+[tools."github:tufin/oasdiff"."platforms.macos-x64"]
+checksum = "sha256:2a479337c15afdcbf0b1e89c0b4d0cf0176472dbc11483358fed1f831d1e46c5"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.33.0/oasdiff_1.33.0_darwin_all.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/603659023"
+
+[tools."github:tufin/oasdiff"."platforms.windows-x64"]
+checksum = "sha256:22f98c7247075f8a446e783595802d6d38637de1760df264f3d4b3309f766c5b"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.33.0/oasdiff_1.33.0_windows_amd64.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/603658993"

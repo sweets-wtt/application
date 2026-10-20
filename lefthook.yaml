@@ -9,6 +9,9 @@ pre-commit:
       run: "{task} check:validate check:format check:spell --parallel -- {staged_files}"
     - name: check:secret
       run: "{task} check:secret"
+    - name: check:openapi
+      run: "{task} check:openapi"
+      glob: ["contracts/http/**"]
 
 # 提交信息
 commit-msg:
@@ -23,3 +26,5 @@ pre-push:
       run: "{task} check"
     - name: check:audit
       run: "{task} check:audit"
+    - name: check:compat
+      run: "{task} check:compat"

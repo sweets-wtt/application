@@ -71,6 +71,19 @@ tasks:
     cmds:
       - trivy fs --scanners vuln,misconfig,secret --severity HIGH,CRITICAL --exit-code 1 .
 
+  check:openapi:
+    desc: 契约检查
+    dir: contracts/http
+    cmds:
+      - vacuum lint --ruleset vacuum.yaml openapi.yaml
+
+  check:compat:
+    desc: 兼容性检查
+    dir: contracts/http
+    shell: bash -c
+    cmds:
+      - git show origin/main:contracts/http/openapi.yaml 2>/dev/null | oasdiff breaking --fail-on ERR - openapi.yaml
+
   format:
     desc: 格式化
     cmds:

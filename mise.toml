@@ -25,3 +25,7 @@ not_found_auto_install = false
 "aqua:evilmartians/lefthook" = "2.2.1"
 # 安全扫描
 "aqua:aquasecurity/trivy" = "0.74.0"
+# 兼容性检查
+"github:tufin/oasdiff" = "1.33.0"
+# HTTP 契约
+"aqua:daveshanley/vacuum" = "0.33.1"

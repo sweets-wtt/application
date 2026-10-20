@@ -1,0 +1,24 @@
+# 扩展
+extends: [[vacuum:oas, recommended]]
+
+# 规则
+rules:
+  # 敏感字段禁止示例与默认值
+  no-sensitive-examples:
+    # 描述
+    description: 敏感字段禁止示例与默认值
+    # 严重级别
+    severity: error
+    # 目标路径
+    given:
+      - "$..password"
+      - "$..secret"
+      - "$..token"
+    # 断言规则
+    then:
+      - field: example
+        function: falsy
+      - field: examples
+        function: falsy
+      - field: default
+        function: falsy

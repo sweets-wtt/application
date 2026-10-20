@@ -1,0 +1,27 @@
+# 问题详情
+Problem:
+  # 描述
+  description: 问题详情
+  # 类型
+  type: object
+  # 必填
+  required:
+    - status
+  # 属性
+  properties:
+    # 标题
+    title:
+      description: 标题
+      type: string
+    # 状态码
+    status:
+      description: 状态码
+      type: integer
+    # 详情
+    detail:
+      description: 描述
+      type: string
+    # 追踪标识
+    traceId:
+      description: 标识
+      type: string

@@ -11,24 +11,31 @@
     ├── 拼写检查: typos
     ├── 提交检查: cocogitto
     ├── 钩子管理: lefthook
-    └── 安全扫描: trivy
+    ├── 安全扫描: trivy
+    ├── 兼容性检查: oasdiff
+    └── HTTP 契约: vacuum
 ```
 
 ## 结构
 
 ```text
 .
-├── .cfv.toml            # 校验配置
-├── .editorconfig        # 代码风格
-├── .gitattributes       # Git 属性
-├── .gitignore           # Git 忽略
-├── .typos.toml          # 拼写检查
-├── dprint.jsonc         # 配置格式
-├── lefthook.yaml        # 钩子管理
-├── mise.lock            # 工具锁定
-├── mise.toml            # 环境管理
-├── trivy-secret.yaml    # 密钥规则
-├── trivy.yaml           # 安全扫描
-├── README.md            # 项目说明
-└── Taskfile.yaml        # 任务定义
+├── contracts             # 契约
+│  └── http               # HTTP
+│     ├── schemas         # 模型定义
+│     ├── openapi.yaml    # OpenAPI
+│     └── vacuum.yaml     # 规则集
+├── .cfv.toml             # 校验配置
+├── .editorconfig         # 代码风格
+├── .gitattributes        # Git 属性
+├── .gitignore            # Git 忽略
+├── .typos.toml           # 拼写检查
+├── dprint.jsonc          # 配置格式
+├── lefthook.yaml         # 钩子管理
+├── mise.lock             # 工具锁定
+├── mise.toml             # 环境管理
+├── trivy-secret.yaml     # 密钥规则
+├── trivy.yaml            # 安全扫描
+├── README.md             # 项目说明
+└── Taskfile.yaml         # 任务定义
 ```
