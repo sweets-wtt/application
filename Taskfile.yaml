@@ -7,11 +7,17 @@ tasks:
     desc: 安装
     cmds:
       - task: install:tools
+      - task: install:hooks
 
   install:tools:
     desc: 安装工具
     cmds:
       - mise install --locked
+
+  install:hooks:
+    desc: 安装钩子
+    cmds:
+      - lefthook install
 
   outdated:
     desc: 更新

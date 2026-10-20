@@ -8,7 +8,9 @@
     ├── 任务运行: task
     ├── 配置校验: config-file-validator
     ├── 配置格式: dprint
-    └── 拼写检查: typos
+    ├── 拼写检查: typos
+    ├── 提交检查: cocogitto
+    └── 钩子管理: lefthook
 ```
 
 ## 结构
@@ -21,6 +23,7 @@
 ├── .gitignore        # Git 忽略
 ├── .typos.toml       # 拼写检查
 ├── dprint.jsonc      # 配置格式
+├── lefthook.yaml     # 钩子管理
 ├── mise.lock         # 工具锁定
 ├── mise.toml         # 环境管理
 ├── README.md         # 项目说明

@@ -1,0 +1,21 @@
+# 模板
+templates:
+  task: mise exec -- task
+
+# 提交前
+pre-commit:
+  jobs:
+    - name: check
+      run: "{task} check:validate check:format check:spell --parallel -- {staged_files}"
+
+# 提交信息
+commit-msg:
+  jobs:
+    - name: verify
+      run: mise exec -- cog verify --file {1}
+
+# 推送前
+pre-push:
+  jobs:
+    - name: check
+      run: "{task} check"
