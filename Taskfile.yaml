@@ -38,6 +38,7 @@ tasks:
     cmds:
       - task: check:validate
       - task: check:format
+      - task: check:spell
 
   check:validate:
     desc: 校验检查
@@ -48,6 +49,11 @@ tasks:
     desc: 格式检查
     cmds:
       - dprint check --allow-no-files
+
+  check:spell:
+    desc: 拼写检查
+    cmds:
+      - typos --force-exclude
 
   format:
     desc: 格式化
