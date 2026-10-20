@@ -93,3 +93,14 @@ tasks:
     desc: 配置格式
     cmds:
       - dprint fmt
+
+  stack:up:
+    desc: 编排启动
+    cmds:
+      - process-compose up -t=false --env infra/.env
+
+  stack:down:
+    desc: 编排停止
+    dir: infra
+    cmds:
+      - process-compose down

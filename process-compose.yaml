@@ -1,0 +1,13 @@
+# 版本
+version: 0.5
+
+# 环境
+environment:
+  - MSYS_NO_PATHCONV=1
+
+# 进程
+processes:
+  # 网络
+  network:
+    # 命令
+    command: docker network inspect application || docker network create application
