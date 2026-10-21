@@ -1,0 +1,53 @@
+# 项目
+[project]
+# 名称
+name = "app"
+# 版本
+version = "0.1.0"
+# 描述
+description = "Python 共享包"
+# 要求 Python
+requires-python = ">=3.12"
+# 依赖
+dependencies = [
+  "pydantic>=2.13.5",
+  "structlog>=26.1.0",
+]
+
+# 可选依赖
+[project.optional-dependencies]
+# 数据库
+db = ["sqlalchemy[asyncio]>=2.0", "asyncpg>=0.30"]
+# 缓存
+cache = ["valkey>=6.0"]
+# 对象存储
+storage = ["aiobotocore>=2.0"]
+# 工作流
+workflow = ["hatchet-sdk>=1.0"]
+
+# 构建系统
+[build-system]
+# 构建依赖
+requires = ["uv_build>=0.12.10"]
+# 后端
+build-backend = "uv_build"
+
+# uv 构建后端
+[tool.uv.build-backend]
+# 模块名
+module-name = "app"
+
+# 契约生成
+[tool.datamodel-codegen]
+# 输入
+input = "../../../contracts/http/openapi.yaml"
+# 输入类型
+input-file-type = "openapi"
+# 输出
+output = "src/app/contracts/generated/http.py"
+# 输出模型
+output-model-type = "pydantic_v2.BaseModel"
+# 目标 Python
+target-python-version = "3.12"
+# 字段约束
+field-constraints = true

@@ -150,3 +150,27 @@ tasks:
     dir: infra
     cmds:
       - hurl --test --variables-file .env test.hurl
+
+  test:
+    desc: 测试
+    cmds:
+      - task: test:python
+
+  test:python:
+    desc: Python 测试
+    dir: packages/python/app
+    cmds:
+      - uv run pytest
+
+  generate:
+    desc: 生成
+    cmds:
+      - task: generate:python
+
+  generate:python:
+    desc: 生成 Python 契约模型
+    dir: packages/python/app
+    deps:
+      - check:openapi
+    cmds:
+      - uvx --from datamodel-code-generator datamodel-codegen
