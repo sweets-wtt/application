@@ -1,0 +1,22 @@
+# 元数据目录
+metadata_dir = "/var/lib/garage/meta"
+# 数据目录
+data_dir = "/var/lib/garage/data"
+
+# 复制因子
+replication_factor = 1
+
+# RPC 绑定地址
+rpc_bind_addr = "[::]:3901"
+
+# S3 API
+[s3_api]
+# 区域
+s3_region = "garage"
+# S3 API 绑定地址
+api_bind_addr = "[::]:3900"
+
+# Admin API
+[admin]
+# Admin API 绑定地址
+api_bind_addr = "[::]:3903"

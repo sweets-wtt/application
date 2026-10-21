@@ -104,3 +104,9 @@ tasks:
     dir: infra
     cmds:
       - process-compose down
+
+  stack:verify:
+    desc: 编排验收
+    dir: infra
+    cmds:
+      - hurl --test --variables-file .env test.hurl

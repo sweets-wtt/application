@@ -1,0 +1,86 @@
+# 接收器
+receivers:
+  # OTLP
+  otlp:
+    # 协议
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+  # 主机指标
+  hostmetrics:
+    # 采集间隔
+    collection_interval: 30s
+    # 采集器
+    scrapers:
+      cpu:
+      memory:
+      disk:
+      filesystem:
+      network:
+
+  # 容器文件日志
+  filelog:
+    # 包含文件
+    include:
+      - /var/lib/docker/containers/*/*.log
+    # 起始读取位置
+    start_at: end
+
+  # PostgreSQL 指标
+  postgresql:
+    # 连接端点
+    endpoint: postgresql:5432
+    # 用户名
+    username: app
+    # 口令
+    password: ${env:POSTGRESQL_PASSWORD}
+    # 采集的数据库
+    databases:
+      - app
+
+# 处理器
+processors:
+  # 敏感串脱敏
+  redaction/敏感脱敏:
+    # 放行全部键
+    allow_all_keys: false
+    # 正则规则
+    blocked_values:
+      - '(?i)(password|secret|token|api[_-]?key)[=:]\S+'
+
+  # 批处理
+  batch:
+
+# 导出器
+exporters:
+  # OTLP/HTTP 导出器
+  otlphttp/openobserve:
+    # 导出端点
+    endpoint: http://openobserve:5080/api/default
+    # 请求头
+    headers:
+      Authorization: ${env:OTEL_EXPORTER_OTLP_HEADERS}
+      stream-name: default
+
+# 服务配置
+service:
+  # 管道
+  pipelines:
+    # 追踪
+    traces:
+      receivers: [otlp]
+      processors: [redaction/敏感脱敏, batch]
+      exporters: [otlphttp/openobserve]
+    # 指标
+    metrics:
+      receivers: [otlp, hostmetrics, postgresql]
+      processors: [redaction/敏感脱敏, batch]
+      exporters: [otlphttp/openobserve]
+    # 日志
+    logs:
+      receivers: [otlp, filelog]
+      processors: [redaction/敏感脱敏, batch]
+      exporters: [otlphttp/openobserve]

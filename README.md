@@ -14,7 +14,8 @@
     ├── 安全扫描: trivy
     ├── 兼容性检查: oasdiff
     ├── HTTP 契约: vacuum
-    └── 本地编排: process-compose
+    ├── 本地编排: process-compose
+    └── 验收: hurl
 ```
 
 ## 结构
@@ -27,7 +28,16 @@
 │     ├── openapi.yaml      # OpenAPI
 │     └── vacuum.yaml       # 规则集
 ├── infra                   # 设施
-│  └── .env.example         # 平台配置
+│  ├── garage               # 对象存储
+│  │  └── garage.toml       # Garage 配置
+│  ├── observe              # 可观测
+│  │  └── collector.yaml    # Collector 配置
+│  ├── postgresql           # 数据库
+│  │  └── init.sql          # 初始化脚本
+│  ├── traefik              # 入口
+│  │  └── dynamic.yaml      # 动态配置
+│  ├── .env.example         # 平台配置
+│  └── test.hurl            # hurl 验收
 ├── .cfv.toml               # 校验配置
 ├── .editorconfig           # 代码风格
 ├── .gitattributes          # Git 属性

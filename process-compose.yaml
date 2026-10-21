@@ -11,3 +11,298 @@ processes:
   network:
     # 命令
     command: docker network inspect application || docker network create application
+
+  # PostgreSQL
+  postgresql:
+    # 命令
+    command: >-
+      docker run --rm --name postgresql --network application
+      -p 127.0.0.1:15432:5432
+      -e POSTGRES_PASSWORD=${POSTGRESQL_PASSWORD}
+      -v ./infra/postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      -v ./.local/postgresql:/var/lib/postgresql/data
+      postgres@sha256:b0f9560a2de083e2cc7382e75f808c7381a32852a7ec49117deedb300e552b24
+    # 就绪探针
+    readiness_probe:
+      exec:
+        command: docker exec postgresql pg_isready -U postgres
+      initial_delay_seconds: 3
+      period_seconds: 5
+      failure_threshold: 30
+    # 依赖
+    depends_on:
+      network:
+    # 受控停止
+    shutdown:
+      command: docker stop postgresql
+      timeout_seconds: 30
+
+  # Valkey
+  valkey:
+    # 命令
+    command: >-
+      docker run --rm --name valkey --network application
+      -p 127.0.0.1:16379:6379
+      -v ./.local/valkey:/data
+      valkey/valkey@sha256:081c2f5cb575efc901aa80ff9cdbd1ec6a301682fd35e1ebb4b0990a4a4a8507
+    # 就绪探针
+    readiness_probe:
+      exec:
+        command: docker exec valkey valkey-cli ping
+      initial_delay_seconds: 3
+      period_seconds: 5
+      failure_threshold: 30
+    # 依赖
+    depends_on:
+      network:
+    # 受控停止
+    shutdown:
+      command: docker stop valkey
+      timeout_seconds: 30
+
+  # PgBouncer
+  pgbouncer:
+    # 命令
+    command: >-
+      docker run --rm --name pgbouncer --network application
+      -p 127.0.0.1:15433:5432
+      -e DB_HOST=postgresql
+      -e DB_USER=app
+      -e DB_PASSWORD=${POSTGRESQL_PASSWORD}
+      -e DB_NAME=*
+      -e POOL_MODE=transaction
+      -e IGNORE_STARTUP_PARAMETERS=extra_float_digits,search_path
+      -e AUTH_TYPE=scram-sha-256
+      edoburu/pgbouncer@sha256:122bac472cfb0b92dca81a72421c93c3c5a840899e2002690a39742427cfcd49
+    # 就绪探针
+    readiness_probe:
+      exec:
+        command: docker run --rm busybox:stable nc -z -w 2 host.docker.internal 15433
+      initial_delay_seconds: 3
+      period_seconds: 5
+      failure_threshold: 30
+    # 依赖
+    depends_on:
+      postgresql:
+        condition: process_healthy
+    # 受控停止
+    shutdown:
+      command: docker stop pgbouncer
+      timeout_seconds: 30
+
+  # Hatchet Lite
+  hatchet-lite:
+    # 命令
+    command: >-
+      docker run --rm --name hatchet-lite --network application
+      -p 127.0.0.1:7077:7077
+      -p 127.0.0.1:18888:8888
+      -e DATABASE_URL=${HATCHET_DATABASE_URL}
+      -e SERVER_GRPC_BIND_ADDRESS=0.0.0.0
+      -e SERVER_GRPC_PORT=7077
+      -e SERVER_GRPC_INSECURE=t
+      -e SERVER_GRPC_BROADCAST_ADDRESS=localhost:7077
+      -e SERVER_URL=http://localhost:8888
+      -e SERVER_AUTH_COOKIE_DOMAIN=localhost
+      -v ./.local/hatchet-lite:/config
+      ghcr.io/hatchet-dev/hatchet/hatchet-lite@sha256:1074a488af999e5ef630a39d53b0430f479e45305e2332f337e2a02d64b19f41
+    # 就绪探针
+    readiness_probe:
+      exec:
+        command: docker run --rm busybox:stable nc -z -w 2 host.docker.internal 18888
+      initial_delay_seconds: 5
+      period_seconds: 5
+      failure_threshold: 60
+    # 依赖
+    depends_on:
+      pgbouncer:
+        condition: process_healthy
+    # 受控停止
+    shutdown:
+      command: docker stop hatchet-lite
+      timeout_seconds: 30
+
+  # Authentik Server
+  authentik-server:
+    # 命令
+    command: >-
+      docker run --rm --name authentik-server --network application
+      -p 127.0.0.1:9000:9000
+      -e AUTHENTIK_SECRET_KEY=${AUTHENTIK_SECRET_KEY}
+      -e AUTHENTIK_REDIS__HOST=valkey
+      -e AUTHENTIK_POSTGRESQL__HOST=pgbouncer
+      -e AUTHENTIK_POSTGRESQL__NAME=authentik
+      -e AUTHENTIK_POSTGRESQL__USER=app
+      -e AUTHENTIK_POSTGRESQL__PASSWORD=${POSTGRESQL_PASSWORD}
+      -e AUTHENTIK_BOOTSTRAP_EMAIL=${AUTHENTIK_BOOTSTRAP_EMAIL}
+      -e AUTHENTIK_BOOTSTRAP_PASSWORD=${AUTHENTIK_BOOTSTRAP_PASSWORD}
+      -e AUTHENTIK_BOOTSTRAP_TOKEN=${AUTHENTIK_BOOTSTRAP_TOKEN}
+      -v ./.local/authentik/media:/media
+      -v ./.local/authentik/templates:/templates
+      ghcr.io/goauthentik/server@sha256:acde6a1fc963301fe27f7e86facb9aefbc68eb523210bcab5679a899e6bf72d5
+      server
+    # 就绪探针
+    readiness_probe:
+      exec:
+        command: docker run --rm busybox:stable nc -z -w 2 host.docker.internal 9000
+      initial_delay_seconds: 10
+      period_seconds: 5
+      failure_threshold: 60
+    # 依赖
+    depends_on:
+      pgbouncer:
+        condition: process_healthy
+    # 受控停止
+    shutdown:
+      command: docker stop authentik-server
+      timeout_seconds: 30
+
+  # Authentik Worker
+  authentik-worker:
+    # 命令
+    command: >-
+      docker run --rm --name authentik-worker --network application
+      -e AUTHENTIK_SECRET_KEY=${AUTHENTIK_SECRET_KEY}
+      -e AUTHENTIK_REDIS__HOST=valkey
+      -e AUTHENTIK_POSTGRESQL__HOST=pgbouncer
+      -e AUTHENTIK_POSTGRESQL__NAME=authentik
+      -e AUTHENTIK_POSTGRESQL__USER=app
+      -e AUTHENTIK_POSTGRESQL__PASSWORD=${POSTGRESQL_PASSWORD}
+      -e AUTHENTIK_BOOTSTRAP_EMAIL=${AUTHENTIK_BOOTSTRAP_EMAIL}
+      -e AUTHENTIK_BOOTSTRAP_PASSWORD=${AUTHENTIK_BOOTSTRAP_PASSWORD}
+      -e AUTHENTIK_BOOTSTRAP_TOKEN=${AUTHENTIK_BOOTSTRAP_TOKEN}
+      -v ./.local/authentik/media:/media
+      -v ./.local/authentik/templates:/templates
+      ghcr.io/goauthentik/server@sha256:acde6a1fc963301fe27f7e86facb9aefbc68eb523210bcab5679a899e6bf72d5
+      worker
+    # 就绪探针
+    readiness_probe:
+      exec:
+        command: docker exec authentik-worker ak healthcheck
+      initial_delay_seconds: 10
+      period_seconds: 5
+      failure_threshold: 60
+    # 依赖
+    depends_on:
+      pgbouncer:
+        condition: process_healthy
+    # 受控停止
+    shutdown:
+      command: docker stop authentik-worker
+      timeout_seconds: 30
+
+  # Garage
+  garage:
+    # 命令
+    command: >-
+      docker run --rm --name garage --network application
+      -p 127.0.0.1:3900:3900
+      -p 127.0.0.1:3901:3901
+      -p 127.0.0.1:3903:3903
+      -e GARAGE_RPC_SECRET=${GARAGE_RPC_SECRET}
+      -e GARAGE_ADMIN_TOKEN=${GARAGE_ADMIN_TOKEN}
+      -v ./infra/garage/garage.toml:/etc/garage.toml:ro
+      -v ./.local/garage:/var/lib/garage
+      dxflrs/garage@sha256:fdb8272fcbe643eef830ee17874d5d4ed623a86501f1acbac8012583113b1c26
+    # 就绪探针
+    readiness_probe:
+      exec:
+        command: docker run --rm busybox:stable nc -z -w 2 host.docker.internal 3900
+      initial_delay_seconds: 3
+      period_seconds: 5
+      failure_threshold: 30
+    # 依赖
+    depends_on:
+      network:
+    # 受控停止
+    shutdown:
+      command: docker stop garage
+      timeout_seconds: 30
+
+  # OpenObserve
+  openobserve:
+    # 命令
+    command: >-
+      docker run --rm --name openobserve --network application
+      -p 127.0.0.1:5080:5080
+      -e ZO_ROOT_USER_EMAIL=${OPENOBSERVE_ROOT_USER}
+      -e ZO_ROOT_USER_PASSWORD=${OPENOBSERVE_ROOT_PASSWORD}
+      -e ZO_DATA_DIR=/data
+      -v ./.local/openobserve:/data
+      openobserve/openobserve@sha256:8f6ea3f9787ad6d158df374e767240a12595d8fcfb72a24bdb6c8dfe937d5cbd
+    # 就绪探针
+    readiness_probe:
+      exec:
+        command: docker run --rm busybox:stable nc -z -w 2 host.docker.internal 5080
+      initial_delay_seconds: 5
+      period_seconds: 5
+      failure_threshold: 30
+    # 依赖
+    depends_on:
+      garage:
+        condition: process_healthy
+    # 受控停止
+    shutdown:
+      command: docker stop openobserve
+      timeout_seconds: 30
+
+  # OpenTelemetry Collector
+  collector:
+    # 命令
+    command: >-
+      docker run --rm --name collector --network application
+      -p 127.0.0.1:4317:4317
+      -p 127.0.0.1:4318:4318
+      --env-file infra/.env
+      -v /var/lib/docker/containers:/var/lib/docker/containers:ro
+      -v ./infra/observe/collector.yaml:/etc/otelcol/collector.yaml:ro
+      ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib@sha256:4611bcc2d6480aef8b108a3c37a5b186894ffab980e5cd5bbffb6217596d408a
+      --config=/etc/otelcol/collector.yaml
+    # 就绪探针
+    readiness_probe:
+      exec:
+        command: docker run --rm busybox:stable nc -z -w 2 host.docker.internal 4317
+      initial_delay_seconds: 5
+      period_seconds: 5
+      failure_threshold: 30
+    # 依赖
+    depends_on:
+      openobserve:
+        condition: process_healthy
+    # 受控停止
+    shutdown:
+      command: docker stop collector
+      timeout_seconds: 30
+
+  # Traefik
+  traefik:
+    # 命令
+    command: >-
+      docker run --rm --name traefik --network application
+      -p 80:80
+      -p 443:443
+      -v /var/run/docker.sock:/var/run/docker.sock
+      -v ./infra/traefik/dynamic.yaml:/etc/traefik/dynamic/dynamic.yaml:ro
+      traefik@sha256:06ddf61ee653caf4f4211a604e657f084f4727f762c16f826c97aafbefcb279e
+      --providers.docker=true
+      --providers.file.directory=/etc/traefik/dynamic
+      --entrypoints.web.address=:80
+      --entrypoints.web.http.redirections.entrypoint.to=websecure
+      --entrypoints.web.http.redirections.entrypoint.scheme=https
+      --entrypoints.websecure.address=:443
+      --api.dashboard=true
+    # 就绪探针
+    readiness_probe:
+      exec:
+        command: docker run --rm busybox:stable nc -z -w 2 host.docker.internal 443
+      initial_delay_seconds: 3
+      period_seconds: 5
+      failure_threshold: 30
+    # 依赖
+    depends_on:
+      authentik-server:
+        condition: process_healthy
+    # 受控停止
+    shutdown:
+      command: docker stop traefik
+      timeout_seconds: 30
