@@ -7,3 +7,4 @@ scan:
   # 跳过目录
   skip-dirs:
     - .venv/
+    - node_modules/

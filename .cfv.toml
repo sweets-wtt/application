@@ -3,3 +3,5 @@ gitignore = true
 
 # 类型映射
 [type-map]
+# Bun 锁文件
+"**/bun.lock" = "jsonc"

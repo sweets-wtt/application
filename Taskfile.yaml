@@ -9,6 +9,7 @@ tasks:
       - task: install:tools
       - task: install:hooks
       - task: install:python
+      - task: install:typescript
 
   install:tools:
     desc: 安装工具
@@ -24,6 +25,11 @@ tasks:
     desc: 安装 Python 依赖
     cmds:
       - uv sync --locked --all-packages --all-extras
+
+  install:typescript:
+    desc: 安装 TypeScript 依赖
+    cmds:
+      - bun install --frozen-lockfile
 
   outdated:
     desc: 更新
@@ -52,6 +58,7 @@ tasks:
       - task: check:format
       - task: check:spell
       - task: check:python
+      - task: check:typescript
 
   check:validate:
     desc: 校验检查
@@ -98,11 +105,19 @@ tasks:
       - uv run ruff check .
       - uv run ty check .
 
+  check:typescript:
+    desc: TypeScript 检查
+    cmds:
+      - bunx oxfmt --check --no-error-on-unmatched-pattern '**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs}'
+      - bunx oxlint --no-error-on-unmatched-pattern
+      - bunx tsc -b --noEmit
+
   format:
     desc: 格式化
     cmds:
       - task: format:config
       - task: format:python
+      - task: format:typescript
 
   format:config:
     desc: 配置格式
@@ -113,6 +128,11 @@ tasks:
     desc: Python 格式化
     cmds:
       - uv run ruff format .
+
+  format:typescript:
+    desc: TypeScript 格式化
+    cmds:
+      - bunx oxfmt --no-error-on-unmatched-pattern '**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs}'
 
   stack:up:
     desc: 编排启动
