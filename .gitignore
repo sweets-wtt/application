@@ -4,12 +4,19 @@
 
 # 缓存
 .cache/
+__pycache__/
+.ruff_cache
+.pytest_cache
+
+# 生成
+.coverage
 
 # 环境
 .env
 .env.*
 !.env.example
 !.env.*.example
+.venv/
 
 # 数据
 .local/

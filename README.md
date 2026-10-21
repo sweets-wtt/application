@@ -15,7 +15,11 @@
     ├── 兼容性检查: oasdiff
     ├── HTTP 契约: vacuum
     ├── 本地编排: process-compose
-    └── 验收: hurl
+    ├── 验收: hurl
+    ├── Python 运行时: python
+    └── Python 依赖管理: uv
+        ├── 代码检查: ruff
+        └── 类型检查: ty
 ```
 
 ## 结构
@@ -48,8 +52,10 @@
 ├── mise.lock               # 工具锁定
 ├── mise.toml               # 环境管理
 ├── process-compose.yaml    # 本地编排
+├── pyproject.toml          # Python 配置
 ├── trivy-secret.yaml       # 密钥规则
 ├── trivy.yaml              # 安全扫描
+├── uv.lock                 # Python 依赖
 ├── README.md               # 项目说明
 └── Taskfile.yaml           # 任务定义
 ```

@@ -8,6 +8,7 @@ tasks:
     cmds:
       - task: install:tools
       - task: install:hooks
+      - task: install:python
 
   install:tools:
     desc: 安装工具
@@ -18,6 +19,11 @@ tasks:
     desc: 安装钩子
     cmds:
       - lefthook install
+
+  install:python:
+    desc: 安装 Python 依赖
+    cmds:
+      - uv sync --locked --all-packages --all-extras
 
   outdated:
     desc: 更新
@@ -45,6 +51,7 @@ tasks:
       - task: check:validate
       - task: check:format
       - task: check:spell
+      - task: check:python
 
   check:validate:
     desc: 校验检查
@@ -84,15 +91,28 @@ tasks:
     cmds:
       - git show origin/main:contracts/http/openapi.yaml 2>/dev/null | oasdiff breaking --fail-on ERR - openapi.yaml
 
+  check:python:
+    desc: Python 检查
+    cmds:
+      - uv run ruff format --check .
+      - uv run ruff check .
+      - uv run ty check .
+
   format:
     desc: 格式化
     cmds:
       - task: format:config
+      - task: format:python
 
   format:config:
     desc: 配置格式
     cmds:
       - dprint fmt
+
+  format:python:
+    desc: Python 格式化
+    cmds:
+      - uv run ruff format .
 
   stack:up:
     desc: 编排启动

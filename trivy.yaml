@@ -5,4 +5,5 @@ scan:
     - "**/mise.lock"
 
   # 跳过目录
-  skip-dirs: []
+  skip-dirs:
+    - .venv/

@@ -33,3 +33,7 @@ not_found_auto_install = false
 "github:F1bonacc1/process-compose" = "1.122.0"
 # HTTP 测试
 "github:Orange-OpenSource/hurl" = "8.0.1"
+# Python 运行时
+python = "3.12.14"
+# Python 依赖管理
+"aqua:astral-sh/uv" = "0.12.10"
