@@ -3,5 +3,7 @@
     "composite": true
   },
   "include": [],
-  "references": []
+  "references": [
+    { "path": "./packages/typescript/app" }
+  ]
 }

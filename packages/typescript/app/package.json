@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@app/shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./contracts": "./src/contracts/index.ts",
+    "./contracts/msw": "./src/contracts/msw.ts",
+    "./log": "./src/log/index.ts",
+    "./state": "./src/state/index.ts",
+    "./auth": "./src/auth/index.ts",
+    "./realtime": "./src/realtime/index.ts"
+  },
+  "dependencies": {
+    "@faker-js/faker": "catalog:",
+    "@tanstack/vue-query": "catalog:",
+    "consola": "catalog:",
+    "msw": "catalog:",
+    "vue": "catalog:",
+    "zod": "catalog:"
+  }
+}

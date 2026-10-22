@@ -25,13 +25,19 @@
 │       ├── 代码检查: oxlint
 │       └── 类型检查: tsc
 └── 共享包: packages
-    └── Python 包: python
-        ├── 契约模型: contracts
+    ├── Python 包: python
+    │   ├── 契约模型: contracts
+    │   ├── 结构化日志: log
+    │   ├── 数据库会话: db
+    │   ├── 缓存: cache
+    │   ├── 对象存储: storage
+    │   └── 工作流: workflow
+    └── TypeScript 包: typescript
+        ├── 契约客户端: contracts
         ├── 结构化日志: log
-        ├── 数据库会话: db
-        ├── 缓存: cache
-        ├── 对象存储: storage
-        └── 工作流: workflow
+        ├── 持久化状态: state
+        ├── 会话令牌: auth
+        └── 实时: realtime
 ```
 
 ## 结构
@@ -55,7 +61,8 @@
 │  ├── .env.example         # 平台配置
 │  └── test.hurl            # hurl 验收
 ├── packages                 # 共享包
-│  └── python                # Python 包
+│  ├── python                # Python 包
+│  └── typescript            # TypeScript 包
 ├── .cfv.toml               # 校验配置
 ├── .editorconfig           # 代码风格
 ├── .gitattributes          # Git 属性
