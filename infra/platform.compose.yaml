@@ -3,13 +3,11 @@
 # yaml-language-server: $schema=https://json.schemastore.org/compose.json
 
 # 服务公共字段
-x-service: &service
-  # 重启策略
+x-service: &service # 重启策略
   restart: unless-stopped
 
 # 健康检查参数
-x-healthcheck: &healthcheck
-  # 间隔
+x-healthcheck: &healthcheck # 间隔
   interval: "10s"
   # 超时
   timeout: "5s"
@@ -19,8 +17,7 @@ x-healthcheck: &healthcheck
   start_period: "30s"
 
 # 内部网
-x-internal: &internal
-  # 内部网
+x-internal: &internal # 内部网
   - "internal"
 
 # 服务
@@ -202,7 +199,12 @@ services:
     healthcheck:
       <<: *healthcheck
       # 配置校验探测
-      test: ["CMD", "/otelcol-contrib", "validate", "--config=/etc/otelcol-contrib/config.yaml"]
+      test: [
+        "CMD",
+        "/otelcol-contrib",
+        "validate",
+        "--config=/etc/otelcol-contrib/config.yaml",
+      ]
       # 启动宽限期
       start_period: "2m"
     # 网络

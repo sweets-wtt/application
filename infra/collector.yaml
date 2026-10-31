@@ -91,7 +91,7 @@ processors:
       # Bearer 令牌
       - '(?i)bearer\s+[a-z0-9._~+/-]+=*'
       # AWS 访问密钥
-      - 'AKIA[0-9A-Z]{16}'
+      - "AKIA[0-9A-Z]{16}"
     # 摘要
     summary: silent
 

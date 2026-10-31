@@ -21,7 +21,7 @@ access_control:
   rules:
     # Traefik 仪表板 - 仅 admins 且强制 2FA
     - domain: 'traefik.{{ env "AUTH_DOMAIN" }}'
-      subject: ['group:admins']
+      subject: ["group:admins"]
       policy: two_factor
 
 # 会话
