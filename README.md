@@ -98,17 +98,13 @@ application（根项目）
 │       ├── openapi.yaml             # 接口规范
 │       └── vacuum.yaml              # 契约检查
 ├── infra                            # 服务编排
-│   ├── app.compose.yaml             # 应用层
 │   ├── authelia                     # Authelia
-│   │   ├── configuration.yaml        # Authelia 配置
-│   │   └── users.yaml                # Authelia 用户
+│   │   ├── configuration.yaml       # Authelia 配置
+│   │   └── users.yaml               # Authelia 用户
 │   ├── collector.yaml               # 采集器配置
-│   ├── compose.yaml                 # 根编排
-│   ├── data.compose.yaml            # 数据层
+│   ├── compose.yaml                 # 容器编排
 │   ├── garage.toml                  # Garage 配置
-│   ├── platform.compose.yaml        # 平台层
-│   ├── postgresql.conf              # PostgreSQL 配置
-│   ├── postgresql-init.sql          # PostgreSQL 初始化
+│   ├── init.sql                     # 数据库初始化
 │   └── .env.example                 # 环境变量
 ├── packages                         # 共享包
 │   ├── python                       # Python
