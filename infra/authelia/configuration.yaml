@@ -1,0 +1,46 @@
+# Authelia 配置 - `https://www.authelia.com/configuration/`
+# 未列出的选项均使用官方默认值(端口 9090/日志 info/默认拒绝/argon2id)
+# 运行时状态存 PostgreSQL(经 AUTHELIA_STORAGE_POSTGRES_* 环境变量注入)
+# 域名经 Go Template 过滤器展开(需 X_AUTHELIA_CONFIG_FILTERS=template),本地与生产共用同一文件
+# 密钥经 AUTHELIA_* 环境变量注入(compose 注入),不入库不入 git
+
+# 身份验证 - 文件后端
+authentication_backend:
+  file:
+    # 用户文件
+    path: /config/users.yaml
+
+# 通知 - 文件系统(无 SMTP 时验证邮件落盘,仅临时)
+notifier:
+  filesystem:
+    filename: /config/notifications.txt
+
+# 访问控制 - 仅作用于 forward-auth 校验(OIDC 模式不适用)
+access_control:
+  # 规则 - 按序匹配
+  rules:
+    # Traefik 仪表板 - 仅 admins 且强制 2FA
+    - domain: 'traefik.{{ env "AUTH_DOMAIN" }}'
+      subject: ['group:admins']
+      policy: two_factor
+
+# 会话
+session:
+  # Cookie 域 - 根域名(覆盖全部子域,须含句点)
+  cookies:
+    - domain: '{{ env "AUTH_DOMAIN" }}'
+      # 门户地址
+      authelia_url: 'https://auth.{{ env "AUTH_DOMAIN" }}'
+
+# ── OIDC 提供方(启用 Web 登录时取消注释) ─────────────────
+# 密钥生成:docker run --rm authelia/authelia authelia crypto oidc generate
+# 客户端口令:docker run --rm authelia/authelia authelia crypto hash generate pbkdf2 --random --random.length 72
+# identity_providers:
+#   oidc:
+#     clients:
+#       - client_id: web
+#         client_name: Web
+#         redirect_uris:
+#           - 'https://web.{{ env "AUTH_DOMAIN" }}/callback'   # 按 @app/auth 回调路径调整
+#         authorization_policy: two_factor
+#         scopes: ['openid', 'email', 'profile', 'groups']

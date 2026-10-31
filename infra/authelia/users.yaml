@@ -1,0 +1,15 @@
+# Authelia 用户 - `https://www.authelia.com/configuration/first-factor/file/`
+# 口令哈希生成:docker run --rm authelia/authelia authelia crypto hash generate argon2 --password '<口令>' --no-confirm
+
+users:
+  # 管理员(开发默认口令 changeme-admin,生产必须更换)
+  admin:
+    displayname: Administrator
+    password: $argon2id$v=19$m=65536,t=3,p=4$swT2ySQWW1sBjn6zl9S7OQ$QSJ/Fw2tcaXwrWpJ9fQO7WoybJnvwg02kd7QxhDa3B4
+    groups: [admins, members]
+
+  # 普通成员(开发默认口令 changeme-member,生产必须更换)
+  member:
+    displayname: Member
+    password: $argon2id$v=19$m=65536,t=3,p=4$vUt7avy4zlBXVGhf8/89iQ$vHphImaI9gjiow2cSdOtv9bi3Qxh8Jt9DLtVE0r4cDs
+    groups: [members]

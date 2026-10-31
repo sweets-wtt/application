@@ -1,45 +1,26 @@
 # Docker Compose - `https://docs.docker.com/compose/`
+# 分层引入:数据 / 平台 / 应用,新增服务写入所属层,include 清单恒定
+
+# yaml-language-server: $schema=https://json.schemastore.org/compose.json
 
 # 项目名
 name: application
 
 # 引入
 include:
-  # PostgreSQL
-  - "postgresql/compose.yaml"
-  # PgBouncer
-  - "pgbouncer/compose.yaml"
-  # Valkey
-  - "valkey/compose.yaml"
-  # Garage
-  - "garage/compose.yaml"
-  # Hatchet
-  - "hatchet/compose.yaml"
-  # authentik
-  - "authentik/compose.yaml"
-  # OpenObserve
-  - "observe/compose.yaml"
-  # Traefik
-  - "traefik/compose.yaml"
-  # Server
-  - "../apps/server/compose.yaml"
-  # Web
-  - "../apps/web/compose.yaml"
+  # 数据层
+  - "data.compose.yaml"
+  # 平台层
+  - "platform.compose.yaml"
+  # 应用层
+  - "app.compose.yaml"
 
 # 命名网络
 networks:
   # 入口网
   edge:
-  # 应用内部网
-  app-internal:
-  # 数据内部网
-  data-internal:
-  # 管理网
-  management:
-    # 外部隔离
-    internal: true
-  # 出站网
-  egress:
+  # 内部网
+  internal:
 
 # 命名卷
 volumes:
@@ -53,32 +34,9 @@ volumes:
   garage-data:
   # Garage 仓库
   garage-repo:
-  # Hatchet 配置
-  hatchet-config:
-  # authentik 数据
-  authentik-data:
   # OpenObserve 数据
   openobserve-data:
   # Collector 存储
   collector-storage:
   # Traefik 证书
   traefik-acme:
-
-# 密钥
-secrets:
-  # PostgreSQL
-  postgres:
-    # 环境变量
-    environment: POSTGRES_PASSWORD
-  # Hatchet 主密钥集
-  hatchet-master-keyset:
-    # 环境变量
-    environment: HATCHET_MASTER_KEYSET
-  # Hatchet JWT 公钥集
-  hatchet-jwt-public-keyset:
-    # 环境变量
-    environment: HATCHET_JWT_PUBLIC_KEYSET
-  # Hatchet JWT 私钥集
-  hatchet-jwt-private-keyset:
-    # 环境变量
-    environment: HATCHET_JWT_PRIVATE_KEYSET

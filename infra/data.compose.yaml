@@ -1,0 +1,222 @@
+# 数据层编排 - PostgreSQL / Valkey / Garage 与备份工具
+
+# yaml-language-server: $schema=https://json.schemastore.org/compose.json
+
+# 服务公共字段
+x-service: &service
+  # 重启策略
+  restart: unless-stopped
+
+# 健康检查参数
+x-healthcheck: &healthcheck
+  # 间隔
+  interval: "10s"
+  # 超时
+  timeout: "5s"
+  # 重试次数
+  retries: 5
+  # 启动宽限期
+  start_period: "30s"
+
+# 内部网
+x-internal: &internal
+  # 内部网
+  - "internal"
+
+# 服务
+services:
+  # PostgreSQL
+  postgresql:
+    # 公共字段
+    <<: *service
+    # 镜像
+    image: postgres:18@sha256:4ef4dbc939d61acea57712655ddb4b4ab27419c913f94cca0cd57cb3ea3c2280
+    # 启动命令
+    command: "postgres -c config_file=/etc/postgresql/postgresql.conf -c hba_file=/etc/postgresql/pg_hba.conf"
+    # 环境变量
+    environment:
+      # 口令
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?}
+      # 应用口令
+      POSTGRES_APP_PASSWORD: ${POSTGRES_APP_PASSWORD:?}
+      # Authelia 口令
+      POSTGRES_AUTHELIA_PASSWORD: ${POSTGRES_AUTHELIA_PASSWORD:?}
+    # 数据卷
+    volumes:
+      # 数据目录
+      - "postgresql-data:/var/lib/postgresql"
+      # 初始化脚本
+      - "./postgresql-init.sql:/docker-entrypoint-initdb.d/init.sql:ro"
+      # 配置文件
+      - "./postgresql.conf:/etc/postgresql/postgresql.conf:ro"
+      # 客户端认证
+      - "./pg_hba.conf:/etc/postgresql/pg_hba.conf:ro"
+    # 健康检查
+    healthcheck:
+      <<: *healthcheck
+      # 就绪探测
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+    # 网络
+    networks: *internal
+
+  # PostgreSQL 备份
+  postgresql-backup:
+    # 公共字段
+    <<: *service
+    # 镜像
+    image: "restic/restic@sha256:4cf4a61ef9786f4de53e9de8c8f5c040f33830eb0a10bf3d614410ee2fcb6120"
+    # 配置档
+    profiles: ["backup"]
+    # 环境变量
+    environment:
+      # 仓库路径
+      RESTIC_REPOSITORY: /srv/repo
+      # 仓库口令
+      RESTIC_PASSWORD: "${RESTIC_PASSWORD:?}"
+      # 口令
+      PGPASSWORD: "${POSTGRES_PASSWORD:?}"
+    # 卷
+    volumes:
+      # 仓库
+      - "postgresql-repo:/srv/repo"
+    # 入口
+    entrypoint: ["sh", "-c"]
+    # 启动命令
+    command:
+      - |
+        restic snapshots --json >/dev/null 2>&1 || restic init -q
+        while true; do
+          pg_dumpall -h postgresql -U postgres | restic backup --stdin --stdin-filename postgresql-all.sql --host postgresql
+          sleep 3600
+        done
+    # 网络
+    networks: *internal
+    # 依赖
+    depends_on:
+      # PostgreSQL
+      postgresql:
+        # 条件
+        condition: "service_healthy"
+
+  # Valkey
+  valkey:
+    # 公共字段
+    <<: *service
+    # 镜像
+    image: "valkey/valkey@sha256:d2e18f3410b6f616de1417f570fa55261af2898b9c5b2cfb6781ce2373ea43d1"
+    # 入口
+    entrypoint: ["sh", "-c"]
+    # 启动命令
+    command:
+      - |
+        printf 'user default off\nuser app on >%s ~* +@all\n' "$$VALKEY_APP_PASSWORD" > /tmp/users.acl
+        exec valkey-server /etc/valkey/valkey.conf --aclfile /tmp/users.acl
+    # 环境变量
+    environment:
+      # ACL 口令
+      VALKEY_APP_PASSWORD: "${VALKEY_APP_PASSWORD:?}"
+    # 卷
+    volumes:
+      # 配置文件
+      - "./valkey.conf:/etc/valkey/valkey.conf:ro"
+      # 数据
+      - "valkey-data:/data"
+    # 健康检查
+    healthcheck:
+      <<: *healthcheck
+      # 就绪探测
+      test: ["CMD-SHELL", "valkey-cli --no-auth-warning --user app -a \"$$VALKEY_APP_PASSWORD\" ping | grep -q PONG"]
+    # 网络
+    networks: *internal
+
+  # Garage
+  garage:
+    # 公共字段
+    <<: *service
+    # 镜像
+    image: "dxflrs/garage@sha256:866bd13ed2038ba7e7190e840482bc27234c4afaf77be8cfa439ae088c1e4690"
+    # 启动命令
+    command: "/garage server --single-node --default-bucket"
+    # 环境变量
+    environment:
+      # RPC 密钥
+      GARAGE_RPC_SECRET: "${GARAGE_RPC_SECRET:?}"
+      # 默认桶访问密钥
+      GARAGE_DEFAULT_ACCESS_KEY: "${GARAGE_S3_ACCESS_KEY:?}"
+      # 默认桶秘密密钥
+      GARAGE_DEFAULT_SECRET_KEY: "${GARAGE_S3_SECRET_KEY:?}"
+      # 默认桶名
+      GARAGE_DEFAULT_BUCKET: "${GARAGE_DEFAULT_BUCKET:?}"
+    # 卷
+    volumes:
+      # 配置文件
+      - "./garage.toml:/etc/garage.toml:ro"
+      # 数据
+      - "garage-data:/var/lib/garage"
+    # 健康检查
+    healthcheck:
+      <<: *healthcheck
+      # 就绪探测
+      test: ["CMD", "/garage", "status"]
+    # 网络
+    networks: *internal
+
+  # S3 客户端
+  s3-client:
+    # 镜像
+    image: "amazon/aws-cli@sha256:c43a4fc95ca09f53ff6bd56016f4dc91fb9b5f3b457a8934f997fc399ccc079e"
+    # 配置档
+    profiles: ["tools"]
+    # 环境变量
+    environment:
+      # 访问密钥
+      AWS_ACCESS_KEY_ID: "${GARAGE_S3_ACCESS_KEY:?}"
+      # 秘密密钥
+      AWS_SECRET_ACCESS_KEY: "${GARAGE_S3_SECRET_KEY:?}"
+      # 区域
+      AWS_DEFAULT_REGION: garage
+      # 端点地址
+      AWS_ENDPOINT_URL: "http://garage:3900"
+    # 入口
+    entrypoint: ["aws"]
+    # 默认命令
+    command: "s3 ls"
+    # 网络
+    networks: *internal
+    # 依赖
+    depends_on:
+      # Garage
+      garage:
+        # 就绪条件
+        condition: "service_healthy"
+
+  # Garage 备份
+  garage-backup:
+    # 公共字段
+    <<: *service
+    # 镜像
+    image: "restic/restic@sha256:4cf4a61ef9786f4de53e9de8c8f5c040f33830eb0a10bf3d614410ee2fcb6120"
+    # 配置档
+    profiles: ["backup"]
+    # 环境变量
+    environment:
+      # 仓库路径
+      RESTIC_REPOSITORY: /srv/repo
+      # 仓库口令
+      RESTIC_PASSWORD: "${RESTIC_PASSWORD:?}"
+    # 卷
+    volumes:
+      # 数据
+      - "garage-data:/srv/data:ro"
+      # 仓库
+      - "garage-repo:/srv/repo"
+    # 入口
+    entrypoint: ["sh", "-c"]
+    # 启动命令（对象 RPO ≤ 60 min 恢复 RTO ≤ 4 h）
+    command:
+      - |
+        restic snapshots --json >/dev/null 2>&1 || restic init -q
+        while true; do
+          restic backup /srv/data --host garage
+          sleep 3600
+        done

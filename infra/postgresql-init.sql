@@ -12,5 +12,11 @@ CREATE DATABASE app OWNER app;
 -- Hatchet 库
 CREATE DATABASE hatchet;
 
--- authentik 库
-CREATE DATABASE authentik;
+-- Authelia 口令
+\getenv authelia_password POSTGRES_AUTHELIA_PASSWORD
+
+-- Authelia 角色
+CREATE ROLE authelia LOGIN PASSWORD :'authelia_password';
+
+-- Authelia 库
+CREATE DATABASE authelia OWNER authelia;

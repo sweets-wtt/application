@@ -25,8 +25,6 @@ application（根项目）
 │   ├── 契约
 │   │   ├── 契约检查：vacuum → openapi
 │   │   └── 兼容检查：oasdiff → openapi
-│   ├── 测试
-│   │   └── HTTP 测试：hurl → docker
 │   └── 工作区
 │       ├── 运行时：python
 │       ├── 依赖管理：uv → python
@@ -52,18 +50,15 @@ application（根项目）
 ├── docker（容器平台）
 │   ├── 数据
 │   │   ├── postgresql（关系数据库）
-│   │   ├── pgbouncer（连接池）→ postgresql
 │   │   ├── valkey（缓存）
-│   │   └── garage（对象存储）
+│   │   ├── garage（对象存储）
+│   │   └── restic（归档备份）→ postgresql / garage
 │   ├── 平台
-│   │   ├── hatchet（工作流）→ postgresql / pgbouncer
-│   │   ├── authentik（身份认证）→ postgresql
-│   │   └── traefik（入口代理）→ authentik
-│   ├── 观测
+│   │   ├── hatchet（工作流）→ postgresql
+│   │   ├── authelia（身份认证）
+│   │   ├── traefik（入口代理）→ authelia
 │   │   ├── collector（遥测采集）→ postgresql / openobserve
-│   │   └── openobserve（观测存储）→ garage
-│   └── 备份
-│       └── restic（归档备份）→ postgresql / garage
+│   │   └── openobserve（观测存储）
 ├── packages（共享包）
 │   ├── python
 │   │   ├── cache（缓存）→ valkey
@@ -103,16 +98,20 @@ application（根项目）
 │       ├── openapi.yaml             # 接口规范
 │       └── vacuum.yaml              # 契约检查
 ├── infra                            # 服务编排
-│   ├── authentik                    # authentik
-│   ├── garage                       # Garage
-│   ├── hatchet                      # Hatchet
-│   ├── observe                      # OpenObserve
-│   ├── pgbouncer                    # PgBouncer
-│   ├── postgresql                   # PostgreSQL
-│   ├── traefik                      # Traefik
-│   ├── valkey                       # Valkey
-│   ├── .env.example                 # 环境变量
-│   └── compose.yaml                 # 容器编排
+│   ├── app.compose.yaml             # 应用层
+│   ├── authelia                     # Authelia
+│   │   ├── configuration.yaml        # Authelia 配置
+│   │   └── users.yaml                # Authelia 用户
+│   ├── collector.yaml               # 采集器配置
+│   ├── compose.yaml                 # 根编排
+│   ├── data.compose.yaml            # 数据层
+│   ├── garage.toml                  # Garage 配置
+│   ├── pg_hba.conf                  # PostgreSQL 认证
+│   ├── platform.compose.yaml        # 平台层
+│   ├── postgresql.conf              # PostgreSQL 配置
+│   ├── postgresql-init.sql          # PostgreSQL 初始化
+│   ├── valkey.conf                  # Valkey 配置
+│   └── .env.example                 # 环境变量
 ├── packages                         # 共享包
 │   ├── python                       # Python
 │   │   ├── cache                    # 缓存
@@ -127,11 +126,6 @@ application（根项目）
 │       ├── log                      # 结构化日志
 │       ├── realtime                 # 实时
 │       └── state                    # 持久化状态
-├── tests                            # 测试
-│   └── docker                       # 容器
-│       ├── observe.hurl             # 观测验收
-│       ├── oidc.hurl                # OIDC 验收
-│       └── tls.hurl                 # TLS 验收
 ├── .editorconfig                    # 代码风格
 ├── .gitattributes                   # Git 属性
 ├── .gitignore                       # Git 忽略

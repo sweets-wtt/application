@@ -10,6 +10,4 @@ export const RELEASE = import.meta.env.VITE_RELEASE ?? "local";
 export const TELEMETRY_URL = import.meta.env.VITE_TELEMETRY_URL ?? "";
 
 // 心跳轮询间隔（毫秒）
-export const HEARTBEAT_INTERVAL = Number(
-  import.meta.env.VITE_HEARTBEAT_INTERVAL ?? 30_000,
-);
+export const HEARTBEAT_INTERVAL = Number(import.meta.env.VITE_HEARTBEAT_INTERVAL ?? 30_000);

@@ -82,24 +82,12 @@ check:
 # 启动
 up:
     # 启动服务
-    {{ compose }} --profile check up -d --remove-orphans --wait
+    {{ compose }} up -d --remove-orphans --wait
 
 # 停止
 down:
     # 停止服务
     {{ compose }} down --remove-orphans
-
-# 测试
-verify:
-    # 启动服务
-    just up
-    # 执行测试
-    hurl --test --retry 15 --retry-interval 2000 --variables-file infra/.env tests/
-
-# 观测
-observe:
-    # 观测验收
-    hurl --test --retry 15 --retry-interval 2000 --variables-file infra/.env tests/docker/observe.hurl
 
 # 工作区检查
 lint-workspace:

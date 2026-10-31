@@ -14,4 +14,3 @@ describe("app store", () => {
     expect(store).toBeDefined();
   });
 });
-
