@@ -106,11 +106,9 @@ application（根项目）
 │   ├── compose.yaml                 # 根编排
 │   ├── data.compose.yaml            # 数据层
 │   ├── garage.toml                  # Garage 配置
-│   ├── pg_hba.conf                  # PostgreSQL 认证
 │   ├── platform.compose.yaml        # 平台层
 │   ├── postgresql.conf              # PostgreSQL 配置
 │   ├── postgresql-init.sql          # PostgreSQL 初始化
-│   ├── valkey.conf                  # Valkey 配置
 │   └── .env.example                 # 环境变量
 ├── packages                         # 共享包
 │   ├── python                       # Python

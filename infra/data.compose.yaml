@@ -3,13 +3,11 @@
 # yaml-language-server: $schema=https://json.schemastore.org/compose.json
 
 # 服务公共字段
-x-service: &service
-  # 重启策略
+x-service: &service # 重启策略
   restart: unless-stopped
 
 # 健康检查参数
-x-healthcheck: &healthcheck
-  # 间隔
+x-healthcheck: &healthcheck # 间隔
   interval: "10s"
   # 超时
   timeout: "5s"
@@ -19,8 +17,7 @@ x-healthcheck: &healthcheck
   start_period: "30s"
 
 # 内部网
-x-internal: &internal
-  # 内部网
+x-internal: &internal # 内部网
   - "internal"
 
 # 服务
@@ -32,7 +29,7 @@ services:
     # 镜像
     image: postgres:18@sha256:4ef4dbc939d61acea57712655ddb4b4ab27419c913f94cca0cd57cb3ea3c2280
     # 启动命令
-    command: "postgres -c config_file=/etc/postgresql/postgresql.conf -c hba_file=/etc/postgresql/pg_hba.conf"
+    command: "postgres -c config_file=/etc/postgresql/postgresql.conf"
     # 环境变量
     environment:
       # 口令
@@ -49,8 +46,6 @@ services:
       - "./postgresql-init.sql:/docker-entrypoint-initdb.d/init.sql:ro"
       # 配置文件
       - "./postgresql.conf:/etc/postgresql/postgresql.conf:ro"
-      # 客户端认证
-      - "./pg_hba.conf:/etc/postgresql/pg_hba.conf:ro"
     # 健康检查
     healthcheck:
       <<: *healthcheck
@@ -106,26 +101,27 @@ services:
     image: "valkey/valkey@sha256:d2e18f3410b6f616de1417f570fa55261af2898b9c5b2cfb6781ce2373ea43d1"
     # 入口
     entrypoint: ["sh", "-c"]
-    # 启动命令
+    # 启动命令 - ACL 生成 + 持久化(其余走镜像默认)
     command:
       - |
         printf 'user default off\nuser app on >%s ~* +@all\n' "$$VALKEY_APP_PASSWORD" > /tmp/users.acl
-        exec valkey-server /etc/valkey/valkey.conf --aclfile /tmp/users.acl
+        exec valkey-server --appendonly yes --aclfile /tmp/users.acl
     # 环境变量
     environment:
       # ACL 口令
       VALKEY_APP_PASSWORD: "${VALKEY_APP_PASSWORD:?}"
     # 卷
     volumes:
-      # 配置文件
-      - "./valkey.conf:/etc/valkey/valkey.conf:ro"
       # 数据
       - "valkey-data:/data"
     # 健康检查
     healthcheck:
       <<: *healthcheck
       # 就绪探测
-      test: ["CMD-SHELL", "valkey-cli --no-auth-warning --user app -a \"$$VALKEY_APP_PASSWORD\" ping | grep -q PONG"]
+      test: [
+        "CMD-SHELL",
+        "valkey-cli --no-auth-warning --user app -a \"$$VALKEY_APP_PASSWORD\" ping | grep -q PONG",
+      ]
     # 网络
     networks: *internal
 

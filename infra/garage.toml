@@ -1,16 +1,14 @@
 # Garage 配置 - `https://garagehq.deuxfleurs.fr/documentation/reference-manual/configuration/`
+# 单节点必要项;rpc_public_addr 由 --single-node 自动探测,admin API 未使用故省略
 
 # 复制因子
 replication_factor = 1
-
 # 元数据目录
 metadata_dir = "/var/lib/garage/meta"
 # 数据目录
 data_dir = "/var/lib/garage/data"
 # RPC 绑定地址
 rpc_bind_addr = "[::]:3901"
-# RPC 公布地址
-rpc_public_addr = "garage:3901"
 
 # S3 API 配置
 [s3_api]
@@ -18,8 +16,3 @@ rpc_public_addr = "garage:3901"
 s3_region = "garage"
 # 绑定地址
 api_bind_addr = "[::]:3900"
-
-# 管理 API 配置
-[admin]
-# 绑定地址
-api_bind_addr = "[::]:3903"
