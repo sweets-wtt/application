@@ -1,6 +1,6 @@
 /** 应用状态 */
 import { defineStore } from "pinia";
-import { parse, serialize, type Storage } from "@app/state";
+import { parse, serialize, type Storage } from "@app/session";
 
 // localStorage 适配为状态包 Storage 接口
 const stateStorage: Storage = {

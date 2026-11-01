@@ -10,10 +10,9 @@
 
   // 引用
   "references": [
-    { "path": "./packages/typescript/auth" },
     { "path": "./packages/typescript/contracts" },
     { "path": "./packages/typescript/log" },
     { "path": "./packages/typescript/realtime" },
-    { "path": "./packages/typescript/state" }
+    { "path": "./packages/typescript/session" }
   ]
 }

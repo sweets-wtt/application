@@ -1,6 +1,6 @@
 /** 路由守卫 */
 import type { Router } from "vue-router";
-import { loadSession, authGuard } from "@app/auth";
+import { loadSession, authGuard } from "@app/session";
 
 // localStorage 适配为状态包 Storage 接口
 const sessionStorage = {

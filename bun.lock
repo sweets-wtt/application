@@ -16,11 +16,10 @@
       "name": "@app/web",
       "version": "0.1.0",
       "dependencies": {
-        "@app/auth": "workspace:*",
         "@app/contracts": "workspace:*",
         "@app/log": "workspace:*",
         "@app/realtime": "workspace:*",
-        "@app/state": "workspace:*",
+        "@app/session": "workspace:*",
         "@tanstack/vue-query": "catalog:",
         "@vueuse/core": "catalog:",
         "pinia": "catalog:",
@@ -44,14 +43,6 @@
         "unplugin-icons": "catalog:",
         "unplugin-vue-components": "catalog:",
         "vite": "catalog:",
-      },
-    },
-    "packages/typescript/auth": {
-      "name": "@app/auth",
-      "version": "0.1.0",
-      "dependencies": {
-        "@app/state": "workspace:*",
-        "zod": "catalog:",
       },
     },
     "packages/typescript/contracts": {
@@ -80,8 +71,8 @@
         "zod": "catalog:",
       },
     },
-    "packages/typescript/state": {
-      "name": "@app/state",
+    "packages/typescript/session": {
+      "name": "@app/session",
       "version": "0.1.0",
       "dependencies": {
         "zod": "catalog:",
@@ -122,15 +113,13 @@
 
     "@antfu/utils": ["@antfu/utils@0.7.10", "", {}, "sha512-+562v9k4aI80m1+VuMHehNJWLOFjBnXn3tdOitzD0il5b7smkSBal4+a3oKiQTbrwMmN/TBUMDvbdoWDehgOww=="],
 
-    "@app/auth": ["@app/auth@workspace:packages/typescript/auth"],
-
     "@app/contracts": ["@app/contracts@workspace:packages/typescript/contracts"],
 
     "@app/log": ["@app/log@workspace:packages/typescript/log"],
 
     "@app/realtime": ["@app/realtime@workspace:packages/typescript/realtime"],
 
-    "@app/state": ["@app/state@workspace:packages/typescript/state"],
+    "@app/session": ["@app/session@workspace:packages/typescript/session"],
 
     "@app/web": ["@app/web@workspace:apps/web"],
 
