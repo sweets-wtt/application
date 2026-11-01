@@ -1,7 +1,7 @@
 """对象存储客户端测试"""
 
 import pytest
-from app.storage.client import StorageSettings, create_client
+from app.persistence.storage import StorageSettings, create_client
 
 
 def test_settings_from_env(monkeypatch: pytest.MonkeyPatch) -> None:

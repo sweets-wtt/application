@@ -19,11 +19,9 @@ dependencies = [
   "opentelemetry-instrumentation-fastapi>=0.66b0",
   "opentelemetry-sdk>=1.45.0",
   "opentelemetry-exporter-otlp-proto-http>=1.45.0",
-  "app-cache",
   "app-contracts",
-  "app-db",
   "app-log",
-  "app-storage",
+  "app-persistence",
   "app-workflow",
 ]
 
@@ -41,15 +39,11 @@ module-name = "server"
 
 # uv 工作区引用
 [tool.uv.sources]
-# 缓存客户端
-app-cache = { workspace = true }
 # 契约模型
 app-contracts = { workspace = true }
-# 数据库会话
-app-db = { workspace = true }
 # 结构化日志
 app-log = { workspace = true }
-# 对象存储客户端
-app-storage = { workspace = true }
+# 持久化（缓存/数据库/对象存储）
+app-persistence = { workspace = true }
 # 工作流客户端
 app-workflow = { workspace = true }

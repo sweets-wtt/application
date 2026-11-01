@@ -59,18 +59,15 @@ application（根项目）
 │   │   └── openobserve（观测存储）
 ├── packages（共享包）
 │   ├── python
-│   │   ├── cache（缓存）→ valkey
 │   │   ├── contracts（契约模型）→ pydantic
-│   │   ├── db（数据库会话）→ sqlalchemy / asyncpg
 │   │   ├── log（结构化日志）→ structlog
-│   │   ├── storage（对象存储）→ aiobotocore
+│   │   ├── persistence（持久化）→ valkey / sqlalchemy / aiobotocore
 │   │   └── workflow（工作流）→ hatchet-sdk
 │   └── typescript
-│       ├── auth（会话与令牌）→ state / zod
 │       ├── contracts（契约客户端）→ vue-query / msw / zod
 │       ├── log（结构化日志）→ consola
 │       ├── realtime（实时）→ contracts / zod
-│       └── state（持久化状态）→ zod
+│       └── session（状态与会话）→ zod
 └── apps（应用）
     └── server（Server 应用）
         ├── fastapi（web 框架）
@@ -106,18 +103,15 @@ application（根项目）
 │   └── .env.example                 # 环境变量
 ├── packages                         # 共享包
 │   ├── python                       # Python
-│   │   ├── cache                    # 缓存
 │   │   ├── contracts                # 契约模型
-│   │   ├── db                       # 数据库会话
 │   │   ├── log                      # 结构化日志
-│   │   ├── storage                  # 对象存储
+│   │   ├── persistence              # 持久化（缓存/数据库/对象存储）
 │   │   └── workflow                 # 工作流
 │   └── typescript                   # TypeScript
-│       ├── auth                     # 会话与令牌
 │       ├── contracts                # 契约客户端
 │       ├── log                      # 结构化日志
 │       ├── realtime                 # 实时
-│       └── state                    # 持久化状态
+│       └── session                  # 状态与会话
 ├── .editorconfig                    # 代码风格
 ├── .gitattributes                   # Git 属性
 ├── .gitignore                       # Git 忽略

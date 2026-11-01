@@ -35,6 +35,6 @@ session:
 #       - client_id: web
 #         client_name: Web
 #         redirect_uris:
-#           - 'https://web.{{ env "AUTH_DOMAIN" }}/callback'   # 按 @app/auth 回调路径调整
+#           - 'https://web.{{ env "AUTH_DOMAIN" }}/callback'   # 按 @app/session 回调路径调整
 #         authorization_policy: two_factor
 #         scopes: ['openid', 'email', 'profile', 'groups']

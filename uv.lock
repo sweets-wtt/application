@@ -4,11 +4,9 @@ requires-python = ">=3.12"
 
 [manifest]
 members = [
-    "app-cache",
     "app-contracts",
-    "app-db",
     "app-log",
-    "app-storage",
+    "app-persistence",
     "app-workflow",
     "application",
     "server",
@@ -209,17 +207,6 @@ wheels = [
 ]
 
 [[package]]
-name = "app-cache"
-version = "0.1.0"
-source = { editable = "packages/python/cache" }
-dependencies = [
-    { name = "valkey" },
-]
-
-[package.metadata]
-requires-dist = [{ name = "valkey", specifier = ">=6.0" }]
-
-[[package]]
 name = "app-contracts"
 version = "0.1.0"
 source = { editable = "packages/python/contracts" }
@@ -229,21 +216,6 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [{ name = "pydantic", specifier = ">=2.13.5" }]
-
-[[package]]
-name = "app-db"
-version = "0.1.0"
-source = { editable = "packages/python/db" }
-dependencies = [
-    { name = "asyncpg" },
-    { name = "sqlalchemy" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "asyncpg", specifier = ">=0.30" },
-    { name = "sqlalchemy", specifier = ">=2.0" },
-]
 
 [[package]]
 name = "app-log"
@@ -257,15 +229,23 @@ dependencies = [
 requires-dist = [{ name = "structlog", specifier = ">=26.1.0" }]
 
 [[package]]
-name = "app-storage"
+name = "app-persistence"
 version = "0.1.0"
-source = { editable = "packages/python/storage" }
+source = { editable = "packages/python/persistence" }
 dependencies = [
     { name = "aiobotocore" },
+    { name = "asyncpg" },
+    { name = "sqlalchemy" },
+    { name = "valkey" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "aiobotocore", specifier = ">=2.0" }]
+requires-dist = [
+    { name = "aiobotocore", specifier = ">=2.0" },
+    { name = "asyncpg", specifier = ">=0.30" },
+    { name = "sqlalchemy", specifier = ">=2.0" },
+    { name = "valkey", specifier = ">=6.0" },
+]
 
 [[package]]
 name = "app-workflow"
@@ -2089,11 +2069,9 @@ version = "0.1.0"
 source = { editable = "apps/server" }
 dependencies = [
     { name = "alembic" },
-    { name = "app-cache" },
     { name = "app-contracts" },
-    { name = "app-db" },
     { name = "app-log" },
-    { name = "app-storage" },
+    { name = "app-persistence" },
     { name = "app-workflow" },
     { name = "fastapi" },
     { name = "granian" },
@@ -2108,11 +2086,9 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "alembic", specifier = ">=1.13" },
-    { name = "app-cache", editable = "packages/python/cache" },
     { name = "app-contracts", editable = "packages/python/contracts" },
-    { name = "app-db", editable = "packages/python/db" },
     { name = "app-log", editable = "packages/python/log" },
-    { name = "app-storage", editable = "packages/python/storage" },
+    { name = "app-persistence", editable = "packages/python/persistence" },
     { name = "app-workflow", editable = "packages/python/workflow" },
     { name = "fastapi", specifier = ">=0.141.1" },
     { name = "granian", specifier = ">=2.8.2" },
