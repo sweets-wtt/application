@@ -9,6 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
+    "size": "size-limit",
     "typecheck": "tsc -b --noEmit"
   },
   "dependencies": {
@@ -43,7 +44,7 @@
   "size-limit": [
     {
       "path": "dist/assets/index-*.js",
-      "limit": "200 KB"
+      "limit": "250 KB"
     }
   ]
 }

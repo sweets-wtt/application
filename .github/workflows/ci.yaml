@@ -71,8 +71,8 @@ jobs:
       - run: sed 's/=$/=placeholder/' infra/.env.example > infra/.env
       # 运行测试
       - run: mise exec -- just test
-      # 构建前端
-      - run: mise exec -- just build-web
+      # 体积预算检查（含构建）
+      - run: mise exec -- just size
       # 契约生成物检查
       - run: mise exec -- just codegen-check
 

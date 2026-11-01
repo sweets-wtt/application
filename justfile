@@ -111,6 +111,15 @@ build-web:
     # 构建前端产物
     bun run --filter @app/web build
 
+# 体积预算检查 - 先构建再测量
+size: build-web
+    # 运行 size-limit
+    bun run --filter @app/web size
+
+# 端到端测试 - 浏览器需先安装： bun x playwright install chromium
+test-e2e:
+    cd apps/web; bun x playwright test
+
 # 启动
 up:
     # 启动服务
