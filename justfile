@@ -78,6 +78,8 @@ codegen-py:
     uv sync --locked --all-packages
     # 在 Python 契约包内生成模型 - 显式输入路径、关闭时间戳、输出路径级响应模型
     cd packages/python/contracts; uv run datamodel-codegen --input ../../../contracts/http/openapi.yaml --disable-timestamp --openapi-scopes paths --strict-types int
+    # 统一 LF - 避免 Windows CRLF 导致工作区漂移
+    uv run python -c "from pathlib import Path; p=Path('packages/python/contracts/src/app/contracts/generated/http.py'); p.write_bytes(p.read_bytes().replace(b'\r\n', b'\n'))"
 
 # 生成 TypeScript 契约
 codegen-ts:
