@@ -17,6 +17,8 @@ export default defineConfig({
     UnoCSS(),
     // 自动导入组件
     Components({
+      // 不生成 components.d.ts（避免生成物与格式化/忽略规则冲突）
+      dts: false,
       resolvers: [
         // 图标组件
         IconsResolver({ prefix: "icon" }),

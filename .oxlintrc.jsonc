@@ -118,7 +118,6 @@
   // 忽略路径 - 契约生成物不参与检查
   "ignorePatterns": [
     "**/packages/typescript/contracts/src/http/**",
-    "**/packages/typescript/contracts/src/schemas/**",
-    "**/components.d.ts"
+    "**/packages/typescript/contracts/src/schemas/**"
   ]
 }
