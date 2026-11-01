@@ -7,12 +7,6 @@ from_latest_tag = true
 # 忽略合并提交
 ignore_merge_commits = true
 
-# 发版前钩子
-pre_bump_hooks = [
-  # 写版本清单
-  "echo {\".\": \"{{version}}\"} > .release-please-manifest.json",
-]
-
 # 更新日志
 [changelog]
 # 模板

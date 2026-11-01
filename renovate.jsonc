@@ -25,5 +25,5 @@
   ],
 
   // 启用管理器
-  "enabledManagers": ["mise", "dockerfile", "docker-compose", "pep621", "bun"]
+  "enabledManagers": ["mise", "dockerfile", "docker-compose", "pep621", "bun", "github-actions"]
 }
