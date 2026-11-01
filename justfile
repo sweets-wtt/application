@@ -149,8 +149,8 @@ format-workspace:
 test:
     # 后端测试
     uv run --locked --all-packages pytest
-    # 前端测试
-    bun run --filter @app/web test
+    # 前端与共享包测试
+    bun run --filter '@app/*' test
 
 # 迁移
 migrate:

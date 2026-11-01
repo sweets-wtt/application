@@ -136,3 +136,20 @@ application（根项目）
 ├── zizmor.yaml                      # 安全审计
 └── README.md                        # 项目说明
 ```
+
+## 契约
+
+`contracts/http/openapi.yaml` 是唯一事实来源：
+
+```text
+OpenAPI
+  ├── datamodel-codegen → Python Pydantic 模型
+  └── Orval             → TS 客户端 / Zod / MSW
+```
+
+修改契约后：
+
+```bash
+just codegen        # 生成 Python 与 TypeScript 代码
+just codegen-check  # 校验生成物无漂移（CI 使用）
+```

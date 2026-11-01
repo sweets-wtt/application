@@ -73,6 +73,8 @@ jobs:
       - run: mise exec -- just test
       # 构建前端
       - run: mise exec -- just build-web
+      # 契约生成物检查
+      - run: mise exec -- just codegen-check
 
   # 镜像构建
   images:
