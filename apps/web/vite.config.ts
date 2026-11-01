@@ -37,6 +37,8 @@ export default defineConfig({
 
   // 测试
   test: {
+    // 测试线程池（forks 在 Windows 下临时目录会 EPERM）
+    pool: "threads",
     // 环境
     environment: "jsdom",
     // 准备文件

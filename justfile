@@ -77,6 +77,16 @@ check:
     # 校验编排
     {{ compose }} config --quiet
 
+# 构建镜像
+build:
+    # 构建应用镜像
+    docker buildx bake -f docker-bake.hcl apps
+
+# 构建前端
+build-web:
+    # 构建前端产物
+    bun run --filter @app/web build
+
 # 启动
 up:
     # 启动服务
@@ -113,10 +123,12 @@ format-workspace:
 
 # 测试
 test:
-    # 运行测试
+    # 后端测试
     uv run --locked --all-packages pytest
+    # 前端测试
+    bun run --filter @app/web test
 
 # 迁移
 migrate:
     # 执行迁移
-    uv run alembic upgrade head
+    uv run alembic -c apps/server/alembic.ini upgrade head

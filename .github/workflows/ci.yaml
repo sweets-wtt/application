@@ -45,6 +45,56 @@ jobs:
       # 运行命令
       - run: mise exec -- just ci
 
+  # 测试
+  test:
+    # 运行环境
+    runs-on: ubuntu-latest
+    # 步骤
+    steps:
+      # 检出仓库
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        # 动作输入
+        with:
+          # 检出深度
+          fetch-depth: 0
+          # 凭据保留
+          persist-credentials: false
+      # 环境管理
+      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
+        # 动作输入
+        with:
+          # 版本
+          version: "2026.8.14"
+      # 环境准备
+      - run: mise exec -- just setup
+      # 环境变量
+      - run: sed 's/=$/=placeholder/' infra/.env.example > infra/.env
+      # 运行测试
+      - run: mise exec -- just test
+      # 构建前端
+      - run: mise exec -- just build-web
+
+  # 镜像构建
+  images:
+    # 运行环境
+    runs-on: ubuntu-latest
+    # 步骤
+    steps:
+      # 检出仓库
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        # 动作输入
+        with:
+          # 凭据保留
+          persist-credentials: false
+      # 环境管理
+      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
+        # 动作输入
+        with:
+          # 版本
+          version: "2026.8.14"
+      # 构建镜像
+      - run: mise exec -- just build
+
   # 依赖更新配置校验
   renovate:
     # 运行环境

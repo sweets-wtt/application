@@ -36,6 +36,9 @@ FROM nginx:alpine
 # 静态产物
 COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
 
+# Nginx 站点配置 - 覆盖默认站点以实现 SPA 回退与 API 反代
+COPY apps/web/nginx.conf /etc/nginx/conf.d/default.conf
+
 # 端口
 EXPOSE 80
 

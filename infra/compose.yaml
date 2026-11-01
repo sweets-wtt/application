@@ -377,10 +377,12 @@ services:
       <<: *healthcheck
       # 就绪探测
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:9090/api/health"]
-    # 网络
+    # 网络 - 入口网供 Traefik 转发,内部网供 PostgreSQL 存储
     networks:
       # 入口网
       - "edge"
+      # 内部网
+      - "internal"
     # 依赖
     depends_on:
       # PostgreSQL
@@ -551,6 +553,28 @@ services:
       traefik.http.middlewares.ratelimit.ratelimit.period: "1m"
       traefik.http.middlewares.ratelimit.ratelimit.burst: "50"
 
+  # 数据库迁移 - 一次性任务,完成后退出
+  migrate:
+    # 公共字段
+    <<: *service
+    # 镜像
+    image: "${SERVER_IMAGE:-server:latest}"
+    # 启动命令 - 迁移至最新版本
+    command: ["alembic", "-c", "apps/server/alembic.ini", "upgrade", "head"]
+    # 环境
+    environment:
+      <<: *environment
+    # 网络
+    networks: *internal
+    # 重启策略 - 一次性任务不重启
+    restart: "no"
+    # 依赖
+    depends_on:
+      # PostgreSQL
+      postgresql:
+        # 条件
+        condition: "service_healthy"
+
   # ── 应用 ─────────────────────────
 
   # API
@@ -558,18 +582,22 @@ services:
     # 公共字段
     <<: *service
     # 镜像
-    image: "${SERVER_IMAGE:?}"
+    image: "${SERVER_IMAGE:-server:latest}"
     # 环境
     environment:
       <<: *environment
       # 实时地址
       APP_REALTIME__URL: "valkey://app:${VALKEY_APP_PASSWORD:?}@valkey:6379/0"
-      # 实时来源允许列表
-      APP_REALTIME__ORIGINS: "[]"
+      # 实时来源允许列表 - 仅允许 Web 入口
+      APP_REALTIME__ORIGINS: '["https://web.${AUTH_DOMAIN}"]'
       # 服务名
       OTEL_SERVICE_NAME: "api"
     # 依赖
     depends_on:
+      # 迁移任务
+      migrate:
+        # 条件 - 迁移成功完成后启动
+        condition: "service_completed_successfully"
       # PostgreSQL
       postgresql:
         # 条件
@@ -606,7 +634,7 @@ services:
     # 公共字段
     <<: *service
     # 镜像
-    image: "${SERVER_IMAGE:?}"
+    image: "${SERVER_IMAGE:-server:latest}"
     # 入口 - 独立进程,与 api 分离
     command: "python -m server.worker"
     # 环境
@@ -616,6 +644,10 @@ services:
       OTEL_SERVICE_NAME: "worker"
     # 依赖
     depends_on:
+      # 迁移任务
+      migrate:
+        # 条件 - 迁移成功完成后启动
+        condition: "service_completed_successfully"
       # PostgreSQL
       postgresql:
         # 条件
@@ -649,7 +681,7 @@ services:
     # 公共字段
     <<: *service
     # 镜像
-    image: "${WEB_IMAGE:?}"
+    image: "${WEB_IMAGE:-web:latest}"
     # 构建参数（VITE_* 为构建时注入）
     build:
       context: ".."
@@ -672,10 +704,18 @@ services:
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/ | grep -q app"]
       # 启动宽限期
       start_period: "10s"
-    # 网络
+    # 网络 - 入口网供 Traefik 转发,内部网供访问 API
     networks:
       # 入口网
       - "edge"
+      # 内部网
+      - "internal"
+    # 依赖
+    depends_on:
+      # API
+      api:
+        # 条件 - API 就绪后启动
+        condition: "service_healthy"
     # 标签
     labels:
       # 启用路由
@@ -686,4 +726,6 @@ services:
       traefik.http.routers.web.tls: "true"
       traefik.http.routers.web.tls.certresolver: "le"
       traefik.http.routers.web.service: "web"
+      # forward-auth 与限流 - Web 为唯一公网入口
+      traefik.http.routers.web.middlewares: "authelia,ratelimit"
       traefik.http.services.web.loadbalancer.server.port: "80"

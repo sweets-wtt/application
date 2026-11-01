@@ -5,11 +5,6 @@ name: release
 on:
   # 手动触发
   workflow_dispatch:
-  # 推送
-  push:
-    # 标签
-    tags:
-      - "v*"
 
 # 令牌权限
 permissions:
@@ -35,6 +30,8 @@ jobs:
     permissions:
       # 内容
       contents: write
+      # 镜像包
+      packages: write
     # 作业输出
     outputs:
       # 标签
@@ -67,3 +64,19 @@ jobs:
         run: echo "tag=$(git describe --tags --abbrev=0)" >> "$GITHUB_OUTPUT"
       # 运行命令
       - run: git push origin main --tags
+      # 登录镜像仓库
+      - env:
+          # 镜像仓库令牌
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # 镜像仓库用户
+          GHCR_USER: ${{ github.actor }}
+        run: echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
+      # 构建器
+      - run: docker buildx create --name ci --driver docker-container --use
+      # 构建并推送镜像
+      - env:
+          # 镜像仓库地址
+          REGISTRY: ghcr.io/${{ github.repository_owner }}/
+          # 镜像标签
+          TAG: ${{ steps.tag.outputs.tag }}
+        run: docker buildx bake -f docker-bake.hcl --push apps
