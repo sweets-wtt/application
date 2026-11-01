@@ -16,12 +16,19 @@ permissions:
   # 内容
   contents: read
 
+# 并发 - 同引用取消旧运行
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 # 作业
 jobs:
   # 持续集成
   ci:
     # 运行环境
     runs-on: ubuntu-latest
+    # 超时
+    timeout-minutes: 15
     # 步骤
     steps:
       # 检出仓库
@@ -49,6 +56,8 @@ jobs:
   test:
     # 运行环境
     runs-on: ubuntu-latest
+    # 超时
+    timeout-minutes: 20
     # 步骤
     steps:
       # 检出仓库
@@ -76,10 +85,39 @@ jobs:
       # 契约生成物检查
       - run: mise exec -- just codegen-check
 
+  # 端到端测试
+  e2e:
+    # 运行环境
+    runs-on: ubuntu-latest
+    # 超时
+    timeout-minutes: 20
+    # 步骤
+    steps:
+      # 检出仓库
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        # 动作输入
+        with:
+          # 凭据保留
+          persist-credentials: false
+      # 环境管理
+      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
+        # 动作输入
+        with:
+          # 版本
+          version: "2026.8.14"
+      # 依赖安装
+      - run: mise exec -- bun install --frozen-lockfile
+      # 浏览器安装
+      - run: mise exec -- bun x playwright install --with-deps chromium
+      # 运行端到端测试
+      - run: mise exec -- just test-e2e
+
   # 镜像构建
   images:
     # 运行环境
     runs-on: ubuntu-latest
+    # 超时
+    timeout-minutes: 20
     # 步骤
     steps:
       # 检出仓库
@@ -101,6 +139,8 @@ jobs:
   renovate:
     # 运行环境
     runs-on: ubuntu-latest
+    # 超时
+    timeout-minutes: 5
     # 步骤
     steps:
       # 检出仓库
@@ -124,6 +164,8 @@ jobs:
     if: github.event_name == 'pull_request'
     # 运行环境
     runs-on: ubuntu-latest
+    # 超时
+    timeout-minutes: 10
     # 步骤
     steps:
       # 检出仓库
@@ -144,3 +186,36 @@ jobs:
       - run: |
           vacuum bundle --ruleset contracts/http/vacuum.yaml contracts/http/openapi.yaml /tmp/rev.yaml
           oasdiff breaking --fail-on ERR origin/main:contracts/http/openapi.yaml /tmp/rev.yaml
+
+  # 提交规范
+  commit-lint:
+    # 运行条件
+    if: github.event_name == 'pull_request'
+    # 运行环境
+    runs-on: ubuntu-latest
+    # 超时
+    timeout-minutes: 5
+    # 步骤
+    steps:
+      # 检出仓库
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        # 动作输入
+        with:
+          # 检出深度
+          fetch-depth: 0
+          # 凭据保留
+          persist-credentials: false
+      # 环境管理
+      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
+        # 动作输入
+        with:
+          # 版本
+          version: "2026.8.14"
+      # 逐条校验提交信息
+      - env:
+          # 基点
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          for sha in $(git rev-list --no-merges "$BASE"..HEAD); do
+            git log -1 --format=%B "$sha" | mise exec -- cog verify --file - || exit 1
+          done

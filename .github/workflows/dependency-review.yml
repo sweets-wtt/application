@@ -1,0 +1,31 @@
+# 工作流名称
+name: dependency-review
+
+# 触发事件
+on:
+  # 拉取请求
+  pull_request:
+
+# 令牌权限
+permissions:
+  # 内容
+  contents: read
+
+# 作业
+jobs:
+  # 依赖审查
+  dependency-review:
+    # 运行环境
+    runs-on: ubuntu-latest
+    # 超时
+    timeout-minutes: 10
+    # 步骤
+    steps:
+      # 检出仓库
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        # 动作输入
+        with:
+          # 凭据保留
+          persist-credentials: false
+      # 依赖审查 - 漏洞与许可门禁
+      - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0

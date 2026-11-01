@@ -85,6 +85,8 @@ application（根项目）
 ├── .github                          # 持续集成
 │   └── workflows                    # 工作流
 │       ├── ci.yaml                  # 持续集成
+│       ├── codeql.yml               # 代码安全扫描
+│       ├── dependency-review.yml    # 依赖审查
 │       └── release.yaml             # 版本发行
 ├── apps                             # 应用
 │   └── server                       # Server
