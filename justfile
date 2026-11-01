@@ -72,6 +72,28 @@ contracts:
     # 校验契约
     vacuum lint --ruleset contracts/http/vacuum.yaml contracts/http/openapi.yaml
 
+# 生成 Python 契约
+codegen-py:
+    # 同步开发依赖 - 含 codegen 工具
+    uv sync --locked --all-packages
+    # 在 Python 契约包内生成模型 - 显式输入路径、关闭时间戳、输出路径级响应模型
+    cd packages/python/contracts; uv run datamodel-codegen --input ../../../contracts/http/openapi.yaml --disable-timestamp --openapi-scopes paths --strict-types int
+
+# 生成 TypeScript 契约
+codegen-ts:
+    # 在 TypeScript 契约包内生成客户端
+    cd packages/typescript/contracts; bun x orval
+    # 统一生成物格式
+    bun x oxfmt packages/typescript/contracts/src/http packages/typescript/contracts/src/schemas
+
+# 生成契约代码
+codegen: codegen-py codegen-ts
+
+# 检查契约生成物
+codegen-check: codegen
+    # 生成物无差异
+    git diff --exit-code -- packages/python/contracts/src/app/contracts/generated packages/typescript/contracts/src/http packages/typescript/contracts/src/schemas
+
 # 校验
 check:
     # 校验编排

@@ -3,9 +3,10 @@
 
 from __future__ import annotations
 
-from typing import Any, Literal
+from enum import StrEnum
+from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, StrictInt
 
 
 class Data(BaseModel):
@@ -15,55 +16,59 @@ class Data(BaseModel):
     status: str
 
 
-class Response(BaseModel):
+class Error(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
-    code: int
-    message: str
-    data: dict[str, Any]
+    detail: str
 
 
-class HealthzGetResponse(Response):
-    data: Data
-
-
-class TelemetryEvent(BaseModel):
+class RealtimeTicket(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
-    level: Literal['debug', 'info', 'warn', 'error']
-    fingerprint: str = Field(max_length=1024)
-    message: str = Field(max_length=8192)
-    timestamp: int = Field(strict=True)
-    context: dict[str, Any] = Field(default_factory=dict)
-
-
-class TelemetryIngest(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    service: Literal['web', 'miniapp']
-    release: str = Field(max_length=128)
-    events: list[TelemetryEvent] = Field(max_length=100)
-
-
-class TelemetryAccepted(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    accepted: int
-
-
-class TelemetryEventsPostResponse(Response):
-    data: TelemetryAccepted
+    ticket: str = Field(..., max_length=256)
+    expiresAtMs: StrictInt
 
 
 class RequestInput(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
-    message: str = Field(max_length=8192)
+    message: str = Field(..., max_length=8192)
+
+
+class Response(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    code: StrictInt
+    message: str
+    data: dict[str, Any]
+
+
+class StorageObject(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    key: str
+    size: StrictInt = Field(..., ge=0)
+
+
+class TelemetryAccepted(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    accepted: StrictInt
+
+
+class Service(StrEnum):
+    web = 'web'
+    miniapp = 'miniapp'
+
+
+class Status(StrEnum):
+    submitted = 'submitted'
 
 
 class WorkflowRunAccepted(BaseModel):
@@ -71,7 +76,77 @@ class WorkflowRunAccepted(BaseModel):
         extra='forbid',
     )
     run_id: str
-    status: Literal['submitted']
+    status: Status
+
+
+class Level(StrEnum):
+    debug = 'debug'
+    info = 'info'
+    warn = 'warn'
+    error = 'error'
+
+
+class TelemetryEvent(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    level: Level
+    fingerprint: str = Field(..., max_length=1024)
+    message: str = Field(..., max_length=8192)
+    timestamp: StrictInt
+    context: dict[str, Any] | None = None
+
+
+class ValidationErrorItem(BaseModel):
+    model_config = ConfigDict(
+        extra='allow',
+    )
+    loc: list[str | StrictInt]
+    msg: str
+    type: str
+
+
+class WorkflowRunState(StrEnum):
+    submitted = 'submitted'
+    running = 'running'
+    succeeded = 'succeeded'
+    failed = 'failed'
+
+
+class HealthzGetResponse(Response):
+    data: Data
+
+
+class StorageKeyPutResponse(Response):
+    data: StorageObject
+
+
+class RealtimeTicketPostResponse(Response):
+    data: RealtimeTicket
+
+
+class TelemetryEventsPostResponse(Response):
+    data: TelemetryAccepted
+
+
+class WorkflowRunsPostResponse(Response):
+    data: WorkflowRunAccepted
+
+
+class TelemetryIngest(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    service: Service
+    release: str = Field(..., max_length=128)
+    events: list[TelemetryEvent] = Field(..., max_length=100)
+
+
+class ValidationError(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    detail: list[ValidationErrorItem]
 
 
 class WorkflowRunStatus(BaseModel):
@@ -79,12 +154,8 @@ class WorkflowRunStatus(BaseModel):
         extra='forbid',
     )
     run_id: str
-    status: Literal['submitted', 'running', 'succeeded', 'failed']
+    status: WorkflowRunState
 
 
-class WorkflowRunsPostResponse(Response):
-    data: WorkflowRunAccepted
-
-
-class WorkflowRunGetResponse(Response):
+class WorkflowRunsRunIdGetResponse(Response):
     data: WorkflowRunStatus

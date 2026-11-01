@@ -6,7 +6,14 @@ info:
   # 标题
   title: API
   # 描述
-  description: HTTP 契约
+  description: |
+    HTTP 契约。
+
+    所有 JSON 成功响应使用统一的 `{code, message, data}` 信封；
+    错误响应使用 FastAPI 默认的 `{detail}` 结构。
+
+    实时 WebSocket 端点 `/realtime/ws` 以说明形式文档化，
+    Orval 生成的 `realtimeWs` 仅为文档占位，不执行真实 WebSocket 握手。
   # 版本
   version: 0.1.0
 
@@ -20,7 +27,7 @@ servers:
 # 可复用组件
 components:
   schemas:
-    # 标准响应
+    # 标准响应信封
     Response:
       # 类型
       type: object
@@ -31,7 +38,7 @@ components:
         - data
       # 属性
       properties:
-        # 状态码
+        # 状态码 - 0 表示成功
         code:
           # 类型
           type: integer
@@ -46,8 +53,85 @@ components:
       # 禁止附加属性
       additionalProperties: false
 
+    # 错误响应
+    Error:
+      # 描述
+      description: 通用错误响应 - 与 FastAPI HTTPException 一致
+      # 类型
+      type: object
+      # 必填属性
+      required:
+        - detail
+      # 属性
+      properties:
+        # 明细
+        detail:
+          # 类型
+          type: string
+      # 禁止附加属性
+      additionalProperties: false
+
+    # 校验错误条目
+    ValidationErrorItem:
+      # 描述
+      description: FastAPI 请求校验错误条目
+      # 类型
+      type: object
+      # 必填属性
+      required:
+        - loc
+        - msg
+        - type
+      # 属性
+      properties:
+        # 出错位置
+        loc:
+          # 类型
+          type: array
+          # 元素
+          items:
+            # 任选其一
+            oneOf:
+              - # 字段名
+                type: string
+              - # 数组下标
+                type: integer
+        # 错误消息
+        msg:
+          # 类型
+          type: string
+        # 错误类型
+        type:
+          # 类型
+          type: string
+      # 允许附加属性 - 保留 input/ctx/url 等原生字段
+      additionalProperties: true
+
+    # 校验错误响应
+    ValidationError:
+      # 描述
+      description: FastAPI 请求校验失败响应
+      # 类型
+      type: object
+      # 必填属性
+      required:
+        - detail
+      # 属性
+      properties:
+        # 明细
+        detail:
+          # 类型
+          type: array
+          # 元素
+          items:
+            $ref: "#/components/schemas/ValidationErrorItem"
+      # 禁止附加属性
+      additionalProperties: false
+
     # 遥测事件
     TelemetryEvent:
+      # 描述
+      description: 单条前端遥测事件 - 批量载荷中 events 的元素
       # 类型
       type: object
       # 必填属性
@@ -68,7 +152,7 @@ components:
             - info
             - warn
             - error
-        # 指纹
+        # 指纹 - 稳定标识同类异常
         fingerprint:
           # 类型
           type: string
@@ -84,15 +168,21 @@ components:
         timestamp:
           # 类型
           type: integer
-        # 上下文
+        # 上下文 - 未提供时为 null
         context:
           # 类型
-          type: object
+          type:
+            - object
+            - "null"
+          # 允许附加属性
+          additionalProperties: true
       # 禁止附加属性
       additionalProperties: false
 
     # 遥测批量载荷
     TelemetryIngest:
+      # 描述
+      description: 前端 logger 批量上报的目标结构 - 端与版本在批次级、事件在 events 中
       # 类型
       type: object
       # 必填属性
@@ -144,6 +234,60 @@ components:
       # 禁止附加属性
       additionalProperties: false
 
+    # 对象存储条目
+    StorageObject:
+      # 描述
+      description: 已写入对象的位置与字节数
+      # 类型
+      type: object
+      # 必填属性
+      required:
+        - key
+        - size
+      # 属性
+      properties:
+        # 对象键
+        key:
+          # 类型
+          type: string
+        # 字节数
+        size:
+          # 类型
+          type: integer
+          # 格式
+          format: int64
+          # 最小值
+          minimum: 0
+      # 禁止附加属性
+      additionalProperties: false
+
+    # 实时票据
+    RealtimeTicket:
+      # 描述
+      description: 一次性 WebSocket 票据及过期时间
+      # 类型
+      type: object
+      # 必填属性
+      required:
+        - ticket
+        - expiresAtMs
+      # 属性
+      properties:
+        # 票据
+        ticket:
+          # 类型
+          type: string
+          # 最大长度
+          maxLength: 256
+        # 过期时间（Unix 毫秒）
+        expiresAtMs:
+          # 类型
+          type: integer
+          # 格式
+          format: int64
+      # 禁止附加属性
+      additionalProperties: false
+
     # 工作流请求输入
     RequestInput:
       # 类型
@@ -162,6 +306,19 @@ components:
       # 禁止附加属性
       additionalProperties: false
 
+    # 工作流 run 状态枚举
+    WorkflowRunState:
+      # 描述
+      description: 工作流 run 状态 - 与 worker 状态回写一致
+      # 类型
+      type: string
+      # 枚举
+      enum:
+        - submitted
+        - running
+        - succeeded
+        - failed
+
     # 工作流 run 受理
     WorkflowRunAccepted:
       # 类型
@@ -176,7 +333,7 @@ components:
         run_id:
           # 类型
           type: string
-        # 状态
+        # 状态 - 受理时固定为 submitted
         status:
           # 类型
           type: string
@@ -202,14 +359,7 @@ components:
           type: string
         # 状态
         status:
-          # 类型
-          type: string
-          # 枚举
-          enum:
-            - submitted
-            - running
-            - succeeded
-            - failed
+          $ref: "#/components/schemas/WorkflowRunState"
       # 禁止附加属性
       additionalProperties: false
 
@@ -221,6 +371,8 @@ paths:
     get:
       # 操作标识
       operationId: healthz
+      # 描述
+      description: 返回服务存活状态
       # 响应
       responses:
         # 成功响应
@@ -252,12 +404,312 @@ paths:
                             type: string
                         # 禁止附加属性
                         additionalProperties: false
+
+  # 对象存储
+  /storage/{key}:
+    # 流式上传
+    put:
+      # 操作标识
+      operationId: storagePut
+      # 描述
+      description: 流式上传对象 - 请求体为原始二进制、最大 10 MiB
+      # 参数
+      parameters:
+        # 对象键
+        - name: key
+          # 位置
+          in: path
+          # 必需
+          required: true
+          # 描述
+          description: 对象键（允许包含路径分隔符）
+          # 模式
+          schema:
+            # 类型
+            type: string
+        # 租户标识
+        - name: x-tenant
+          # 位置
+          in: header
+          # 必需
+          required: true
+          # 描述
+          description: 租户标识 - 作为对象键前缀
+          # 模式
+          schema:
+            # 类型
+            type: string
+      # 请求体
+      requestBody:
+        # 必需
+        required: true
+        # 描述
+        description: 二进制对象内容
+        # 内容
+        content:
+          # 二进制
+          application/octet-stream:
+            # 模式
+            schema:
+              # 类型
+              type: string
+              # 格式
+              format: binary
+      # 响应
+      responses:
+        # 写入成功
+        "200":
+          # 描述
+          description: 已写入
+          # 内容
+          content:
+            application/json:
+              # 模式
+              schema:
+                # 全部满足
+                allOf:
+                  - $ref: "#/components/schemas/Response"
+                  # 属性
+                  - properties:
+                      # 数据
+                      data:
+                        $ref: "#/components/schemas/StorageObject"
+        # 目标不存在
+        "404":
+          # 描述
+          description: 目标桶或对象路径不存在
+          # 内容
+          content:
+            application/json:
+              # 模式
+              schema:
+                $ref: "#/components/schemas/Error"
+        # 请求体超限
+        "413":
+          # 描述
+          description: 上传超过 10 MiB
+          # 内容
+          content:
+            application/json:
+              # 模式
+              schema:
+                $ref: "#/components/schemas/Error"
+        # 校验失败
+        "422":
+          # 描述
+          description: 请求校验失败 - 缺少租户标识等
+          # 内容
+          content:
+            application/json:
+              # 模式
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+    # 流式下载
+    get:
+      # 操作标识
+      operationId: storageGet
+      # 描述
+      description: 流式下载对象 - 响应体为原始二进制
+      # 参数
+      parameters:
+        # 对象键
+        - name: key
+          # 位置
+          in: path
+          # 必需
+          required: true
+          # 描述
+          description: 对象键（允许包含路径分隔符）
+          # 模式
+          schema:
+            # 类型
+            type: string
+        # 租户标识
+        - name: x-tenant
+          # 位置
+          in: header
+          # 必需
+          required: true
+          # 描述
+          description: 租户标识 - 作为对象键前缀
+          # 模式
+          schema:
+            # 类型
+            type: string
+      # 响应
+      responses:
+        # 下载成功
+        "200":
+          # 描述
+          description: 对象内容
+          # 内容
+          content:
+            # 二进制
+            application/octet-stream:
+              # 模式
+              schema:
+                # 类型
+                type: string
+                # 格式
+                format: binary
+        # 对象不存在
+        "404":
+          # 描述
+          description: 对象不存在
+          # 内容
+          content:
+            application/json:
+              # 模式
+              schema:
+                $ref: "#/components/schemas/Error"
+        # 校验失败
+        "422":
+          # 描述
+          description: 请求校验失败 - 缺少租户标识等
+          # 内容
+          content:
+            application/json:
+              # 模式
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
+  # 实时票据
+  /realtime/ticket:
+    # 签发一次性票据
+    post:
+      # 操作标识
+      operationId: realtimeTicket
+      # 描述
+      description: 签发一次性 WebSocket 票据 - 有效期内通过 /realtime/ws 消费一次
+      # 参数
+      parameters:
+        # 请求来源
+        - name: Origin
+          # 位置
+          in: header
+          # 非必需
+          required: false
+          # 描述
+          description: 请求来源 - 缺失放行，存在时必须命中允许列表
+          # 模式
+          schema:
+            # 类型
+            type: string
+      # 响应
+      responses:
+        # 签发成功
+        "200":
+          # 描述
+          description: 票据已签发
+          # 内容
+          content:
+            application/json:
+              # 模式
+              schema:
+                # 全部满足
+                allOf:
+                  - $ref: "#/components/schemas/Response"
+                  # 属性
+                  - properties:
+                      # 数据
+                      data:
+                        $ref: "#/components/schemas/RealtimeTicket"
+        # 来源拒绝
+        "403":
+          # 描述
+          description: 来源不在允许列表
+          # 内容
+          content:
+            application/json:
+              # 模式
+              schema:
+                $ref: "#/components/schemas/Error"
+        # 存储不可用
+        "503":
+          # 描述
+          description: 票据存储不可用
+          # 内容
+          content:
+            application/json:
+              # 模式
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  # 实时 WebSocket
+  /realtime/ws:
+    # 协议升级
+    get:
+      # 操作标识
+      operationId: realtimeWs
+      # 描述
+      description: |
+        WebSocket 升级端点（HTTP 101 Switching Protocols）。
+
+        握手参数：`ticket` 为 `/realtime/ticket` 签发的一次性票据；
+        `Origin` 缺失放行，存在时必须命中允许列表。
+
+        会话协议：
+        - 连接后服务端先发送 `{"type":"system","topic":"system","payload":{"status":"connected"}}`；
+        - 心跳：客户端发送纯文本 `ping`，服务端回复纯文本 `pong`；
+        - 订阅：`{"type":"subscribe","topic":"<topic>"}`；
+        - 取消订阅：`{"type":"unsubscribe","topic":"<topic>"}`；
+        - 发布：`{"type":"publish","topic":"<topic>","payload":{...}}`；
+        - 事件：`{"type":"event","topic":"<topic>","payload":{...}}`。
+
+        关闭码：`4401` 票据无效、`4403` 来源拒绝、`4503` 票据存储不可用。
+
+        说明：Orval 生成的 `realtimeWs` 仅为文档占位，不执行真实 WebSocket 握手。
+      # 参数
+      parameters:
+        # 一次性票据
+        - name: ticket
+          # 位置
+          in: query
+          # 必需
+          required: true
+          # 描述
+          description: 一次性票据 - 握手时消费
+          # 模式
+          schema:
+            # 类型
+            type: string
+        # 请求来源
+        - name: Origin
+          # 位置
+          in: header
+          # 非必需
+          required: false
+          # 描述
+          description: 请求来源 - 缺失放行，存在时必须命中允许列表
+          # 模式
+          schema:
+            # 类型
+            type: string
+      # 响应
+      responses:
+        # 升级成功
+        "101":
+          # 描述
+          description: 协议升级成功 - 进入 WebSocket 会话
+        # 非 WebSocket 请求
+        "404":
+          # 描述
+          description: 普通 HTTP 请求无法匹配 WebSocket 路由
+          # 内容
+          content:
+            application/json:
+              # 模式
+              schema:
+                $ref: "#/components/schemas/Error"
+
   # 遥测接收
   /telemetry/events:
     # 批量接收前端遥测事件
     post:
       # 操作标识
       operationId: telemetryEvents
+      # 描述
+      description: 批量接收前端遥测事件 - 请求体上限 256 KiB
       # 请求体
       requestBody:
         # 必需
@@ -296,41 +748,17 @@ paths:
             application/json:
               # 模式
               schema:
-                # 类型
-                type: object
-                # 必填属性
-                required:
-                  - detail
-                # 属性
-                properties:
-                  # 明细
-                  detail:
-                    # 类型
-                    type: string
-                # 禁止附加属性
-                additionalProperties: false
+                $ref: "#/components/schemas/Error"
         # 请求体超限
         "413":
           # 描述
-          description: 请求体超过上限
+          description: 请求体超过 256 KiB
           # 内容
           content:
             application/json:
               # 模式
               schema:
-                # 类型
-                type: object
-                # 必填属性
-                required:
-                  - detail
-                # 属性
-                properties:
-                  # 明细
-                  detail:
-                    # 类型
-                    type: string
-                # 禁止附加属性
-                additionalProperties: false
+                $ref: "#/components/schemas/Error"
         # 校验失败
         "422":
           # 描述
@@ -340,29 +768,16 @@ paths:
             application/json:
               # 模式
               schema:
-                # 类型
-                type: object
-                # 必填属性
-                required:
-                  - detail
-                # 属性
-                properties:
-                  # 明细
-                  detail:
-                    # 类型
-                    type: array
-                    # 元素
-                    items:
-                      # 类型
-                      type: object
-                # 禁止附加属性
-                additionalProperties: false
+                $ref: "#/components/schemas/ValidationError"
+
   # 提交工作流 run
   /workflow/runs:
     # 提交工作流 run
     post:
       # 操作标识
       operationId: workflowRuns
+      # 描述
+      description: 提交工作流 run - 以 Idempotency-Key 保证幂等
       # 参数
       parameters:
         # 幂等键
@@ -413,19 +828,7 @@ paths:
             application/json:
               # 模式
               schema:
-                # 类型
-                type: object
-                # 必填属性
-                required:
-                  - detail
-                # 属性
-                properties:
-                  # 明细
-                  detail:
-                    # 类型
-                    type: string
-                # 禁止附加属性
-                additionalProperties: false
+                $ref: "#/components/schemas/Error"
         # 校验失败
         "422":
           # 描述
@@ -435,29 +838,16 @@ paths:
             application/json:
               # 模式
               schema:
-                # 类型
-                type: object
-                # 必填属性
-                required:
-                  - detail
-                # 属性
-                properties:
-                  # 明细
-                  detail:
-                    # 类型
-                    type: array
-                    # 元素
-                    items:
-                      # 类型
-                      type: object
-                # 禁止附加属性
-                additionalProperties: false
+                $ref: "#/components/schemas/ValidationError"
+
   # 查询工作流 run
   /workflow/runs/{run_id}:
     # 查询工作流 run
     get:
       # 操作标识
       operationId: workflowRun
+      # 描述
+      description: 查询工作流 run 状态
       # 参数
       parameters:
         # 运行标识
@@ -498,16 +888,14 @@ paths:
             application/json:
               # 模式
               schema:
-                # 类型
-                type: object
-                # 必填属性
-                required:
-                  - detail
-                # 属性
-                properties:
-                  # 明细
-                  detail:
-                    # 类型
-                    type: string
-                # 禁止附加属性
-                additionalProperties: false
+                $ref: "#/components/schemas/Error"
+        # 校验失败
+        "422":
+          # 描述
+          description: 请求校验失败
+          # 内容
+          content:
+            application/json:
+              # 模式
+              schema:
+                $ref: "#/components/schemas/ValidationError"

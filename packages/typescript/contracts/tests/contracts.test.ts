@@ -11,7 +11,7 @@ it("zod 模式解析标准响应", () => {
 });
 
 it("MSW 钩子可用", () => {
-  expect(getDefaultMock()).toHaveLength(1);
+  expect(getDefaultMock().length).toBeGreaterThan(0);
 });
 
 it("客户端函数存在", () => {

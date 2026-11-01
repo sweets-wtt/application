@@ -26,7 +26,7 @@ module-name = "app.contracts"
 # datamodel-code-generator - https://datamodel-code-generator.koxudaxi.dev/
 [tool.datamodel-codegen]
 # 输入
-input = "../../contracts/http/openapi.yaml"
+input = "../../../contracts/http/openapi.yaml"
 # 输入类型
 input-file-type = "openapi"
 # 输出
@@ -37,3 +37,7 @@ output-model-type = "pydantic_v2.BaseModel"
 target-python-version = "3.12"
 # 字段约束
 field-constraints = true
+# 只生成 path 引用模型
+openapi-scopes = ["paths"]
+# 禁用生成时间戳 - 保证可复现
+disable-timestamp = true
