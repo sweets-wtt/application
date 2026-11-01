@@ -93,7 +93,10 @@ application（根项目）
 │   └── server                       # Server
 ├── contracts                        # 契约
 │   └── http                         # HTTP
-│       ├── openapi.yaml             # 接口规范
+│       ├── components               # 组件（参数/响应/模式）
+│       ├── dist                     # 打包制品
+│       │   └── openapi.yaml         # 接口规范（生成）
+│       ├── openapi.yaml             # 契约入口
 │       └── vacuum.yaml              # 契约检查
 ├── infra                            # 服务编排
 │   ├── authelia                     # Authelia
@@ -142,17 +145,22 @@ application（根项目）
 
 ## 契约
 
-`contracts/http/openapi.yaml` 是唯一事实来源：
+源文件按职责拆分，`dist/openapi.yaml` 是机器消费的唯一入口：
 
 ```text
-OpenAPI
-  ├── datamodel-codegen → Python Pydantic 模型
-  └── Orval             → TS 客户端 / Zod / MSW
+源（人写）                                            制品（生成）
+contracts/http/openapi.yaml      ┐
+paths.yaml                       ├─ just bundle → dist/openapi.yaml
+components/{parameters,responses,schemas}.yaml ┘
+                                       ├── datamodel-codegen → Python Pydantic 模型
+                                       ├── Orval            → TS 客户端 / Zod / MSW
+                                       └── vacuum / oasdiff / schemathesis
 ```
 
 修改契约后：
 
 ```bash
-just codegen        # 生成 Python 与 TypeScript 代码
-just codegen-check  # 校验生成物无漂移（CI 使用）
+just bundle         # 重新打包制品
+just codegen        # 打包并生成 Python 与 TypeScript 代码
+just codegen-check  # 校验制品与生成物无漂移（CI 使用）
 ```

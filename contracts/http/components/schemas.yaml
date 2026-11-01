@@ -1,0 +1,219 @@
+# 可复用模式
+schemas:
+  # 标准响应信封
+  Response:
+    type: object
+    required:
+      - code
+      - message
+      - data
+    properties:
+      # 状态码 - 0 表示成功
+      code:
+        type: integer
+      message:
+        type: string
+      data:
+        type: object
+    additionalProperties: false
+
+  # 通用错误响应 - 与 FastAPI HTTPException 一致
+  Error:
+    description: 通用错误响应 - 与 FastAPI HTTPException 一致
+    type: object
+    required:
+      - detail
+    properties:
+      detail:
+        type: string
+    additionalProperties: false
+
+  # FastAPI 请求校验错误条目
+  ValidationErrorItem:
+    description: FastAPI 请求校验错误条目
+    type: object
+    required:
+      - loc
+      - msg
+      - type
+    properties:
+      # 出错位置 - 字段名或数组下标
+      loc:
+        type: array
+        items:
+          oneOf:
+            - type: string
+            - type: integer
+      msg:
+        type: string
+      type:
+        type: string
+    # 保留 input/ctx/url 等原生字段
+    additionalProperties: true
+
+  # FastAPI 请求校验失败响应
+  ValidationError:
+    description: FastAPI 请求校验失败响应
+    type: object
+    required:
+      - detail
+    properties:
+      detail:
+        type: array
+        items:
+          $ref: "#/schemas/ValidationErrorItem"
+    additionalProperties: false
+
+  # 单条前端遥测事件 - 批量载荷中 events 的元素
+  TelemetryEvent:
+    description: 单条前端遥测事件 - 批量载荷中 events 的元素
+    type: object
+    required:
+      - level
+      - fingerprint
+      - message
+      - timestamp
+    properties:
+      level:
+        type: string
+        enum:
+          - debug
+          - info
+          - warn
+          - error
+      # 稳定标识同类异常
+      fingerprint:
+        type: string
+        maxLength: 1024
+      message:
+        type: string
+        maxLength: 8192
+      # Unix 毫秒
+      timestamp:
+        type: integer
+      # 未提供时为 null
+      context:
+        type:
+          - object
+          - "null"
+        additionalProperties: true
+    additionalProperties: false
+
+  # 前端 logger 批量上报的目标结构 - 端与版本在批次级、事件在 events 中
+  TelemetryIngest:
+    description: 前端 logger 批量上报的目标结构 - 端与版本在批次级、事件在 events 中
+    type: object
+    required:
+      - service
+      - release
+      - events
+    properties:
+      service:
+        type: string
+        enum:
+          - web
+          - miniapp
+      release:
+        type: string
+        maxLength: 128
+      # 条数上限 100
+      events:
+        type: array
+        maxItems: 100
+        items:
+          $ref: "#/schemas/TelemetryEvent"
+    additionalProperties: false
+
+  # 遥测受理
+  TelemetryAccepted:
+    type: object
+    required:
+      - accepted
+    properties:
+      # 受理条数
+      accepted:
+        type: integer
+    additionalProperties: false
+
+  # 已写入对象的位置与字节数
+  StorageObject:
+    description: 已写入对象的位置与字节数
+    type: object
+    required:
+      - key
+      - size
+    properties:
+      key:
+        type: string
+      size:
+        type: integer
+        format: int64
+        minimum: 0
+    additionalProperties: false
+
+  # 一次性 WebSocket 票据及过期时间
+  RealtimeTicket:
+    description: 一次性 WebSocket 票据及过期时间
+    type: object
+    required:
+      - ticket
+      - expiresAtMs
+    properties:
+      ticket:
+        type: string
+        maxLength: 256
+      # Unix 毫秒
+      expiresAtMs:
+        type: integer
+        format: int64
+    additionalProperties: false
+
+  # 工作流请求输入
+  RequestInput:
+    type: object
+    required:
+      - message
+    properties:
+      message:
+        type: string
+        maxLength: 8192
+    additionalProperties: false
+
+  # 工作流 run 状态 - 与 worker 状态回写一致
+  WorkflowRunState:
+    description: 工作流 run 状态 - 与 worker 状态回写一致
+    type: string
+    enum:
+      - submitted
+      - running
+      - succeeded
+      - failed
+
+  # 工作流 run 受理
+  WorkflowRunAccepted:
+    type: object
+    required:
+      - run_id
+      - status
+    properties:
+      run_id:
+        type: string
+      # 受理时固定为 submitted
+      status:
+        type: string
+        enum:
+          - submitted
+    additionalProperties: false
+
+  # 工作流 run 状态
+  WorkflowRunStatus:
+    type: object
+    required:
+      - run_id
+      - status
+    properties:
+      run_id:
+        type: string
+      status:
+        $ref: "#/schemas/WorkflowRunState"
+    additionalProperties: false

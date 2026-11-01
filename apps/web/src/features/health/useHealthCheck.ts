@@ -1,6 +1,6 @@
 /** 服务端健康检查（心跳） */
 import { computed, type ComputedRef, type Ref } from "vue";
-import { useHealthz, type Healthz200 } from "@app/contracts";
+import { useHealthz, type Healthz200Response } from "@app/contracts";
 import { HEARTBEAT_INTERVAL } from "@/core/settings";
 
 /** 服务端状态 */
@@ -11,7 +11,7 @@ export interface HealthCheckResult {
   status: ComputedRef<ServerStatus>;
   online: ComputedRef<boolean>;
   isFetching: Ref<boolean>;
-  data: ComputedRef<Healthz200 | undefined>;
+  data: ComputedRef<Healthz200Response | undefined>;
 }
 
 /** 健康检查 hook：轮询 /healthz 并推导在线状态 */
@@ -46,7 +46,7 @@ export const useHealthCheck = (): HealthCheckResult => {
   const online = computed(() => status.value === "online");
 
   // 响应信封内层数据
-  const data = computed<Healthz200 | undefined>(() => result.value?.data);
+  const data = computed<Healthz200Response | undefined>(() => result.value?.data);
 
   return { status, online, isFetching, data };
 };

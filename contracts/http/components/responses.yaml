@@ -1,0 +1,124 @@
+# 可复用响应 - 成功响应命名对齐 Orval 生成物
+responses:
+  Healthz200:
+    description: 存活
+    content:
+      application/json:
+        schema:
+          allOf:
+            - $ref: "schemas.yaml#/schemas/Response"
+            - properties:
+                data:
+                  type: object
+                  required:
+                    - status
+                  properties:
+                    status:
+                      type: string
+                  additionalProperties: false
+
+  StoragePut200:
+    description: 已写入
+    content:
+      application/json:
+        schema:
+          allOf:
+            - $ref: "schemas.yaml#/schemas/Response"
+            - properties:
+                data:
+                  $ref: "schemas.yaml#/schemas/StorageObject"
+
+  StorageGet200:
+    description: 对象内容
+    content:
+      application/octet-stream:
+        schema:
+          type: string
+          format: binary
+
+  RealtimeTicket200:
+    description: 票据已签发
+    content:
+      application/json:
+        schema:
+          allOf:
+            - $ref: "schemas.yaml#/schemas/Response"
+            - properties:
+                data:
+                  $ref: "schemas.yaml#/schemas/RealtimeTicket"
+
+  TelemetryEvents202:
+    description: 已受理
+    content:
+      application/json:
+        schema:
+          allOf:
+            - $ref: "schemas.yaml#/schemas/Response"
+            - properties:
+                data:
+                  $ref: "schemas.yaml#/schemas/TelemetryAccepted"
+
+  WorkflowRuns202:
+    description: 已受理
+    content:
+      application/json:
+        schema:
+          allOf:
+            - $ref: "schemas.yaml#/schemas/Response"
+            - properties:
+                data:
+                  $ref: "schemas.yaml#/schemas/WorkflowRunAccepted"
+
+  WorkflowRun200:
+    description: 查询成功
+    content:
+      application/json:
+        schema:
+          allOf:
+            - $ref: "schemas.yaml#/schemas/Response"
+            - properties:
+                data:
+                  $ref: "schemas.yaml#/schemas/WorkflowRunStatus"
+
+  # 错误响应
+  BadRequest:
+    description: 请求体解析失败
+    content:
+      application/json:
+        schema:
+          $ref: "schemas.yaml#/schemas/Error"
+
+  Forbidden:
+    description: 来源不在允许列表
+    content:
+      application/json:
+        schema:
+          $ref: "schemas.yaml#/schemas/Error"
+
+  NotFound:
+    description: 资源不存在
+    content:
+      application/json:
+        schema:
+          $ref: "schemas.yaml#/schemas/Error"
+
+  PayloadTooLarge:
+    description: 请求体超过上限
+    content:
+      application/json:
+        schema:
+          $ref: "schemas.yaml#/schemas/Error"
+
+  UnprocessableEntity:
+    description: 请求校验失败
+    content:
+      application/json:
+        schema:
+          $ref: "schemas.yaml#/schemas/ValidationError"
+
+  ServiceUnavailable:
+    description: 票据存储不可用
+    content:
+      application/json:
+        schema:
+          $ref: "schemas.yaml#/schemas/Error"

@@ -1,6 +1,9 @@
 {
   // 排除
-  "excludes": [],
+  "excludes": [
+    // 打包制品 - 由 just bundle 生成，格式由生成器决定
+    "contracts/http/dist/**"
+  ],
 
   // 插件 - npm 形式在前,其余按工具字母序
   "plugins": [

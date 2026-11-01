@@ -17,7 +17,7 @@ from server.adapters.workflow import get_client
 from server.main import app
 
 # 契约单一来源 - 直接加载契约文件
-schema = schemathesis.openapi.from_path("contracts/http/openapi.yaml")
+schema = schemathesis.openapi.from_path("contracts/http/dist/openapi.yaml")
 
 
 # 离线桩 - 外部依赖(Hatchet/数据库/对象存储/票据存储)在测试环境不可用,

@@ -36,6 +36,7 @@
     }
   },
   "devDependencies": {
+    "@redocly/cli": "^2.72.1",
     "@types/node": "^26.5.0",
     "orval": "^8.46.0",
     "oxfmt": "^0.70.0",

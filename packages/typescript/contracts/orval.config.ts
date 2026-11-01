@@ -7,7 +7,7 @@ export default defineConfig({
     // 输入
     input: {
       // 契约来源
-      target: "../../../contracts/http/openapi.yaml",
+      target: "../../../contracts/http/dist/openapi.yaml",
     },
 
     // 输出

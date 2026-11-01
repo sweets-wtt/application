@@ -1,0 +1,53 @@
+# 可复用参数
+parameters:
+  # 租户标识 - 作为对象键前缀
+  TenantHeader:
+    name: x-tenant
+    in: header
+    required: true
+    description: 租户标识 - 作为对象键前缀
+    schema:
+      type: string
+
+  # 请求来源 - 缺失放行，存在时必须命中允许列表
+  OriginHeader:
+    name: Origin
+    in: header
+    required: false
+    description: 请求来源 - 缺失放行，存在时必须命中允许列表
+    schema:
+      type: string
+
+  # 对象键
+  KeyPath:
+    name: key
+    in: path
+    required: true
+    description: 对象键（允许包含路径分隔符）
+    schema:
+      type: string
+
+  # 运行标识
+  RunIdPath:
+    name: run_id
+    in: path
+    required: true
+    schema:
+      type: string
+
+  # 幂等键
+  IdempotencyKeyHeader:
+    name: Idempotency-Key
+    in: header
+    required: true
+    schema:
+      type: string
+
+  # 一次性票据
+  TicketQuery:
+    name: ticket
+    in: query
+    required: true
+    description: 一次性票据 - 握手时消费
+    schema:
+      type: string

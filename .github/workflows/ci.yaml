@@ -131,10 +131,13 @@ jobs:
           fetch-depth: 0
           dependencies: none
           env-file: false
-      # 破坏性变更检查
+      # 破坏性变更检查 - 制品对比，基线缺失时跳过
       - run: |
-          vacuum bundle --ruleset contracts/http/vacuum.yaml contracts/http/openapi.yaml /tmp/rev.yaml
-          oasdiff breaking --fail-on ERR origin/main:contracts/http/openapi.yaml /tmp/rev.yaml
+          if git cat-file -e "origin/main:contracts/http/dist/openapi.yaml" 2>/dev/null; then
+            oasdiff breaking --fail-on ERR "origin/main:contracts/http/dist/openapi.yaml" contracts/http/dist/openapi.yaml
+          else
+            echo "基线制品缺失 - 跳过兼容检查"
+          fi
 
   # 提交规范
   commit-lint:
