@@ -1,10 +1,9 @@
 """对象存储客户端"""
 
-import os
-from dataclasses import dataclass
 from typing import TYPE_CHECKING, Self
 
 from aiobotocore.session import AioSession
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 if TYPE_CHECKING:
     from contextlib import AbstractAsyncContextManager
@@ -12,26 +11,25 @@ if TYPE_CHECKING:
     from aiobotocore.client import AioBaseClient
 
 
-@dataclass(frozen=True)
-class StorageSettings:
+class StorageSettings(BaseSettings):
     """对象存储装配参数"""
+
+    model_config = SettingsConfigDict(
+        env_prefix="APP_STORAGE__",
+        extra="ignore",
+        frozen=True,
+    )
 
     endpoint_url: str
     access_key_id: str
     secret_access_key: str
-    region_name: str
+    region_name: str = "garage"
     bucket: str
 
     @classmethod
     def from_env(cls) -> Self:
-        """从环境变量装配"""
-        return cls(
-            endpoint_url=os.environ["APP_STORAGE_ENDPOINT"],
-            access_key_id=os.environ["APP_STORAGE_ACCESS_KEY"],
-            secret_access_key=os.environ["APP_STORAGE_SECRET_KEY"],
-            region_name=os.environ.get("APP_STORAGE_REGION", "garage"),
-            bucket=os.environ["APP_STORAGE_BUCKET"],
-        )
+        """从环境变量装配 - 与 compose 注入命名一致"""
+        return cls()
 
 
 def create_client(

@@ -6,10 +6,11 @@ from app.persistence.storage import StorageSettings, create_client
 
 def test_settings_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
     """从环境变量装配参数"""
-    monkeypatch.setenv("APP_STORAGE_ENDPOINT", "http://garage:3900")
-    monkeypatch.setenv("APP_STORAGE_ACCESS_KEY", "ak")
-    monkeypatch.setenv("APP_STORAGE_SECRET_KEY", "sk")
-    monkeypatch.setenv("APP_STORAGE_BUCKET", "app")
+    monkeypatch.setenv("APP_STORAGE__ENDPOINT_URL", "http://garage:3900")
+    monkeypatch.setenv("APP_STORAGE__ACCESS_KEY_ID", "ak")
+    monkeypatch.setenv("APP_STORAGE__SECRET_ACCESS_KEY", "sk")
+    monkeypatch.setenv("APP_STORAGE__REGION_NAME", "garage")
+    monkeypatch.setenv("APP_STORAGE__BUCKET", "app")
 
     settings = StorageSettings.from_env()
 

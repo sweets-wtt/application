@@ -244,6 +244,7 @@ source = { editable = "packages/python/persistence" }
 dependencies = [
     { name = "aiobotocore" },
     { name = "asyncpg" },
+    { name = "pydantic-settings" },
     { name = "sqlalchemy" },
     { name = "valkey" },
 ]
@@ -252,6 +253,7 @@ dependencies = [
 requires-dist = [
     { name = "aiobotocore", specifier = ">=2.0" },
     { name = "asyncpg", specifier = ">=0.30" },
+    { name = "pydantic-settings", specifier = ">=2.15.0" },
     { name = "sqlalchemy", specifier = ">=2.0" },
     { name = "valkey", specifier = ">=6.0" },
 ]
