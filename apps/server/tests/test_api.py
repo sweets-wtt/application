@@ -1,6 +1,7 @@
 """契约模糊测试"""
 
 from collections.abc import AsyncIterator
+from types import SimpleNamespace
 from typing import Any
 
 import schemathesis
@@ -34,8 +35,18 @@ class _FakeWorkflow:
         return _FakeRun()
 
 
+class _FakeRuns:
+    """runs 客户端桩 - 固定返回 COMPLETED"""
+
+    async def aio_get_status(self, _run_id: str) -> SimpleNamespace:
+        return SimpleNamespace(value="COMPLETED")
+
+
 class _FakeClient:
     """Hatchet 客户端桩"""
+
+    def __init__(self) -> None:
+        self.runs = _FakeRuns()
 
     def workflow(self, **_kwargs: object) -> _FakeWorkflow:
         return _FakeWorkflow()

@@ -3,6 +3,7 @@
 from types import SimpleNamespace
 from typing import TYPE_CHECKING, Any, cast
 
+import pytest
 from app.contracts.generated.http import RequestInput
 from server.services import workflow as workflow_service
 
@@ -28,12 +29,28 @@ class FakeWorkflow:
         return FakeRun()
 
 
+class FakeRuns:
+    """runs 客户端桩 - 返回固定状态或抛出异常"""
+
+    def __init__(self, status: Any = "QUEUED", error: Exception | None = None) -> None:
+        self.status = status
+        self.error = error
+        self.requested: list[str] = []
+
+    async def aio_get_status(self, run_id: str) -> Any:
+        self.requested.append(run_id)
+        if self.error is not None:
+            raise self.error
+        return self.status
+
+
 class FakeClient:
     """Hatchet 客户端桩"""
 
-    def __init__(self) -> None:
+    def __init__(self, status: Any = "QUEUED", error: Exception | None = None) -> None:
         self.workflow_obj = FakeWorkflow()
         self.workflow_name: str | None = None
+        self.runs = FakeRuns(status=status, error=error)
 
     def workflow(self, **kwargs: Any) -> FakeWorkflow:
         self.workflow_name = kwargs.get("name")
@@ -103,17 +120,84 @@ async def test_submit_returns_existing_on_idempotent_key() -> None:
 
 async def test_get_status_returns_submitted_for_known_run() -> None:
     """已知 run 返回 submitted"""
+    client = FakeClient()
     session = FakeSession(row=SimpleNamespace(run_id="run-1"))
 
-    status = await workflow_service.get_status(cast("AsyncSession", session), "run-1")
+    status = await workflow_service.get_status(
+        cast("Hatchet", client), cast("AsyncSession", session), "run-1"
+    )
+
+    assert status == "submitted"
+    assert client.runs.requested == ["run-1"]
+
+
+@pytest.mark.parametrize(
+    ("remote", "expected"),
+    [
+        (SimpleNamespace(value="QUEUED"), "submitted"),
+        (SimpleNamespace(value="RUNNING"), "running"),
+        (SimpleNamespace(value="COMPLETED"), "succeeded"),
+        (SimpleNamespace(value="FAILED"), "failed"),
+        (SimpleNamespace(value="CANCELLED"), "failed"),
+    ],
+    ids=["queued", "running", "completed", "failed", "cancelled"],
+)
+async def test_get_status_maps_hatchet_status(remote: Any, expected: str) -> None:
+    """Hatchet 状态映射到契约枚举"""
+    client = FakeClient(status=remote)
+    session = FakeSession(row=SimpleNamespace(run_id="run-1"))
+
+    status = await workflow_service.get_status(
+        cast("Hatchet", client), cast("AsyncSession", session), "run-1"
+    )
+
+    assert status == expected
+
+
+async def test_get_status_maps_plain_string_status() -> None:
+    """Hatchet 返回纯字符串状态时同样映射"""
+    client = FakeClient(status="COMPLETED")
+    session = FakeSession(row=SimpleNamespace(run_id="run-1"))
+
+    status = await workflow_service.get_status(
+        cast("Hatchet", client), cast("AsyncSession", session), "run-1"
+    )
+
+    assert status == "succeeded"
+
+
+async def test_get_status_returns_submitted_for_unknown_status() -> None:
+    """未知远端状态降级为 submitted"""
+    client = FakeClient(status=SimpleNamespace(value="SOMETHING_NEW"))
+    session = FakeSession(row=SimpleNamespace(run_id="run-1"))
+
+    status = await workflow_service.get_status(
+        cast("Hatchet", client), cast("AsyncSession", session), "run-1"
+    )
+
+    assert status == "submitted"
+
+
+async def test_get_status_returns_submitted_when_hatchet_fails() -> None:
+    """Hatchet 查询异常 - 降级为 submitted"""
+    client = FakeClient(error=RuntimeError("hatchet unavailable"))
+    session = FakeSession(row=SimpleNamespace(run_id="run-1"))
+
+    status = await workflow_service.get_status(
+        cast("Hatchet", client), cast("AsyncSession", session), "run-1"
+    )
 
     assert status == "submitted"
 
 
 async def test_get_status_returns_none_for_unknown_run() -> None:
-    """未知 run 返回 None"""
+    """未知 run 返回 None, 不查询 Hatchet"""
+    client = FakeClient()
     session = FakeSession()
 
-    status = await workflow_service.get_status(cast("AsyncSession", session), "missing")
+    status = await workflow_service.get_status(
+        cast("Hatchet", client), cast("AsyncSession", session), "missing"
+    )
 
     assert status is None
+    assert client.runs.requested == []

@@ -3,6 +3,7 @@
 from typing import TYPE_CHECKING
 
 from app.contracts.generated.http import RequestInput
+from app.log import get_logger
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -10,6 +11,18 @@ from server.core.constants import WORKFLOW_NAME
 
 if TYPE_CHECKING:
     from hatchet_sdk import Hatchet
+
+# 结构化日志器
+logger = get_logger(__name__)
+
+# Hatchet 状态 -> 契约枚举
+_STATUS_MAP = {
+    "QUEUED": "submitted",
+    "RUNNING": "running",
+    "COMPLETED": "succeeded",
+    "FAILED": "failed",
+    "CANCELLED": "failed",
+}
 
 
 async def submit(
@@ -48,10 +61,14 @@ async def submit(
     return run.workflow_run_id
 
 
-async def get_status(session: AsyncSession, run_id: str) -> str | None:
-    """查询 run 状态 - 基于本地幂等记录
+async def get_status(
+    client: "Hatchet",
+    session: AsyncSession,
+    run_id: str,
+) -> str | None:
+    """查询 run 状态 - 本地幂等记录 + Hatchet 远端状态
 
-    远端状态需对接 hatchet.runs,此处仅核验 run 是否已受理
+    未记录的 run 返回 None; Hatchet 查询失败降级为 submitted(本地已受理)
     """
     result = await session.execute(
         text("SELECT run_id FROM idempotency WHERE run_id = :run_id"),
@@ -60,4 +77,10 @@ async def get_status(session: AsyncSession, run_id: str) -> str | None:
     if result.first() is None:
         return None
 
-    return "submitted"
+    try:
+        status = await client.runs.aio_get_status(run_id)
+    except Exception:
+        logger.warning("workflow.status_query_failed", run_id=run_id, exc_info=True)
+        return "submitted"
+
+    return _STATUS_MAP.get(str(getattr(status, "value", status)), "submitted")

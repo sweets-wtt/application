@@ -36,10 +36,11 @@ async def submit_run(
 @router.get(path="/runs/{run_id}", description="查询工作流 run")
 async def get_run(
     run_id: str,
+    client: Annotated[Hatchet, Depends(get_client)],
     session: Annotated[AsyncSession, Depends(get_session)],
 ) -> dict:
     """查询工作流 run - 不存在返回 404"""
-    status = await workflow_service.get_status(session, run_id)
+    status = await workflow_service.get_status(client, session, run_id)
     if status is None:
         raise HTTPException(status_code=404, detail="run 不存在")
 
