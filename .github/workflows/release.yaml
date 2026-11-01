@@ -44,6 +44,8 @@ jobs:
         with:
           # 检出深度
           fetch-depth: 0
+          # 凭据保留 - 推送改用显式令牌
+          persist-credentials: false
       # 环境管理
       - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
         # 动作输入
@@ -62,8 +64,13 @@ jobs:
       - id: tag
         # 运行命令
         run: echo "tag=$(git describe --tags --abbrev=0)" >> "$GITHUB_OUTPUT"
-      # 运行命令
-      - run: git push origin main --tags
+      # 推送分支与标签 - 显式令牌认证（凭据不持久化）
+      - env:
+          # 仓库令牌
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # 仓库全名
+          GH_REPO: ${{ github.repository }}
+        run: git push "https://x-access-token:${GH_TOKEN}@github.com/${GH_REPO}" main --tags
       # 登录镜像仓库
       - env:
           # 镜像仓库令牌
