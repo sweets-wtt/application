@@ -13,6 +13,10 @@
     "noFallthroughCasesInSwitch": true,
     // 原样模块语法
     "verbatimModuleSyntax": true,
+    // 模块
+    "module": "ESNext",
+    // 模块解析（识别包 exports 子路径）
+    "moduleResolution": "Bundler",
     // 跳过库检查
     "skipLibCheck": true
   }

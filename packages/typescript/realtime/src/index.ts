@@ -1,5 +1,5 @@
 /** 传输无关实时客户端 */
-import { Response } from "@app/contracts/src/schemas";
+import { Response } from "@app/contracts/schemas";
 
 // 信封类型
 export type EnvelopeType = "subscribe" | "unsubscribe" | "publish" | "event" | "error";
