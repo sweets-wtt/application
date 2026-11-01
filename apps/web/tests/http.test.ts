@@ -1,28 +1,59 @@
-/** HTTP 适配器测试 */
-import { describe, expect, it, vi } from "vitest";
-import { clientFetch, httpFetch } from "../src/adapters/http";
+/** 契约客户端测试 */
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { appFetch, setBaseUrl } from "@app/contracts";
 
-describe("http adapter", () => {
-  it("clientFetch 调用 appFetch", async () => {
-    // 桩 fetch
-    const fetchMock = vi.fn().mockResolvedValue({
-      ok: true,
-      json: () => Promise.resolve({ code: 0 }),
-    });
+// 每个用例后恢复基地址
+afterEach(() => {
+  setBaseUrl("");
+});
+
+describe("appFetch", () => {
+  it("返回 Orval 约定的 data/status/headers", async () => {
+    const body = { code: 0, message: "ok", data: { status: "ok" } };
+    const fetchMock = vi.fn().mockResolvedValue(
+      new Response(JSON.stringify(body), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
     vi.stubGlobal("fetch", fetchMock);
 
-    const result = await clientFetch<{ code: number }>("/healthz");
+    const result = await appFetch<{ data: typeof body; status: number; headers: Headers }>(
+      "/healthz",
+    );
 
-    expect(result).toEqual({ code: 0 });
-    expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining("/healthz"), undefined);
+    expect(result.data).toEqual(body);
+    expect(result.status).toBe(200);
+    expect(result.headers.get("content-type")).toContain("application/json");
+    expect(fetchMock).toHaveBeenCalledWith("/healthz", undefined);
   });
 
-  it("httpFetch 带基地址", async () => {
-    const fetchMock = vi.fn().mockResolvedValue({ ok: true });
+  it("拼接基地址", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      new Response(JSON.stringify({ code: 0 }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
     vi.stubGlobal("fetch", fetchMock);
+    setBaseUrl("https://api.example.com");
 
-    await httpFetch("/test");
+    await appFetch("/healthz");
 
-    expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining("/test"), undefined);
+    expect(fetchMock).toHaveBeenCalledWith("https://api.example.com/healthz", undefined);
+  });
+
+  it("非 2xx 抛错", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        new Response(JSON.stringify({ detail: "fail" }), {
+          status: 500,
+          headers: { "Content-Type": "application/json" },
+        }),
+      ),
+    );
+
+    await expect(appFetch("/healthz")).rejects.toThrow("500");
   });
 });

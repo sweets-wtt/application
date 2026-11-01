@@ -1,8 +1,6 @@
 /** 服务端健康检查（心跳） */
 import { computed, type ComputedRef, type Ref } from "vue";
-import { useRequest } from "@/features/http/useRequest";
-import { clientFetch } from "@/adapters/http";
-import type { Healthz200 } from "@app/contracts";
+import { useHealthz, type Healthz200 } from "@app/contracts";
 import { HEARTBEAT_INTERVAL } from "@/core/settings";
 
 /** 服务端状态 */
@@ -13,22 +11,25 @@ export interface HealthCheckResult {
   status: ComputedRef<ServerStatus>;
   online: ComputedRef<boolean>;
   isFetching: Ref<boolean>;
-  data: Ref<Healthz200 | undefined>;
+  data: ComputedRef<Healthz200 | undefined>;
 }
 
 /** 健康检查 hook：轮询 /healthz 并推导在线状态 */
 export const useHealthCheck = (): HealthCheckResult => {
   // 契约请求：定时拉取存活探针
-  const { isSuccess, isError, isFetching, data } = useRequest<Healthz200>(
-    ["healthz"],
-    () => clientFetch<Healthz200>("/healthz"),
-    {
+  const {
+    isSuccess,
+    isError,
+    isFetching,
+    data: result,
+  } = useHealthz({
+    query: {
       // 轮询间隔
       refetchInterval: HEARTBEAT_INTERVAL,
       // 失败重试一次
       retry: 1,
     },
-  );
+  });
 
   // 在线状态
   const status = computed<ServerStatus>(() => {
@@ -43,6 +44,9 @@ export const useHealthCheck = (): HealthCheckResult => {
 
   // 是否在线
   const online = computed(() => status.value === "online");
+
+  // 响应信封内层数据
+  const data = computed<Healthz200 | undefined>(() => result.value?.data);
 
   return { status, online, isFetching, data };
 };

@@ -1,6 +1,7 @@
 /** 应用入口 */
 import { createApp } from "vue";
 import { VueQueryPlugin } from "@tanstack/vue-query";
+import { setBaseUrl } from "@app/contracts";
 import "virtual:uno.css";
 
 import App from "@/App.vue";
@@ -8,10 +9,14 @@ import { router } from "@/router";
 import { pinia } from "@/stores";
 import { queryClient } from "@/core/query";
 import { configureLogger } from "@/core/logger";
+import { API_BASE_URL } from "@/core/settings";
 import "@/styles/main.css";
 
 // 配置日志与遥测上报
 configureLogger();
+
+// 契约客户端基地址
+setBaseUrl(API_BASE_URL);
 
 // 创建应用
 const app = createApp(App);
