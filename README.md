@@ -26,19 +26,17 @@ application（根项目）
 │   │   ├── 契约检查：vacuum → openapi
 │   │   └── 兼容检查：oasdiff → openapi
 │   └── 工作区
-│       ├── 运行时：python
-│       ├── 依赖管理：uv → python
-│       │   ├── 测试
-│       │   │   ├── 测试框架：pytest → uv
-│       │   │   ├── 异步测试：pytest-asyncio → uv
-│       │   │   └── 覆盖率：pytest-cov → uv
-│       │   ├── HTTP
-│       │   │   └── 客户端：httpx2 → uv
-│       │   └── 代码
-│       │       ├── 代码检查：ruff → uv
-│       │       └── 类型检查：ty → uv
-│       ├── 运行时：node
-│       └── 依赖管理：bun → node
+│       └── 运行时与依赖管理：uv
+│           ├── 测试
+│           │   ├── 测试框架：pytest → uv
+│           │   ├── 异步测试：pytest-asyncio → uv
+│           │   └── 覆盖率：pytest-cov → uv
+│           ├── HTTP
+│           │   └── 客户端：httpx2 → uv
+│           └── 代码
+│               ├── 代码检查：ruff → uv
+│               └── 类型检查：ty → uv
+│       └── 运行时与依赖管理：bun
 │           ├── 测试
 │           │   └── 测试框架：vitest → bun
 │           └── 代码
