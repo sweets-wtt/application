@@ -1,0 +1,13 @@
+# 查询工作流 run
+get:
+  operationId: workflowRun
+  description: 查询工作流 run 状态
+  parameters:
+    - $ref: "../components/parameters.yaml#/parameters/RunIdPath"
+  responses:
+    "200":
+      $ref: "../components/responses.yaml#/responses/WorkflowRun200"
+    "404":
+      $ref: "../components/responses.yaml#/responses/NotFound"
+    "422":
+      $ref: "../components/responses.yaml#/responses/UnprocessableEntity"

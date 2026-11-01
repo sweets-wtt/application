@@ -1,0 +1,19 @@
+# 遥测接收
+post:
+  operationId: telemetryEvents
+  description: 批量接收前端遥测事件 - 请求体上限 256 KiB
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../components/schemas.yaml#/schemas/TelemetryIngest"
+  responses:
+    "202":
+      $ref: "../components/responses.yaml#/responses/TelemetryEvents202"
+    "400":
+      $ref: "../components/responses.yaml#/responses/BadRequest"
+    "413":
+      $ref: "../components/responses.yaml#/responses/PayloadTooLarge"
+    "422":
+      $ref: "../components/responses.yaml#/responses/UnprocessableEntity"

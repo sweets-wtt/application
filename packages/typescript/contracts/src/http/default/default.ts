@@ -4,7 +4,7 @@
  * API
  * HTTP 契约（源文件入口）。
  *
- * 结构：路径在本文件；`components/` 存放参数、响应与模式。
+ * 结构：`paths/` 每路径一文件；`components/` 参数、响应与模式。
  * 修改源文件后执行 `just bundle` 重新打包 `dist/openapi.yaml` -
  * 制品是 datamodel-codegen / Orval / vacuum / oasdiff / schemathesis 的唯一消费入口。
  *
@@ -50,7 +50,7 @@ import type {
   UnprocessableEntityResponse,
   WorkflowRun200Response,
   WorkflowRuns202Response,
-} from "../../schemas";
+} from "../../schemas/index.zod";
 
 import { appFetch } from "../../../client";
 

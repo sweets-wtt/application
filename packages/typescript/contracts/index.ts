@@ -1,5 +1,4 @@
-/** 契约客户端与模拟钩子 */
+/** 契约客户端与模式 */
 export * from "./client";
 export * from "./src/http";
-export * from "./src/http/default/default.msw";
-export * from "./src/schemas";
+export * from "./src/schemas/index.zod";

@@ -1,0 +1,13 @@
+# 实时票据
+post:
+  operationId: realtimeTicket
+  description: 签发一次性 WebSocket 票据 - 有效期内通过 /realtime/ws 消费一次
+  parameters:
+    - $ref: "../components/parameters.yaml#/parameters/OriginHeader"
+  responses:
+    "200":
+      $ref: "../components/responses.yaml#/responses/RealtimeTicket200"
+    "403":
+      $ref: "../components/responses.yaml#/responses/Forbidden"
+    "503":
+      $ref: "../components/responses.yaml#/responses/ServiceUnavailable"

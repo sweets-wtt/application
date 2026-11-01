@@ -8,7 +8,6 @@
       "apps/web"
     ],
     "catalog": {
-      "@faker-js/faker": "^10.6.0",
       "@iconify-json/carbon": "^1.2.14",
       "@playwright/test": "^1.58.1",
       "@size-limit/file": "^11.2.0",
@@ -20,7 +19,6 @@
       "@vueuse/core": "^12.5.0",
       "consola": "^3.4.2",
       "jsdom": "^27.1.0",
-      "msw": "^2.15.0",
       "pinia": "^3.0.4",
       "pinia-plugin-persistedstate": "^4.5.0",
       "playwright": "^1.58.1",

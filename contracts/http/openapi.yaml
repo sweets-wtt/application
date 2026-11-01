@@ -9,7 +9,7 @@ info:
   description: |
     HTTP 契约（源文件入口）。
 
-    结构：路径在本文件；`components/` 存放参数、响应与模式。
+    结构：`paths/` 每路径一文件；`components/` 参数、响应与模式。
     修改源文件后执行 `just bundle` 重新打包 `dist/openapi.yaml` -
     制品是 datamodel-codegen / Orval / vacuum / oasdiff / schemathesis 的唯一消费入口。
 
@@ -28,163 +28,19 @@ jsonSchemaDialect: "https://json-schema.org/draft/2020-12/schema"
 servers:
   - url: /
 
-# 路径
+# 路径 - 每路径项一文件（Redocly split 结构）
 paths:
-  # 存活探针
   /healthz:
-    get:
-      # 操作标识
-      operationId: healthz
-      # 描述
-      description: 返回服务存活状态
-      # 响应
-      responses:
-        "200":
-          $ref: "components/responses.yaml#/responses/Healthz200"
-
-  # 对象存储
+    $ref: "./paths/healthz.yaml"
   /storage/{key}:
-    # 流式上传
-    put:
-      operationId: storagePut
-      description: 流式上传对象 - 请求体为原始二进制、最大 10 MiB
-      parameters:
-        - $ref: "components/parameters.yaml#/parameters/KeyPath"
-        - $ref: "components/parameters.yaml#/parameters/TenantHeader"
-      requestBody:
-        required: true
-        description: 二进制对象内容
-        content:
-          application/octet-stream:
-            schema:
-              type: string
-              format: binary
-      responses:
-        "200":
-          $ref: "components/responses.yaml#/responses/StoragePut200"
-        "404":
-          $ref: "components/responses.yaml#/responses/NotFound"
-        "413":
-          $ref: "components/responses.yaml#/responses/PayloadTooLarge"
-        "422":
-          $ref: "components/responses.yaml#/responses/UnprocessableEntity"
-    # 流式下载
-    get:
-      operationId: storageGet
-      description: 流式下载对象 - 响应体为原始二进制
-      parameters:
-        - $ref: "components/parameters.yaml#/parameters/KeyPath"
-        - $ref: "components/parameters.yaml#/parameters/TenantHeader"
-      responses:
-        "200":
-          $ref: "components/responses.yaml#/responses/StorageGet200"
-        "404":
-          $ref: "components/responses.yaml#/responses/NotFound"
-        "422":
-          $ref: "components/responses.yaml#/responses/UnprocessableEntity"
-
-  # 实时票据
+    $ref: "./paths/storage@{key}.yaml"
   /realtime/ticket:
-    post:
-      operationId: realtimeTicket
-      description: 签发一次性 WebSocket 票据 - 有效期内通过 /realtime/ws 消费一次
-      parameters:
-        - $ref: "components/parameters.yaml#/parameters/OriginHeader"
-      responses:
-        "200":
-          $ref: "components/responses.yaml#/responses/RealtimeTicket200"
-        "403":
-          $ref: "components/responses.yaml#/responses/Forbidden"
-        "503":
-          $ref: "components/responses.yaml#/responses/ServiceUnavailable"
-
-  # 实时 WebSocket
+    $ref: "./paths/realtime@ticket.yaml"
   /realtime/ws:
-    get:
-      operationId: realtimeWs
-      description: |
-        WebSocket 升级端点（HTTP 101 Switching Protocols）。
-
-        握手参数：`ticket` 为 `/realtime/ticket` 签发的一次性票据；
-        `Origin` 缺失放行，存在时必须命中允许列表。
-
-        会话协议：
-        - 连接后服务端先发送 `{"type":"system","topic":"system","payload":{"status":"connected"}}`；
-        - 心跳：客户端发送纯文本 `ping`，服务端回复纯文本 `pong`；
-        - 订阅：`{"type":"subscribe","topic":"<topic>"}`；
-        - 取消订阅：`{"type":"unsubscribe","topic":"<topic>"}`；
-        - 发布：`{"type":"publish","topic":"<topic>","payload":{...}}`；
-        - 事件：`{"type":"event","topic":"<topic>","payload":{...}}`。
-
-        关闭码：`4401` 票据无效、`4403` 来源拒绝、`4503` 票据存储不可用。
-
-        说明：Orval 生成的 `realtimeWs` 仅为文档占位，不执行真实 WebSocket 握手。
-      parameters:
-        - $ref: "components/parameters.yaml#/parameters/TicketQuery"
-        - $ref: "components/parameters.yaml#/parameters/OriginHeader"
-      responses:
-        "101":
-          description: 协议升级成功 - 进入 WebSocket 会话
-        "404":
-          description: 普通 HTTP 请求无法匹配 WebSocket 路由
-          content:
-            application/json:
-              schema:
-                $ref: "components/schemas.yaml#/schemas/Error"
-
-  # 遥测接收
+    $ref: "./paths/realtime@ws.yaml"
   /telemetry/events:
-    post:
-      operationId: telemetryEvents
-      description: 批量接收前端遥测事件 - 请求体上限 256 KiB
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "components/schemas.yaml#/schemas/TelemetryIngest"
-      responses:
-        "202":
-          $ref: "components/responses.yaml#/responses/TelemetryEvents202"
-        "400":
-          $ref: "components/responses.yaml#/responses/BadRequest"
-        "413":
-          $ref: "components/responses.yaml#/responses/PayloadTooLarge"
-        "422":
-          $ref: "components/responses.yaml#/responses/UnprocessableEntity"
-
-  # 提交工作流 run
+    $ref: "./paths/telemetry@events.yaml"
   /workflow/runs:
-    post:
-      operationId: workflowRuns
-      description: 提交工作流 run - 以 Idempotency-Key 保证幂等
-      parameters:
-        - $ref: "components/parameters.yaml#/parameters/IdempotencyKeyHeader"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "components/schemas.yaml#/schemas/RequestInput"
-      responses:
-        "202":
-          $ref: "components/responses.yaml#/responses/WorkflowRuns202"
-        "400":
-          $ref: "components/responses.yaml#/responses/BadRequest"
-        "422":
-          $ref: "components/responses.yaml#/responses/UnprocessableEntity"
-
-  # 查询工作流 run
+    $ref: "./paths/workflow@runs.yaml"
   /workflow/runs/{run_id}:
-    get:
-      operationId: workflowRun
-      description: 查询工作流 run 状态
-      parameters:
-        - $ref: "components/parameters.yaml#/parameters/RunIdPath"
-      responses:
-        "200":
-          $ref: "components/responses.yaml#/responses/WorkflowRun200"
-        "404":
-          $ref: "components/responses.yaml#/responses/NotFound"
-        "422":
-          $ref: "components/responses.yaml#/responses/UnprocessableEntity"
+    $ref: "./paths/workflow@runs@{run_id}.yaml"

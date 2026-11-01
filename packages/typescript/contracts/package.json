@@ -7,7 +7,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./schemas": "./src/schemas/index.ts"
+    "./schemas": "./src/schemas/index.zod.ts"
   },
   "types": "./src/index.ts",
   "scripts": {
@@ -15,9 +15,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@faker-js/faker": "catalog:",
     "@tanstack/vue-query": "catalog:",
-    "msw": "catalog:",
     "vue": "catalog:",
     "zod": "catalog:"
   }

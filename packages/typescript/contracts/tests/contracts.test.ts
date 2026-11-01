@@ -1,6 +1,6 @@
 /** 契约测试 */
 import { expect, it } from "vitest";
-import { getDefaultMock, Healthz200Response, healthz } from "../index";
+import { Healthz200Response, healthz } from "../index";
 
 it("zod 模式解析标准响应", () => {
   expect(Healthz200Response.parse({ code: 0, message: "ok", data: { status: "ok" } })).toEqual({
@@ -8,10 +8,6 @@ it("zod 模式解析标准响应", () => {
     message: "ok",
     data: { status: "ok" },
   });
-});
-
-it("MSW 钩子可用", () => {
-  expect(getDefaultMock().length).toBeGreaterThan(0);
 });
 
 it("客户端函数存在", () => {

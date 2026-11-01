@@ -97,6 +97,7 @@ application（根项目）
 │       ├── dist                     # 打包制品
 │       │   └── openapi.yaml         # 接口规范（生成）
 │       ├── openapi.yaml             # 契约入口
+│       ├── paths                    # 路径（每路径项一文件）
 │       └── vacuum.yaml              # 契约检查
 ├── infra                            # 服务编排
 │   ├── authelia                     # Authelia

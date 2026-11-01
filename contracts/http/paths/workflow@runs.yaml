@@ -1,0 +1,19 @@
+# 提交工作流 run
+post:
+  operationId: workflowRuns
+  description: 提交工作流 run - 以 Idempotency-Key 保证幂等
+  parameters:
+    - $ref: "../components/parameters.yaml#/parameters/IdempotencyKeyHeader"
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../components/schemas.yaml#/schemas/RequestInput"
+  responses:
+    "202":
+      $ref: "../components/responses.yaml#/responses/WorkflowRuns202"
+    "400":
+      $ref: "../components/responses.yaml#/responses/BadRequest"
+    "422":
+      $ref: "../components/responses.yaml#/responses/UnprocessableEntity"

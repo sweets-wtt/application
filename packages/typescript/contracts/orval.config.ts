@@ -25,12 +25,8 @@ export default defineConfig({
         path: "./src/schemas",
         // 校验器类型
         type: "zod",
-      },
-
-      // 模拟
-      mock: {
-        // 生成器
-        generators: [{ type: "msw" }],
+        // 单文件模式 - 全部 zod 模式合并为一个模块
+        mode: "single",
       },
 
       // 覆盖

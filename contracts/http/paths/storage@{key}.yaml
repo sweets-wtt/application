@@ -1,0 +1,39 @@
+# 对象存储
+# 流式上传
+put:
+  operationId: storagePut
+  description: 流式上传对象 - 请求体为原始二进制、最大 10 MiB
+  parameters:
+    - $ref: "../components/parameters.yaml#/parameters/KeyPath"
+    - $ref: "../components/parameters.yaml#/parameters/TenantHeader"
+  requestBody:
+    required: true
+    description: 二进制对象内容
+    content:
+      application/octet-stream:
+        schema:
+          type: string
+          format: binary
+  responses:
+    "200":
+      $ref: "../components/responses.yaml#/responses/StoragePut200"
+    "404":
+      $ref: "../components/responses.yaml#/responses/NotFound"
+    "413":
+      $ref: "../components/responses.yaml#/responses/PayloadTooLarge"
+    "422":
+      $ref: "../components/responses.yaml#/responses/UnprocessableEntity"
+# 流式下载
+get:
+  operationId: storageGet
+  description: 流式下载对象 - 响应体为原始二进制
+  parameters:
+    - $ref: "../components/parameters.yaml#/parameters/KeyPath"
+    - $ref: "../components/parameters.yaml#/parameters/TenantHeader"
+  responses:
+    "200":
+      $ref: "../components/responses.yaml#/responses/StorageGet200"
+    "404":
+      $ref: "../components/responses.yaml#/responses/NotFound"
+    "422":
+      $ref: "../components/responses.yaml#/responses/UnprocessableEntity"
