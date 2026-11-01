@@ -4,7 +4,9 @@
  * API
  * HTTP 契约（源文件入口）。
  *
- * 结构：`paths/` 每路径一文件；`components/` 参数、响应与模式。
+ * 结构：`paths/` 按资源域一文件（与 server/routes 一一对应，
+ * 多路径项文件内用语义键，如 `realtime.yaml#/ticket`）；
+ * `components/` 参数、请求体、响应与模式。
  * 修改源文件后执行 `just bundle` 重新打包 `dist/openapi.yaml` -
  * 制品是 datamodel-codegen / Orval / vacuum / oasdiff / schemathesis 的唯一消费入口。
  *
@@ -34,6 +36,7 @@ import type { MaybeRefOrGetter } from "vue";
 
 import type {
   BadRequestResponse,
+  BinaryContentBody,
   Error,
   ForbiddenResponse,
   Healthz200Response,
@@ -41,13 +44,13 @@ import type {
   PayloadTooLargeResponse,
   RealtimeTicket200Response,
   RealtimeWsParams,
-  RequestInput,
   ServiceUnavailableResponse,
   StorageGet200Response,
   StoragePut200Response,
+  TelemetryBatchBody,
   TelemetryEvents202Response,
-  TelemetryIngest,
   UnprocessableEntityResponse,
+  WorkflowInputBody,
   WorkflowRun200Response,
   WorkflowRuns202Response,
 } from "../../schemas/index.zod";
@@ -175,7 +178,7 @@ export const getStoragePutUrl = (key: string) => {
  */
 export const storagePut = async (
   key: string,
-  storagePutBody: Blob,
+  binaryContentBody: BinaryContentBody,
   options?: Parameters<typeof appFetch>[1],
 ): Promise<storagePutResponse> => {
   const getHeaders = (
@@ -201,7 +204,7 @@ export const storagePut = async (
     ...options,
     method: "PUT",
     headers: { "Content-Type": "application/octet-stream", ...getHeaders(options?.headers) },
-    body: storagePutBody,
+    body: binaryContentBody,
   });
 };
 
@@ -244,12 +247,12 @@ export const getStoragePutMutationOptions = <
 };
 
 export type StoragePutMutationResult = NonNullable<Awaited<ReturnType<typeof storagePut>>>;
-export type StoragePutMutationBody = Blob;
+export type StoragePutMutationBody = BinaryContentBody;
 export type StoragePutMutationError =
   | NotFoundResponse
   | PayloadTooLargeResponse
   | UnprocessableEntityResponse;
-export type StoragePutMutationVariables = { key: string; data: Blob };
+export type StoragePutMutationVariables = { key: string; data: BinaryContentBody };
 
 export const useStoragePut = <
   TError = NotFoundResponse | PayloadTooLargeResponse | UnprocessableEntityResponse,
@@ -606,7 +609,7 @@ export const getTelemetryEventsUrl = () => {
  * 批量接收前端遥测事件 - 请求体上限 256 KiB
  */
 export const telemetryEvents = async (
-  telemetryIngest: TelemetryIngest,
+  telemetryBatchBody: TelemetryBatchBody,
   options?: Parameters<typeof appFetch>[1],
 ): Promise<telemetryEventsResponse> => {
   const getHeaders = (
@@ -632,7 +635,7 @@ export const telemetryEvents = async (
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/json", ...getHeaders(options?.headers) },
-    body: JSON.stringify(telemetryIngest),
+    body: JSON.stringify(telemetryBatchBody),
   });
 };
 
@@ -677,12 +680,12 @@ export const getTelemetryEventsMutationOptions = <
 export type TelemetryEventsMutationResult = NonNullable<
   Awaited<ReturnType<typeof telemetryEvents>>
 >;
-export type TelemetryEventsMutationBody = TelemetryIngest;
+export type TelemetryEventsMutationBody = TelemetryBatchBody;
 export type TelemetryEventsMutationError =
   | BadRequestResponse
   | PayloadTooLargeResponse
   | UnprocessableEntityResponse;
-export type TelemetryEventsMutationVariables = { data: TelemetryIngest };
+export type TelemetryEventsMutationVariables = { data: TelemetryBatchBody };
 
 export const useTelemetryEvents = <
   TError = BadRequestResponse | PayloadTooLargeResponse | UnprocessableEntityResponse,
@@ -738,7 +741,7 @@ export const getWorkflowRunsUrl = () => {
  * 提交工作流 run - 以 Idempotency-Key 保证幂等
  */
 export const workflowRuns = async (
-  requestInput: RequestInput,
+  workflowInputBody: WorkflowInputBody,
   options?: Parameters<typeof appFetch>[1],
 ): Promise<workflowRunsResponse> => {
   const getHeaders = (
@@ -764,7 +767,7 @@ export const workflowRuns = async (
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/json", ...getHeaders(options?.headers) },
-    body: JSON.stringify(requestInput),
+    body: JSON.stringify(workflowInputBody),
   });
 };
 
@@ -807,9 +810,9 @@ export const getWorkflowRunsMutationOptions = <
 };
 
 export type WorkflowRunsMutationResult = NonNullable<Awaited<ReturnType<typeof workflowRuns>>>;
-export type WorkflowRunsMutationBody = RequestInput;
+export type WorkflowRunsMutationBody = WorkflowInputBody;
 export type WorkflowRunsMutationError = BadRequestResponse | UnprocessableEntityResponse;
-export type WorkflowRunsMutationVariables = { data: RequestInput };
+export type WorkflowRunsMutationVariables = { data: WorkflowInputBody };
 
 export const useWorkflowRuns = <
   TError = BadRequestResponse | UnprocessableEntityResponse,

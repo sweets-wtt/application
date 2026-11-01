@@ -4,7 +4,9 @@
  * API
  * HTTP 契约（源文件入口）。
  *
- * 结构：`paths/` 每路径一文件；`components/` 参数、响应与模式。
+ * 结构：`paths/` 按资源域一文件（与 server/routes 一一对应，
+ * 多路径项文件内用语义键，如 `realtime.yaml#/ticket`）；
+ * `components/` 参数、请求体、响应与模式。
  * 修改源文件后执行 `just bundle` 重新打包 `dist/openapi.yaml` -
  * 制品是 datamodel-codegen / Orval / vacuum / oasdiff / schemathesis 的唯一消费入口。
  *
@@ -359,6 +361,51 @@ export const WorkflowRun200Response = zod
 
 export type WorkflowRun200Response = zod.input<typeof WorkflowRun200Response>;
 export type WorkflowRun200ResponseOutput = zod.output<typeof WorkflowRun200Response>;
+
+export const BinaryContentBody = zod.instanceof(Blob);
+
+export type BinaryContentBody = zod.input<typeof BinaryContentBody>;
+export type BinaryContentBodyOutput = zod.output<typeof BinaryContentBody>;
+
+export const telemetryBatchBodyReleaseMax = 128;
+
+export const telemetryBatchBodyEventsItemFingerprintMax = 1024;
+
+export const telemetryBatchBodyEventsItemMessageMax = 8192;
+
+export const telemetryBatchBodyEventsMax = 100;
+
+export const TelemetryBatchBody = zod
+  .object({
+    service: zod.enum(["web", "miniapp"]),
+    release: zod.string().max(telemetryBatchBodyReleaseMax),
+    events: zod
+      .array(
+        zod
+          .object({
+            level: zod.enum(["debug", "info", "warn", "error"]),
+            fingerprint: zod.string().max(telemetryBatchBodyEventsItemFingerprintMax),
+            message: zod.string().max(telemetryBatchBodyEventsItemMessageMax),
+            timestamp: zod.int(),
+            context: zod.record(zod.string(), zod.unknown()).nullish(),
+          })
+          .describe("单条前端遥测事件 - 批量载荷中 events 的元素"),
+      )
+      .max(telemetryBatchBodyEventsMax),
+  })
+  .describe("前端 logger 批量上报的目标结构 - 端与版本在批次级、事件在 events 中");
+
+export type TelemetryBatchBody = zod.input<typeof TelemetryBatchBody>;
+export type TelemetryBatchBodyOutput = zod.output<typeof TelemetryBatchBody>;
+
+export const workflowInputBodyMessageMax = 8192;
+
+export const WorkflowInputBody = zod.object({
+  message: zod.string().max(workflowInputBodyMessageMax),
+});
+
+export type WorkflowInputBody = zod.input<typeof WorkflowInputBody>;
+export type WorkflowInputBodyOutput = zod.output<typeof WorkflowInputBody>;
 export const StoragePutHeaders = zod.object({
   "x-tenant": zod.string(),
 });
@@ -393,46 +440,6 @@ export const RealtimeWsHeaders = zod.object({
 
 export type RealtimeWsHeaders = zod.input<typeof RealtimeWsHeaders>;
 export type RealtimeWsHeadersOutput = zod.output<typeof RealtimeWsHeaders>;
-
-export const telemetryEventsBodyReleaseMax = 128;
-
-export const telemetryEventsBodyEventsItemFingerprintMax = 1024;
-
-export const telemetryEventsBodyEventsItemMessageMax = 8192;
-
-export const telemetryEventsBodyEventsMax = 100;
-
-export const TelemetryEventsBody = zod
-  .object({
-    service: zod.enum(["web", "miniapp"]),
-    release: zod.string().max(telemetryEventsBodyReleaseMax),
-    events: zod
-      .array(
-        zod
-          .object({
-            level: zod.enum(["debug", "info", "warn", "error"]),
-            fingerprint: zod.string().max(telemetryEventsBodyEventsItemFingerprintMax),
-            message: zod.string().max(telemetryEventsBodyEventsItemMessageMax),
-            timestamp: zod.int(),
-            context: zod.record(zod.string(), zod.unknown()).nullish(),
-          })
-          .describe("单条前端遥测事件 - 批量载荷中 events 的元素"),
-      )
-      .max(telemetryEventsBodyEventsMax),
-  })
-  .describe("前端 logger 批量上报的目标结构 - 端与版本在批次级、事件在 events 中");
-
-export type TelemetryEventsBody = zod.input<typeof TelemetryEventsBody>;
-export type TelemetryEventsBodyOutput = zod.output<typeof TelemetryEventsBody>;
-
-export const workflowRunsBodyMessageMax = 8192;
-
-export const WorkflowRunsBody = zod.object({
-  message: zod.string().max(workflowRunsBodyMessageMax),
-});
-
-export type WorkflowRunsBody = zod.input<typeof WorkflowRunsBody>;
-export type WorkflowRunsBodyOutput = zod.output<typeof WorkflowRunsBody>;
 
 export const WorkflowRunsHeaders = zod.object({
   "Idempotency-Key": zod.string(),

@@ -93,11 +93,11 @@ application（根项目）
 │   └── server                       # Server
 ├── contracts                        # 契约
 │   └── http                         # HTTP
-│       ├── components               # 组件（参数/响应/模式）
+│       ├── components               # 组件（参数/请求体/响应/模式）
 │       ├── dist                     # 打包制品
 │       │   └── openapi.yaml         # 接口规范（生成）
 │       ├── openapi.yaml             # 契约入口
-│       ├── paths                    # 路径（每路径项一文件）
+│       ├── paths                    # 路径（按资源域一文件）
 │       └── vacuum.yaml              # 契约检查
 ├── infra                            # 服务编排
 │   ├── authelia                     # Authelia

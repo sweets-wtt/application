@@ -1,10 +1,7 @@
-# 存活探针
+# 存活探针 - GET /healthz
 get:
-  # 操作标识
   operationId: healthz
-  # 描述
   description: 返回服务存活状态
-  # 响应
   responses:
     "200":
       $ref: "../components/responses.yaml#/responses/Healthz200"

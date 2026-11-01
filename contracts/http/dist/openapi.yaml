@@ -5,7 +5,9 @@ info:
   description: |
     HTTP 契约（源文件入口）。
 
-    结构：`paths/` 每路径一文件；`components/` 参数、响应与模式。
+    结构：`paths/` 按资源域一文件（与 server/routes 一一对应，
+    多路径项文件内用语义键，如 `realtime.yaml#/ticket`）；
+    `components/` 参数、请求体、响应与模式。
     修改源文件后执行 `just bundle` 重新打包 `dist/openapi.yaml` -
     制品是 datamodel-codegen / Orval / vacuum / oasdiff / schemathesis 的唯一消费入口。
 
@@ -34,13 +36,7 @@ paths:
         - $ref: '#/components/parameters/KeyPath'
         - $ref: '#/components/parameters/TenantHeader'
       requestBody:
-        required: true
-        description: 二进制对象内容
-        content:
-          application/octet-stream:
-            schema:
-              type: string
-              format: binary
+        $ref: '#/components/requestBodies/BinaryContent'
       responses:
         '200':
           $ref: '#/components/responses/StoragePut200'
@@ -113,11 +109,7 @@ paths:
       operationId: telemetryEvents
       description: 批量接收前端遥测事件 - 请求体上限 256 KiB
       requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TelemetryIngest'
+        $ref: '#/components/requestBodies/TelemetryBatch'
       responses:
         '202':
           $ref: '#/components/responses/TelemetryEvents202'
@@ -134,11 +126,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/IdempotencyKeyHeader'
       requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RequestInput'
+        $ref: '#/components/requestBodies/WorkflowInput'
       responses:
         '202':
           $ref: '#/components/responses/WorkflowRuns202'
@@ -494,3 +482,24 @@ components:
       required: true
       schema:
         type: string
+  requestBodies:
+    BinaryContent:
+      required: true
+      description: 二进制对象内容
+      content:
+        application/octet-stream:
+          schema:
+            type: string
+            format: binary
+    TelemetryBatch:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TelemetryIngest'
+    WorkflowInput:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RequestInput'

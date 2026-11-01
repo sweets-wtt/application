@@ -1,0 +1,27 @@
+# 可复用请求体
+requestBodies:
+  # 二进制对象内容 - 上限 10 MiB
+  BinaryContent:
+    required: true
+    description: 二进制对象内容
+    content:
+      application/octet-stream:
+        schema:
+          type: string
+          format: binary
+
+  # 前端遥测批量载荷
+  TelemetryBatch:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "schemas.yaml#/schemas/TelemetryIngest"
+
+  # 工作流提交载荷
+  WorkflowInput:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "schemas.yaml#/schemas/RequestInput"
