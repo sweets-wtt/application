@@ -25,9 +25,9 @@ describe("realtime transport", () => {
 
     const transport = createWsTransport("ws://localhost/ws");
     transport.connect(
-      () => undefined,
-      () => undefined,
-      () => undefined,
+      () => {},
+      () => {},
+      () => {},
     );
     transport.send("ping");
 

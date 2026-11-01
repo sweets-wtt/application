@@ -15,7 +15,7 @@ const redact = (data: Record<string, unknown> = {}): Record<string, unknown> =>
 
 /** 多端实例：无 console 环境降级为空实现 */
 const instance: ConsolaInstance | undefined =
-  typeof globalThis.console === "undefined" ? undefined : createConsola({ level: 3 });
+  globalThis.console === undefined ? undefined : createConsola({ level: 3 });
 
 /** 结构化日志器：应用不直接依赖 Consola */
 export const logger = {
@@ -82,7 +82,7 @@ const flush = (): void => {
   if (reporting === undefined || buffer.length === 0) {
     return;
   }
-  const events = buffer.splice(0, buffer.length);
+  const events = buffer.splice(0);
   try {
     reporting.send(reporting.endpoint, events);
   } catch {

@@ -122,7 +122,7 @@ application（根项目）
 ├── .gitattributes                   # Git 属性
 ├── .gitignore                       # Git 忽略
 ├── .gitleaks.toml                   # 密钥扫描
-├── .oxlintrc.json                   # JavaScript 代码检查
+├── .oxlintrc.jsonc                  # JavaScript 代码检查
 ├── .release-please-manifest.json    # 版本清单
 ├── .typos.toml                      # 拼写检查
 ├── bun.lock                         # JavaScript 依赖

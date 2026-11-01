@@ -134,7 +134,7 @@ export class RealtimeClient {
         this.transport.connect(
           (data) => this.receive(data),
           (error) => this.handleClose(error),
-          () => undefined,
+          () => {},
         );
         this.applyTicket(this.transport, ticket);
         this.status = "connected";
@@ -168,10 +168,10 @@ export class RealtimeClient {
     if (handlers === undefined) {
       return;
     }
-    if (handler !== undefined) {
-      handlers.delete(handler);
-    } else {
+    if (handler === undefined) {
       handlers.clear();
+    } else {
+      handlers.delete(handler);
     }
     if (handlers.size === 0) {
       this.handlers.delete(topic);
@@ -291,7 +291,7 @@ export class RealtimeClient {
 
   /** 冲刷出站队列 */
   private flushQueue(): void {
-    const queued = this.queue.splice(0, this.queue.length);
+    const queued = this.queue.splice(0);
     for (const data of queued) {
       this.transport?.send(data);
     }
