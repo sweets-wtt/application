@@ -3,15 +3,8 @@
   "name": "@app/session",
   "version": "0.1.0",
   "private": true,
-  "sideEffects": false,
   "type": "module",
-  "exports": {
-    ".": {
-      "types": "./src/index.ts",
-      "import": "./src/index.ts",
-      "default": "./src/index.ts"
-    }
-  },
+  "exports": "./src/index.ts",
   "types": "./src/index.ts",
   "scripts": {
     "typecheck": "tsc -b --noEmit",
