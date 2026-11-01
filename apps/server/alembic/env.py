@@ -7,7 +7,7 @@ from alembic import context
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from server.core.settings import settings
+from server.core import settings
 
 # Alembic Config 对象
 config = context.config

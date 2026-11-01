@@ -7,10 +7,11 @@ import httpx2
 import pytest
 from botocore.exceptions import ClientError
 from fastapi import FastAPI
-from server.adapters.storage import get_client, tenant_key
-from server.core.constants import MAX_UPLOAD_SIZE
+from server import services as storage_service
+from server.adapters import get_storage_client as get_client
+from server.adapters import tenant_key
+from server.core import MAX_UPLOAD_SIZE
 from server.main import app as application
-from server.services import storage as storage_service
 
 if TYPE_CHECKING:
     from aiobotocore.client import AioBaseClient

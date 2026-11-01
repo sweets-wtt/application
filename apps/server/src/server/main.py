@@ -4,13 +4,12 @@ from contextlib import asynccontextmanager
 
 import fastapi
 
-from server import routes
-from server.adapters.realtime import bus
-from server.core import dependencies
-from server.services import realtime as realtime_service
+from server import routes, services
+from server.adapters import bus
+from server.core import setup
 
 # 装配依赖 - 须先于应用实例化以替换 FastAPI 类
-dependencies.setup()
+setup()
 
 
 @asynccontextmanager
@@ -18,8 +17,8 @@ async def lifespan(_: fastapi.FastAPI):
     """应用生命周期 - 启动/关闭实时总线"""
 
     async def on_message(topic: str, message: str) -> None:
-        """总线消息转发到 Hub 对应主题"""
-        await realtime_service.hub.broadcast_to(topic, message)
+        """总线消息转发至 Hub 对应主题"""
+        await services.hub.broadcast_to(topic, message)
 
     await bus.start(on_message)
 

@@ -2,7 +2,7 @@
 
 import pytest
 from app.data.cache import CacheClient
-from server.adapters.cache import AuthzCache, LocalStore
+from server.adapters import AuthzCache, LocalStore
 
 
 class FakeBackend:

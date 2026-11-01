@@ -1,6 +1,6 @@
 """数据库适配器测试"""
 
-from server.adapters.database import engine, get_session, session_factory
+from server.adapters import engine, get_session, session_factory
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.pool import NullPool
 

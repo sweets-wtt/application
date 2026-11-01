@@ -10,10 +10,14 @@ from schemathesis.specs.openapi.checks import (
     negative_data_rejection,
     unsupported_method,
 )
-from server.adapters.database import get_session
-from server.adapters.realtime import get_ticket_store
-from server.adapters.storage import get_client as get_storage_client
-from server.adapters.workflow import get_client
+from server.adapters import (
+    get_session,
+    get_storage_client,
+    get_ticket_store,
+)
+from server.adapters import (
+    get_workflow_client as get_client,
+)
 from server.main import app
 
 # 契约单一来源 - 直接加载契约文件

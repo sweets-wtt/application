@@ -8,14 +8,14 @@ from collections.abc import Iterator
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from server.adapters.realtime import TicketStore, get_ticket_store
-from server.core.constants import (
+from server import services as realtime_service
+from server.adapters import TicketStore, get_ticket_store
+from server.core import (
     REALTIME_QUEUE_LIMIT,
     TICKET_TTL_SECONDS,
     WsCloseCode,
+    settings,
 )
-from server.core.settings import settings
-from server.services import realtime as realtime_service
 from starlette.websockets import WebSocketDisconnect
 from valkey.exceptions import ValkeyError
 

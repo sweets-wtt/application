@@ -6,7 +6,7 @@ import pytest
 from app.contracts.generated.http import TelemetryBatch, TelemetryEvent
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from server.services import telemetry as telemetry_service
+from server import services as telemetry_service
 
 
 class StubLogger:

@@ -1,19 +1,134 @@
-"""实时适配器"""
+"""外部系统适配 - 缓存、数据库、实时、对象存储与工作流客户端"""
 
 import asyncio
 import secrets
+import time
 from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import suppress
-from typing import Protocol
+from typing import TYPE_CHECKING, Protocol
 
+from aiobotocore.client import AioBaseClient
+from app.data.cache import CacheClient
+from app.data.cache import create_client as create_cache_client
+from app.data.db import create_engine, create_session_factory
+from app.data.storage import StorageSettings
+from app.data.storage import create_client as create_storage_client
+from app.workflow import WorkflowSettings
+from app.workflow import create_client as create_workflow_client
+from sqlalchemy.ext.asyncio import AsyncSession
 from valkey.asyncio import Valkey
 
-from server.core.constants import (
+from server.core import (
     TICKET_ISSUE_ATTEMPTS,
     TICKET_TOKEN_BYTES,
     TICKET_TTL_SECONDS,
+    settings,
 )
-from server.core.settings import settings
+
+if TYPE_CHECKING:
+    from hatchet_sdk import Hatchet
+
+
+# ── 缓存 ─────────────────────────
+
+
+class LocalStore:
+    """进程内本地回退存储"""
+
+    def __init__(self) -> None:
+        self._entries: dict[str, tuple[float, str]] = {}
+
+    def get(self, name: str) -> str | None:
+        """读取 - 惰性过期"""
+        entry = self._entries.get(name)
+        if entry is None:
+            return None
+
+        expires, value = entry
+        if time.monotonic() >= expires:
+            # 过期即清除
+            del self._entries[name]
+            return None
+
+        return value
+
+    def set(self, name: str, value: str, timeout: int) -> None:
+        """写入"""
+        self._entries[name] = (time.monotonic() + timeout, value)
+
+
+class AuthzCache:
+    """短期非敏感授权缓存 - 远端优先、不可用回退本地、不扩大权限"""
+
+    def __init__(self, client: CacheClient, local: LocalStore, timeout: int) -> None:
+        self._client = client
+        self._local = local
+        self._timeout = timeout
+
+    async def get(self, name: str) -> str | None:
+        """读取 - 远端故障回退本地、无值返回 None"""
+        try:
+            value = await self._client.get(name)
+        except Exception:
+            return self._local.get(name)
+
+        if value is None:
+            return None
+
+        if isinstance(value, bytes):
+            return value.decode("utf-8")
+
+        return str(value)
+
+    async def set(self, name: str, value: str) -> None:
+        """写入 - 本地必存、远端尽力而为"""
+        self._local.set(name, value, self._timeout)
+
+        with suppress(Exception):
+            await self._client.set(name, value)
+
+    async def close(self) -> None:
+        """关闭连接"""
+        await self._client.close()
+
+
+# 进程级回退存储
+_local = LocalStore()
+
+
+async def get_authz_cache() -> AsyncIterator[AuthzCache]:
+    """每请求生命周期的授权缓存"""
+    cache = AuthzCache(
+        create_cache_client(
+            url=settings.cache.url,
+            key_prefix=settings.cache.key_prefix,
+            timeout=settings.cache.timeout,
+        ),
+        _local,
+        settings.cache.timeout,
+    )
+
+    yield cache
+
+    await cache.close()
+
+
+# ── 数据库 ─────────────────────────
+
+# 异步引擎 - PgBouncer 兼容默认值由 app-data 提供
+engine = create_engine(settings.database.url)
+
+# 会话工厂 - api 每请求 / worker 任务共用
+session_factory = create_session_factory(engine)
+
+
+async def get_session() -> AsyncIterator[AsyncSession]:
+    """每请求生命周期的数据库会话"""
+    async with session_factory() as session:
+        yield session
+
+
+# ── 实时 ─────────────────────────
 
 
 class Backend(Protocol):
@@ -50,7 +165,7 @@ class TicketStore:
         raise RuntimeError("票据签发碰撞")
 
     async def consume(self, ticket: str) -> bool:
-        """消费票据 - 一次性、返回是否有效"""
+        """消费票据 - 一次性、返回是否存在"""
         result = await self._client.getdel(self._key_prefix + ticket)
 
         return result is not None
@@ -71,9 +186,9 @@ async def get_ticket_store() -> AsyncIterator[TicketStore]:
 
 
 class PubSubBus:
-    """Valkey Pub/Sub 总线 - 跨实例消息中转
+    """Valkey Pub/Sub 总线 - 跨实例消息中继
 
-    通道命名: {prefix}{topic}, 订阅前缀通配以接收全部主题.
+    通道命名: {prefix}{topic}, 订阅前缀通配以接收全部主题
     """
 
     def __init__(self, url: str, prefix: str) -> None:
@@ -98,7 +213,7 @@ class PubSubBus:
     async def start(self, handler: Callable[[str, str], Awaitable[None]]) -> None:
         """启动监听 - 订阅前缀通配并转发到回调
 
-        Valkey 不可用时降级为单实例模式 (仅本进程 Hub 内分发).
+        Valkey 不可用时降级为单实例模式 (仅本进程 Hub 内分发)。
         """
         self._handler = handler
 
@@ -170,3 +285,47 @@ bus = PubSubBus(settings.realtime.url, settings.realtime.pubsub_prefix)
 async def get_bus() -> PubSubBus:
     """获取应用级总线"""
     return bus
+
+
+# ── 对象存储 ─────────────────────────
+
+# 客户端装配参数
+storage_settings = StorageSettings(
+    endpoint_url=settings.storage.endpoint_url,
+    access_key_id=settings.storage.access_key_id,
+    secret_access_key=settings.storage.secret_access_key,
+    region_name=settings.storage.region_name,
+    bucket=settings.storage.bucket,
+)
+
+
+def tenant_key(tenant: str, key: str) -> str:
+    """租户前缀对象键"""
+    return f"{tenant}/{key}"
+
+
+async def get_storage_client() -> AsyncIterator[AioBaseClient]:
+    """每请求生命周期的存储客户端"""
+    async with create_storage_client(storage_settings) as client:
+        yield client
+
+
+# ── 工作流 ─────────────────────────
+
+# 客户端装配参数
+workflow_settings = WorkflowSettings(
+    token=settings.workflow.token,
+    server_url=settings.workflow.server_url,
+)
+
+# 进程级客户端单例
+_client: "Hatchet | None" = None
+
+
+def get_workflow_client() -> "Hatchet":
+    """提交侧 - Hatchet 客户端单例"""
+    global _client
+
+    if _client is None:
+        _client = create_workflow_client(workflow_settings)
+    return _client

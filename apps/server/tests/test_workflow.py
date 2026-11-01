@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any, cast
 
 import pytest
 from app.contracts.generated.http import WorkflowInput
-from server.services import workflow as workflow_service
+from server import services as workflow_service
 
 if TYPE_CHECKING:
     from hatchet_sdk import Hatchet
