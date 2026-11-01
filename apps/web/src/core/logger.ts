@@ -25,10 +25,10 @@ export const configureLogger = (): void => {
         service: "web",
         release: RELEASE,
         events: events.map((event) => ({
-          level: "error",
+          level: event.level,
           fingerprint: event.fingerprint,
           message: event.message,
-          timestamp: Date.now(),
+          timestamp: event.timestamp,
         })),
       };
 

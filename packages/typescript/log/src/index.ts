@@ -37,12 +37,19 @@ export const configure = (level: 0 | 1 | 2 | 3 | 4 | 5): void => {
   }
 };
 
+// 上报级别
+export type ReportLevel = "debug" | "info" | "warn" | "error";
+
 // 上报事件
 export interface ReportEvent {
+  // 级别
+  level: ReportLevel;
   // 指纹
   fingerprint: string;
   // 消息
   message: string;
+  // 时间戳（毫秒）
+  timestamp: number;
   // 发布版本
   release?: string | undefined;
 }
@@ -130,7 +137,13 @@ export const captureError = (error: unknown): string => {
   const message = error instanceof Error ? error.message : String(error);
   logger.error(mark, { message });
   if (reporting !== undefined) {
-    buffer.push({ fingerprint: mark, message, release: appRelease });
+    buffer.push({
+      level: "error",
+      fingerprint: mark,
+      message,
+      timestamp: Date.now(),
+      release: appRelease,
+    });
     schedule();
   }
   return mark;
