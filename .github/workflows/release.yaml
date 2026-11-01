@@ -11,18 +11,18 @@ permissions:
   # 内容
   contents: read
 
-# 并发控制
+# 并发 - 同一时间只允许一次发版
 concurrency:
-  # 并发组
+  # 组
   group: release
-  # 取消进行中
+  # 不取消进行中
   cancel-in-progress: false
 
 # 作业
 jobs:
   # 发版
   release:
-    # 运行条件
+    # 仅手动触发
     if: github.event_name == 'workflow_dispatch'
     # 运行环境
     runs-on: ubuntu-latest
@@ -40,29 +40,27 @@ jobs:
     steps:
       # 检出仓库
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        # 动作输入
+        # 输入
         with:
           # 检出深度
           fetch-depth: 0
           # 凭据保留 - 推送改用显式令牌
           persist-credentials: false
-      # 环境管理
+      # 环境管理 - 发版不缓存
       - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
-        # 动作输入
+        # 输入
         with:
           # 版本
           version: "2026.8.14"
-          # 启用缓存
+          # 缓存
           cache: false
-      # 运行命令
+      # 提交身份
       - run: git config user.name 'github-actions[bot]'
-      # 运行命令
       - run: git config user.email 'github-actions[bot]@users.noreply.github.com'
-      # 运行命令
+      # 自动版本
       - run: cog bump --auto
-      # 步骤标识
+      # 读取标签
       - id: tag
-        # 运行命令
         run: echo "tag=$(git describe --tags --abbrev=0)" >> "$GITHUB_OUTPUT"
       # 推送分支与标签 - 显式令牌认证（凭据不持久化）
       - env:

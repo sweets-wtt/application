@@ -83,10 +83,11 @@ application（根项目）
 ```text
 .
 ├── .github                          # 持续集成
+│   ├── actions                      # 复合动作
+│   │   └── setup                    # 环境准备
+│   │       └── action.yml           # 检出与工具链
 │   └── workflows                    # 工作流
 │       ├── ci.yaml                  # 持续集成
-│       ├── codeql.yml               # 代码安全扫描
-│       ├── dependency-review.yml    # 依赖审查
 │       └── release.yaml             # 版本发行
 ├── apps                             # 应用
 │   └── server                       # Server

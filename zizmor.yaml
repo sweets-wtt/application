@@ -1,0 +1,7 @@
+# 审计规则 - `https://docs.zizmor.sh/audits/`
+rules:
+  # 自仓库语法 - actionlint 1.7.12 尚不支持 `$/` 语法，继续使用 `./` 并忽略此建议
+  self-repository:
+    # 忽略文件
+    ignore:
+      - ci.yaml

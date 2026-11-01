@@ -16,7 +16,7 @@ default:
     @just --list
 
 # 初始化
-setup:
+install:
     # 安装工具
     mise install --locked
     # Python 依赖
@@ -35,7 +35,7 @@ lint:
     # 工作流语法
     actionlint
     # 工作流审计
-    zizmor .github/workflows
+    zizmor .github
     # 编排校验
     just check
     # 工作区检查

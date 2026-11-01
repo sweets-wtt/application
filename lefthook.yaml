@@ -1,17 +1,35 @@
 # 提交前
 pre-commit:
-  # 命令
-  commands:
+  # 任务
+  jobs:
     # 代码检查
-    lint:
+    - name: lint
       # 运行命令
       run: mise exec -- just lint
 
+# 推送前
+pre-push:
+  # 任务
+  jobs:
+    # 测试
+    - name: test
+      # 运行命令
+      run: mise exec -- just test
+
+# 下拉后
+post-merge:
+  # 任务
+  jobs:
+    # 初始化
+    - name: install
+      # 运行命令
+      run: mise exec -- just install
+
 # 提交信息
 commit-msg:
-  # 命令
-  commands:
+  # 任务
+  jobs:
     # 提交检查
-    cog:
+    - name: cog
       # 运行命令
       run: mise exec -- cog verify --file {1}

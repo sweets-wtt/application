@@ -18,38 +18,27 @@ permissions:
 
 # 并发 - 同引用取消旧运行
 concurrency:
+  # 组
   group: ${{ github.workflow }}-${{ github.ref }}
+  # 取消进行中
   cancel-in-progress: true
 
 # 作业
 jobs:
-  # 持续集成
-  ci:
+  # 代码检查
+  lint:
     # 运行环境
     runs-on: ubuntu-latest
     # 超时
     timeout-minutes: 15
     # 步骤
     steps:
-      # 检出仓库
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        # 动作输入
+      # 环境准备 - 检查需全量历史
+      - uses: ./.github/actions/setup
         with:
-          # 检出深度
           fetch-depth: 0
-          # 凭据保留
-          persist-credentials: false
-      # 环境管理
-      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
-        # 动作输入
-        with:
-          # 版本
-          version: "2026.8.14"
-      # 环境准备
-      - run: mise exec -- just setup
-      # 环境变量
-      - run: sed 's/=$/=placeholder/' infra/.env.example > infra/.env
-      # 运行命令
+          env-file: false
+      # 检查与审计
       - run: mise exec -- just ci
 
   # 测试
@@ -60,24 +49,10 @@ jobs:
     timeout-minutes: 20
     # 步骤
     steps:
-      # 检出仓库
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        # 动作输入
-        with:
-          # 检出深度
-          fetch-depth: 0
-          # 凭据保留
-          persist-credentials: false
-      # 环境管理
-      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
-        # 动作输入
-        with:
-          # 版本
-          version: "2026.8.14"
       # 环境准备
-      - run: mise exec -- just setup
-      # 环境变量
-      - run: sed 's/=$/=placeholder/' infra/.env.example > infra/.env
+      - uses: ./.github/actions/setup
+        with:
+          fetch-depth: 0
       # 运行测试
       - run: mise exec -- just test
       # 体积预算检查（含构建）
@@ -93,20 +68,11 @@ jobs:
     timeout-minutes: 20
     # 步骤
     steps:
-      # 检出仓库
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        # 动作输入
+      # 环境准备 - 仅前端依赖
+      - uses: ./.github/actions/setup
         with:
-          # 凭据保留
-          persist-credentials: false
-      # 环境管理
-      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
-        # 动作输入
-        with:
-          # 版本
-          version: "2026.8.14"
-      # 依赖安装
-      - run: mise exec -- bun install --frozen-lockfile
+          dependencies: bun
+          env-file: false
       # 浏览器安装
       - run: mise exec -- bun x playwright install --with-deps chromium
       # 运行端到端测试
@@ -120,18 +86,10 @@ jobs:
     timeout-minutes: 20
     # 步骤
     steps:
-      # 检出仓库
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        # 动作输入
+      # 环境准备
+      - uses: ./.github/actions/setup
         with:
-          # 凭据保留
-          persist-credentials: false
-      # 环境管理
-      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
-        # 动作输入
-        with:
-          # 版本
-          version: "2026.8.14"
+          env-file: false
       # 构建镜像
       - run: mise exec -- just build
 
@@ -143,24 +101,23 @@ jobs:
     timeout-minutes: 5
     # 步骤
     steps:
-      # 检出仓库
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        # 动作输入
+      # 环境准备
+      - uses: ./.github/actions/setup
         with:
-          # 凭据保留
-          persist-credentials: false
+          dependencies: none
+          env-file: false
       # 运行时
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
       # 配置校验
       - uses: suzuki-shunsuke/github-action-renovate-config-validator@ee9f69e1f683ed0d08225086482b34fc9abe9300 # v2.1.0
-        # 动作输入
+        # 输入
         with:
           # 配置路径
           config_file_path: renovate.jsonc
 
-  # 兼容检查
-  oasdiff:
-    # 运行条件
+  # API 兼容检查
+  compat:
+    # 仅拉取请求
     if: github.event_name == 'pull_request'
     # 运行环境
     runs-on: ubuntu-latest
@@ -168,28 +125,20 @@ jobs:
     timeout-minutes: 10
     # 步骤
     steps:
-      # 检出仓库
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        # 动作输入
+      # 环境准备 - 对比基线需全量历史
+      - uses: ./.github/actions/setup
         with:
-          # 检出深度
           fetch-depth: 0
-          # 凭据保留
-          persist-credentials: false
-      # 环境管理
-      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
-        # 动作输入
-        with:
-          # 版本
-          version: "2026.8.14"
-      # 运行命令
+          dependencies: none
+          env-file: false
+      # 破坏性变更检查
       - run: |
           vacuum bundle --ruleset contracts/http/vacuum.yaml contracts/http/openapi.yaml /tmp/rev.yaml
           oasdiff breaking --fail-on ERR origin/main:contracts/http/openapi.yaml /tmp/rev.yaml
 
   # 提交规范
   commit-lint:
-    # 运行条件
+    # 仅拉取请求
     if: github.event_name == 'pull_request'
     # 运行环境
     runs-on: ubuntu-latest
@@ -197,20 +146,12 @@ jobs:
     timeout-minutes: 5
     # 步骤
     steps:
-      # 检出仓库
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        # 动作输入
+      # 环境准备 - 校验提交需全量历史
+      - uses: ./.github/actions/setup
         with:
-          # 检出深度
           fetch-depth: 0
-          # 凭据保留
-          persist-credentials: false
-      # 环境管理
-      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
-        # 动作输入
-        with:
-          # 版本
-          version: "2026.8.14"
+          dependencies: none
+          env-file: false
       # 逐条校验提交信息
       - env:
           # 基点
@@ -219,3 +160,21 @@ jobs:
           for sha in $(git rev-list --no-merges "$BASE"..HEAD); do
             git log -1 --format=%B "$sha" | mise exec -- cog verify --file - || exit 1
           done
+
+  # 依赖审查
+  deps-review:
+    # 仅拉取请求
+    if: github.event_name == 'pull_request'
+    # 运行环境
+    runs-on: ubuntu-latest
+    # 超时
+    timeout-minutes: 10
+    # 步骤
+    steps:
+      # 环境准备
+      - uses: ./.github/actions/setup
+        with:
+          dependencies: none
+          env-file: false
+      # 依赖审查 - 漏洞与许可门禁
+      - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
