@@ -61,7 +61,7 @@ application（根项目）
 │   ├── python
 │   │   ├── contracts（契约模型）→ pydantic
 │   │   ├── log（结构化日志）→ structlog
-│   │   ├── persistence（持久化）→ valkey / sqlalchemy / aiobotocore
+│   │   ├── data（数据）→ valkey / sqlalchemy / aiobotocore
 │   │   └── workflow（工作流）→ hatchet-sdk
 │   └── typescript
 │       ├── contracts（契约客户端）→ vue-query / msw / zod
@@ -112,7 +112,7 @@ application（根项目）
 │   ├── python                       # Python
 │   │   ├── contracts                # 契约模型
 │   │   ├── log                      # 结构化日志
-│   │   ├── persistence              # 持久化（缓存/数据库/对象存储）
+│   │   ├── data                     # 数据（缓存/数据库/对象存储）
 │   │   └── workflow                 # 工作流
 │   └── typescript                   # TypeScript
 │       ├── contracts                # 契约客户端

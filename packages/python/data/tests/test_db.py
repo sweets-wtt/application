@@ -1,6 +1,6 @@
 """数据库会话测试"""
 
-from app.persistence.db import _engine_kwargs, create_engine, create_session_factory
+from app.data.db import _engine_kwargs, create_engine, create_session_factory
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.pool import NullPool
 

@@ -13,8 +13,8 @@ resolution-markers = [
 [manifest]
 members = [
     "app-contracts",
+    "app-data",
     "app-log",
-    "app-persistence",
     "app-workflow",
     "application",
     "server",
@@ -227,20 +227,9 @@ dependencies = [
 requires-dist = [{ name = "pydantic", specifier = ">=2.13.5" }]
 
 [[package]]
-name = "app-log"
+name = "app-data"
 version = "0.1.0"
-source = { editable = "packages/python/log" }
-dependencies = [
-    { name = "structlog" },
-]
-
-[package.metadata]
-requires-dist = [{ name = "structlog", specifier = ">=26.1.0" }]
-
-[[package]]
-name = "app-persistence"
-version = "0.1.0"
-source = { editable = "packages/python/persistence" }
+source = { editable = "packages/python/data" }
 dependencies = [
     { name = "aiobotocore" },
     { name = "asyncpg" },
@@ -257,6 +246,17 @@ requires-dist = [
     { name = "sqlalchemy", specifier = ">=2.0" },
     { name = "valkey", specifier = ">=6.0" },
 ]
+
+[[package]]
+name = "app-log"
+version = "0.1.0"
+source = { editable = "packages/python/log" }
+dependencies = [
+    { name = "structlog" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "structlog", specifier = ">=26.1.0" }]
 
 [[package]]
 name = "app-workflow"
@@ -2410,8 +2410,8 @@ source = { editable = "apps/server" }
 dependencies = [
     { name = "alembic" },
     { name = "app-contracts" },
+    { name = "app-data" },
     { name = "app-log" },
-    { name = "app-persistence" },
     { name = "app-workflow" },
     { name = "fastapi" },
     { name = "granian" },
@@ -2428,8 +2428,8 @@ dependencies = [
 requires-dist = [
     { name = "alembic", specifier = ">=1.13" },
     { name = "app-contracts", editable = "packages/python/contracts" },
+    { name = "app-data", editable = "packages/python/data" },
     { name = "app-log", editable = "packages/python/log" },
-    { name = "app-persistence", editable = "packages/python/persistence" },
     { name = "app-workflow", editable = "packages/python/workflow" },
     { name = "fastapi", specifier = ">=0.141.1" },
     { name = "granian", specifier = ">=2.8.2" },

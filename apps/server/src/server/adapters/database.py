@@ -2,12 +2,12 @@
 
 from collections.abc import AsyncIterator
 
-from app.persistence.db import create_engine, create_session_factory
+from app.data.db import create_engine, create_session_factory
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from server.core.settings import settings
 
-# 异步引擎 - PgBouncer 兼容默认值由 app-persistence 提供
+# 异步引擎 - PgBouncer 兼容默认值由 app-data 提供
 engine = create_engine(settings.database.url)
 
 # 会话工厂 - api 每请求 / worker 任务共用

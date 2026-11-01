@@ -21,7 +21,7 @@ dependencies = [
   "opentelemetry-exporter-otlp-proto-http>=1.45.0",
   "app-contracts",
   "app-log",
-  "app-persistence",
+  "app-data",
   "app-workflow",
 ]
 
@@ -44,6 +44,6 @@ app-contracts = { workspace = true }
 # 结构化日志
 app-log = { workspace = true }
 # 持久化（缓存/数据库/对象存储）
-app-persistence = { workspace = true }
+app-data = { workspace = true }
 # 工作流客户端
 app-workflow = { workspace = true }

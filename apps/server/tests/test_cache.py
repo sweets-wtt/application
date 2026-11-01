@@ -1,7 +1,7 @@
 """缓存测试"""
 
 import pytest
-from app.persistence.cache import CacheClient
+from app.data.cache import CacheClient
 from server.adapters.cache import AuthzCache, LocalStore
 
 

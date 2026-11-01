@@ -3,7 +3,7 @@
 from collections.abc import AsyncIterator
 
 from aiobotocore.client import AioBaseClient
-from app.persistence.storage import StorageSettings, create_client
+from app.data.storage import StorageSettings, create_client
 
 from server.core.settings import settings
 

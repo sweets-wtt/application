@@ -1,11 +1,11 @@
 # 项目
 [project]
 # 名称
-name = "app-persistence"
+name = "app-data"
 # 版本
 version = "0.1.0"
 # 描述
-description = "持久化（缓存/数据库/对象存储）"
+description = "数据访问（缓存/数据库/对象存储）"
 # 要求 Python
 requires-python = ">=3.12"
 # 依赖
@@ -27,4 +27,4 @@ build-backend = "uv_build"
 # uv 构建后端
 [tool.uv.build-backend]
 # 模块名
-module-name = "app.persistence"
+module-name = "app.data"

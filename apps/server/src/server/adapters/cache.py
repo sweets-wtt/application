@@ -4,7 +4,7 @@ import time
 from collections.abc import AsyncIterator
 from contextlib import suppress
 
-from app.persistence.cache import CacheClient, create_client
+from app.data.cache import CacheClient, create_client
 
 from server.core.settings import settings
 

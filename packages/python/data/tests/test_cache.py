@@ -1,6 +1,6 @@
 """缓存客户端测试"""
 
-from app.persistence.cache import CacheClient
+from app.data.cache import CacheClient
 
 
 class FakeValkey:
