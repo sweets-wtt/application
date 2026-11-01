@@ -1,6 +1,6 @@
 /** 服务端健康检查（心跳） */
 import { computed, type ComputedRef, type Ref } from "vue";
-import { useHealthz, type Healthz200Response } from "@app/contracts";
+import { useGetHealthz, type Healthz200Response } from "@app/contracts";
 import { HEARTBEAT_INTERVAL } from "@/core/settings";
 
 /** 服务端状态 */
@@ -14,7 +14,7 @@ export interface HealthCheckResult {
   data: ComputedRef<Healthz200Response | undefined>;
 }
 
-/** 健康检查 hook：轮询 /healthz 并推导在线状态 */
+/** 健康检查 hook：轮询 /getHealthz 并推导在线状态 */
 export const useHealthCheck = (): HealthCheckResult => {
   // 契约请求：定时拉取存活探针
   const {
@@ -22,7 +22,7 @@ export const useHealthCheck = (): HealthCheckResult => {
     isError,
     isFetching,
     data: result,
-  } = useHealthz({
+  } = useGetHealthz({
     query: {
       // 轮询间隔
       refetchInterval: HEARTBEAT_INTERVAL,

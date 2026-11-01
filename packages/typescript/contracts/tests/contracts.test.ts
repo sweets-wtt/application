@@ -1,6 +1,6 @@
 /** 契约测试 */
 import { expect, it } from "vitest";
-import { Healthz200Response, healthz } from "../index";
+import { Healthz200Response, getHealthz } from "../index";
 
 it("zod 模式解析标准响应", () => {
   expect(Healthz200Response.parse({ code: 0, message: "ok", data: { status: "ok" } })).toEqual({
@@ -11,5 +11,5 @@ it("zod 模式解析标准响应", () => {
 });
 
 it("客户端函数存在", () => {
-  expect(typeof healthz).toBe("function");
+  expect(typeof getHealthz).toBe("function");
 });

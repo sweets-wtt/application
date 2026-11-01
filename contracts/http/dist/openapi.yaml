@@ -15,7 +15,7 @@ info:
     错误响应使用 FastAPI 默认的 `{detail}` 结构。
 
     实时 WebSocket 端点 `/realtime/ws` 以说明形式文档化，
-    Orval 生成的 `realtimeWs` 仅为文档占位，不执行真实 WebSocket 握手。
+    Orval 生成的 `connectRealtime` 仅为文档占位，不执行真实 WebSocket 握手。
   version: 0.1.0
 jsonSchemaDialect: https://json-schema.org/draft/2020-12/schema
 servers:
@@ -23,18 +23,18 @@ servers:
 paths:
   /healthz:
     get:
-      operationId: healthz
+      operationId: getHealthz
       description: 返回服务存活状态
       responses:
         '200':
           $ref: '#/components/responses/Healthz200'
   /storage/{key}:
     put:
-      operationId: storagePut
+      operationId: putStorage
       description: 流式上传对象 - 请求体为原始二进制、最大 10 MiB
       parameters:
-        - $ref: '#/components/parameters/KeyPath'
-        - $ref: '#/components/parameters/TenantHeader'
+        - $ref: '#/components/parameters/Key'
+        - $ref: '#/components/parameters/Tenant'
       requestBody:
         $ref: '#/components/requestBodies/BinaryContent'
       responses:
@@ -47,11 +47,11 @@ paths:
         '422':
           $ref: '#/components/responses/UnprocessableEntity'
     get:
-      operationId: storageGet
+      operationId: getStorage
       description: 流式下载对象 - 响应体为原始二进制
       parameters:
-        - $ref: '#/components/parameters/KeyPath'
-        - $ref: '#/components/parameters/TenantHeader'
+        - $ref: '#/components/parameters/Key'
+        - $ref: '#/components/parameters/Tenant'
       responses:
         '200':
           $ref: '#/components/responses/StorageGet200'
@@ -61,10 +61,10 @@ paths:
           $ref: '#/components/responses/UnprocessableEntity'
   /realtime/ticket:
     post:
-      operationId: realtimeTicket
+      operationId: createTicket
       description: 签发一次性 WebSocket 票据 - 有效期内通过 /realtime/ws 消费一次
       parameters:
-        - $ref: '#/components/parameters/OriginHeader'
+        - $ref: '#/components/parameters/Origin'
       responses:
         '200':
           $ref: '#/components/responses/RealtimeTicket200'
@@ -74,7 +74,7 @@ paths:
           $ref: '#/components/responses/ServiceUnavailable'
   /realtime/ws:
     get:
-      operationId: realtimeWs
+      operationId: connectRealtime
       description: |
         WebSocket 升级端点（HTTP 101 Switching Protocols）。
 
@@ -91,10 +91,10 @@ paths:
 
         关闭码：`4401` 票据无效、`4403` 来源拒绝、`4503` 票据存储不可用。
 
-        说明：Orval 生成的 `realtimeWs` 仅为文档占位，不执行真实 WebSocket 握手。
+        说明：Orval 生成的 `connectRealtime` 仅为文档占位，不执行真实 WebSocket 握手。
       parameters:
-        - $ref: '#/components/parameters/TicketQuery'
-        - $ref: '#/components/parameters/OriginHeader'
+        - $ref: '#/components/parameters/Ticket'
+        - $ref: '#/components/parameters/Origin'
       responses:
         '101':
           description: 协议升级成功 - 进入 WebSocket 会话
@@ -106,7 +106,7 @@ paths:
                 $ref: '#/components/schemas/Error'
   /telemetry/events:
     post:
-      operationId: telemetryEvents
+      operationId: ingestTelemetry
       description: 批量接收前端遥测事件 - 请求体上限 256 KiB
       requestBody:
         $ref: '#/components/requestBodies/TelemetryBatch'
@@ -121,10 +121,10 @@ paths:
           $ref: '#/components/responses/UnprocessableEntity'
   /workflow/runs:
     post:
-      operationId: workflowRuns
+      operationId: createWorkflowRun
       description: 提交工作流 run - 以 Idempotency-Key 保证幂等
       parameters:
-        - $ref: '#/components/parameters/IdempotencyKeyHeader'
+        - $ref: '#/components/parameters/IdempotencyKey'
       requestBody:
         $ref: '#/components/requestBodies/WorkflowInput'
       responses:
@@ -136,10 +136,10 @@ paths:
           $ref: '#/components/responses/UnprocessableEntity'
   /workflow/runs/{run_id}:
     get:
-      operationId: workflowRun
+      operationId: getWorkflowRun
       description: 查询工作流 run 状态
       parameters:
-        - $ref: '#/components/parameters/RunIdPath'
+        - $ref: '#/components/parameters/RunId'
       responses:
         '200':
           $ref: '#/components/responses/WorkflowRun200'
@@ -260,7 +260,7 @@ components:
             - 'null'
           additionalProperties: true
       additionalProperties: false
-    TelemetryIngest:
+    TelemetryBatch:
       description: 前端 logger 批量上报的目标结构 - 端与版本在批次级、事件在 events 中
       type: object
       required:
@@ -290,7 +290,7 @@ components:
         accepted:
           type: integer
       additionalProperties: false
-    RequestInput:
+    WorkflowInput:
       type: object
       required:
         - message
@@ -312,7 +312,7 @@ components:
           enum:
             - submitted
       additionalProperties: false
-    WorkflowRunState:
+    WorkflowRunStatus:
       description: 工作流 run 状态 - 与 worker 状态回写一致
       type: string
       enum:
@@ -320,17 +320,6 @@ components:
         - running
         - succeeded
         - failed
-    WorkflowRunStatus:
-      type: object
-      required:
-        - run_id
-        - status
-      properties:
-        run_id:
-          type: string
-        status:
-          $ref: '#/components/schemas/WorkflowRunState'
-      additionalProperties: false
   responses:
     Healthz200:
       description: 存活
@@ -442,41 +431,41 @@ components:
                   data:
                     $ref: '#/components/schemas/WorkflowRunStatus'
   parameters:
-    KeyPath:
+    Key:
       name: key
       in: path
       required: true
       description: 对象键（允许包含路径分隔符）
       schema:
         type: string
-    TenantHeader:
+    Tenant:
       name: x-tenant
       in: header
       required: true
       description: 租户标识 - 作为对象键前缀
       schema:
         type: string
-    OriginHeader:
+    Origin:
       name: Origin
       in: header
       required: false
       description: 请求来源 - 缺失放行，存在时必须命中允许列表
       schema:
         type: string
-    TicketQuery:
+    Ticket:
       name: ticket
       in: query
       required: true
       description: 一次性票据 - 握手时消费
       schema:
         type: string
-    IdempotencyKeyHeader:
+    IdempotencyKey:
       name: Idempotency-Key
       in: header
       required: true
       schema:
         type: string
-    RunIdPath:
+    RunId:
       name: run_id
       in: path
       required: true
@@ -496,10 +485,10 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/TelemetryIngest'
+            $ref: '#/components/schemas/TelemetryBatch'
     WorkflowInput:
       required: true
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/RequestInput'
+            $ref: '#/components/schemas/WorkflowInput'

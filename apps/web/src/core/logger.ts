@@ -1,6 +1,6 @@
 /** 日志与遥测 */
 import { configure, setRelease, setReporting, type ReportEvent } from "@app/log";
-import type { TelemetryIngest } from "@app/contracts";
+import type { TelemetryBatch } from "@app/contracts";
 import { RELEASE, TELEMETRY_URL } from "@/core/settings";
 
 /** 配置日志与遥测上报 */
@@ -21,7 +21,7 @@ export const configureLogger = (): void => {
     endpoint: TELEMETRY_URL,
     send: (url: string, events: ReportEvent[]): void => {
       // 组装契约载荷：端与版本在批次级、事件在 events 中
-      const payload: TelemetryIngest = {
+      const payload: TelemetryBatch = {
         service: "web",
         release: RELEASE,
         events: events.map((event) => ({

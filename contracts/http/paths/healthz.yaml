@@ -1,6 +1,6 @@
 # 存活探针 - GET /healthz
 get:
-  operationId: healthz
+  operationId: getHealthz
   description: 返回服务存活状态
   responses:
     "200":

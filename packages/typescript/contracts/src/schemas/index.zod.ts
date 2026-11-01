@@ -14,7 +14,7 @@
  * 错误响应使用 FastAPI 默认的 `{detail}` 结构。
  *
  * 实时 WebSocket 端点 `/realtime/ws` 以说明形式文档化，
- * Orval 生成的 `realtimeWs` 仅为文档占位，不执行真实 WebSocket 握手。
+ * Orval 生成的 `connectRealtime` 仅为文档占位，不执行真实 WebSocket 握手。
  *
  * OpenAPI spec version: 0.1.0
  */
@@ -107,36 +107,36 @@ export const TelemetryEvent = zod
 export type TelemetryEvent = zod.input<typeof TelemetryEvent>;
 export type TelemetryEventOutput = zod.output<typeof TelemetryEvent>;
 
-export const telemetryIngestReleaseMax = 128;
+export const telemetryBatchReleaseMax = 128;
 
-export const telemetryIngestEventsItemFingerprintMax = 1024;
+export const telemetryBatchEventsItemFingerprintMax = 1024;
 
-export const telemetryIngestEventsItemMessageMax = 8192;
+export const telemetryBatchEventsItemMessageMax = 8192;
 
-export const telemetryIngestEventsMax = 100;
+export const telemetryBatchEventsMax = 100;
 
-export const TelemetryIngest = zod
+export const TelemetryBatch = zod
   .object({
     service: zod.enum(["web", "miniapp"]),
-    release: zod.string().max(telemetryIngestReleaseMax),
+    release: zod.string().max(telemetryBatchReleaseMax),
     events: zod
       .array(
         zod
           .object({
             level: zod.enum(["debug", "info", "warn", "error"]),
-            fingerprint: zod.string().max(telemetryIngestEventsItemFingerprintMax),
-            message: zod.string().max(telemetryIngestEventsItemMessageMax),
+            fingerprint: zod.string().max(telemetryBatchEventsItemFingerprintMax),
+            message: zod.string().max(telemetryBatchEventsItemMessageMax),
             timestamp: zod.int(),
             context: zod.record(zod.string(), zod.unknown()).nullish(),
           })
           .describe("单条前端遥测事件 - 批量载荷中 events 的元素"),
       )
-      .max(telemetryIngestEventsMax),
+      .max(telemetryBatchEventsMax),
   })
   .describe("前端 logger 批量上报的目标结构 - 端与版本在批次级、事件在 events 中");
 
-export type TelemetryIngest = zod.input<typeof TelemetryIngest>;
-export type TelemetryIngestOutput = zod.output<typeof TelemetryIngest>;
+export type TelemetryBatch = zod.input<typeof TelemetryBatch>;
+export type TelemetryBatchOutput = zod.output<typeof TelemetryBatch>;
 
 export const TelemetryAccepted = zod.object({
   accepted: zod.int(),
@@ -145,14 +145,14 @@ export const TelemetryAccepted = zod.object({
 export type TelemetryAccepted = zod.input<typeof TelemetryAccepted>;
 export type TelemetryAcceptedOutput = zod.output<typeof TelemetryAccepted>;
 
-export const requestInputMessageMax = 8192;
+export const workflowInputMessageMax = 8192;
 
-export const RequestInput = zod.object({
-  message: zod.string().max(requestInputMessageMax),
+export const WorkflowInput = zod.object({
+  message: zod.string().max(workflowInputMessageMax),
 });
 
-export type RequestInput = zod.input<typeof RequestInput>;
-export type RequestInputOutput = zod.output<typeof RequestInput>;
+export type WorkflowInput = zod.input<typeof WorkflowInput>;
+export type WorkflowInputOutput = zod.output<typeof WorkflowInput>;
 
 export const WorkflowRunAccepted = zod.object({
   run_id: zod.string(),
@@ -162,19 +162,9 @@ export const WorkflowRunAccepted = zod.object({
 export type WorkflowRunAccepted = zod.input<typeof WorkflowRunAccepted>;
 export type WorkflowRunAcceptedOutput = zod.output<typeof WorkflowRunAccepted>;
 
-export const WorkflowRunState = zod
+export const WorkflowRunStatus = zod
   .enum(["submitted", "running", "succeeded", "failed"])
   .describe("工作流 run 状态 - 与 worker 状态回写一致");
-
-export type WorkflowRunState = zod.input<typeof WorkflowRunState>;
-export type WorkflowRunStateOutput = zod.output<typeof WorkflowRunState>;
-
-export const WorkflowRunStatus = zod.object({
-  run_id: zod.string(),
-  status: zod
-    .enum(["submitted", "running", "succeeded", "failed"])
-    .describe("工作流 run 状态 - 与 worker 状态回写一致"),
-});
 
 export type WorkflowRunStatus = zod.input<typeof WorkflowRunStatus>;
 export type WorkflowRunStatusOutput = zod.output<typeof WorkflowRunStatus>;
@@ -350,12 +340,9 @@ export const WorkflowRun200Response = zod
   })
   .and(
     zod.object({
-      data: zod.object({
-        run_id: zod.string(),
-        status: zod
-          .enum(["submitted", "running", "succeeded", "failed"])
-          .describe("工作流 run 状态 - 与 worker 状态回写一致"),
-      }),
+      data: zod
+        .enum(["submitted", "running", "succeeded", "failed"])
+        .describe("工作流 run 状态 - 与 worker 状态回写一致"),
     }),
   );
 
@@ -406,44 +393,44 @@ export const WorkflowInputBody = zod.object({
 
 export type WorkflowInputBody = zod.input<typeof WorkflowInputBody>;
 export type WorkflowInputBodyOutput = zod.output<typeof WorkflowInputBody>;
-export const StoragePutHeaders = zod.object({
+export const PutStorageHeaders = zod.object({
   "x-tenant": zod.string(),
 });
 
-export type StoragePutHeaders = zod.input<typeof StoragePutHeaders>;
-export type StoragePutHeadersOutput = zod.output<typeof StoragePutHeaders>;
+export type PutStorageHeaders = zod.input<typeof PutStorageHeaders>;
+export type PutStorageHeadersOutput = zod.output<typeof PutStorageHeaders>;
 
-export const StorageGetHeaders = zod.object({
+export const GetStorageHeaders = zod.object({
   "x-tenant": zod.string(),
 });
 
-export type StorageGetHeaders = zod.input<typeof StorageGetHeaders>;
-export type StorageGetHeadersOutput = zod.output<typeof StorageGetHeaders>;
+export type GetStorageHeaders = zod.input<typeof GetStorageHeaders>;
+export type GetStorageHeadersOutput = zod.output<typeof GetStorageHeaders>;
 
-export const RealtimeTicketHeaders = zod.object({
+export const CreateTicketHeaders = zod.object({
   Origin: zod.string().optional(),
 });
 
-export type RealtimeTicketHeaders = zod.input<typeof RealtimeTicketHeaders>;
-export type RealtimeTicketHeadersOutput = zod.output<typeof RealtimeTicketHeaders>;
+export type CreateTicketHeaders = zod.input<typeof CreateTicketHeaders>;
+export type CreateTicketHeadersOutput = zod.output<typeof CreateTicketHeaders>;
 
-export const RealtimeWsParams = zod.object({
+export const ConnectRealtimeParams = zod.object({
   ticket: zod.string(),
 });
 
-export type RealtimeWsParams = zod.input<typeof RealtimeWsParams>;
-export type RealtimeWsParamsOutput = zod.output<typeof RealtimeWsParams>;
+export type ConnectRealtimeParams = zod.input<typeof ConnectRealtimeParams>;
+export type ConnectRealtimeParamsOutput = zod.output<typeof ConnectRealtimeParams>;
 
-export const RealtimeWsHeaders = zod.object({
+export const ConnectRealtimeHeaders = zod.object({
   Origin: zod.string().optional(),
 });
 
-export type RealtimeWsHeaders = zod.input<typeof RealtimeWsHeaders>;
-export type RealtimeWsHeadersOutput = zod.output<typeof RealtimeWsHeaders>;
+export type ConnectRealtimeHeaders = zod.input<typeof ConnectRealtimeHeaders>;
+export type ConnectRealtimeHeadersOutput = zod.output<typeof ConnectRealtimeHeaders>;
 
-export const WorkflowRunsHeaders = zod.object({
+export const CreateWorkflowRunHeaders = zod.object({
   "Idempotency-Key": zod.string(),
 });
 
-export type WorkflowRunsHeaders = zod.input<typeof WorkflowRunsHeaders>;
-export type WorkflowRunsHeadersOutput = zod.output<typeof WorkflowRunsHeaders>;
+export type CreateWorkflowRunHeaders = zod.input<typeof CreateWorkflowRunHeaders>;
+export type CreateWorkflowRunHeadersOutput = zod.output<typeof CreateWorkflowRunHeaders>;

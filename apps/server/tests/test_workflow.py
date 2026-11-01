@@ -6,7 +6,7 @@ from types import SimpleNamespace
 from typing import TYPE_CHECKING, Any, cast
 
 import pytest
-from app.contracts.generated.http import RequestInput
+from app.contracts.generated.http import WorkflowInput
 from server.services import workflow as workflow_service
 
 if TYPE_CHECKING:
@@ -34,7 +34,7 @@ class FakeWorkflow:
     def __init__(self) -> None:
         self.payload: Any = None
 
-    async def aio_run_no_wait(self, payload: RequestInput) -> FakeRun:
+    async def aio_run_no_wait(self, payload: WorkflowInput) -> FakeRun:
         self.payload = payload
         return FakeRun()
 
@@ -115,7 +115,7 @@ async def test_submit_triggers_run_and_records_idempotency() -> None:
     """首次提交 - 触发 run 并同事务记录幂等键"""
     client = FakeClient()
     session = FakeSession()
-    payload = RequestInput(message="hi")
+    payload = WorkflowInput(message="hi")
 
     run_id = await workflow_service.submit(
         cast("Hatchet", client), cast("AsyncSession", session), "key-1", payload
@@ -138,7 +138,7 @@ async def test_submit_returns_existing_on_idempotent_key() -> None:
         cast("Hatchet", client),
         cast("AsyncSession", session),
         "dup",
-        RequestInput(message="x"),
+        WorkflowInput(message="x"),
     )
 
     assert run_id == "existing-run"

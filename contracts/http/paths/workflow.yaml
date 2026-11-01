@@ -2,10 +2,10 @@
 # 提交 run
 runs:
   post:
-    operationId: workflowRuns
+    operationId: createWorkflowRun
     description: 提交工作流 run - 以 Idempotency-Key 保证幂等
     parameters:
-      - $ref: "../components/parameters.yaml#/parameters/IdempotencyKeyHeader"
+      - $ref: "../components/parameters.yaml#/parameters/IdempotencyKey"
     requestBody:
       $ref: "../components/bodies.yaml#/requestBodies/WorkflowInput"
     responses:
@@ -19,10 +19,10 @@ runs:
 # 查询 run
 run:
   get:
-    operationId: workflowRun
+    operationId: getWorkflowRun
     description: 查询工作流 run 状态
     parameters:
-      - $ref: "../components/parameters.yaml#/parameters/RunIdPath"
+      - $ref: "../components/parameters.yaml#/parameters/RunId"
     responses:
       "200":
         $ref: "../components/responses.yaml#/responses/WorkflowRun200"

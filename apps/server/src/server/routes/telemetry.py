@@ -1,6 +1,6 @@
 """遥测接收路由"""
 
-from app.contracts.generated.http import TelemetryIngest
+from app.contracts.generated.http import TelemetryBatch
 from fastapi import APIRouter, HTTPException, Request
 
 from server.core.constants import MAX_TELEMETRY_BODY_BYTES
@@ -12,7 +12,7 @@ router = APIRouter(tags=["telemetry"])
 @router.post(
     path="/telemetry/events", status_code=202, description="批量接收前端遥测事件"
 )
-async def telemetry_events(request: Request, payload: TelemetryIngest) -> dict:
+async def telemetry_events(request: Request, payload: TelemetryBatch) -> dict:
     """批量接收前端遥测事件 - 超限返回 413"""
     # 请求体超限 - 413 - 缺失长度时跳过、由后续读取环节兜底
     length = request.headers.get("content-length", "")

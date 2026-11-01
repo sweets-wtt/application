@@ -16,7 +16,7 @@ requestBodies:
     content:
       application/json:
         schema:
-          $ref: "schemas.yaml#/schemas/TelemetryIngest"
+          $ref: "schemas.yaml#/schemas/TelemetryBatch"
 
   # 工作流提交载荷
   WorkflowInput:
@@ -24,4 +24,4 @@ requestBodies:
     content:
       application/json:
         schema:
-          $ref: "schemas.yaml#/schemas/RequestInput"
+          $ref: "schemas.yaml#/schemas/WorkflowInput"

@@ -19,7 +19,7 @@ info:
     错误响应使用 FastAPI 默认的 `{detail}` 结构。
 
     实时 WebSocket 端点 `/realtime/ws` 以说明形式文档化，
-    Orval 生成的 `realtimeWs` 仅为文档占位，不执行真实 WebSocket 握手。
+    Orval 生成的 `connectRealtime` 仅为文档占位，不执行真实 WebSocket 握手。
   # 版本
   version: 0.1.0
 

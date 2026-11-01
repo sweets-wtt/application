@@ -99,8 +99,8 @@ schemas:
         additionalProperties: true
     additionalProperties: false
 
-  # 前端 logger 批量上报的目标结构 - 端与版本在批次级、事件在 events 中
-  TelemetryIngest:
+  # 遥测批量载荷
+  TelemetryBatch:
     description: 前端 logger 批量上报的目标结构 - 端与版本在批次级、事件在 events 中
     type: object
     required:
@@ -169,7 +169,7 @@ schemas:
     additionalProperties: false
 
   # 工作流请求输入
-  RequestInput:
+  WorkflowInput:
     type: object
     required:
       - message
@@ -180,7 +180,7 @@ schemas:
     additionalProperties: false
 
   # 工作流 run 状态 - 与 worker 状态回写一致
-  WorkflowRunState:
+  WorkflowRunStatus:
     description: 工作流 run 状态 - 与 worker 状态回写一致
     type: string
     enum:
@@ -205,8 +205,8 @@ schemas:
           - submitted
     additionalProperties: false
 
-  # 工作流 run 状态
-  WorkflowRunStatus:
+  # 工作流 run
+  WorkflowRun:
     type: object
     required:
       - run_id
@@ -215,5 +215,5 @@ schemas:
       run_id:
         type: string
       status:
-        $ref: "#/schemas/WorkflowRunState"
+        $ref: "#/schemas/WorkflowRunStatus"
     additionalProperties: false

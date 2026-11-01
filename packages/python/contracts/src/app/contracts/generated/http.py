@@ -31,13 +31,6 @@ class RealtimeTicket(BaseModel):
     expiresAtMs: StrictInt
 
 
-class RequestInput(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    message: str = Field(..., max_length=8192)
-
-
 class Response(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
@@ -67,6 +60,13 @@ class Service(StrEnum):
     miniapp = 'miniapp'
 
 
+class WorkflowInput(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    message: str = Field(..., max_length=8192)
+
+
 class Status(StrEnum):
     submitted = 'submitted'
 
@@ -77,6 +77,13 @@ class WorkflowRunAccepted(BaseModel):
     )
     run_id: str
     status: Status
+
+
+class WorkflowRunStatus(StrEnum):
+    submitted = 'submitted'
+    running = 'running'
+    succeeded = 'succeeded'
+    failed = 'failed'
 
 
 class Level(StrEnum):
@@ -106,13 +113,6 @@ class ValidationErrorItem(BaseModel):
     type: str
 
 
-class WorkflowRunState(StrEnum):
-    submitted = 'submitted'
-    running = 'running'
-    succeeded = 'succeeded'
-    failed = 'failed'
-
-
 class HealthzGetResponse(Response):
     data: Data
 
@@ -133,7 +133,11 @@ class WorkflowRunsPostResponse(Response):
     data: WorkflowRunAccepted
 
 
-class TelemetryIngest(BaseModel):
+class WorkflowRunsRunIdGetResponse(Response):
+    data: WorkflowRunStatus
+
+
+class TelemetryBatch(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
@@ -147,15 +151,3 @@ class ValidationError(BaseModel):
         extra='forbid',
     )
     detail: list[ValidationErrorItem]
-
-
-class WorkflowRunStatus(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    run_id: str
-    status: WorkflowRunState
-
-
-class WorkflowRunsRunIdGetResponse(Response):
-    data: WorkflowRunStatus

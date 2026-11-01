@@ -1,7 +1,7 @@
 # 可复用参数
 parameters:
   # 租户标识 - 作为对象键前缀
-  TenantHeader:
+  Tenant:
     name: x-tenant
     in: header
     required: true
@@ -10,7 +10,7 @@ parameters:
       type: string
 
   # 请求来源 - 缺失放行，存在时必须命中允许列表
-  OriginHeader:
+  Origin:
     name: Origin
     in: header
     required: false
@@ -19,7 +19,7 @@ parameters:
       type: string
 
   # 对象键
-  KeyPath:
+  Key:
     name: key
     in: path
     required: true
@@ -28,7 +28,7 @@ parameters:
       type: string
 
   # 运行标识
-  RunIdPath:
+  RunId:
     name: run_id
     in: path
     required: true
@@ -36,7 +36,7 @@ parameters:
       type: string
 
   # 幂等键
-  IdempotencyKeyHeader:
+  IdempotencyKey:
     name: Idempotency-Key
     in: header
     required: true
@@ -44,7 +44,7 @@ parameters:
       type: string
 
   # 一次性票据
-  TicketQuery:
+  Ticket:
     name: ticket
     in: query
     required: true

@@ -3,7 +3,7 @@
 from collections.abc import Iterator
 
 import pytest
-from app.contracts.generated.http import TelemetryEvent, TelemetryIngest
+from app.contracts.generated.http import TelemetryBatch, TelemetryEvent
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from server.services import telemetry as telemetry_service
@@ -114,7 +114,7 @@ async def test_level_mapping(monkeypatch: pytest.MonkeyPatch) -> None:
     """级别映射 - error 级写 error 日志"""
     stub = StubLogger()
     monkeypatch.setattr(telemetry_service, "logger", stub)
-    ingest = TelemetryIngest(
+    ingest = TelemetryBatch(
         service="miniapp",
         release="2.0.0",
         events=[

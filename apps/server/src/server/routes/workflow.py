@@ -2,7 +2,7 @@
 
 from typing import Annotated
 
-from app.contracts.generated.http import RequestInput
+from app.contracts.generated.http import WorkflowInput
 from fastapi import APIRouter, Depends, Header, HTTPException
 from hatchet_sdk import Hatchet
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -16,7 +16,7 @@ router = APIRouter(prefix="/workflow", tags=["workflow"])
 
 @router.post(path="/runs", status_code=202, description="提交工作流 run")
 async def submit_run(
-    payload: RequestInput,
+    payload: WorkflowInput,
     idempotency_key: Annotated[
         str, Header(alias="Idempotency-Key", description="幂等键")
     ],

@@ -14,7 +14,7 @@
  * 错误响应使用 FastAPI 默认的 `{detail}` 结构。
  *
  * 实时 WebSocket 端点 `/realtime/ws` 以说明形式文档化，
- * Orval 生成的 `realtimeWs` 仅为文档占位，不执行真实 WebSocket 握手。
+ * Orval 生成的 `connectRealtime` 仅为文档占位，不执行真实 WebSocket 握手。
  *
  * OpenAPI spec version: 0.1.0
  */
@@ -37,13 +37,13 @@ import type { MaybeRefOrGetter } from "vue";
 import type {
   BadRequestResponse,
   BinaryContentBody,
+  ConnectRealtimeParams,
   Error,
   ForbiddenResponse,
   Healthz200Response,
   NotFoundResponse,
   PayloadTooLargeResponse,
   RealtimeTicket200Response,
-  RealtimeWsParams,
   ServiceUnavailableResponse,
   StorageGet200Response,
   StoragePut200Response,
@@ -63,69 +63,69 @@ type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-export type healthzResponse200 = {
+export type getHealthzResponse200 = {
   data: Healthz200Response;
   status: 200;
 };
 
-export type healthzResponseSuccess = healthzResponse200 & {
+export type getHealthzResponseSuccess = getHealthzResponse200 & {
   headers: Headers;
 };
 
-export type healthzResponse = healthzResponseSuccess;
+export type getHealthzResponse = getHealthzResponseSuccess;
 
-export const getHealthzUrl = () => {
+export const getGetHealthzUrl = () => {
   return `/healthz`;
 };
 
 /**
  * 返回服务存活状态
  */
-export const healthz = async (
+export const getHealthz = async (
   options?: Parameters<typeof appFetch>[1],
-): Promise<healthzResponse> => {
-  return appFetch<healthzResponse>(getHealthzUrl(), {
+): Promise<getHealthzResponse> => {
+  return appFetch<getHealthzResponse>(getGetHealthzUrl(), {
     ...options,
     method: "GET",
   });
 };
 
-export const getHealthzQueryKey = () => {
+export const getGetHealthzQueryKey = () => {
   return ["healthz"] as const;
 };
 
-export const getHealthzQueryOptions = <
-  TData = Awaited<ReturnType<typeof healthz>>,
+export const getGetHealthzQueryOptions = <
+  TData = Awaited<ReturnType<typeof getHealthz>>,
   TError = unknown,
 >(options?: {
-  query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof healthz>>, TError, TData>>;
+  query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getHealthz>>, TError, TData>>;
   request?: SecondParameter<typeof appFetch>;
 }) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey = getHealthzQueryKey();
+  const queryKey = getGetHealthzQueryKey();
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof healthz>>> = ({ signal }) =>
-    healthz({ signal, ...requestOptions });
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getHealthz>>> = ({ signal }) =>
+    getHealthz({ signal, ...requestOptions });
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof healthz>>,
+    Awaited<ReturnType<typeof getHealthz>>,
     TError,
     TData
   >;
 };
 
-export type HealthzQueryResult = NonNullable<Awaited<ReturnType<typeof healthz>>>;
-export type HealthzQueryError = unknown;
+export type GetHealthzQueryResult = NonNullable<Awaited<ReturnType<typeof getHealthz>>>;
+export type GetHealthzQueryError = unknown;
 
-export function useHealthz<TData = Awaited<ReturnType<typeof healthz>>, TError = unknown>(
+export function useGetHealthz<TData = Awaited<ReturnType<typeof getHealthz>>, TError = unknown>(
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof healthz>>, TError, TData>>;
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getHealthz>>, TError, TData>>;
     request?: SecondParameter<typeof appFetch>;
   },
   queryClient?: QueryClient,
 ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getHealthzQueryOptions(options);
+  const queryOptions = getGetHealthzQueryOptions(options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & {
     queryKey: DataTag<QueryKey, TData, TError>;
@@ -136,51 +136,51 @@ export function useHealthz<TData = Awaited<ReturnType<typeof healthz>>, TError =
   return query;
 }
 
-export type storagePutResponse200 = {
+export type putStorageResponse200 = {
   data: StoragePut200Response;
   status: 200;
 };
 
-export type storagePutResponse404 = {
+export type putStorageResponse404 = {
   data: NotFoundResponse;
   status: 404;
 };
 
-export type storagePutResponse413 = {
+export type putStorageResponse413 = {
   data: PayloadTooLargeResponse;
   status: 413;
 };
 
-export type storagePutResponse422 = {
+export type putStorageResponse422 = {
   data: UnprocessableEntityResponse;
   status: 422;
 };
 
-export type storagePutResponseSuccess = storagePutResponse200 & {
+export type putStorageResponseSuccess = putStorageResponse200 & {
   headers: Headers;
 };
-export type storagePutResponseError = (
-  | storagePutResponse404
-  | storagePutResponse413
-  | storagePutResponse422
+export type putStorageResponseError = (
+  | putStorageResponse404
+  | putStorageResponse413
+  | putStorageResponse422
 ) & {
   headers: Headers;
 };
 
-export type storagePutResponse = storagePutResponseSuccess | storagePutResponseError;
+export type putStorageResponse = putStorageResponseSuccess | putStorageResponseError;
 
-export const getStoragePutUrl = (key: string) => {
+export const getPutStorageUrl = (key: string) => {
   return `/storage/${key}`;
 };
 
 /**
  * 流式上传对象 - 请求体为原始二进制、最大 10 MiB
  */
-export const storagePut = async (
+export const putStorage = async (
   key: string,
   binaryContentBody: BinaryContentBody,
   options?: Parameters<typeof appFetch>[1],
-): Promise<storagePutResponse> => {
+): Promise<putStorageResponse> => {
   const getHeaders = (
     h?: NonNullable<RequestInit["headers"]>,
   ): Record<string, string | readonly string[]> => {
@@ -200,7 +200,7 @@ export const storagePut = async (
     }
     return headers;
   };
-  return appFetch<storagePutResponse>(getStoragePutUrl(key), {
+  return appFetch<putStorageResponse>(getPutStorageUrl(key), {
     ...options,
     method: "PUT",
     headers: { "Content-Type": "application/octet-stream", ...getHeaders(options?.headers) },
@@ -208,26 +208,26 @@ export const storagePut = async (
   });
 };
 
-export const getStoragePutMutationKey = () => ["storagePut"] as const;
+export const getPutStorageMutationKey = () => ["putStorage"] as const;
 
-export const getStoragePutMutationOptions = <
+export const getPutStorageMutationOptions = <
   TError = NotFoundResponse | PayloadTooLargeResponse | UnprocessableEntityResponse,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof storagePut>>,
+    Awaited<ReturnType<typeof putStorage>>,
     TError,
-    StoragePutMutationVariables,
+    PutStorageMutationVariables,
     TContext
   >;
   request?: SecondParameter<typeof appFetch>;
 }): UseMutationOptions<
-  Awaited<ReturnType<typeof storagePut>>,
+  Awaited<ReturnType<typeof putStorage>>,
   TError,
-  StoragePutMutationVariables,
+  PutStorageMutationVariables,
   TContext
 > => {
-  const mutationKey = getStoragePutMutationKey();
+  const mutationKey = getPutStorageMutationKey();
   const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
       ? options
@@ -235,132 +235,132 @@ export const getStoragePutMutationOptions = <
     : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof storagePut>>,
-    StoragePutMutationVariables
+    Awaited<ReturnType<typeof putStorage>>,
+    PutStorageMutationVariables
   > = (props) => {
     const { key, data } = props ?? {};
 
-    return storagePut(key, data, requestOptions);
+    return putStorage(key, data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type StoragePutMutationResult = NonNullable<Awaited<ReturnType<typeof storagePut>>>;
-export type StoragePutMutationBody = BinaryContentBody;
-export type StoragePutMutationError =
+export type PutStorageMutationResult = NonNullable<Awaited<ReturnType<typeof putStorage>>>;
+export type PutStorageMutationBody = BinaryContentBody;
+export type PutStorageMutationError =
   | NotFoundResponse
   | PayloadTooLargeResponse
   | UnprocessableEntityResponse;
-export type StoragePutMutationVariables = { key: string; data: BinaryContentBody };
+export type PutStorageMutationVariables = { key: string; data: BinaryContentBody };
 
-export const useStoragePut = <
+export const usePutStorage = <
   TError = NotFoundResponse | PayloadTooLargeResponse | UnprocessableEntityResponse,
   TContext = unknown,
 >(
   options?: {
     mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof storagePut>>,
+      Awaited<ReturnType<typeof putStorage>>,
       TError,
-      StoragePutMutationVariables,
+      PutStorageMutationVariables,
       TContext
     >;
     request?: SecondParameter<typeof appFetch>;
   },
   queryClient?: QueryClient,
 ): UseMutationReturnType<
-  Awaited<ReturnType<typeof storagePut>>,
+  Awaited<ReturnType<typeof putStorage>>,
   TError,
-  StoragePutMutationVariables,
+  PutStorageMutationVariables,
   TContext
 > => {
-  return useMutation(getStoragePutMutationOptions(options), queryClient);
+  return useMutation(getPutStorageMutationOptions(options), queryClient);
 };
-export type storageGetResponse200 = {
+export type getStorageResponse200 = {
   data: StorageGet200Response;
   status: 200;
 };
 
-export type storageGetResponse404 = {
+export type getStorageResponse404 = {
   data: NotFoundResponse;
   status: 404;
 };
 
-export type storageGetResponse422 = {
+export type getStorageResponse422 = {
   data: UnprocessableEntityResponse;
   status: 422;
 };
 
-export type storageGetResponseSuccess = storageGetResponse200 & {
+export type getStorageResponseSuccess = getStorageResponse200 & {
   headers: Headers;
 };
-export type storageGetResponseError = (storageGetResponse404 | storageGetResponse422) & {
+export type getStorageResponseError = (getStorageResponse404 | getStorageResponse422) & {
   headers: Headers;
 };
 
-export type storageGetResponse = storageGetResponseSuccess | storageGetResponseError;
+export type getStorageResponse = getStorageResponseSuccess | getStorageResponseError;
 
-export const getStorageGetUrl = (key: string) => {
+export const getGetStorageUrl = (key: string) => {
   return `/storage/${key}`;
 };
 
 /**
  * 流式下载对象 - 响应体为原始二进制
  */
-export const storageGet = async (
+export const getStorage = async (
   key: string,
   options?: Parameters<typeof appFetch>[1],
-): Promise<storageGetResponse> => {
-  return appFetch<storageGetResponse>(getStorageGetUrl(key), {
+): Promise<getStorageResponse> => {
+  return appFetch<getStorageResponse>(getGetStorageUrl(key), {
     ...options,
     method: "GET",
   });
 };
 
-export const getStorageGetQueryKey = (key: MaybeRefOrGetter<string>) => {
+export const getGetStorageQueryKey = (key: MaybeRefOrGetter<string>) => {
   return ["storage", key] as const;
 };
 
-export const getStorageGetQueryOptions = <
-  TData = Awaited<ReturnType<typeof storageGet>>,
+export const getGetStorageQueryOptions = <
+  TData = Awaited<ReturnType<typeof getStorage>>,
   TError = NotFoundResponse | UnprocessableEntityResponse,
 >(
   key: MaybeRefOrGetter<string>,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof storageGet>>, TError, TData>>;
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getStorage>>, TError, TData>>;
     request?: SecondParameter<typeof appFetch>;
   },
 ) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey = getStorageGetQueryKey(key);
+  const queryKey = getGetStorageQueryKey(key);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof storageGet>>> = ({ signal }) =>
-    storageGet(toValue(key), { signal, ...requestOptions });
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getStorage>>> = ({ signal }) =>
+    getStorage(toValue(key), { signal, ...requestOptions });
 
   return {
     queryKey,
     queryFn,
     enabled: computed(() => toValue(key) !== null && toValue(key) !== undefined),
     ...queryOptions,
-  } as UseQueryOptions<Awaited<ReturnType<typeof storageGet>>, TError, TData>;
+  } as UseQueryOptions<Awaited<ReturnType<typeof getStorage>>, TError, TData>;
 };
 
-export type StorageGetQueryResult = NonNullable<Awaited<ReturnType<typeof storageGet>>>;
-export type StorageGetQueryError = NotFoundResponse | UnprocessableEntityResponse;
+export type GetStorageQueryResult = NonNullable<Awaited<ReturnType<typeof getStorage>>>;
+export type GetStorageQueryError = NotFoundResponse | UnprocessableEntityResponse;
 
-export function useStorageGet<
-  TData = Awaited<ReturnType<typeof storageGet>>,
+export function useGetStorage<
+  TData = Awaited<ReturnType<typeof getStorage>>,
   TError = NotFoundResponse | UnprocessableEntityResponse,
 >(
   key: MaybeRefOrGetter<string>,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof storageGet>>, TError, TData>>;
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getStorage>>, TError, TData>>;
     request?: SecondParameter<typeof appFetch>;
   },
   queryClient?: QueryClient,
 ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getStorageGetQueryOptions(key, options);
+  const queryOptions = getGetStorageQueryOptions(key, options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & {
     queryKey: DataTag<QueryKey, TData, TError>;
@@ -371,109 +371,104 @@ export function useStorageGet<
   return query;
 }
 
-export type realtimeTicketResponse200 = {
+export type createTicketResponse200 = {
   data: RealtimeTicket200Response;
   status: 200;
 };
 
-export type realtimeTicketResponse403 = {
+export type createTicketResponse403 = {
   data: ForbiddenResponse;
   status: 403;
 };
 
-export type realtimeTicketResponse503 = {
+export type createTicketResponse503 = {
   data: ServiceUnavailableResponse;
   status: 503;
 };
 
-export type realtimeTicketResponseSuccess = realtimeTicketResponse200 & {
+export type createTicketResponseSuccess = createTicketResponse200 & {
   headers: Headers;
 };
-export type realtimeTicketResponseError = (
-  | realtimeTicketResponse403
-  | realtimeTicketResponse503
-) & {
+export type createTicketResponseError = (createTicketResponse403 | createTicketResponse503) & {
   headers: Headers;
 };
 
-export type realtimeTicketResponse = realtimeTicketResponseSuccess | realtimeTicketResponseError;
+export type createTicketResponse = createTicketResponseSuccess | createTicketResponseError;
 
-export const getRealtimeTicketUrl = () => {
+export const getCreateTicketUrl = () => {
   return `/realtime/ticket`;
 };
 
 /**
  * 签发一次性 WebSocket 票据 - 有效期内通过 /realtime/ws 消费一次
  */
-export const realtimeTicket = async (
+export const createTicket = async (
   options?: Parameters<typeof appFetch>[1],
-): Promise<realtimeTicketResponse> => {
-  return appFetch<realtimeTicketResponse>(getRealtimeTicketUrl(), {
+): Promise<createTicketResponse> => {
+  return appFetch<createTicketResponse>(getCreateTicketUrl(), {
     ...options,
     method: "POST",
   });
 };
 
-export const getRealtimeTicketMutationKey = () => ["realtimeTicket"] as const;
+export const getCreateTicketMutationKey = () => ["createTicket"] as const;
 
-export const getRealtimeTicketMutationOptions = <
+export const getCreateTicketMutationOptions = <
   TError = ForbiddenResponse | ServiceUnavailableResponse,
   TContext = unknown,
 >(options?: {
-  mutation?: UseMutationOptions<Awaited<ReturnType<typeof realtimeTicket>>, TError, void, TContext>;
+  mutation?: UseMutationOptions<Awaited<ReturnType<typeof createTicket>>, TError, void, TContext>;
   request?: SecondParameter<typeof appFetch>;
-}): UseMutationOptions<Awaited<ReturnType<typeof realtimeTicket>>, TError, void, TContext> => {
-  const mutationKey = getRealtimeTicketMutationKey();
+}): UseMutationOptions<Awaited<ReturnType<typeof createTicket>>, TError, void, TContext> => {
+  const mutationKey = getCreateTicketMutationKey();
   const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
     : { mutation: { mutationKey }, request: undefined };
 
-  const mutationFn: MutationFunction<Awaited<ReturnType<typeof realtimeTicket>>, void> = () => {
-    return realtimeTicket(requestOptions);
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof createTicket>>, void> = () => {
+    return createTicket(requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type RealtimeTicketMutationResult = NonNullable<Awaited<ReturnType<typeof realtimeTicket>>>;
+export type CreateTicketMutationResult = NonNullable<Awaited<ReturnType<typeof createTicket>>>;
 
-export type RealtimeTicketMutationError = ForbiddenResponse | ServiceUnavailableResponse;
+export type CreateTicketMutationError = ForbiddenResponse | ServiceUnavailableResponse;
 
-export const useRealtimeTicket = <
+export const useCreateTicket = <
   TError = ForbiddenResponse | ServiceUnavailableResponse,
   TContext = unknown,
 >(
   options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof realtimeTicket>>,
-      TError,
-      void,
-      TContext
-    >;
+    mutation?: UseMutationOptions<Awaited<ReturnType<typeof createTicket>>, TError, void, TContext>;
     request?: SecondParameter<typeof appFetch>;
   },
   queryClient?: QueryClient,
-): UseMutationReturnType<Awaited<ReturnType<typeof realtimeTicket>>, TError, void, TContext> => {
-  return useMutation(getRealtimeTicketMutationOptions(options), queryClient);
+): UseMutationReturnType<Awaited<ReturnType<typeof createTicket>>, TError, void, TContext> => {
+  return useMutation(getCreateTicketMutationOptions(options), queryClient);
 };
-export type realtimeWsResponse101 = {
+export type connectRealtimeResponse101 = {
   data: void;
   status: 101;
 };
 
-export type realtimeWsResponse404 = {
+export type connectRealtimeResponse404 = {
   data: Error;
   status: 404;
 };
-export type realtimeWsResponseError = (realtimeWsResponse101 | realtimeWsResponse404) & {
+export type connectRealtimeResponseError = (
+  | connectRealtimeResponse101
+  | connectRealtimeResponse404
+) & {
   headers: Headers;
 };
 
-export type realtimeWsResponse = realtimeWsResponseError;
+export type connectRealtimeResponse = connectRealtimeResponseError;
 
-export const getRealtimeWsUrl = (params: RealtimeWsParams) => {
+export const getConnectRealtimeUrl = (params: ConnectRealtimeParams) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
@@ -503,61 +498,61 @@ export const getRealtimeWsUrl = (params: RealtimeWsParams) => {
  *
  * 关闭码：`4401` 票据无效、`4403` 来源拒绝、`4503` 票据存储不可用。
  *
- * 说明：Orval 生成的 `realtimeWs` 仅为文档占位，不执行真实 WebSocket 握手。
+ * 说明：Orval 生成的 `connectRealtime` 仅为文档占位，不执行真实 WebSocket 握手。
  */
-export const realtimeWs = async (
-  params: RealtimeWsParams,
+export const connectRealtime = async (
+  params: ConnectRealtimeParams,
   options?: Parameters<typeof appFetch>[1],
-): Promise<realtimeWsResponse> => {
-  return appFetch<realtimeWsResponse>(getRealtimeWsUrl(params), {
+): Promise<connectRealtimeResponse> => {
+  return appFetch<connectRealtimeResponse>(getConnectRealtimeUrl(params), {
     ...options,
     method: "GET",
   });
 };
 
-export const getRealtimeWsQueryKey = (params?: MaybeRefOrGetter<RealtimeWsParams>) => {
+export const getConnectRealtimeQueryKey = (params?: MaybeRefOrGetter<ConnectRealtimeParams>) => {
   return ["realtime", "ws", ...(params ? [params] : [])] as const;
 };
 
-export const getRealtimeWsQueryOptions = <
-  TData = Awaited<ReturnType<typeof realtimeWs>>,
+export const getConnectRealtimeQueryOptions = <
+  TData = Awaited<ReturnType<typeof connectRealtime>>,
   TError = void | Error,
 >(
-  params: MaybeRefOrGetter<RealtimeWsParams>,
+  params: MaybeRefOrGetter<ConnectRealtimeParams>,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof realtimeWs>>, TError, TData>>;
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof connectRealtime>>, TError, TData>>;
     request?: SecondParameter<typeof appFetch>;
   },
 ) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey = getRealtimeWsQueryKey(params);
+  const queryKey = getConnectRealtimeQueryKey(params);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof realtimeWs>>> = ({ signal }) =>
-    realtimeWs(toValue(params), { signal, ...requestOptions });
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof connectRealtime>>> = ({ signal }) =>
+    connectRealtime(toValue(params), { signal, ...requestOptions });
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof realtimeWs>>,
+    Awaited<ReturnType<typeof connectRealtime>>,
     TError,
     TData
   >;
 };
 
-export type RealtimeWsQueryResult = NonNullable<Awaited<ReturnType<typeof realtimeWs>>>;
-export type RealtimeWsQueryError = void | Error;
+export type ConnectRealtimeQueryResult = NonNullable<Awaited<ReturnType<typeof connectRealtime>>>;
+export type ConnectRealtimeQueryError = void | Error;
 
-export function useRealtimeWs<
-  TData = Awaited<ReturnType<typeof realtimeWs>>,
+export function useConnectRealtime<
+  TData = Awaited<ReturnType<typeof connectRealtime>>,
   TError = void | Error,
 >(
-  params: MaybeRefOrGetter<RealtimeWsParams>,
+  params: MaybeRefOrGetter<ConnectRealtimeParams>,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof realtimeWs>>, TError, TData>>;
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof connectRealtime>>, TError, TData>>;
     request?: SecondParameter<typeof appFetch>;
   },
   queryClient?: QueryClient,
 ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getRealtimeWsQueryOptions(params, options);
+  const queryOptions = getConnectRealtimeQueryOptions(params, options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & {
     queryKey: DataTag<QueryKey, TData, TError>;
@@ -568,50 +563,50 @@ export function useRealtimeWs<
   return query;
 }
 
-export type telemetryEventsResponse202 = {
+export type ingestTelemetryResponse202 = {
   data: TelemetryEvents202Response;
   status: 202;
 };
 
-export type telemetryEventsResponse400 = {
+export type ingestTelemetryResponse400 = {
   data: BadRequestResponse;
   status: 400;
 };
 
-export type telemetryEventsResponse413 = {
+export type ingestTelemetryResponse413 = {
   data: PayloadTooLargeResponse;
   status: 413;
 };
 
-export type telemetryEventsResponse422 = {
+export type ingestTelemetryResponse422 = {
   data: UnprocessableEntityResponse;
   status: 422;
 };
 
-export type telemetryEventsResponseSuccess = telemetryEventsResponse202 & {
+export type ingestTelemetryResponseSuccess = ingestTelemetryResponse202 & {
   headers: Headers;
 };
-export type telemetryEventsResponseError = (
-  | telemetryEventsResponse400
-  | telemetryEventsResponse413
-  | telemetryEventsResponse422
+export type ingestTelemetryResponseError = (
+  | ingestTelemetryResponse400
+  | ingestTelemetryResponse413
+  | ingestTelemetryResponse422
 ) & {
   headers: Headers;
 };
 
-export type telemetryEventsResponse = telemetryEventsResponseSuccess | telemetryEventsResponseError;
+export type ingestTelemetryResponse = ingestTelemetryResponseSuccess | ingestTelemetryResponseError;
 
-export const getTelemetryEventsUrl = () => {
+export const getIngestTelemetryUrl = () => {
   return `/telemetry/events`;
 };
 
 /**
  * 批量接收前端遥测事件 - 请求体上限 256 KiB
  */
-export const telemetryEvents = async (
+export const ingestTelemetry = async (
   telemetryBatchBody: TelemetryBatchBody,
   options?: Parameters<typeof appFetch>[1],
-): Promise<telemetryEventsResponse> => {
+): Promise<ingestTelemetryResponse> => {
   const getHeaders = (
     h?: NonNullable<RequestInit["headers"]>,
   ): Record<string, string | readonly string[]> => {
@@ -631,7 +626,7 @@ export const telemetryEvents = async (
     }
     return headers;
   };
-  return appFetch<telemetryEventsResponse>(getTelemetryEventsUrl(), {
+  return appFetch<ingestTelemetryResponse>(getIngestTelemetryUrl(), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/json", ...getHeaders(options?.headers) },
@@ -639,26 +634,26 @@ export const telemetryEvents = async (
   });
 };
 
-export const getTelemetryEventsMutationKey = () => ["telemetryEvents"] as const;
+export const getIngestTelemetryMutationKey = () => ["ingestTelemetry"] as const;
 
-export const getTelemetryEventsMutationOptions = <
+export const getIngestTelemetryMutationOptions = <
   TError = BadRequestResponse | PayloadTooLargeResponse | UnprocessableEntityResponse,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof telemetryEvents>>,
+    Awaited<ReturnType<typeof ingestTelemetry>>,
     TError,
-    TelemetryEventsMutationVariables,
+    IngestTelemetryMutationVariables,
     TContext
   >;
   request?: SecondParameter<typeof appFetch>;
 }): UseMutationOptions<
-  Awaited<ReturnType<typeof telemetryEvents>>,
+  Awaited<ReturnType<typeof ingestTelemetry>>,
   TError,
-  TelemetryEventsMutationVariables,
+  IngestTelemetryMutationVariables,
   TContext
 > => {
-  const mutationKey = getTelemetryEventsMutationKey();
+  const mutationKey = getIngestTelemetryMutationKey();
   const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
       ? options
@@ -666,84 +661,89 @@ export const getTelemetryEventsMutationOptions = <
     : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof telemetryEvents>>,
-    TelemetryEventsMutationVariables
+    Awaited<ReturnType<typeof ingestTelemetry>>,
+    IngestTelemetryMutationVariables
   > = (props) => {
     const { data } = props ?? {};
 
-    return telemetryEvents(data, requestOptions);
+    return ingestTelemetry(data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type TelemetryEventsMutationResult = NonNullable<
-  Awaited<ReturnType<typeof telemetryEvents>>
+export type IngestTelemetryMutationResult = NonNullable<
+  Awaited<ReturnType<typeof ingestTelemetry>>
 >;
-export type TelemetryEventsMutationBody = TelemetryBatchBody;
-export type TelemetryEventsMutationError =
+export type IngestTelemetryMutationBody = TelemetryBatchBody;
+export type IngestTelemetryMutationError =
   | BadRequestResponse
   | PayloadTooLargeResponse
   | UnprocessableEntityResponse;
-export type TelemetryEventsMutationVariables = { data: TelemetryBatchBody };
+export type IngestTelemetryMutationVariables = { data: TelemetryBatchBody };
 
-export const useTelemetryEvents = <
+export const useIngestTelemetry = <
   TError = BadRequestResponse | PayloadTooLargeResponse | UnprocessableEntityResponse,
   TContext = unknown,
 >(
   options?: {
     mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof telemetryEvents>>,
+      Awaited<ReturnType<typeof ingestTelemetry>>,
       TError,
-      TelemetryEventsMutationVariables,
+      IngestTelemetryMutationVariables,
       TContext
     >;
     request?: SecondParameter<typeof appFetch>;
   },
   queryClient?: QueryClient,
 ): UseMutationReturnType<
-  Awaited<ReturnType<typeof telemetryEvents>>,
+  Awaited<ReturnType<typeof ingestTelemetry>>,
   TError,
-  TelemetryEventsMutationVariables,
+  IngestTelemetryMutationVariables,
   TContext
 > => {
-  return useMutation(getTelemetryEventsMutationOptions(options), queryClient);
+  return useMutation(getIngestTelemetryMutationOptions(options), queryClient);
 };
-export type workflowRunsResponse202 = {
+export type createWorkflowRunResponse202 = {
   data: WorkflowRuns202Response;
   status: 202;
 };
 
-export type workflowRunsResponse400 = {
+export type createWorkflowRunResponse400 = {
   data: BadRequestResponse;
   status: 400;
 };
 
-export type workflowRunsResponse422 = {
+export type createWorkflowRunResponse422 = {
   data: UnprocessableEntityResponse;
   status: 422;
 };
 
-export type workflowRunsResponseSuccess = workflowRunsResponse202 & {
+export type createWorkflowRunResponseSuccess = createWorkflowRunResponse202 & {
   headers: Headers;
 };
-export type workflowRunsResponseError = (workflowRunsResponse400 | workflowRunsResponse422) & {
+export type createWorkflowRunResponseError = (
+  | createWorkflowRunResponse400
+  | createWorkflowRunResponse422
+) & {
   headers: Headers;
 };
 
-export type workflowRunsResponse = workflowRunsResponseSuccess | workflowRunsResponseError;
+export type createWorkflowRunResponse =
+  | createWorkflowRunResponseSuccess
+  | createWorkflowRunResponseError;
 
-export const getWorkflowRunsUrl = () => {
+export const getCreateWorkflowRunUrl = () => {
   return `/workflow/runs`;
 };
 
 /**
  * 提交工作流 run - 以 Idempotency-Key 保证幂等
  */
-export const workflowRuns = async (
+export const createWorkflowRun = async (
   workflowInputBody: WorkflowInputBody,
   options?: Parameters<typeof appFetch>[1],
-): Promise<workflowRunsResponse> => {
+): Promise<createWorkflowRunResponse> => {
   const getHeaders = (
     h?: NonNullable<RequestInit["headers"]>,
   ): Record<string, string | readonly string[]> => {
@@ -763,7 +763,7 @@ export const workflowRuns = async (
     }
     return headers;
   };
-  return appFetch<workflowRunsResponse>(getWorkflowRunsUrl(), {
+  return appFetch<createWorkflowRunResponse>(getCreateWorkflowRunUrl(), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/json", ...getHeaders(options?.headers) },
@@ -771,26 +771,26 @@ export const workflowRuns = async (
   });
 };
 
-export const getWorkflowRunsMutationKey = () => ["workflowRuns"] as const;
+export const getCreateWorkflowRunMutationKey = () => ["createWorkflowRun"] as const;
 
-export const getWorkflowRunsMutationOptions = <
+export const getCreateWorkflowRunMutationOptions = <
   TError = BadRequestResponse | UnprocessableEntityResponse,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof workflowRuns>>,
+    Awaited<ReturnType<typeof createWorkflowRun>>,
     TError,
-    WorkflowRunsMutationVariables,
+    CreateWorkflowRunMutationVariables,
     TContext
   >;
   request?: SecondParameter<typeof appFetch>;
 }): UseMutationOptions<
-  Awaited<ReturnType<typeof workflowRuns>>,
+  Awaited<ReturnType<typeof createWorkflowRun>>,
   TError,
-  WorkflowRunsMutationVariables,
+  CreateWorkflowRunMutationVariables,
   TContext
 > => {
-  const mutationKey = getWorkflowRunsMutationKey();
+  const mutationKey = getCreateWorkflowRunMutationKey();
   const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
       ? options
@@ -798,129 +798,134 @@ export const getWorkflowRunsMutationOptions = <
     : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof workflowRuns>>,
-    WorkflowRunsMutationVariables
+    Awaited<ReturnType<typeof createWorkflowRun>>,
+    CreateWorkflowRunMutationVariables
   > = (props) => {
     const { data } = props ?? {};
 
-    return workflowRuns(data, requestOptions);
+    return createWorkflowRun(data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type WorkflowRunsMutationResult = NonNullable<Awaited<ReturnType<typeof workflowRuns>>>;
-export type WorkflowRunsMutationBody = WorkflowInputBody;
-export type WorkflowRunsMutationError = BadRequestResponse | UnprocessableEntityResponse;
-export type WorkflowRunsMutationVariables = { data: WorkflowInputBody };
+export type CreateWorkflowRunMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createWorkflowRun>>
+>;
+export type CreateWorkflowRunMutationBody = WorkflowInputBody;
+export type CreateWorkflowRunMutationError = BadRequestResponse | UnprocessableEntityResponse;
+export type CreateWorkflowRunMutationVariables = { data: WorkflowInputBody };
 
-export const useWorkflowRuns = <
+export const useCreateWorkflowRun = <
   TError = BadRequestResponse | UnprocessableEntityResponse,
   TContext = unknown,
 >(
   options?: {
     mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof workflowRuns>>,
+      Awaited<ReturnType<typeof createWorkflowRun>>,
       TError,
-      WorkflowRunsMutationVariables,
+      CreateWorkflowRunMutationVariables,
       TContext
     >;
     request?: SecondParameter<typeof appFetch>;
   },
   queryClient?: QueryClient,
 ): UseMutationReturnType<
-  Awaited<ReturnType<typeof workflowRuns>>,
+  Awaited<ReturnType<typeof createWorkflowRun>>,
   TError,
-  WorkflowRunsMutationVariables,
+  CreateWorkflowRunMutationVariables,
   TContext
 > => {
-  return useMutation(getWorkflowRunsMutationOptions(options), queryClient);
+  return useMutation(getCreateWorkflowRunMutationOptions(options), queryClient);
 };
-export type workflowRunResponse200 = {
+export type getWorkflowRunResponse200 = {
   data: WorkflowRun200Response;
   status: 200;
 };
 
-export type workflowRunResponse404 = {
+export type getWorkflowRunResponse404 = {
   data: NotFoundResponse;
   status: 404;
 };
 
-export type workflowRunResponse422 = {
+export type getWorkflowRunResponse422 = {
   data: UnprocessableEntityResponse;
   status: 422;
 };
 
-export type workflowRunResponseSuccess = workflowRunResponse200 & {
+export type getWorkflowRunResponseSuccess = getWorkflowRunResponse200 & {
   headers: Headers;
 };
-export type workflowRunResponseError = (workflowRunResponse404 | workflowRunResponse422) & {
+export type getWorkflowRunResponseError = (
+  | getWorkflowRunResponse404
+  | getWorkflowRunResponse422
+) & {
   headers: Headers;
 };
 
-export type workflowRunResponse = workflowRunResponseSuccess | workflowRunResponseError;
+export type getWorkflowRunResponse = getWorkflowRunResponseSuccess | getWorkflowRunResponseError;
 
-export const getWorkflowRunUrl = (runId: string) => {
+export const getGetWorkflowRunUrl = (runId: string) => {
   return `/workflow/runs/${runId}`;
 };
 
 /**
  * 查询工作流 run 状态
  */
-export const workflowRun = async (
+export const getWorkflowRun = async (
   runId: string,
   options?: Parameters<typeof appFetch>[1],
-): Promise<workflowRunResponse> => {
-  return appFetch<workflowRunResponse>(getWorkflowRunUrl(runId), {
+): Promise<getWorkflowRunResponse> => {
+  return appFetch<getWorkflowRunResponse>(getGetWorkflowRunUrl(runId), {
     ...options,
     method: "GET",
   });
 };
 
-export const getWorkflowRunQueryKey = (runId: MaybeRefOrGetter<string>) => {
+export const getGetWorkflowRunQueryKey = (runId: MaybeRefOrGetter<string>) => {
   return ["workflow", "runs", runId] as const;
 };
 
-export const getWorkflowRunQueryOptions = <
-  TData = Awaited<ReturnType<typeof workflowRun>>,
+export const getGetWorkflowRunQueryOptions = <
+  TData = Awaited<ReturnType<typeof getWorkflowRun>>,
   TError = NotFoundResponse | UnprocessableEntityResponse,
 >(
   runId: MaybeRefOrGetter<string>,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof workflowRun>>, TError, TData>>;
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getWorkflowRun>>, TError, TData>>;
     request?: SecondParameter<typeof appFetch>;
   },
 ) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey = getWorkflowRunQueryKey(runId);
+  const queryKey = getGetWorkflowRunQueryKey(runId);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof workflowRun>>> = ({ signal }) =>
-    workflowRun(toValue(runId), { signal, ...requestOptions });
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getWorkflowRun>>> = ({ signal }) =>
+    getWorkflowRun(toValue(runId), { signal, ...requestOptions });
 
   return {
     queryKey,
     queryFn,
     enabled: computed(() => toValue(runId) !== null && toValue(runId) !== undefined),
     ...queryOptions,
-  } as UseQueryOptions<Awaited<ReturnType<typeof workflowRun>>, TError, TData>;
+  } as UseQueryOptions<Awaited<ReturnType<typeof getWorkflowRun>>, TError, TData>;
 };
 
-export type WorkflowRunQueryResult = NonNullable<Awaited<ReturnType<typeof workflowRun>>>;
-export type WorkflowRunQueryError = NotFoundResponse | UnprocessableEntityResponse;
+export type GetWorkflowRunQueryResult = NonNullable<Awaited<ReturnType<typeof getWorkflowRun>>>;
+export type GetWorkflowRunQueryError = NotFoundResponse | UnprocessableEntityResponse;
 
-export function useWorkflowRun<
-  TData = Awaited<ReturnType<typeof workflowRun>>,
+export function useGetWorkflowRun<
+  TData = Awaited<ReturnType<typeof getWorkflowRun>>,
   TError = NotFoundResponse | UnprocessableEntityResponse,
 >(
   runId: MaybeRefOrGetter<string>,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof workflowRun>>, TError, TData>>;
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getWorkflowRun>>, TError, TData>>;
     request?: SecondParameter<typeof appFetch>;
   },
   queryClient?: QueryClient,
 ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getWorkflowRunQueryOptions(runId, options);
+  const queryOptions = getGetWorkflowRunQueryOptions(runId, options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & {
     queryKey: DataTag<QueryKey, TData, TError>;

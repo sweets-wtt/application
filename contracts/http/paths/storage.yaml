@@ -1,10 +1,10 @@
 # 对象存储 - /storage/{key}
 put:
-  operationId: storagePut
+  operationId: putStorage
   description: 流式上传对象 - 请求体为原始二进制、最大 10 MiB
   parameters:
-    - $ref: "../components/parameters.yaml#/parameters/KeyPath"
-    - $ref: "../components/parameters.yaml#/parameters/TenantHeader"
+    - $ref: "../components/parameters.yaml#/parameters/Key"
+    - $ref: "../components/parameters.yaml#/parameters/Tenant"
   requestBody:
     $ref: "../components/bodies.yaml#/requestBodies/BinaryContent"
   responses:
@@ -18,11 +18,11 @@ put:
       $ref: "../components/responses.yaml#/responses/UnprocessableEntity"
 
 get:
-  operationId: storageGet
+  operationId: getStorage
   description: 流式下载对象 - 响应体为原始二进制
   parameters:
-    - $ref: "../components/parameters.yaml#/parameters/KeyPath"
-    - $ref: "../components/parameters.yaml#/parameters/TenantHeader"
+    - $ref: "../components/parameters.yaml#/parameters/Key"
+    - $ref: "../components/parameters.yaml#/parameters/Tenant"
   responses:
     "200":
       $ref: "../components/responses.yaml#/responses/StorageGet200"

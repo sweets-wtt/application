@@ -4,7 +4,7 @@ import asyncio
 from time import monotonic
 from typing import TYPE_CHECKING, Any, Final
 
-from app.contracts.generated.http import RequestInput
+from app.contracts.generated.http import WorkflowInput
 from app.log import get_logger
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -49,7 +49,7 @@ async def submit(
     client: "Hatchet",
     session: AsyncSession,
     key: str,
-    payload: RequestInput,
+    payload: WorkflowInput,
 ) -> str:
     """提交工作流 run - 幂等同事务
 
@@ -65,7 +65,7 @@ async def submit(
         return row.run_id
 
     # 触发工作流 run - 不等待完成
-    workflow = client.workflow(name=WORKFLOW_NAME, input_validator=RequestInput)
+    workflow = client.workflow(name=WORKFLOW_NAME, input_validator=WorkflowInput)
     run = await workflow.aio_run_no_wait(payload)
 
     # 同事务记录幂等键
