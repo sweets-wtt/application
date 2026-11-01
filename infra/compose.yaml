@@ -1,8 +1,3 @@
-# Docker Compose - `https://docs.docker.com/compose/`
-# 服务按 数据 → 平台 → 应用 排列,同一应用的多个服务相邻成组
-
-# yaml-language-server: $schema=https://json.schemastore.org/compose.json
-
 # 项目名
 name: application
 

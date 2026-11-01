@@ -1,5 +1,3 @@
-# justfile - `https://github.com/casey/just`
-
 # 不稳定特性
 set unstable
 

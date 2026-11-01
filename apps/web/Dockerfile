@@ -1,5 +1,3 @@
-# Dockerfile - https://docs.docker.com/reference/dockerfile/
-
 # 构建层
 FROM oven/bun:1 AS builder
 

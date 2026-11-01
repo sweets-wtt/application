@@ -1,5 +1,3 @@
-# vacuum - `https://quobix.com/vacuum/rulesets/`
-
 # 规则集继承
 extends: [[vacuum:oas, recommended]]
 

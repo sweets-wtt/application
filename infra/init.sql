@@ -1,5 +1,3 @@
--- PostgreSQL 初始化脚本 - `https://www.postgresql.org/docs/current/app-psql.html`
-
 -- 应用口令
 \getenv app_password POSTGRES_APP_PASSWORD
 

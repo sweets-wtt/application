@@ -1,5 +1,3 @@
-# gitignore - `https://git-scm.com/docs/gitignore`
-
 # 环境
 .env
 .env.*

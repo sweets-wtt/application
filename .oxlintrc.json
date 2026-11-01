@@ -1,5 +1,3 @@
-// Oxlint - https://oxc.rs/docs/guide/usage/linter/config
-
 {
   // Schema
   "$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxlint/configuration_schema.json",

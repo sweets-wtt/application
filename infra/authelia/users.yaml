@@ -1,6 +1,3 @@
-# Authelia 用户 - `https://www.authelia.com/configuration/first-factor/file/`
-# 口令哈希生成:docker run --rm authelia/authelia authelia crypto hash generate argon2 --password '<口令>' --no-confirm
-
 users:
   # 管理员(开发默认口令 changeme-admin,生产必须更换)
   admin:

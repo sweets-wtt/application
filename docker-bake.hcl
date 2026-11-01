@@ -1,5 +1,3 @@
-// Docker Bake - `https://docs.docker.com/build/bake/`
-
 // 镜像仓库
 variable "REGISTRY" {
   // 默认（本地 Docker）

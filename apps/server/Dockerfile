@@ -1,5 +1,3 @@
-# Dockerfile - https://docs.docker.com/reference/dockerfile/
-
 # 基础镜像
 FROM python:3.12-slim AS builder
 

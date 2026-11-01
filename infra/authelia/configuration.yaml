@@ -1,9 +1,3 @@
-# Authelia 配置 - `https://www.authelia.com/configuration/`
-# 未列出的选项均使用官方默认值(端口 9090/日志 info/默认拒绝/argon2id)
-# 运行时状态存 PostgreSQL(经 AUTHELIA_STORAGE_POSTGRES_* 环境变量注入)
-# 域名经 Go Template 过滤器展开(需 X_AUTHELIA_CONFIG_FILTERS=template),本地与生产共用同一文件
-# 密钥经 AUTHELIA_* 环境变量注入(compose 注入),不入库不入 git
-
 # 身份验证 - 文件后端
 authentication_backend:
   file:

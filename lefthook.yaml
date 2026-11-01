@@ -1,5 +1,3 @@
-# lefthook - `https://lefthook.dev/`
-
 # 提交前
 pre-commit:
   # 命令

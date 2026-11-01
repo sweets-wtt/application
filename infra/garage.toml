@@ -1,6 +1,3 @@
-# Garage 配置 - `https://garagehq.deuxfleurs.fr/documentation/reference-manual/configuration/`
-# 单节点必要项;rpc_public_addr 由 --single-node 自动探测,admin API 未使用故省略
-
 # 复制因子
 replication_factor = 1
 # 元数据目录
