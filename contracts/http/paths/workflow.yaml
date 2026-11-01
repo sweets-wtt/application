@@ -7,7 +7,7 @@ runs:
     parameters:
       - $ref: "../components/parameters.yaml#/parameters/IdempotencyKeyHeader"
     requestBody:
-      $ref: "../components/requestBodies.yaml#/requestBodies/WorkflowInput"
+      $ref: "../components/bodies.yaml#/requestBodies/WorkflowInput"
     responses:
       "202":
         $ref: "../components/responses.yaml#/responses/WorkflowRuns202"

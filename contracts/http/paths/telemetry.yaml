@@ -3,7 +3,7 @@ post:
   operationId: telemetryEvents
   description: 批量接收前端遥测事件 - 请求体上限 256 KiB
   requestBody:
-    $ref: "../components/requestBodies.yaml#/requestBodies/TelemetryBatch"
+    $ref: "../components/bodies.yaml#/requestBodies/TelemetryBatch"
   responses:
     "202":
       $ref: "../components/responses.yaml#/responses/TelemetryEvents202"

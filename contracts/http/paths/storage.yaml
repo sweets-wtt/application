@@ -6,7 +6,7 @@ put:
     - $ref: "../components/parameters.yaml#/parameters/KeyPath"
     - $ref: "../components/parameters.yaml#/parameters/TenantHeader"
   requestBody:
-    $ref: "../components/requestBodies.yaml#/requestBodies/BinaryContent"
+    $ref: "../components/bodies.yaml#/requestBodies/BinaryContent"
   responses:
     "200":
       $ref: "../components/responses.yaml#/responses/StoragePut200"
