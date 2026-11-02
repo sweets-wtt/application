@@ -8,29 +8,29 @@ on:
 
 # 令牌权限
 permissions:
-  # 内容
+  # 内容(只读)
   contents: read
 
-# 并发 - 同一时间只允许一次发版
+# 并发(同一时间只允许一次发版)
 concurrency:
   # 组
   group: release
-  # 不取消进行中
+  # 取消进行中(否)
   cancel-in-progress: false
 
 # 作业
 jobs:
   # 发版
   release:
-    # 仅手动触发
+    # 条件(仅手动触发)
     if: github.event_name == 'workflow_dispatch'
     # 运行环境
     runs-on: ubuntu-latest
     # 令牌权限
     permissions:
-      # 内容
+      # 内容(写入)
       contents: write
-      # 镜像包
+      # 镜像包(写入)
       packages: write
     # 作业输出
     outputs:
@@ -42,32 +42,35 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         # 输入
         with:
-          # 检出深度
+          # 检出深度(全量)
           fetch-depth: 0
-          # 凭据保留 - 推送改用显式令牌
+          # 凭据保留(推送改用显式令牌)
           persist-credentials: false
-      # 环境管理 - 发版不缓存
+      # 环境管理(发版不缓存)
       - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
         # 输入
         with:
           # 版本
           version: "2026.8.14"
-          # 缓存
+          # 缓存(禁用)
           cache: false
-      # 提交身份
+      # 提交身份(用户名)
       - run: git config user.name 'github-actions[bot]'
+      # 提交身份(邮箱)
       - run: git config user.email 'github-actions[bot]@users.noreply.github.com'
       # 自动版本
       - run: cog bump --auto
       # 读取标签
       - id: tag
+        # 输出命令
         run: echo "tag=$(git describe --tags --abbrev=0)" >> "$GITHUB_OUTPUT"
-      # 推送分支与标签 - 显式令牌认证（凭据不持久化）
+      # 推送分支与标签(显式令牌认证，凭据不持久化)
       - env:
           # 仓库令牌
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # 仓库全名
           GH_REPO: ${{ github.repository }}
+        # 运行命令
         run: git push "https://x-access-token:${GH_TOKEN}@github.com/${GH_REPO}" main --tags
       # 登录镜像仓库
       - env:
@@ -75,8 +78,9 @@ jobs:
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # 镜像仓库用户
           GHCR_USER: ${{ github.actor }}
+        # 运行命令
         run: echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
-      # 构建器
+      # 构建器(容器驱动)
       - run: docker buildx create --name ci --driver docker-container --use
       # 构建并推送镜像
       - env:
@@ -84,4 +88,5 @@ jobs:
           REGISTRY: ghcr.io/${{ github.repository_owner }}/
           # 镜像标签
           TAG: ${{ steps.tag.outputs.tag }}
+        # 运行命令
         run: docker buildx bake -f docker-bake.hcl --push apps

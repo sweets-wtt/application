@@ -7,26 +7,26 @@ description: 检出仓库并准备工具链、依赖与环境变量
 inputs:
   # 检出深度
   fetch-depth:
-    # 说明
+    # 描述
     description: 检出深度
-    # 默认浅检出
+    # 默认值(浅检出)
     default: "1"
-  # 依赖 - all | bun | none
+  # 依赖范围(all | bun | none)
   dependencies:
-    # 说明
+    # 描述
     description: 依赖安装方式
-    # 默认全量
+    # 默认值(全量)
     default: all
   # 环境变量文件
   env-file:
-    # 说明
+    # 描述
     description: 是否生成 infra/.env
-    # 默认生成
+    # 默认值(生成)
     default: "true"
 
 # 运行
 runs:
-  # 复合动作
+  # 动作类型
   using: composite
   # 步骤
   steps:
@@ -38,27 +38,27 @@ runs:
         fetch-depth: ${{ inputs.fetch-depth }}
         # 凭据保留
         persist-credentials: false
-    # 环境管理 - 版本号唯一来源
+    # 环境管理(版本号唯一来源)
     - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
       # 输入
       with:
         # 版本
         version: "2026.8.14"
-    # 全量依赖 - mise + uv + bun
+    # 安装全量依赖(mise + uv + bun)
     - if: inputs.dependencies == 'all'
       # 运行命令
       run: mise exec -- just install
-      # shell
+      # 解释器
       shell: bash
-    # 仅前端依赖
+    # 安装前端依赖
     - if: inputs.dependencies == 'bun'
       # 运行命令
       run: mise exec -- bun install --frozen-lockfile
-      # shell
+      # 解释器
       shell: bash
-    # 环境变量文件 - compose 校验用
+    # 生成环境变量文件(compose 校验用)
     - if: inputs.env-file == 'true'
       # 运行命令
       run: sed 's/=$/=placeholder/' infra/.env.example > infra/.env
-      # shell
+      # 解释器
       shell: bash
