@@ -5,7 +5,7 @@ pre-commit:
     # 代码检查
     - name: lint
       # 运行命令
-      run: mise exec -- just lint
+      run: mise run lint
 
 # 推送前
 pre-push:
@@ -14,7 +14,7 @@ pre-push:
     # 测试
     - name: test
       # 运行命令
-      run: mise exec -- just test
+      run: mise run test
 
 # 下拉后
 post-merge:
@@ -23,7 +23,7 @@ post-merge:
     # 初始化
     - name: install
       # 运行命令
-      run: mise exec -- just install
+      run: mise run install
 
 # 提交信息
 commit-msg:

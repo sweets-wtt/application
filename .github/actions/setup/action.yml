@@ -47,7 +47,7 @@ runs:
     # 安装全量依赖(mise + uv + bun)
     - if: inputs.dependencies == 'all'
       # 运行命令
-      run: mise exec -- just install
+      run: mise run install
       # 解释器
       shell: bash
     # 安装前端依赖

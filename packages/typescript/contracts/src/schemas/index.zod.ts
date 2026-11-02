@@ -7,7 +7,7 @@
  * 结构：`paths/` 按资源域一文件（与 server/routes 一一对应，
  * 多路径项文件内用语义键，如 `realtime.yaml#/ticket`）；
  * `components/` 参数、请求体、响应与模式。
- * 修改源文件后执行 `just bundle` 重新打包 `dist/openapi.yaml` -
+ * 修改源文件后执行 `mise run bundle` 重新打包 `dist/openapi.yaml` -
  * 制品是 datamodel-codegen / Orval / vacuum / oasdiff / schemathesis 的唯一消费入口。
  *
  * 所有 JSON 成功响应使用统一的 `{code, message, data}` 信封；

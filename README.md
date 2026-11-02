@@ -10,7 +10,6 @@
 ```text
 application（根项目）
 ├── mise（环境管理）
-│   ├── 任务运行：just
 │   ├── 代码
 │   │   ├── 代码格式：dprint
 │   │   └── 拼写检查：typos
@@ -129,10 +128,9 @@ application（根项目）
 ├── bun.lock                         # JavaScript 依赖
 ├── cog.toml                         # 提交检查
 ├── dprint.jsonc                     # 代码格式
-├── justfile                         # 任务运行
 ├── lefthook.yaml                    # 钩子管理
 ├── mise.lock                        # 工具版本
-├── mise.toml                        # 开发环境
+├── mise.toml                        # 开发环境与任务
 ├── package.json                     # JavaScript 包
 ├── pyproject.toml                   # Python 配置
 ├── renovate.jsonc                   # 依赖更新
@@ -151,7 +149,7 @@ application（根项目）
 ```text
 源（人写）                                            制品（生成）
 contracts/http/openapi.yaml      ┐
-paths.yaml                       ├─ just bundle → dist/openapi.yaml
+paths.yaml                       ├─ mise run bundle → dist/openapi.yaml
 components/{parameters,responses,schemas}.yaml ┘
                                        ├── datamodel-codegen → Python Pydantic 模型
                                        ├── Orval            → TS 客户端 / Zod / MSW
@@ -161,7 +159,7 @@ components/{parameters,responses,schemas}.yaml ┘
 修改契约后：
 
 ```bash
-just bundle         # 重新打包制品
-just codegen        # 打包并生成 Python 与 TypeScript 代码
-just codegen-check  # 校验制品与生成物无漂移（CI 使用）
+mise run bundle         # 重新打包制品
+mise run codegen        # 打包并生成 Python 与 TypeScript 代码
+mise run check:codegen  # 校验制品与生成物无漂移（CI 使用）
 ```

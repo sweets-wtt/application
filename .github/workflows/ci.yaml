@@ -42,7 +42,7 @@ jobs:
           # 环境变量文件(不生成)
           env-file: false
       # 检查与审计
-      - run: mise exec -- just ci
+      - run: mise run ci
 
   # 测试
   test:
@@ -59,11 +59,11 @@ jobs:
           # 检出深度(全量)
           fetch-depth: 0
       # 运行测试
-      - run: mise exec -- just test
+      - run: mise run test
       # 体积预算检查(含构建)
-      - run: mise exec -- just size
+      - run: mise run size
       # 契约生成物检查
-      - run: mise exec -- just codegen-check
+      - run: mise run check:codegen
 
   # 端到端测试
   e2e:
@@ -84,7 +84,7 @@ jobs:
       # 浏览器安装
       - run: mise exec -- bun x playwright install --with-deps chromium
       # 运行端到端测试
-      - run: mise exec -- just test-e2e
+      - run: mise run test:e2e
 
   # 镜像构建
   images:
@@ -101,7 +101,7 @@ jobs:
           # 环境变量文件(不生成)
           env-file: false
       # 构建镜像
-      - run: mise exec -- just build
+      - run: mise run build
 
   # 依赖更新配置校验
   renovate:
