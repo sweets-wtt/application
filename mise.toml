@@ -30,8 +30,6 @@ COMPOSE = "podman compose -f infra/compose.yaml -p application"
 shell = "bash -c"
 
 # 任务
-[tasks]
-
 [tasks.default]
 run = "mise tasks ls"
 description = "列出全部任务"
@@ -65,7 +63,7 @@ depends = [
   "lint:compose",
   "lint:python",
   "lint:typescript",
-  "lint:app",
+  "lint:api",
 ]
 
 [tasks."lint:format"]
@@ -77,7 +75,7 @@ run = "typos"
 description = "检查拼写"
 
 [tasks."lint:secret"]
-run = "gitleaks git --config .gitleaks.toml ."
+run = "gitleaks git"
 description = "检测泄露密钥"
 
 [tasks."lint:github"]
@@ -115,10 +113,6 @@ sources = [
   "bun.lock",
 ]
 
-[tasks."lint:app"]
-run = "bun run --filter @app/web typecheck"
-description = "检查 Web 应用类型"
-
 [tasks."lint:api"]
 run = "vacuum lint --ruleset contracts/http/vacuum.yaml contracts/http/dist/openapi.yaml"
 description = "校验 OpenAPI 契约"
@@ -141,16 +135,8 @@ run = """bunx oxfmt --no-error-on-unmatched-pattern '**/*.{ts,tsx,mts,cts,js,jsx
 description = "格式化 TypeScript 代码"
 
 [tasks.audit]
-description = "运行安全审计"
-depends = ["audit:vuln", "audit:config"]
-
-[tasks."audit:vuln"]
-run = "trivy fs --scanners vuln --severity HIGH,CRITICAL --exit-code 1 ."
-description = "扫描依赖漏洞"
-
-[tasks."audit:config"]
-run = "trivy fs --scanners misconfig --severity HIGH,CRITICAL --exit-code 1 ."
-description = "扫描配置错误"
+run = "trivy fs --scanners vuln,misconfig --severity HIGH,CRITICAL --exit-code 1 ."
+description = "扫描依赖漏洞与配置错误"
 
 [tasks.ci]
 description = "运行 CI 检查"
@@ -242,9 +228,10 @@ outputs = ["apps/server/src/server/contracts.py"]
 
 [tasks."codegen:ts"]
 run = [
-  "cd apps/web && bun x orval",
-  "bun x oxfmt apps/web/src/contracts",
+  "bun x orval",
+  "bun x oxfmt src/contracts",
 ]
+dir = "apps/web"
 description = "生成 TypeScript 契约客户端"
 depends = ["bundle"]
 sources = ["contracts/http/dist/openapi.yaml"]
