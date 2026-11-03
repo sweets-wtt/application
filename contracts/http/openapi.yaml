@@ -10,16 +10,13 @@ info:
     HTTP 契约（源文件入口）。
 
     结构：`paths/` 按资源域一文件（与 server/routes 一一对应，
-    多路径项文件内用语义键，如 `realtime.yaml#/ticket`）；
+    多路径项文件内用语义键，如 `workflow.yaml#/runs`）；
     `components/` 参数、请求体、响应与模式。
     修改源文件后执行 `mise run bundle` 重新打包 `dist/openapi.yaml` -
     制品是 datamodel-codegen / Orval / vacuum / oasdiff / schemathesis 的唯一消费入口。
 
     所有 JSON 成功响应使用统一的 `{code, message, data}` 信封；
     错误响应使用 FastAPI 默认的 `{detail}` 结构。
-
-    实时 WebSocket 端点 `/realtime/ws` 以说明形式文档化，
-    Orval 生成的 `connectRealtime` 仅为文档占位，不执行真实 WebSocket 握手。
   # 版本
   version: 0.1.0
 
@@ -42,12 +39,6 @@ paths:
     $ref: "./paths/auth.yaml#/me"
   /healthz:
     $ref: "./paths/healthz.yaml"
-  /storage/{key}:
-    $ref: "./paths/storage.yaml"
-  /realtime/ticket:
-    $ref: "./paths/realtime.yaml#/ticket"
-  /realtime/ws:
-    $ref: "./paths/realtime.yaml#/ws"
   /telemetry/events:
     $ref: "./paths/telemetry.yaml"
   /workflow/runs:

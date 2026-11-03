@@ -18,7 +18,7 @@ def test_principal_maps_tenant_roles_and_scope() -> None:
             "roles": ["application/editor"],
             "email": "user@example.com",
             "name": "User",
-            "scope": "storage:read",
+            "scope": "custom:perm",
         }
     )
 
@@ -26,7 +26,7 @@ def test_principal_maps_tenant_roles_and_scope() -> None:
     assert principal.tenant_id == "tenant-a"
     assert principal.roles == ("editor",)
     assert "workflow:write" in principal.permissions
-    assert "storage:read" in principal.permissions
+    assert "custom:perm" in principal.permissions
     assert "telemetry:write" in principal.permissions
     assert principal.email == "user@example.com"
 
@@ -43,14 +43,14 @@ def test_principal_admin_gets_all_permissions() -> None:
 
 def test_require_permission_denies_missing_permission() -> None:
     """缺少权限时返回 403"""
-    dependency = auth.require_permission("storage:write")
+    dependency = auth.require_permission("workflow:write")
     principal = auth.Principal(
         user_id="user-1",
         tenant_id="tenant-a",
         email=None,
         name=None,
         roles=("viewer",),
-        permissions=frozenset({"storage:read"}),
+        permissions=frozenset({"telemetry:write"}),
     )
 
     with pytest.raises(HTTPException) as exc:

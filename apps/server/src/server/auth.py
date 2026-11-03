@@ -43,17 +43,12 @@ ROLE_PERMISSIONS: dict[str, frozenset[str]] = {
         {
             "workflow:read",
             "workflow:write",
-            "storage:read",
-            "storage:write",
-            "realtime:connect",
             "telemetry:write",
         }
     ),
     "viewer": frozenset(
         {
             "workflow:read",
-            "storage:read",
-            "realtime:connect",
             "telemetry:write",
         }
     ),
@@ -61,9 +56,6 @@ ROLE_PERMISSIONS: dict[str, frozenset[str]] = {
         {
             "workflow:read",
             "workflow:write",
-            "storage:read",
-            "storage:write",
-            "realtime:connect",
             "telemetry:write",
         }
     ),

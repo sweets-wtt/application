@@ -32,11 +32,6 @@ WORKDIR /app
 # 运行用户
 RUN groupadd --system --gid 1000 app && useradd --system --uid 1000 --gid app app
 
-# 迁移配置 - migrate 服务以 /app 为 cwd 执行 alembic -c apps/server/alembic.ini
-COPY --from=builder --chown=app:app /app/apps/server/alembic.ini /app/apps/server/alembic.ini
-# 迁移脚本 - 含 env.py、模板与 versions
-COPY --from=builder --chown=app:app /app/apps/server/alembic /app/apps/server/alembic
-
 # 用户
 USER app
 

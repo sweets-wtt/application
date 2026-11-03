@@ -147,13 +147,6 @@ responses:
         schema:
           $ref: "schemas.yaml#/schemas/Error"
 
-  Forbidden:
-    description: 来源不在允许列表
-    content:
-      application/json:
-        schema:
-          $ref: "schemas.yaml#/schemas/Error"
-
   NotFound:
     description: 资源不存在
     content:
@@ -174,10 +167,3 @@ responses:
       application/json:
         schema:
           $ref: "schemas.yaml#/schemas/ValidationError"
-
-  ServiceUnavailable:
-    description: 票据存储不可用
-    content:
-      application/json:
-        schema:
-          $ref: "schemas.yaml#/schemas/Error"

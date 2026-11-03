@@ -41,14 +41,6 @@ class Error(BaseModel):
     detail: str
 
 
-class RealtimeTicket(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    ticket: str = Field(..., max_length=256)
-    expiresAtMs: StrictInt
-
-
 class Response(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
@@ -56,14 +48,6 @@ class Response(BaseModel):
     code: StrictInt
     message: str
     data: dict[str, Any]
-
-
-class StorageObject(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    key: str
-    size: StrictInt = Field(..., ge=0)
 
 
 class TelemetryAccepted(BaseModel):
@@ -141,14 +125,6 @@ class AuthMeGetResponse(Response):
 
 class HealthzGetResponse(Response):
     data: Data
-
-
-class StorageKeyPutResponse(Response):
-    data: StorageObject
-
-
-class RealtimeTicketPostResponse(Response):
-    data: RealtimeTicket
 
 
 class TelemetryEventsPostResponse(Response):

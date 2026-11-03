@@ -277,10 +277,6 @@ run = "bun run --filter @app/web size"
 description = "体积预算检查"
 depends = ["build:web"]
 
-[tasks.migrate]
-run = "uv run alembic -c apps/server/alembic.ini upgrade head"
-description = "执行数据库迁移"
-
 [tasks.up]
 run = "$COMPOSE up -d --remove-orphans --wait"
 description = "启动服务"

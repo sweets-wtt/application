@@ -15,19 +15,13 @@ dependencies = [
   "pydantic-settings>=2.15.0",
   "granian>=2.8.2",
   "schemathesis>=4.26.1",
-  "alembic>=1.13",
   "httpx>=0.28.0",
   "itsdangerous>=2.2.0",
   "pyjwt[crypto]>=2.10.0",
-  "opentelemetry-exporter-otlp-proto-http>=1.45.0",
-  "opentelemetry-instrumentation-fastapi>=0.66b0",
-  "opentelemetry-sdk>=1.45.0",
   "app-contracts",
   "app-log",
-  "app-data",
   "app-workflow",
   "slowapi>=0.1.9",
-  "redis>=5.0",
 ]
 
 # 构建系统
@@ -48,7 +42,5 @@ module-name = "server"
 app-contracts = { workspace = true }
 # 结构化日志
 app-log = { workspace = true }
-# 持久化（缓存/数据库/对象存储）
-app-data = { workspace = true }
 # 工作流客户端
 app-workflow = { workspace = true }

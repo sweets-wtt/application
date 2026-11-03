@@ -5,16 +5,13 @@
  * HTTP 契约（源文件入口）。
  *
  * 结构：`paths/` 按资源域一文件（与 server/routes 一一对应，
- * 多路径项文件内用语义键，如 `realtime.yaml#/ticket`）；
+ * 多路径项文件内用语义键，如 `workflow.yaml#/runs`）；
  * `components/` 参数、请求体、响应与模式。
  * 修改源文件后执行 `mise run bundle` 重新打包 `dist/openapi.yaml` -
  * 制品是 datamodel-codegen / Orval / vacuum / oasdiff / schemathesis 的唯一消费入口。
  *
  * 所有 JSON 成功响应使用统一的 `{code, message, data}` 信封；
  * 错误响应使用 FastAPI 默认的 `{detail}` 结构。
- *
- * 实时 WebSocket 端点 `/realtime/ws` 以说明形式文档化，
- * Orval 生成的 `connectRealtime` 仅为文档占位，不执行真实 WebSocket 握手。
  *
  * OpenAPI spec version: 0.1.0
  */
@@ -56,58 +53,6 @@ export const AuthUser = zod
 
 export type AuthUser = zod.input<typeof AuthUser>;
 export type AuthUserOutput = zod.output<typeof AuthUser>;
-
-export const ValidationErrorItem = zod
-  .looseObject({
-    loc: zod.array(zod.union([zod.string(), zod.int()])),
-    msg: zod.string(),
-    type: zod.string(),
-  })
-  .describe("FastAPI 请求校验错误条目");
-
-export type ValidationErrorItem = zod.input<typeof ValidationErrorItem>;
-export type ValidationErrorItemOutput = zod.output<typeof ValidationErrorItem>;
-
-export const ValidationError = zod
-  .object({
-    detail: zod.array(
-      zod
-        .looseObject({
-          loc: zod.array(zod.union([zod.string(), zod.int()])),
-          msg: zod.string(),
-          type: zod.string(),
-        })
-        .describe("FastAPI 请求校验错误条目"),
-    ),
-  })
-  .describe("FastAPI 请求校验失败响应");
-
-export type ValidationError = zod.input<typeof ValidationError>;
-export type ValidationErrorOutput = zod.output<typeof ValidationError>;
-
-export const storageObjectSizeMin = 0;
-
-export const StorageObject = zod
-  .object({
-    key: zod.string(),
-    size: zod.int().min(storageObjectSizeMin),
-  })
-  .describe("已写入对象的位置与字节数");
-
-export type StorageObject = zod.input<typeof StorageObject>;
-export type StorageObjectOutput = zod.output<typeof StorageObject>;
-
-export const realtimeTicketTicketMax = 256;
-
-export const RealtimeTicket = zod
-  .object({
-    ticket: zod.string().max(realtimeTicketTicketMax),
-    expiresAtMs: zod.int(),
-  })
-  .describe("一次性 WebSocket 票据及过期时间");
-
-export type RealtimeTicket = zod.input<typeof RealtimeTicket>;
-export type RealtimeTicketOutput = zod.output<typeof RealtimeTicket>;
 
 export const telemetryEventFingerprintMax = 1024;
 
@@ -163,6 +108,34 @@ export const TelemetryAccepted = zod.object({
 
 export type TelemetryAccepted = zod.input<typeof TelemetryAccepted>;
 export type TelemetryAcceptedOutput = zod.output<typeof TelemetryAccepted>;
+
+export const ValidationErrorItem = zod
+  .looseObject({
+    loc: zod.array(zod.union([zod.string(), zod.int()])),
+    msg: zod.string(),
+    type: zod.string(),
+  })
+  .describe("FastAPI 请求校验错误条目");
+
+export type ValidationErrorItem = zod.input<typeof ValidationErrorItem>;
+export type ValidationErrorItemOutput = zod.output<typeof ValidationErrorItem>;
+
+export const ValidationError = zod
+  .object({
+    detail: zod.array(
+      zod
+        .looseObject({
+          loc: zod.array(zod.union([zod.string(), zod.int()])),
+          msg: zod.string(),
+          type: zod.string(),
+        })
+        .describe("FastAPI 请求校验错误条目"),
+    ),
+  })
+  .describe("FastAPI 请求校验失败响应");
+
+export type ValidationError = zod.input<typeof ValidationError>;
+export type ValidationErrorOutput = zod.output<typeof ValidationError>;
 
 export const workflowInputMessageMax = 8192;
 
@@ -295,19 +268,31 @@ export const Healthz200Response = zod
 export type Healthz200Response = zod.input<typeof Healthz200Response>;
 export type Healthz200ResponseOutput = zod.output<typeof Healthz200Response>;
 
-export const StorageGet200Response = zod.instanceof(Blob);
+export const TelemetryEvents202Response = zod
+  .object({
+    code: zod.int(),
+    message: zod.string(),
+    data: zod.looseObject({}),
+  })
+  .and(
+    zod.object({
+      data: zod.object({
+        accepted: zod.int(),
+      }),
+    }),
+  );
 
-export type StorageGet200Response = zod.input<typeof StorageGet200Response>;
-export type StorageGet200ResponseOutput = zod.output<typeof StorageGet200Response>;
+export type TelemetryEvents202Response = zod.input<typeof TelemetryEvents202Response>;
+export type TelemetryEvents202ResponseOutput = zod.output<typeof TelemetryEvents202Response>;
 
-export const NotFoundResponse = zod
+export const PayloadTooLargeResponse = zod
   .object({
     detail: zod.string(),
   })
   .describe("通用错误响应 - 与 FastAPI HTTPException 一致");
 
-export type NotFoundResponse = zod.input<typeof NotFoundResponse>;
-export type NotFoundResponseOutput = zod.output<typeof NotFoundResponse>;
+export type PayloadTooLargeResponse = zod.input<typeof PayloadTooLargeResponse>;
+export type PayloadTooLargeResponseOutput = zod.output<typeof PayloadTooLargeResponse>;
 
 export const UnprocessableEntityResponse = zod
   .object({
@@ -325,94 +310,6 @@ export const UnprocessableEntityResponse = zod
 
 export type UnprocessableEntityResponse = zod.input<typeof UnprocessableEntityResponse>;
 export type UnprocessableEntityResponseOutput = zod.output<typeof UnprocessableEntityResponse>;
-
-export const storagePut200ResponseTwoDataSizeMin = 0;
-
-export const StoragePut200Response = zod
-  .object({
-    code: zod.int(),
-    message: zod.string(),
-    data: zod.looseObject({}),
-  })
-  .and(
-    zod.object({
-      data: zod
-        .object({
-          key: zod.string(),
-          size: zod.int().min(storagePut200ResponseTwoDataSizeMin),
-        })
-        .describe("已写入对象的位置与字节数"),
-    }),
-  );
-
-export type StoragePut200Response = zod.input<typeof StoragePut200Response>;
-export type StoragePut200ResponseOutput = zod.output<typeof StoragePut200Response>;
-
-export const PayloadTooLargeResponse = zod
-  .object({
-    detail: zod.string(),
-  })
-  .describe("通用错误响应 - 与 FastAPI HTTPException 一致");
-
-export type PayloadTooLargeResponse = zod.input<typeof PayloadTooLargeResponse>;
-export type PayloadTooLargeResponseOutput = zod.output<typeof PayloadTooLargeResponse>;
-
-export const realtimeTicket200ResponseTwoDataTicketMax = 256;
-
-export const RealtimeTicket200Response = zod
-  .object({
-    code: zod.int(),
-    message: zod.string(),
-    data: zod.looseObject({}),
-  })
-  .and(
-    zod.object({
-      data: zod
-        .object({
-          ticket: zod.string().max(realtimeTicket200ResponseTwoDataTicketMax),
-          expiresAtMs: zod.int(),
-        })
-        .describe("一次性 WebSocket 票据及过期时间"),
-    }),
-  );
-
-export type RealtimeTicket200Response = zod.input<typeof RealtimeTicket200Response>;
-export type RealtimeTicket200ResponseOutput = zod.output<typeof RealtimeTicket200Response>;
-
-export const ForbiddenResponse = zod
-  .object({
-    detail: zod.string(),
-  })
-  .describe("通用错误响应 - 与 FastAPI HTTPException 一致");
-
-export type ForbiddenResponse = zod.input<typeof ForbiddenResponse>;
-export type ForbiddenResponseOutput = zod.output<typeof ForbiddenResponse>;
-
-export const ServiceUnavailableResponse = zod
-  .object({
-    detail: zod.string(),
-  })
-  .describe("通用错误响应 - 与 FastAPI HTTPException 一致");
-
-export type ServiceUnavailableResponse = zod.input<typeof ServiceUnavailableResponse>;
-export type ServiceUnavailableResponseOutput = zod.output<typeof ServiceUnavailableResponse>;
-
-export const TelemetryEvents202Response = zod
-  .object({
-    code: zod.int(),
-    message: zod.string(),
-    data: zod.looseObject({}),
-  })
-  .and(
-    zod.object({
-      data: zod.object({
-        accepted: zod.int(),
-      }),
-    }),
-  );
-
-export type TelemetryEvents202Response = zod.input<typeof TelemetryEvents202Response>;
-export type TelemetryEvents202ResponseOutput = zod.output<typeof TelemetryEvents202Response>;
 
 export const WorkflowRuns202Response = zod
   .object({
@@ -452,10 +349,14 @@ export const WorkflowRun200Response = zod
 export type WorkflowRun200Response = zod.input<typeof WorkflowRun200Response>;
 export type WorkflowRun200ResponseOutput = zod.output<typeof WorkflowRun200Response>;
 
-export const BinaryContentBody = zod.instanceof(Blob);
+export const NotFoundResponse = zod
+  .object({
+    detail: zod.string(),
+  })
+  .describe("通用错误响应 - 与 FastAPI HTTPException 一致");
 
-export type BinaryContentBody = zod.input<typeof BinaryContentBody>;
-export type BinaryContentBodyOutput = zod.output<typeof BinaryContentBody>;
+export type NotFoundResponse = zod.input<typeof NotFoundResponse>;
+export type NotFoundResponseOutput = zod.output<typeof NotFoundResponse>;
 
 export const telemetryBatchBodyReleaseMax = 128;
 
@@ -510,41 +411,6 @@ export const AuthCallbackParams = zod.object({
 
 export type AuthCallbackParams = zod.input<typeof AuthCallbackParams>;
 export type AuthCallbackParamsOutput = zod.output<typeof AuthCallbackParams>;
-
-export const PutStorageHeaders = zod.object({
-  "x-tenant": zod.string(),
-});
-
-export type PutStorageHeaders = zod.input<typeof PutStorageHeaders>;
-export type PutStorageHeadersOutput = zod.output<typeof PutStorageHeaders>;
-
-export const GetStorageHeaders = zod.object({
-  "x-tenant": zod.string(),
-});
-
-export type GetStorageHeaders = zod.input<typeof GetStorageHeaders>;
-export type GetStorageHeadersOutput = zod.output<typeof GetStorageHeaders>;
-
-export const CreateTicketHeaders = zod.object({
-  Origin: zod.string().optional(),
-});
-
-export type CreateTicketHeaders = zod.input<typeof CreateTicketHeaders>;
-export type CreateTicketHeadersOutput = zod.output<typeof CreateTicketHeaders>;
-
-export const ConnectRealtimeParams = zod.object({
-  ticket: zod.string(),
-});
-
-export type ConnectRealtimeParams = zod.input<typeof ConnectRealtimeParams>;
-export type ConnectRealtimeParamsOutput = zod.output<typeof ConnectRealtimeParams>;
-
-export const ConnectRealtimeHeaders = zod.object({
-  Origin: zod.string().optional(),
-});
-
-export type ConnectRealtimeHeaders = zod.input<typeof ConnectRealtimeHeaders>;
-export type ConnectRealtimeHeadersOutput = zod.output<typeof ConnectRealtimeHeaders>;
 
 export const CreateWorkflowRunHeaders = zod.object({
   "Idempotency-Key": zod.string(),

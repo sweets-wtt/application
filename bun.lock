@@ -20,7 +20,6 @@
       "dependencies": {
         "@app/contracts": "workspace:*",
         "@app/log": "workspace:*",
-        "@app/realtime": "workspace:*",
         "@app/session": "workspace:*",
         "@tanstack/vue-query": "catalog:",
         "@vueuse/core": "catalog:",
@@ -61,14 +60,6 @@
       "version": "0.1.0",
       "dependencies": {
         "consola": "catalog:",
-      },
-    },
-    "packages/typescript/realtime": {
-      "name": "@app/realtime",
-      "version": "0.1.0",
-      "dependencies": {
-        "@app/contracts": "workspace:*",
-        "zod": "catalog:",
       },
     },
     "packages/typescript/session": {
@@ -114,8 +105,6 @@
     "@app/contracts": ["@app/contracts@workspace:packages/typescript/contracts"],
 
     "@app/log": ["@app/log@workspace:packages/typescript/log"],
-
-    "@app/realtime": ["@app/realtime@workspace:packages/typescript/realtime"],
 
     "@app/session": ["@app/session@workspace:packages/typescript/session"],
 

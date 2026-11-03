@@ -173,39 +173,6 @@ schemas:
         type: integer
     additionalProperties: false
 
-  # 已写入对象的位置与字节数
-  StorageObject:
-    description: 已写入对象的位置与字节数
-    type: object
-    required:
-      - key
-      - size
-    properties:
-      key:
-        type: string
-      size:
-        type: integer
-        format: int64
-        minimum: 0
-    additionalProperties: false
-
-  # 一次性 WebSocket 票据及过期时间
-  RealtimeTicket:
-    description: 一次性 WebSocket 票据及过期时间
-    type: object
-    required:
-      - ticket
-      - expiresAtMs
-    properties:
-      ticket:
-        type: string
-        maxLength: 256
-      # Unix 毫秒
-      expiresAtMs:
-        type: integer
-        format: int64
-    additionalProperties: false
-
   # 工作流请求输入
   WorkflowInput:
     type: object

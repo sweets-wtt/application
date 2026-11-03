@@ -45,35 +45,23 @@ application（根项目）
 ├── renovate（依赖更新）→ mise
 ├── github（GitHub）
 ├── podman（容器平台）
-│   ├── 数据
-│   │   ├── postgresql（关系数据库）
-│   │   ├── valkey（缓存）
-│   │   ├── garage（对象存储）
-│   │   └── restic（归档备份）→ postgresql / garage
-│   ├── 平台
-│   │   ├── casdoor（身份认证）
-│   │   ├── caddy（入口代理）→ casdoor
-│   │   ├── collector（遥测采集）→ postgresql / openobserve
-│   │   └── openobserve（观测存储）
+│   └── 平台
+│       └── caddy（入口代理）
 ├── packages（共享包）
 │   ├── python
 │   │   ├── contracts（契约模型）→ pydantic
 │   │   ├── log（结构化日志）→ structlog
-│   │   ├── data（数据）→ valkey / sqlalchemy / aiobotocore
 │   │   └── workflow（工作流）→ dbos
 │   └── typescript
 │       ├── contracts（契约客户端）→ vue-query / msw / zod
 │       ├── log（结构化日志）→ consola
-│       ├── realtime（实时）→ contracts / zod
 │       └── session（状态与会话）→ zod
 └── apps（应用）
     └── server（Server 应用）
         ├── fastapi（web 框架）
         ├── granian（ASGI 服务器）
-        ├── alembic（数据库迁移）
         ├── pydantic-settings（配置管理）
-        ├── schemathesis（契约测试）
-        └── opentelemetry（遥测）
+        └── schemathesis（契约测试）
 ```
 
 ## 结构
@@ -90,7 +78,7 @@ application（根项目）
 ├── apps                             # 应用
 │   ├── server                       # Server
 │   └── web                          # Web
-├── contracts                        # 契约
+├── contracts                         # 契约
 │   └── http                         # HTTP
 │       ├── components               # 组件（参数/请求体/响应/模式）
 │       ├── dist                     # 打包制品
@@ -99,24 +87,17 @@ application（根项目）
 │       ├── paths                    # 路径（按资源域一文件）
 │       └── vacuum.yaml              # 契约检查
 ├── infra                            # 服务编排
-│   ├── casdoor                      # Casdoor 初始化与说明
-│   │   ├── README.md                # 本地认证配置
-│   │   └── init_data.template.yaml  # 组织/应用/角色初始数据
-│   ├── collector.yaml               # 采集器配置
+│   ├── Caddyfile                    # 入口代理配置
 │   ├── compose.yaml                 # 容器编排
-│   ├── garage.toml                  # Garage 配置
-│   ├── init.sql                     # 数据库初始化
 │   └── .env.example                 # 环境变量
 ├── packages                         # 共享包
 │   ├── python                       # Python
 │   │   ├── contracts                # 契约模型
 │   │   ├── log                      # 结构化日志
-│   │   ├── data                     # 数据（缓存/数据库/对象存储）
 │   │   └── workflow                 # 工作流
 │   └── typescript                   # TypeScript
 │       ├── contracts                # 契约客户端
 │       ├── log                      # 结构化日志
-│       ├── realtime                 # 实时
 │       └── session                  # 状态与会话
 ├── .containerignore                 # 构建忽略
 ├── .editorconfig                    # 代码风格

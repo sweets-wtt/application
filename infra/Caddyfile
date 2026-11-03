@@ -8,11 +8,6 @@
 	admin off
 }
 
-# 认证服务 - Casdoor 登录/注册/管理台
-auth.{$AUTH_DOMAIN} {
-	reverse_proxy casdoor:8000
-}
-
 # Web 应用 - 唯一公网入口, 鉴权由 FastAPI 校验 JWT
 web.{$AUTH_DOMAIN} {
 	# 静态资源、SPA 回退与 API 反代由 Nginx 处理

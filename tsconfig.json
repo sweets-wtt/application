@@ -12,7 +12,6 @@
   "references": [
     { "path": "./packages/typescript/contracts" },
     { "path": "./packages/typescript/log" },
-    { "path": "./packages/typescript/realtime" },
     { "path": "./packages/typescript/session" }
   ]
 }

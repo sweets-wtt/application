@@ -15,7 +15,6 @@
   "dependencies": {
     "@app/contracts": "workspace:*",
     "@app/log": "workspace:*",
-    "@app/realtime": "workspace:*",
     "@app/session": "workspace:*",
     "@tanstack/vue-query": "catalog:",
     "@vueuse/core": "catalog:",
