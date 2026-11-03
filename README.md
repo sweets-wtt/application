@@ -110,7 +110,6 @@ application（根项目）
 ├── mise.toml                        # 开发环境与任务
 ├── package.json                     # JavaScript 包
 ├── renovate.jsonc                   # 依赖更新
-├── tsconfig.base.json               # JavaScript 基础
 ├── zizmor.yaml                      # 安全审计
 └── README.md                        # 项目说明
 ```

@@ -1,16 +1,24 @@
 {
-  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     // 应用仅做类型检查，不产出编译物
     "noEmit": true,
     "jsx": "preserve",
+    // Bundler 解析以识别包 exports 子路径
     "moduleResolution": "bundler",
     "module": "ESNext",
     "target": "ESNext",
     "types": ["node", "vitest/globals"],
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    // 严格
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true
   },
   "include": ["src", "tests"]
 }
