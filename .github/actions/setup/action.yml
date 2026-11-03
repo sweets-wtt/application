@@ -23,6 +23,12 @@ inputs:
     description: 是否生成 infra/.env
     # 默认值(生成)
     default: "true"
+  # 容器运行时
+  container-runtime:
+    # 描述
+    description: 是否安装 podman
+    # 默认值(安装)
+    default: "false"
 
 # 运行
 runs:
@@ -48,6 +54,12 @@ runs:
     - if: inputs.dependencies == 'all'
       # 运行命令
       run: mise run install
+      # 解释器
+      shell: bash
+    # 安装容器运行时(podman)
+    - if: inputs.container-runtime == 'true'
+      # 运行命令
+      run: sudo apt-get update && sudo apt-get install -y podman podman-compose
       # 解释器
       shell: bash
     # 安装前端依赖

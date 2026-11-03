@@ -44,7 +44,7 @@ application（根项目）
 │               └── 类型检查：typescript → bun
 ├── renovate（依赖更新）→ mise
 ├── github（GitHub）
-├── docker（容器平台）
+├── podman（容器平台）
 │   ├── 数据
 │   │   ├── postgresql（关系数据库）
 │   │   ├── valkey（缓存）
@@ -89,7 +89,8 @@ application（根项目）
 │       ├── ci.yaml                  # 持续集成
 │       └── release.yaml             # 版本发行
 ├── apps                             # 应用
-│   └── server                       # Server
+│   ├── server                       # Server
+│   └── web                          # Web
 ├── contracts                        # 契约
 │   └── http                         # HTTP
 │       ├── components               # 组件（参数/请求体/响应/模式）
@@ -118,12 +119,12 @@ application（根项目）
 │       ├── log                      # 结构化日志
 │       ├── realtime                 # 实时
 │       └── session                  # 状态与会话
+├── .containerignore                 # 构建忽略
 ├── .editorconfig                    # 代码风格
 ├── .gitattributes                   # Git 属性
 ├── .gitignore                       # Git 忽略
 ├── .gitleaks.toml                   # 密钥扫描
 ├── .oxlintrc.jsonc                  # JavaScript 代码检查
-├── .release-please-manifest.json    # 版本清单
 ├── .typos.toml                      # 拼写检查
 ├── bun.lock                         # JavaScript 依赖
 ├── cog.toml                         # 提交检查
@@ -149,7 +150,7 @@ application（根项目）
 ```text
 源（人写）                                            制品（生成）
 contracts/http/openapi.yaml      ┐
-paths.yaml                       ├─ mise run bundle → dist/openapi.yaml
+paths/*.yaml                     ├─ mise run bundle → dist/openapi.yaml
 components/{parameters,responses,schemas}.yaml ┘
                                        ├── datamodel-codegen → Python Pydantic 模型
                                        ├── Orval            → TS 客户端 / Zod / MSW

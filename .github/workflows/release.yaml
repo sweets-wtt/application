@@ -54,6 +54,8 @@ jobs:
           version: "2026.8.14"
           # 缓存(禁用)
           cache: false
+      # 安装容器运行时(podman)
+      - run: sudo apt-get update && sudo apt-get install -y podman podman-compose
       # 提交身份(用户名)
       - run: git config user.name 'github-actions[bot]'
       # 提交身份(邮箱)
@@ -79,9 +81,7 @@ jobs:
           # 镜像仓库用户
           GHCR_USER: ${{ github.actor }}
         # 运行命令
-        run: echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
-      # 构建器(容器驱动)
-      - run: docker buildx create --name ci --driver docker-container --use
+        run: echo "$GHCR_TOKEN" | podman login ghcr.io -u "$GHCR_USER" --password-stdin
       # 构建并推送镜像
       - env:
           # 镜像仓库地址
@@ -89,4 +89,7 @@ jobs:
           # 镜像标签
           TAG: ${{ steps.tag.outputs.tag }}
         # 运行命令
-        run: docker buildx bake -f docker-bake.hcl --push apps
+        run: |
+          mise run build:image
+          podman push "${REGISTRY}server:${TAG}"
+          podman push "${REGISTRY}web:${TAG}"

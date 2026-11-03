@@ -492,7 +492,7 @@ services:
     image: "traefik:v3.7.13@sha256:1c32e7c368204fd72812152ebdd2ac0425993df6fd982317deb02e48f2d5423c"
     # 启动命令
     command:
-      # Docker 发现
+      # Podman 发现 - 经 Docker 兼容层读取容器标签
       - "--providers.docker=true"
       - "--providers.docker.exposedByDefault=false"
       # 容器多网络时默认路由网
@@ -521,10 +521,14 @@ services:
       - "443:443"
     # 数据卷
     volumes:
-      # Docker 套接字
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      # Podman 套接字
+      - "/run/podman/podman.sock:/var/run/docker.sock:ro"
       # ACME 证书
       - "traefik-acme:/acme"
+    # 安全选项
+    security_opt:
+      # 允许容器访问挂载的套接字(SELinux)
+      - "label=disable"
     # 健康检查
     healthcheck:
       <<: *healthcheck

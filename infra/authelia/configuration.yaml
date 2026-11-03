@@ -27,8 +27,8 @@ session:
       authelia_url: 'https://auth.{{ env "AUTH_DOMAIN" }}'
 
 # ── OIDC 提供方(启用 Web 登录时取消注释) ─────────────────
-# 密钥生成:docker run --rm authelia/authelia authelia crypto oidc generate
-# 客户端口令:docker run --rm authelia/authelia authelia crypto hash generate pbkdf2 --random --random.length 72
+# 密钥生成:podman run --rm authelia/authelia authelia crypto oidc generate
+# 客户端口令:podman run --rm authelia/authelia authelia crypto hash generate pbkdf2 --random --random.length 72
 # identity_providers:
 #   oidc:
 #     clients:

@@ -100,8 +100,10 @@ jobs:
         with:
           # 环境变量文件(不生成)
           env-file: false
+          # 容器运行时(安装)
+          container-runtime: "true"
       # 构建镜像
-      - run: mise run build
+      - run: mise run build:image
 
   # 依赖更新配置校验
   renovate:
