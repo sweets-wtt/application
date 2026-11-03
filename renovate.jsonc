@@ -1,29 +1,22 @@
 {
-  // 模式
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-
-  // 继承
+  // 继承推荐配置
   "extends": ["config:best-practices"],
 
   // 锁文件维护
   "lockFileMaintenance": { "enabled": true },
 
-  // 分组规则
   "packageRules": [
     {
-      // 分组名
+      // monorepo 类依赖 - minor/patch 分组批量更新
       "groupName": "monorepos",
-      // 匹配更新类型
       "matchUpdateTypes": ["minor", "patch"]
     },
     {
-      // 匹配管理器
+      // bun 依赖 - 精确升版本
       "matchManagers": ["bun"],
-      // 版本策略
       "rangeStrategy": "bump"
     }
   ],
 
-  // 启用管理器
   "enabledManagers": ["mise", "dockerfile", "docker-compose", "pep621", "bun", "github-actions"]
 }

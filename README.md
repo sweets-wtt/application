@@ -75,6 +75,7 @@ application（根项目）
 │       └── release.yaml             # 版本发行
 ├── apps                             # 应用
 │   ├── server                       # Server
+│   │   ├── .python-version          # Python 版本
 │   │   ├── pyproject.toml           # Python 配置
 │   │   ├── schemathesis.toml        # 契约模糊测试
 │   │   ├── uv.lock                  # Python 依赖

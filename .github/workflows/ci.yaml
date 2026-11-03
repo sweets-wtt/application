@@ -1,156 +1,97 @@
 # 工作流名称
 name: ci
 
-# 触发事件
 on:
-  # 拉取请求
   pull_request:
-  # 推送
   push:
-    # 分支
     branches:
       - main
 
-# 令牌权限
 permissions:
-  # 内容(只读)
   contents: read
 
-# 并发(同一引用取消旧运行)
+# 同一引用取消旧运行
 concurrency:
-  # 组(工作流 + 引用)
   group: ${{ github.workflow }}-${{ github.ref }}
-  # 取消进行中
   cancel-in-progress: true
 
-# 作业
 jobs:
   # 代码检查
   lint:
-    # 运行环境
     runs-on: ubuntu-latest
-    # 超时(分钟)
     timeout-minutes: 15
-    # 步骤
     steps:
-      # 环境准备(检查需全量历史)
+      # 全量历史供密钥扫描
       - uses: ./.github/actions/setup
-        # 输入
         with:
-          # 检出深度(全量)
           fetch-depth: 0
-          # 环境变量文件(不生成)
           env-file: false
-      # 检查与审计
       - run: mise run ci
 
   # 测试
   test:
-    # 运行环境
     runs-on: ubuntu-latest
-    # 超时(分钟)
     timeout-minutes: 20
-    # 步骤
     steps:
-      # 环境准备
       - uses: ./.github/actions/setup
-        # 输入
         with:
-          # 检出深度(全量)
           fetch-depth: 0
-      # 运行测试
       - run: mise run test
-      # 体积预算检查(含构建)
+      # 体积预算（含前端构建）
       - run: mise run size
-      # 契约生成物检查
+      # 契约生成物无漂移
       - run: mise run check:codegen
 
   # 端到端测试
   e2e:
-    # 运行环境
     runs-on: ubuntu-latest
-    # 超时(分钟)
     timeout-minutes: 20
-    # 步骤
     steps:
-      # 环境准备(仅前端依赖)
       - uses: ./.github/actions/setup
-        # 输入
         with:
-          # 依赖(仅前端)
           dependencies: bun
-          # 环境变量文件(不生成)
           env-file: false
-      # 浏览器安装
       - run: mise exec -- bun x playwright install --with-deps chromium
-      # 运行端到端测试
       - run: mise run test:e2e
 
   # 镜像构建
   images:
-    # 运行环境
     runs-on: ubuntu-latest
-    # 超时(分钟)
     timeout-minutes: 20
-    # 步骤
     steps:
-      # 环境准备
       - uses: ./.github/actions/setup
-        # 输入
         with:
-          # 环境变量文件(不生成)
           env-file: false
-          # 容器运行时(安装)
           container-runtime: "true"
-      # 构建镜像
       - run: mise run build:image
 
   # 依赖更新配置校验
   renovate:
-    # 运行环境
     runs-on: ubuntu-latest
-    # 超时(分钟)
     timeout-minutes: 5
-    # 步骤
     steps:
-      # 环境准备
       - uses: ./.github/actions/setup
-        # 输入
         with:
-          # 依赖(不安装)
           dependencies: none
-          # 环境变量文件(不生成)
           env-file: false
-      # Node.js(校验器运行时)
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-      # 配置校验
       - uses: suzuki-shunsuke/github-action-renovate-config-validator@ee9f69e1f683ed0d08225086482b34fc9abe9300 # v2.1.0
-        # 输入
         with:
-          # 配置路径
           config_file_path: renovate.jsonc
 
   # API 兼容检查
   compat:
-    # 条件(仅拉取请求)
     if: github.event_name == 'pull_request'
-    # 运行环境
     runs-on: ubuntu-latest
-    # 超时(分钟)
     timeout-minutes: 10
-    # 步骤
     steps:
-      # 环境准备(对比基线需全量历史)
+      # 对比基线需全量历史
       - uses: ./.github/actions/setup
-        # 输入
         with:
-          # 检出深度(全量)
           fetch-depth: 0
-          # 依赖(不安装)
           dependencies: none
-          # 环境变量文件(不生成)
           env-file: false
-      # 破坏性变更检查(制品对比，基线缺失时跳过)
+      # 制品对比，基线缺失时跳过
       - run: |
           if git cat-file -e "origin/main:contracts/http/dist/openapi.yaml" 2>/dev/null; then
             oasdiff breaking --fail-on ERR "origin/main:contracts/http/dist/openapi.yaml" contracts/http/dist/openapi.yaml
@@ -160,29 +101,18 @@ jobs:
 
   # 提交规范
   commit-lint:
-    # 条件(仅拉取请求)
     if: github.event_name == 'pull_request'
-    # 运行环境
     runs-on: ubuntu-latest
-    # 超时(分钟)
     timeout-minutes: 5
-    # 步骤
     steps:
-      # 环境准备(校验提交需全量历史)
+      # 校验提交需全量历史
       - uses: ./.github/actions/setup
-        # 输入
         with:
-          # 检出深度(全量)
           fetch-depth: 0
-          # 依赖(不安装)
           dependencies: none
-          # 环境变量文件(不生成)
           env-file: false
-      # 逐条校验提交信息
       - env:
-          # 基点 SHA
           BASE: ${{ github.event.pull_request.base.sha }}
-        # 运行命令
         run: |
           for sha in $(git rev-list --no-merges "$BASE"..HEAD); do
             git log -1 --format=%B "$sha" | mise exec -- cog verify --file - || exit 1
@@ -190,21 +120,12 @@ jobs:
 
   # 依赖审查
   deps-review:
-    # 条件(仅拉取请求)
     if: github.event_name == 'pull_request'
-    # 运行环境
     runs-on: ubuntu-latest
-    # 超时(分钟)
     timeout-minutes: 10
-    # 步骤
     steps:
-      # 环境准备
       - uses: ./.github/actions/setup
-        # 输入
         with:
-          # 依赖(不安装)
           dependencies: none
-          # 环境变量文件(不生成)
           env-file: false
-      # 漏洞与许可门禁
       - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0

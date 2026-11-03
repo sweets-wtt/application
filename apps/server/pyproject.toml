@@ -1,13 +1,9 @@
-# 项目
 [project]
-# 名称
 name = "server"
-# 版本
 version = "0.1.0"
-# 描述
 description = "Server 应用"
-# 要求 Python
 requires-python = ">=3.12"
+
 # 依赖
 dependencies = [
   "fastapi>=0.141.1",
@@ -19,9 +15,8 @@ dependencies = [
   "structlog>=25.4.0",
 ]
 
-# 依赖组
+# 开发依赖
 [dependency-groups]
-# 开发
 dev = [
   "datamodel-code-generator>=0.87.0",
   "pytest>=9.0",
@@ -31,25 +26,20 @@ dev = [
   "ty>=0.0.78",
 ]
 
-# 构建系统
+# 构建
 [build-system]
-# 构建依赖
 requires = ["uv_build>=0.12.10"]
-# 后端
 build-backend = "uv_build"
 
-# uv 构建后端
 [tool.uv.build-backend]
-# 模块名
 module-name = "server"
 
 # Ruff - https://docs.astral.sh/ruff/
 [tool.ruff]
-# 扩展排除 - 契约生成物
+# 契约生成物不参与检查
 extend-exclude = ["src/server/contracts.py"]
 
 [tool.ruff.lint]
-# 规则集
 select = [
   "E",
   "W",
@@ -69,19 +59,15 @@ select = [
 
 # ty - https://docs.astral.sh/ty/
 [tool.ty.analysis]
-# 严格等式比较
 strict-equality-semantics = true
-# 严格泛型窄化
 strict-generic-narrowing = true
 
 # pytest - https://docs.pytest.org/
 [tool.pytest.ini_options]
-# 附加参数 importlib 允许非包目录下同名测试模块共存
+# importlib 模式允许非包目录下同名测试模块共存
 addopts = "--strict-markers --strict-config --cov --cov-branch --import-mode=importlib"
-# asyncio 模式
 asyncio_mode = "auto"
 
 # coverage - https://coverage.readthedocs.io/
 [tool.coverage.run]
-# 分支覆盖
 branch = true

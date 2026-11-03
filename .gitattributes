@@ -2,6 +2,6 @@
 * text=auto eol=lf
 
 # 生成物
-packages/typescript/contracts/src/http/** linguist-generated=true
-packages/typescript/contracts/src/schemas/** linguist-generated=true
-packages/python/contracts/src/app/contracts/generated/** linguist-generated=true
+apps/web/src/contracts/http/** linguist-generated=true
+apps/web/src/contracts/schemas/** linguist-generated=true
+apps/server/src/server/contracts.py linguist-generated=true

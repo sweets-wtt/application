@@ -3,6 +3,7 @@
   "name": "@app/web",
   "version": "0.1.0",
   "private": true,
+  "description": "Web 应用",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -37,7 +38,8 @@
     "unocss": "catalog:",
     "unplugin-icons": "catalog:",
     "unplugin-vue-components": "catalog:",
-    "vite": "catalog:"
+    "vite": "catalog:",
+    "vitest": "catalog:"
   },
   "size-limit": [
     {

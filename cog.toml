@@ -9,15 +9,10 @@ ignore_merge_commits = true
 
 # 更新日志
 [changelog]
-# 模板
 template = "remote"
-# 路径
 path = "CHANGELOG.md"
-# 远程
 remote = "github.com"
-# 所有者
 owner = "sweets-wtt"
-# 仓库名
 repository = "application"
 
 # 提交类型

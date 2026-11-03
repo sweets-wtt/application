@@ -4,43 +4,37 @@
 
   // 规则分类 - 未列出的分类保持默认关闭
   "categories": {
-    // 正确性
     "correctness": "error",
-    // 可疑
     "suspicious": "warn",
-    // 严格
     "pedantic": "warn",
-    // 性能
     "perf": "warn"
   },
 
-  // 规则
   "rules": {
-    // 禁止使用 var, 要求用块级作用域的 let/const 声明变量
+    // 禁止 var，要求块级作用域的 let/const
     "no-var": "error",
-    // 要求使用 === 和 !==, 禁止 == 和 != 以避免隐式类型转换
+    // 要求 === / !==，避免隐式类型转换
     "eqeqeq": "error",
-    // 对声明后从未重新赋值的变量要求使用 const
+    // 声明后未重新赋值的变量要求 const
     "prefer-const": "error",
-    // 禁止显式使用 any 类型, 避免绕过类型系统
+    // 禁止显式 any，避免绕过类型系统
     "typescript/no-explicit-any": "error",
-    // 禁止提交带 .only 的聚焦测试, 以免只运行部分用例
+    // 禁止 .only 聚焦测试，以免漏跑用例
     "vitest/no-focused-tests": "error",
-    // 提示存在被禁用的测试, 以免遗漏执行
+    // 提示存在被禁用的测试
     "vitest/no-disabled-tests": "warn",
-    // 限制单文件最大行数
+    // 单文件最大行数
     "max-lines": ["warn", { "max": 300, "skipBlankLines": true, "skipComments": true }],
-    // 限制单个函数最大行数
+    // 单函数最大行数
     "max-lines-per-function": [
       "warn",
       { "max": 50, "skipBlankLines": true, "skipComments": true }
     ]
   },
 
-  // 文件覆盖
+  // 测试文件 - 测试块通常较长
   "overrides": [
     {
-      // 测试文件 - 测试块通常较长
       "files": ["**/*.test.ts", "**/*.spec.ts", "**/tests/**"],
       "rules": {
         "max-lines-per-function": "off"
@@ -48,7 +42,7 @@
     }
   ],
 
-  // 忽略路径
+  // 契约生成物
   "ignorePatterns": [
     "**/apps/web/src/contracts/http/**",
     "**/apps/web/src/contracts/schemas/**"

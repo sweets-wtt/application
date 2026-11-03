@@ -1,133 +1,85 @@
 # 项目名
 name: application
 
-# 命名网络
 networks:
-  # 入口网
+  # 入口网（Caddy / Web）
   edge:
-  # 内部网
+  # 内部网（其余服务）
   internal:
 
-# 命名卷
 volumes:
-  # Caddy 证书与配置
   caddy-data:
 
 # 服务公共字段
-x-service: &service # 重启策略
+x-service: &service
   restart: unless-stopped
-  # 日志驱动 - 写入 systemd journal，留存在宿主机
+  # 日志写入宿主机 systemd journal
   logging:
-    # 驱动
     driver: journald
 
 # 健康检查参数
-x-healthcheck: &healthcheck # 间隔
+x-healthcheck: &healthcheck
   interval: "10s"
-  # 超时
   timeout: "5s"
-  # 重试次数
   retries: 5
-  # 启动宽限期
   start_period: "30s"
 
-# 内部网
-x-internal: &internal # 内部网
+x-internal: &internal
   - "internal"
 
-# 服务
 services:
   # ── 平台 ─────────────────────────
-
-  # Caddy - 入口代理
   caddy:
-    # 公共字段
     <<: *service
-    # 镜像
     image: "caddy:2.11.7@sha256:36c24ad91a7ff7bc4c87fe22bfa8df3c4b18da0773d73fc12ee2c52b98c0bb7e"
-    # 环境变量 - Caddyfile 内插值
     environment:
-      # 根域名
       AUTH_DOMAIN: "${AUTH_DOMAIN:?}"
-      # ACME 证书邮箱
       ACME_EMAIL: "${ACME_EMAIL:?}"
-    # 端口
     ports:
-      # HTTP 入口
       - "80:80"
-      # HTTPS 入口
       - "443:443"
       # HTTP/3
       - "443:443/udp"
-    # 数据卷
     volumes:
-      # 配置文件
       - "./Caddyfile:/etc/caddy/Caddyfile:ro"
-      # 证书与自动保存配置
       - "caddy-data:/data"
-    # 健康检查
     healthcheck:
       <<: *healthcheck
-      # 就绪探测 - 管理接口已关闭, 改为校验二进制可用
+      # 管理接口已关闭，改为校验二进制可用
       test: ["CMD", "caddy", "version"]
-    # 网络
     networks:
-      # 入口网
       - "edge"
 
   # ── 应用 ─────────────────────────
 
-  # API
   api:
-    # 公共字段
     <<: *service
-    # 镜像
     image: "${SERVER_IMAGE:-server:latest}"
-    # 工作流执行器标识 - 刻意不在此注入
-    # 容器内 HOSTNAME 由运行时按容器分配且唯一, 应用优先读取它
-    # 若改用 ${HOSTNAME} 会被 compose 插值成宿主机名, 多副本反而全部相同
-    # 健康检查
     healthcheck:
       <<: *healthcheck
-      # 就绪探测
       test: [
         "CMD-SHELL",
         "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz')\"",
       ]
-    # 网络
     networks: *internal
 
-  # Web
   web:
-    # 公共字段
     <<: *service
-    # 镜像
     image: "${WEB_IMAGE:-web:latest}"
-    # 构建参数（VITE_* 为构建时注入）
     build:
       context: ".."
       dockerfile: "apps/web/Dockerfile"
+      # VITE_* 为构建时注入
       args:
-        # API 基地址
         VITE_API_BASE_URL: "${VITE_API_BASE_URL:-}"
-        # 心跳间隔
         VITE_HEARTBEAT_INTERVAL: "${VITE_HEARTBEAT_INTERVAL:-}"
-    # 健康检查
     healthcheck:
       <<: *healthcheck
-      # 就绪探测
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/ | grep -q app"]
-      # 启动宽限期
       start_period: "10s"
-    # 网络 - 入口网供 Caddy 转发,内部网供访问 API
     networks:
-      # 入口网
       - "edge"
-      # 内部网
       - "internal"
-    # 依赖
     depends_on:
-      # API
       api:
-        # 条件 - API 就绪后启动
         condition: "service_healthy"

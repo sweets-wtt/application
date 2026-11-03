@@ -25,5 +25,4 @@ pytest-of-*/
 dist/
 # 契约制品入库
 !contracts/http/dist/
-# unplugin-vue-components 类型声明（已关闭 dts，此项为兜底）
-apps/web/components.d.ts
+

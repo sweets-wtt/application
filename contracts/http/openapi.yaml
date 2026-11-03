@@ -1,32 +1,23 @@
-# 规范版本
 openapi: 3.1.2
 
-# 接口信息
 info:
-  # 标题
   title: API
-  # 描述
   description: |
-    HTTP 契约（源文件入口）。
+    HTTP API 契约。
 
-    结构：`paths/` 按资源域一文件（与 server/routes 一一对应，整文件引用）；
-    `components/` 响应与模式。
-    修改源文件后执行 `mise run bundle` 重新打包 `dist/openapi.yaml` -
-    制品是 datamodel-codegen / Orval / vacuum / oasdiff / schemathesis 的唯一消费入口。
+    - `paths/`：路径定义，按资源域一文件，与 `apps/server` 路由一一对应
+    - `components/`：可复用响应与模式
+    - 修改源文件后运行 `mise run bundle` 重新生成 `dist/openapi.yaml`，
+      制品是 datamodel-codegen / Orval / vacuum / oasdiff / schemathesis 的唯一消费入口
 
-    所有 JSON 成功响应使用统一的 `{code, message, data}` 信封；
-    错误响应使用 FastAPI 默认的 `{detail}` 结构。
-  # 版本
+    成功响应统一使用 `{code, message, data}` 信封，错误响应为 FastAPI 默认的 `{detail}` 结构。
   version: 0.1.0
 
-# JSON Schema 方言
 jsonSchemaDialect: "https://json-schema.org/draft/2020-12/schema"
 
-# 服务器
 servers:
   - url: /
 
-# 路径 - 整文件引用
 paths:
   /healthz:
     $ref: "./paths/healthz.yaml"

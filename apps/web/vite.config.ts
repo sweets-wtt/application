@@ -9,45 +9,29 @@ import IconsResolver from "unplugin-icons/resolver";
 import RekaResolver from "reka-ui/resolver";
 
 export default defineConfig({
-  // 插件
   plugins: [
-    // Vue 单文件组件
     vue(),
-    // 原子样式
     UnoCSS(),
-    // 自动导入组件
     Components({
-      // 不生成 components.d.ts（避免生成物与格式化/忽略规则冲突）
+      // 关闭 dts 生成，避免生成物与格式化/忽略规则冲突
       dts: false,
-      resolvers: [
-        // 图标组件
-        IconsResolver({ prefix: "icon" }),
-        // Reka UI 组件
-        RekaResolver(),
-      ],
+      resolvers: [IconsResolver({ prefix: "icon" }), RekaResolver()],
     }),
-    // 图标
     Icons({ autoInstall: false }),
   ],
 
-  // 路径别名
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
 
-  // 测试
   test: {
-    // 测试线程池（forks 在 Windows 下临时目录会 EPERM）
+    // threads：forks 池在 Windows 下临时目录会 EPERM
     pool: "threads",
-    // 环境
     environment: "jsdom",
-    // 准备文件
     setupFiles: ["./tests/setup.ts"],
-    // 仅本应用测试
     include: ["tests/**/*.test.ts"],
-    // 排除 e2e 与依赖
     exclude: ["**/e2e/**", "**/node_modules/**"],
   },
 });

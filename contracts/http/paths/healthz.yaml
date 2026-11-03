@@ -1,7 +1,8 @@
-# 存活探针 - GET /healthz
+# GET /healthz
 get:
   operationId: getHealthz
-  description: 返回服务存活状态
+  summary: 存活探针
+  description: 返回服务存活状态。
   responses:
     "200":
       $ref: "../components/responses.yaml#/responses/Healthz200"

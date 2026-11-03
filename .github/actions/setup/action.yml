@@ -3,74 +3,44 @@ name: setup
 # 动作说明
 description: 检出仓库并准备工具链、依赖与环境变量
 
-# 输入
 inputs:
-  # 检出深度
   fetch-depth:
-    # 描述
     description: 检出深度
-    # 默认值(浅检出)
     default: "1"
-  # 依赖范围(all | bun | none)
   dependencies:
-    # 描述
-    description: 依赖安装方式
-    # 默认值(全量)
+    description: 依赖安装方式（all | bun | none）
     default: all
-  # 环境变量文件
   env-file:
-    # 描述
     description: 是否生成 infra/.env
-    # 默认值(生成)
     default: "true"
-  # 容器运行时
   container-runtime:
-    # 描述
     description: 是否安装 podman
-    # 默认值(安装)
     default: "false"
 
-# 运行
 runs:
-  # 动作类型
   using: composite
-  # 步骤
   steps:
-    # 检出仓库
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      # 输入
       with:
-        # 检出深度
         fetch-depth: ${{ inputs.fetch-depth }}
-        # 凭据保留
         persist-credentials: false
-    # 环境管理(版本号唯一来源)
+    # 环境管理（版本号唯一来源）
     - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
-      # 输入
       with:
-        # 版本
         version: "2026.8.14"
-    # 安装全量依赖(mise + uv + bun)
+    # 全量依赖（mise + uv + bun）
     - if: inputs.dependencies == 'all'
-      # 运行命令
       run: mise run install
-      # 解释器
       shell: bash
-    # 安装容器运行时(podman)
+    # 容器运行时
     - if: inputs.container-runtime == 'true'
-      # 运行命令
       run: sudo apt-get update && sudo apt-get install -y podman podman-compose
-      # 解释器
       shell: bash
-    # 安装前端依赖
+    # 前端依赖
     - if: inputs.dependencies == 'bun'
-      # 运行命令
       run: mise exec -- bun install --frozen-lockfile
-      # 解释器
       shell: bash
-    # 生成环境变量文件(compose 校验用)
+    # 环境变量文件（compose 校验用）
     - if: inputs.env-file == 'true'
-      # 运行命令
       run: sed 's/=$/=placeholder/' infra/.env.example > infra/.env
-      # 解释器
       shell: bash
