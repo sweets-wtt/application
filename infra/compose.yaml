@@ -30,6 +30,10 @@ volumes:
 # 服务公共字段
 x-service: &service # 重启策略
   restart: unless-stopped
+  # 日志驱动 - 写入 systemd journal，供 collector 采集
+  logging:
+    # 驱动
+    driver: journald
 
 # 健康检查参数
 x-healthcheck: &healthcheck # 间隔
@@ -66,14 +70,14 @@ x-environment: &environment # 数据源名称 - 单机直连,无独立连接池
   APP_WORKFLOW__SERVER_URL: "http://hatchet-lite:7077"
   # Hatchet TLS 策略
   HATCHET_CLIENT_TLS_STRATEGY: "none"
-  # OTLP 端点
-  OTEL_EXPORTER_OTLP_ENDPOINT: "http://collector:4318"
-  # OTLP 追踪端点
-  OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: "http://collector:4318/v1/traces"
-  # OTLP 指标端点
-  OTEL_EXPORTER_OTLP_METRICS_ENDPOINT: "http://collector:4318/v1/metrics"
-  # 追踪导出器
-  OTEL_TRACES_EXPORTER: "otlp"
+  # OpenObserve 端点
+  OPENOBSERVE_URL: "http://openobserve:5080"
+  # OpenObserve 组织
+  OPENOBSERVE_ORG: "default"
+  # OpenObserve 认证令牌
+  OPENOBSERVE_AUTH_TOKEN: "${OPENOBSERVE_AUTHORIZATION:?}"
+  # 追踪流名
+  OPENOBSERVE_TRACES_STREAM_NAME: "app-traces"
   # 指标导出间隔
   OTEL_METRIC_EXPORT_INTERVAL: "5000"
 
@@ -439,6 +443,12 @@ services:
     image: "otel/opentelemetry-collector-contrib@sha256:fd328de2552466ad78385e1b1289c3f2402b1c45f265b252aab1955b42845ac1"
     # 运行用户
     user: "0:0"
+    # 追加能力 - journald 接收器读取宿主日志所需
+    cap_add:
+      # 无视权限读取任意文件
+      - "DAC_READ_SEARCH"
+      # journalctl 部分操作所需
+      - "SYS_PTRACE"
     # 启动命令
     command: --config /etc/otelcol-contrib/config.yaml
     # 环境变量
@@ -455,8 +465,8 @@ services:
       - "/proc:/proc:ro"
       # 主机系统
       - "/sys:/sys:ro"
-      # 容器日志
-      - "/var/lib/docker/containers:/var/lib/docker/containers:ro"
+      # 主机根 - journald 接收器 chroot 执行宿主机 journalctl
+      - "/:/host:ro,rslave"
       # 偏移存储
       - "collector-storage:/var/lib/otelcol"
     # 健康检查
@@ -614,10 +624,10 @@ services:
       valkey:
         # 条件
         condition: "service_healthy"
-      # 采集器
-      collector:
-        # 条件
-        condition: "service_healthy"
+      # 观测存储
+      openobserve:
+        # 条件 - 无健康检查,以启动为准
+        condition: "service_started"
       # Hatchet
       hatchet-lite:
         # 条件
@@ -664,10 +674,10 @@ services:
       valkey:
         # 条件
         condition: "service_healthy"
-      # 采集器
-      collector:
-        # 条件
-        condition: "service_healthy"
+      # 观测存储
+      openobserve:
+        # 条件 - 无健康检查,以启动为准
+        condition: "service_started"
       # Hatchet
       hatchet-lite:
         # 条件

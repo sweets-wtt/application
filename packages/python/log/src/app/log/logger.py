@@ -2,6 +2,7 @@
 
 import logging
 import os
+import re
 import sys
 from typing import Any, Final, cast
 
@@ -12,17 +13,39 @@ SENSITIVE_KEYS: Final[frozenset[str]] = frozenset(
     {"password", "secret", "token", "authorization", "api_key"}
 )
 
+# 敏感值模式 - 覆盖键名之外的明文形态
+# 顺序敏感: 先匹配更具体的形态, 再由通用键值对收尾
+SENSITIVE_PATTERNS: Final[tuple[re.Pattern[str], ...]] = (
+    # Bearer 令牌 - 须先于通用键值对, 否则 Authorization: Bearer xxx 只脱去前缀
+    re.compile(r"(?i)bearer\s+[a-z0-9._~+/-]+=*"),
+    # AWS 访问密钥
+    re.compile(r"AKIA[0-9A-Z]{16}"),
+    # 口令键值对
+    re.compile(
+        r"(?i)(password|passwd|secret|token|api[_-]?key|authorization|credential)[=:]\s*\S+"
+    ),
+)
+
 # 默认级别
 DEFAULT_LOG_LEVEL: Final[str] = "INFO"
+
+
+def _mask(value: str) -> str:
+    """屏蔽字符串内嵌的敏感明文"""
+    for pattern in SENSITIVE_PATTERNS:
+        value = pattern.sub("***", value)
+    return value
 
 
 def redact(
     logger: Any, method_name: str, event_dict: dict[str, Any], /
 ) -> dict[str, Any]:
-    """脱敏敏感键"""
-    for key in event_dict:
+    """脱敏敏感键与值内嵌明文"""
+    for key, value in event_dict.items():
         if str(key).lower() in SENSITIVE_KEYS:
             event_dict[key] = "***"
+        elif isinstance(value, str):
+            event_dict[key] = _mask(value)
     return event_dict
 
 

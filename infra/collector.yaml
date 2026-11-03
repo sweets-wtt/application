@@ -7,15 +7,6 @@ extensions:
 
 # 接收器
 receivers:
-  # OTLP
-  otlp:
-    # 协议
-    protocols:
-      # HTTP
-      http:
-        # 监听地址
-        endpoint: 0.0.0.0:4318
-
   # 主机指标 - 采集间隔默认 1m
   hostmetrics:
     # 采集器
@@ -35,25 +26,22 @@ receivers:
       # 交换分区
       paging:
 
-  # 文件日志
-  filelog:
-    # 容器日志
-    include: [/var/lib/docker/containers/*/*.log]
-    # 存储扩展
+  # 系统日志 - podman 默认将容器日志写入 journald
+  journald:
+    # 宿主机根 - 在 chroot 内执行宿主机同版本 journalctl
+    root_path: /host
+    # journalctl 路径 - 相对 root_path 的绝对路径
+    journalctl_path: /usr/bin/journalctl
+    # 起始位置 - 仅采集新日志，避免启动回灌历史
+    start_at: end
+    # 存储扩展 - 游标持久化，重启后续读
     storage: file_storage
     # 操作器
     operators:
-      # JSON 解析
-      - type: json_parser
       # 正文字段
       - type: move
-        from: attributes.log
+        from: attributes.MESSAGE
         to: body
-      # 时间戳
-      - type: time_parser
-        parse_from: attributes.time
-        layout_type: gotime
-        layout: "2006-01-02T15:04:05.999999999Z07:00"
 
   # PostgreSQL
   postgresql:
@@ -104,26 +92,18 @@ service:
   extensions: [file_storage]
   # 管道
   pipelines:
-    # 指标
+    # 指标 - 仅基础设施
     metrics:
       # 接收器
-      receivers: [otlp, hostmetrics, postgresql]
+      receivers: [hostmetrics, postgresql]
       # 处理器
       processors: [redaction]
       # 导出器
       exporters: [otlphttp/openobserve]
-    # 日志
+    # 日志 - 仅容器日志(应用日志由 SDK 直连)
     logs:
       # 接收器
-      receivers: [otlp, filelog]
-      # 处理器
-      processors: [redaction]
-      # 导出器
-      exporters: [otlphttp/openobserve]
-    # 追踪
-    traces:
-      # 接收器
-      receivers: [otlp]
+      receivers: [journald]
       # 处理器
       processors: [redaction]
       # 导出器

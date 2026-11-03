@@ -164,34 +164,21 @@ WORKFLOW_NAME = "request"
 
 
 def _instrument() -> None:
-    """接线 OpenTelemetry - 提供方与 FastAPI 埋点"""
+    """接线遥测 - OpenObserve 官方 SDK
 
-    from opentelemetry import metrics, trace
-    from opentelemetry.exporter.otlp.proto.http.metric_exporter import (
-        OTLPMetricExporter,
-    )
-    from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
+    提供方与导出器由 SDK 装配, 框架埋点仍需显式启用
+    """
+
+    from openobserve import openobserve_init
     from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
-    from opentelemetry.sdk.metrics import MeterProvider
-    from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
-    from opentelemetry.sdk.resources import Resource
-    from opentelemetry.sdk.trace import TracerProvider
-    from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
-    # 资源 - 服务名取 OTEL_SERVICE_NAME
-    resource = Resource.create()
-
-    # 追踪提供方 - OTLP 批处理导出
-    tracer_provider = TracerProvider(resource=resource)
-    tracer_provider.add_span_processor(BatchSpanProcessor(OTLPSpanExporter()))
-    trace.set_tracer_provider(tracer_provider)
-
-    # 指标提供方 - OTLP 周期导出
-    metrics.set_meter_provider(
-        MeterProvider(
-            resource=resource,
-            metric_readers=[PeriodicExportingMetricReader(OTLPMetricExporter())],
-        )
+    # 追踪与指标 - 服务名取 OTEL_SERVICE_NAME
+    openobserve_init(
+        traces=True,
+        metrics=True,
+        resource_attributes={
+            "service.name": os.environ.get("OTEL_SERVICE_NAME", "server")
+        },
     )
 
     # FastAPI 埋点 - 须在应用实例化前替换类
@@ -208,6 +195,6 @@ def setup() -> None:
     # 初始化日志
     configure()
 
-    # 存在 OTLP 端点才接线遥测 - 测试离线安全
-    if os.environ.get("OTEL_EXPORTER_OTLP_ENDPOINT"):
+    # 存在 OpenObserve 令牌才接线遥测 - 测试离线安全
+    if os.environ.get("OPENOBSERVE_AUTH_TOKEN"):
         _instrument()

@@ -22,3 +22,33 @@ def test_redact_masks_sensitive_keys() -> None:
 
     assert event["token"] == "***"
     assert event["user"] == "app"
+
+
+def test_redact_masks_inline_password() -> None:
+    """值内嵌口令脱敏"""
+    event = redact(None, "info", {"msg": "login password=hunter2 ok"})
+
+    assert "hunter2" not in event["msg"]
+    assert "***" in event["msg"]
+
+
+def test_redact_masks_bearer_token() -> None:
+    """值内嵌 Bearer 令牌脱敏"""
+    event = redact(None, "info", {"detail": "Authorization: Bearer abc.def-123"})
+
+    assert "abc.def-123" not in event["detail"]
+
+
+def test_redact_masks_aws_key() -> None:
+    """值内嵌 AWS 访问密钥脱敏"""
+    event = redact(None, "info", {"note": "key AKIAIOSFODNN7EXAMPLE used"})
+
+    assert "AKIAIOSFODNN7EXAMPLE" not in event["note"]
+
+
+def test_redact_keeps_plain_string() -> None:
+    """普通字符串不受影响"""
+    event = redact(None, "info", {"msg": "hello world", "count": 3})
+
+    assert event["msg"] == "hello world"
+    assert event["count"] == 3

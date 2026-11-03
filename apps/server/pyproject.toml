@@ -18,11 +18,11 @@ dependencies = [
   "alembic>=1.13",
   "opentelemetry-instrumentation-fastapi>=0.66b0",
   "opentelemetry-sdk>=1.45.0",
-  "opentelemetry-exporter-otlp-proto-http>=1.45.0",
   "app-contracts",
   "app-log",
   "app-data",
   "app-workflow",
+  "openobserve-python-sdk>=0.2.0",
 ]
 
 # 构建系统
