@@ -5,11 +5,12 @@ import json
 from collections import deque
 from collections.abc import AsyncIterator, Awaitable, Callable
 from time import monotonic
-from typing import TYPE_CHECKING, Any, Final
+from typing import Any, Final
 
 from aiobotocore.client import AioBaseClient
 from app.contracts.generated.http import TelemetryBatch, WorkflowInput
 from app.log import get_logger
+from app.workflow import WorkflowClient
 from botocore.exceptions import ClientError
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -24,9 +25,7 @@ from server.core import (
     TelemetryLevel,
     settings,
 )
-
-if TYPE_CHECKING:
-    from hatchet_sdk import Hatchet
+from server.workflows import process as workflow_process
 
 # 结构化日志器
 logger = get_logger(__name__)
@@ -229,12 +228,14 @@ _PENDING_TTL_SECONDS: Final[float] = 5.0
 # 终态集合 - 结果不再变化, 常驻缓存
 _TERMINAL_STATUSES: Final[frozenset[str]] = frozenset({"succeeded", "failed"})
 
-# Hatchet 状态 -> 契约枚举
+# DBOS 状态 -> 契约枚举
 _STATUS_MAP = {
-    "QUEUED": "submitted",
-    "RUNNING": "running",
-    "COMPLETED": "succeeded",
-    "FAILED": "failed",
+    "ENQUEUED": "submitted",
+    "DELAYED": "submitted",
+    "PENDING": "running",
+    "SUCCESS": "succeeded",
+    "ERROR": "failed",
+    "MAX_RECOVERY_ATTEMPTS_EXCEEDED": "failed",
     "CANCELLED": "failed",
 }
 
@@ -244,12 +245,12 @@ _status_cache: dict[str, tuple[float | None, str]] = {}
 
 
 def _map_status(status: Any) -> str:
-    """Hatchet 状态对象 -> 契约枚举"""
-    return _STATUS_MAP.get(str(getattr(status, "value", status)), "submitted")
+    """DBOS 状态对象 -> 契约枚举"""
+    return _STATUS_MAP.get(str(getattr(status, "status", status)), "submitted")
 
 
 async def submit(
-    client: "Hatchet",
+    client: WorkflowClient,
     session: AsyncSession,
     key: str,
     payload: WorkflowInput,
@@ -267,9 +268,8 @@ async def submit(
     if row is not None:
         return row.run_id
 
-    # 触发工作流 run - 不等待完成
-    workflow = client.workflow(name=WORKFLOW_NAME, input_validator=WorkflowInput)
-    run = await workflow.aio_run_no_wait(payload)
+    # 触发工作流 - 以幂等键为 workflow_id, DBOS 自身亦去重
+    run_id = client.start(workflow_process, payload, key)
 
     # 同事务记录幂等键
     await session.execute(
@@ -277,22 +277,22 @@ async def submit(
             "INSERT INTO idempotency (key, workflow_name, run_id) "
             "VALUES (:key, :workflow, :run_id)"
         ),
-        {"key": key, "workflow": WORKFLOW_NAME, "run_id": run.workflow_run_id},
+        {"key": key, "workflow": WORKFLOW_NAME, "run_id": run_id},
     )
     await session.commit()
 
-    return run.workflow_run_id
+    return run_id
 
 
 async def get_status(
-    client: "Hatchet",
+    client: WorkflowClient,
     session: AsyncSession,
     run_id: str,
 ) -> str | None:
-    """查询 run 状态 - 本地幂等记录 + 缓存 + Hatchet 远端状态
+    """查询 run 状态 - 本地幂等记录 + 缓存 + DBOS 远端状态
 
     未记录的 run 返回 None; 终态常驻缓存; 非终态短 TTL 缓存;
-    Hatchet 查询失败/超时降级为 submitted(本地已受理)且不写缓存
+    DBOS 查询失败/超时降级为 submitted(本地已受理)且不写缓存
     """
     result = await session.execute(
         text("SELECT run_id FROM idempotency WHERE run_id = :run_id"),
@@ -309,8 +309,9 @@ async def get_status(
             return cached_status
 
     try:
+        # DBOS 查询为同步调用 - 移出事件循环并加超时
         status = await asyncio.wait_for(
-            client.runs.aio_get_status(run_id),
+            asyncio.to_thread(client.status, run_id),
             timeout=_QUERY_TIMEOUT_SECONDS,
         )
     except Exception:
@@ -326,11 +327,3 @@ async def get_status(
         _status_cache[run_id] = (monotonic() + _PENDING_TTL_SECONDS, mapped)
 
     return mapped
-
-
-# ── 请求 ─────────────────────────
-
-
-async def handle(input: WorkflowInput) -> str:
-    """处理请求 - 转大写"""
-    return input.message.upper()

@@ -1,11 +1,11 @@
-"""工作流集成测试 - 需 Hatchet 控制面"""
+"""工作流集成测试 - 需可用的工作流系统库"""
 
 import os
 
 import pytest
 
-# 缺少令牌则跳过 - 离线安全
+# 缺少系统库连接串则跳过 - 离线安全
 pytestmark = pytest.mark.skipif(
-    not os.environ.get("HATCHET_CLIENT_TOKEN"),
-    reason="需 Hatchet 控制面",
+    not os.environ.get("APP_WORKFLOW__SYSTEM_DATABASE_URL"),
+    reason="需工作流系统库",
 )

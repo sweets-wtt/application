@@ -51,9 +51,8 @@ application（根项目）
 │   │   ├── garage（对象存储）
 │   │   └── restic（归档备份）→ postgresql / garage
 │   ├── 平台
-│   │   ├── hatchet（工作流）→ postgresql
 │   │   ├── authelia（身份认证）
-│   │   ├── traefik（入口代理）→ authelia
+│   │   ├── caddy（入口代理）→ authelia
 │   │   ├── collector（遥测采集）→ postgresql / openobserve
 │   │   └── openobserve（观测存储）
 ├── packages（共享包）
@@ -61,7 +60,7 @@ application（根项目）
 │   │   ├── contracts（契约模型）→ pydantic
 │   │   ├── log（结构化日志）→ structlog
 │   │   ├── data（数据）→ valkey / sqlalchemy / aiobotocore
-│   │   └── workflow（工作流）→ hatchet-sdk
+│   │   └── workflow（工作流）→ dbos
 │   └── typescript
 │       ├── contracts（契约客户端）→ vue-query / msw / zod
 │       ├── log（结构化日志）→ consola

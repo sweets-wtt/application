@@ -64,12 +64,10 @@ x-environment: &environment # 数据源名称 - 单机直连,无独立连接池
   APP_STORAGE__BUCKET: "${GARAGE_DEFAULT_BUCKET:?}"
   # 缓存地址
   APP_CACHE__URL: "valkey://app:${VALKEY_APP_PASSWORD:?}@valkey:6379/0"
-  # 工作流令牌
-  APP_WORKFLOW__TOKEN: "${HATCHET_CLIENT_TOKEN:?}"
-  # 工作流服务地址
-  APP_WORKFLOW__SERVER_URL: "http://hatchet-lite:7077"
-  # Hatchet TLS 策略
-  HATCHET_CLIENT_TLS_STRATEGY: "none"
+  # 工作流系统库 - 与主库共用同一 PostgreSQL 实例
+  APP_WORKFLOW__SYSTEM_DATABASE_URL: "postgresql://app:${POSTGRES_APP_PASSWORD:?}@postgresql:5432/app"
+  # 工作流应用名
+  APP_WORKFLOW__APP_NAME: "application"
   # OpenObserve 端点
   OPENOBSERVE_URL: "http://openobserve:5080"
   # OpenObserve 组织
@@ -287,62 +285,6 @@ services:
         condition: "service_healthy"
 
   # ── 平台 ─────────────────────────
-
-  # Hatchet
-  hatchet-lite:
-    # 公共字段
-    <<: *service
-    # 镜像
-    image: "ghcr.io/hatchet-dev/hatchet/hatchet-lite@sha256:db8fb8e009a5c892859e52e4aa50b17aa11ab1dd23801cd320492f2942db30d7"
-    # 环境变量
-    environment:
-      # 数据库直连 - 迁移与队列
-      DATABASE_URL: "postgresql://postgres:${POSTGRES_PASSWORD:?}@postgresql:5432/hatchet?sslmode=disable"
-      # 数据库连接 - API 运行时(单机直连,无独立连接池)
-      DATABASE_PGBOUNCER_URL: "postgresql://postgres:${POSTGRES_PASSWORD:?}@postgresql:5432/hatchet?sslmode=disable"
-      # 消息队列类型
-      SERVER_MSGQUEUE_KIND: "postgres"
-      # 发布订阅类型
-      SERVER_MSGQUEUE_PUBSUB_KIND: "postgres"
-      # 服务器端口
-      SERVER_PORT: "8080"
-      # 服务器地址
-      SERVER_URL: "http://hatchet-lite:8888"
-      # Cookie 不安全模式
-      SERVER_AUTH_COOKIE_INSECURE: "t"
-      # Cookie 域
-      SERVER_AUTH_COOKIE_DOMAIN: "hatchet-lite:8888"
-      # Cookie 密钥
-      SERVER_AUTH_COOKIE_SECRETS: "${SERVER_AUTH_COOKIE_SECRETS:?}"
-      # gRPC 不安全模式
-      SERVER_GRPC_INSECURE: "t"
-      # gRPC 绑定地址
-      SERVER_GRPC_BIND_ADDRESS: "0.0.0.0"
-      # gRPC 端口
-      SERVER_GRPC_PORT: "7077"
-      # gRPC 广播地址
-      SERVER_GRPC_BROADCAST_ADDRESS: "hatchet-lite:7077"
-      # 主密钥集
-      SERVER_ENCRYPTION_MASTER_KEYSET: "${SERVER_ENCRYPTION_MASTER_KEYSET:?}"
-      # JWT 公钥集
-      SERVER_ENCRYPTION_JWT_PUBLIC_KEYSET: "${SERVER_ENCRYPTION_JWT_PUBLIC_KEYSET:?}"
-      # JWT 私钥集
-      SERVER_ENCRYPTION_JWT_PRIVATE_KEYSET: "${SERVER_ENCRYPTION_JWT_PRIVATE_KEYSET:?}"
-    # 健康检查
-    healthcheck:
-      <<: *healthcheck
-      # 就绪探测
-      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8733/ready"]
-      # 启动宽限期
-      start_period: "5m"
-    # 网络
-    networks: *internal
-    # 依赖
-    depends_on:
-      # PostgreSQL
-      postgresql:
-        # 条件
-        condition: "service_healthy"
 
   # Authelia
   authelia:
@@ -628,10 +570,6 @@ services:
       openobserve:
         # 条件 - 无健康检查,以启动为准
         condition: "service_started"
-      # Hatchet
-      hatchet-lite:
-        # 条件
-        condition: "service_healthy"
     # 健康检查
     healthcheck:
       <<: *healthcheck
@@ -640,53 +578,6 @@ services:
         "CMD-SHELL",
         "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz')\"",
       ]
-    # 网络
-    networks: *internal
-
-  # Worker
-  worker:
-    # 公共字段
-    <<: *service
-    # 镜像
-    image: "${SERVER_IMAGE:-server:latest}"
-    # 入口 - 独立进程,与 api 分离
-    command: "python -m server.worker"
-    # 环境
-    environment:
-      <<: *environment
-      # 服务名
-      OTEL_SERVICE_NAME: "worker"
-    # 依赖
-    depends_on:
-      # 迁移任务
-      migrate:
-        # 条件 - 迁移成功完成后启动
-        condition: "service_completed_successfully"
-      # PostgreSQL
-      postgresql:
-        # 条件
-        condition: "service_healthy"
-      # Garage
-      garage:
-        # 条件
-        condition: "service_healthy"
-      # Valkey
-      valkey:
-        # 条件
-        condition: "service_healthy"
-      # 观测存储
-      openobserve:
-        # 条件 - 无健康检查,以启动为准
-        condition: "service_started"
-      # Hatchet
-      hatchet-lite:
-        # 条件
-        condition: "service_healthy"
-    # 健康检查 - 进程级探活,worker 不监听 HTTP
-    healthcheck:
-      <<: *healthcheck
-      # 就绪探测
-      test: ["CMD-SHELL", "python -c \"import server.worker\""]
     # 网络
     networks: *internal
 

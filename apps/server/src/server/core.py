@@ -66,14 +66,30 @@ class RealtimeSettings(BaseModel):
 class WorkflowSettings(BaseModel):
     """工作流配置"""
 
-    # Hatchet 令牌
-    token: str = ""
+    # 系统库连接串 - 工作流与步骤状态落库
+    system_database_url: str = "sqlite:///./data/workflow.sqlite"
 
-    # Hatchet 服务地址
-    server_url: str = ""
+    # 应用名 - 同一系统库内区分应用归属
+    app_name: str = "application"
 
-    # TLS 策略 - 内网默认关闭
-    tls_strategy: str = "none"
+
+class RateLimitSettings(BaseModel):
+    """限流配置"""
+
+    # 存储地址 - 复用 Valkey 以支持多实例共享计数
+    storage_uri: str = ""
+
+    # 是否启用
+    enabled: bool = True
+
+    # 应用级默认限额 - 每客户端 IP
+    default_limit: str = "300/minute"
+
+    # 高成本端点限额 - 工作流提交
+    workflow_limit: str = "30/minute"
+
+    # 对象存储限额 - 上传下载
+    storage_limit: str = "120/minute"
 
 
 class Settings(BaseSettings):
@@ -102,6 +118,9 @@ class Settings(BaseSettings):
 
     # 工作流
     workflow: WorkflowSettings = WorkflowSettings()
+
+    # 限流
+    rate_limit: RateLimitSettings = RateLimitSettings()
 
 
 # 应用配置实例

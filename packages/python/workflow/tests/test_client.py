@@ -1,39 +1,33 @@
 """工作流客户端测试"""
 
 import pytest
-from app.workflow.client import WorkflowSettings, create_client
+from app.workflow.client import WorkflowClient, WorkflowSettings, create_client
 
 
 def test_settings_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
     """从环境变量装配参数"""
-    monkeypatch.setenv("APP_WORKFLOW_TOKEN", "t")
-    monkeypatch.setenv("APP_WORKFLOW_SERVER_URL", "http://hatchet:7070")
+    monkeypatch.setenv("APP_WORKFLOW_SYSTEM_DATABASE_URL", "sqlite:///app.sqlite")
 
     settings = WorkflowSettings.from_env()
 
-    assert settings == WorkflowSettings(token="t", server_url="http://hatchet:7070")
+    assert settings == WorkflowSettings(system_database_url="sqlite:///app.sqlite")
 
 
-def test_create_client_injects_config(monkeypatch: pytest.MonkeyPatch) -> None:
-    """创建客户端时经 ClientConfig 注入装配参数"""
+def test_create_client_returns_client() -> None:
+    """创建客户端返回装配好的实例"""
+    settings = WorkflowSettings(system_database_url="sqlite:///app.sqlite")
 
-    # ClientConfig 校验 token 须为有效 JWT - 测试用桩替换
-    class FakeConfig:
-        def __init__(self, **kwargs: object) -> None:
-            self.kwargs = kwargs
+    client = create_client(settings)
 
-    monkeypatch.setattr("app.workflow.client.ClientConfig", FakeConfig)
+    assert isinstance(client, WorkflowClient)
 
-    class FakeHatchet:
-        def __init__(self, **kwargs: object) -> None:
-            self.kwargs = kwargs
 
-    settings = WorkflowSettings(token="t", server_url="http://hatchet:7070")
+def test_sqlite_parent_dir_created(tmp_path) -> None:
+    """SQLite 系统库的父目录缺失时自动创建"""
+    db_path = tmp_path / "nested" / "deeper" / "workflow.sqlite"
+    settings = WorkflowSettings(system_database_url=f"sqlite:///{db_path.as_posix()}")
 
-    client = create_client(settings, client_factory=FakeHatchet)
+    client = create_client(settings)
+    client._ensure_sqlite_dir()
 
-    assert set(client.kwargs) == {"config"}
-    assert client.kwargs["config"].kwargs == {
-        "token": "t",
-        "server_url": "http://hatchet:7070",
-    }
+    assert db_path.parent.is_dir()

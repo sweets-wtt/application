@@ -7,6 +7,7 @@ from typing import Annotated
 import fastapi
 from aiobotocore.client import AioBaseClient
 from app.contracts.generated.http import TelemetryBatch, WorkflowInput
+from app.workflow import WorkflowClient
 from fastapi import (
     APIRouter,
     Depends,
@@ -17,7 +18,6 @@ from fastapi import (
     Response,
     WebSocket,
 )
-from hatchet_sdk import Hatchet
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import StreamingResponse
 from starlette.websockets import WebSocketDisconnect
@@ -224,7 +224,7 @@ async def create_workflow_run(
     idempotency_key: Annotated[
         str, Header(alias="Idempotency-Key", description="幂等键")
     ],
-    client: Annotated[Hatchet, Depends(get_workflow_client)],
+    client: Annotated[WorkflowClient, Depends(get_workflow_client)],
     session: Annotated[AsyncSession, Depends(get_session)],
 ) -> dict:
     """提交工作流 run - 幂等"""
@@ -240,7 +240,7 @@ async def create_workflow_run(
 @workflow_router.get(path="/runs/{run_id}", description="查询工作流 run")
 async def get_workflow_run(
     run_id: str,
-    client: Annotated[Hatchet, Depends(get_workflow_client)],
+    client: Annotated[WorkflowClient, Depends(get_workflow_client)],
     session: Annotated[AsyncSession, Depends(get_session)],
 ) -> dict:
     """查询工作流 run - 不存在返回 404"""

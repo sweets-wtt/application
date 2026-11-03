@@ -23,6 +23,8 @@ dependencies = [
   "app-data",
   "app-workflow",
   "openobserve-python-sdk>=0.2.0",
+  "slowapi>=0.1.9",
+  "redis>=5.0",
 ]
 
 # 构建系统

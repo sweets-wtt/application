@@ -5,7 +5,7 @@ import secrets
 import time
 from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import suppress
-from typing import TYPE_CHECKING, Protocol
+from typing import Protocol
 
 from aiobotocore.client import AioBaseClient
 from app.data.cache import CacheClient
@@ -13,7 +13,7 @@ from app.data.cache import create_client as create_cache_client
 from app.data.db import create_engine, create_session_factory
 from app.data.storage import StorageSettings
 from app.data.storage import create_client as create_storage_client
-from app.workflow import WorkflowSettings
+from app.workflow import WorkflowClient, WorkflowSettings
 from app.workflow import create_client as create_workflow_client
 from sqlalchemy.ext.asyncio import AsyncSession
 from valkey.asyncio import Valkey
@@ -24,10 +24,6 @@ from server.core import (
     TICKET_TTL_SECONDS,
     settings,
 )
-
-if TYPE_CHECKING:
-    from hatchet_sdk import Hatchet
-
 
 # ── 缓存 ─────────────────────────
 
@@ -314,16 +310,16 @@ async def get_storage_client() -> AsyncIterator[AioBaseClient]:
 
 # 客户端装配参数
 workflow_settings = WorkflowSettings(
-    token=settings.workflow.token,
-    server_url=settings.workflow.server_url,
+    system_database_url=settings.workflow.system_database_url,
+    app_name=settings.workflow.app_name,
 )
 
 # 进程级客户端单例
-_client: "Hatchet | None" = None
+_client: "WorkflowClient | None" = None
 
 
-def get_workflow_client() -> "Hatchet":
-    """提交侧 - Hatchet 客户端单例"""
+def get_workflow_client() -> "WorkflowClient":
+    """提交侧 - 工作流客户端单例"""
     global _client
 
     if _client is None:

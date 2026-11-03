@@ -21,6 +21,8 @@ __pycache__/
 # 生成
 .coverage
 dist/
+# 工作流系统库（DBOS 运行时生成）
+data/
 # 契约制品入库
 !contracts/http/dist/
 # unplugin-vue-components 类型声明（已关闭 dts，此项为兜底）

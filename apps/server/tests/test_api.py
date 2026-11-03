@@ -24,36 +24,16 @@ from server.main import app
 schema = schemathesis.openapi.from_path("contracts/http/dist/openapi.yaml")
 
 
-# 离线桩 - 外部依赖(Hatchet/数据库/对象存储/票据存储)在测试环境不可用,
+# 离线桩 - 外部依赖(工作流/数据库/对象存储/票据存储)在测试环境不可用,
 # 模糊测试只验证契约符合性
-class _FakeRun:
-    """工作流 run 引用桩"""
-
-    workflow_run_id = "run-test"
-
-
-class _FakeWorkflow:
-    """工作流桩"""
-
-    async def aio_run_no_wait(self, _payload: object) -> _FakeRun:
-        return _FakeRun()
-
-
-class _FakeRuns:
-    """runs 客户端桩 - 固定返回 COMPLETED"""
-
-    async def aio_get_status(self, _run_id: str) -> SimpleNamespace:
-        return SimpleNamespace(value="COMPLETED")
-
-
 class _FakeClient:
-    """Hatchet 客户端桩"""
+    """工作流客户端桩 - 固定 run_id 与 SUCCESS 状态"""
 
-    def __init__(self) -> None:
-        self.runs = _FakeRuns()
+    def start(self, _workflow: object, _payload: object, _workflow_id: str) -> str:
+        return "run-test"
 
-    def workflow(self, **_kwargs: object) -> _FakeWorkflow:
-        return _FakeWorkflow()
+    def status(self, _run_id: str) -> SimpleNamespace:
+        return SimpleNamespace(status="SUCCESS")
 
 
 class _FakeResult:
