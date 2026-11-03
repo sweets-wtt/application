@@ -10,12 +10,34 @@ from sqlalchemy.ext.asyncio import (
 )
 
 
-def create_engine(url: str, **options: Any) -> AsyncEngine:
+def create_engine(
+    url: str,
+    *,
+    pool_size: int = 5,
+    max_overflow: int = 10,
+    pool_timeout: int = 30,
+    pool_pre_ping: bool = True,
+    pool_recycle: int = 3600,
+    **options: Any,
+) -> AsyncEngine:
     """创建异步引擎
 
-    直连数据库, 使用 SQLAlchemy 默认连接池与预编译语句缓存。
+    显式声明连接池参数, 由池自行探活与到期重建,
+    避免容器重启或中间设备静默断连后取到死连接。
+    SQLite 的池实现不接受这些参数, 需剥离。
     """
-    return create_async_engine(url, **options)
+    if url.startswith("sqlite"):
+        return create_async_engine(url, **options)
+
+    return create_async_engine(
+        url,
+        pool_size=pool_size,
+        max_overflow=max_overflow,
+        pool_timeout=pool_timeout,
+        pool_pre_ping=pool_pre_ping,
+        pool_recycle=pool_recycle,
+        **options,
+    )
 
 
 def create_session_factory(engine: AsyncEngine) -> async_sessionmaker[AsyncSession]:

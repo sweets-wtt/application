@@ -43,5 +43,9 @@ USER app
 # 端口
 EXPOSE 8000
 
+# 工作进程数 - 默认 2 兼顾单进程阻塞隔离与连接池规模
+# 可通过同名环境变量覆盖, 调大时须同步核算数据库连接上限
+ENV GRANIAN_WORKERS=2
+
 # 启动命令
 CMD ["granian", "--interface", "asgi", "--host", "0.0.0.0", "server.main:app"]

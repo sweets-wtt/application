@@ -14,6 +14,21 @@ class DatabaseSettings(BaseModel):
     # 数据源名称
     url: str = "postgresql+asyncpg://app:app@localhost:5432/app"
 
+    # 连接池常驻连接数 - 每进程
+    pool_size: int = 5
+
+    # 连接池溢出上限 - 峰值可额外申请的连接数
+    max_overflow: int = 10
+
+    # 获取连接超时秒数 - 超时抛错而非无限等待
+    pool_timeout: int = 30
+
+    # 取连接前探活 - 规避容器重启导致池内死连接
+    pool_pre_ping: bool = True
+
+    # 连接最长复用秒数 - 到点重建, 规避中间设备静默断连
+    pool_recycle: int = 3600
+
 
 class StorageSettings(BaseModel):
     """对象存储配置"""

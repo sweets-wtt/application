@@ -111,8 +111,15 @@ async def get_authz_cache() -> AsyncIterator[AuthzCache]:
 
 # ── 数据库 ─────────────────────────
 
-# 异步引擎 - PgBouncer 兼容默认值由 app-data 提供
-engine = create_engine(settings.database.url)
+# 异步引擎 - 连接池参数由配置提供
+engine = create_engine(
+    settings.database.url,
+    pool_size=settings.database.pool_size,
+    max_overflow=settings.database.max_overflow,
+    pool_timeout=settings.database.pool_timeout,
+    pool_pre_ping=settings.database.pool_pre_ping,
+    pool_recycle=settings.database.pool_recycle,
+)
 
 # 会话工厂 - api 每请求 / worker 任务共用
 session_factory = create_session_factory(engine)
