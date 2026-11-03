@@ -51,8 +51,8 @@ application（根项目）
 │   │   ├── garage（对象存储）
 │   │   └── restic（归档备份）→ postgresql / garage
 │   ├── 平台
-│   │   ├── authelia（身份认证）
-│   │   ├── caddy（入口代理）→ authelia
+│   │   ├── casdoor（身份认证）
+│   │   ├── caddy（入口代理）→ casdoor
 │   │   ├── collector（遥测采集）→ postgresql / openobserve
 │   │   └── openobserve（观测存储）
 ├── packages（共享包）
@@ -99,9 +99,9 @@ application（根项目）
 │       ├── paths                    # 路径（按资源域一文件）
 │       └── vacuum.yaml              # 契约检查
 ├── infra                            # 服务编排
-│   ├── authelia                     # Authelia
-│   │   ├── configuration.yaml       # Authelia 配置
-│   │   └── users.yaml               # Authelia 用户
+│   ├── casdoor                      # Casdoor 初始化与说明
+│   │   ├── README.md                # 本地认证配置
+│   │   └── init_data.template.yaml  # 组织/应用/角色初始数据
 │   ├── collector.yaml               # 采集器配置
 │   ├── compose.yaml                 # 容器编排
 │   ├── garage.toml                  # Garage 配置

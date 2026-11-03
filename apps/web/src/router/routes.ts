@@ -18,6 +18,8 @@ export const routes: RouteRecordRaw[] = [
         meta: {
           // 页面标题
           title: "首页",
+          // 需要登录
+          requiresAuth: true,
         },
       },
     ],

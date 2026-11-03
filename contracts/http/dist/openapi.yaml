@@ -21,6 +21,68 @@ jsonSchemaDialect: https://json-schema.org/draft/2020-12/schema
 servers:
   - url: /
 paths:
+  /auth/login:
+    get:
+      operationId: authLogin
+      description: 跳转 Casdoor 登录页
+      parameters:
+        - name: next
+          in: query
+          required: false
+          description: 登录后站内跳转路径
+          schema:
+            type: string
+      responses:
+        '302':
+          $ref: '#/components/responses/AuthRedirect'
+        '503':
+          $ref: '#/components/responses/AuthUnavailable'
+  /auth/callback:
+    get:
+      operationId: authCallback
+      description: Casdoor 授权码回调
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: state
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '303':
+          $ref: '#/components/responses/AuthRedirect'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+  /auth/logout:
+    get:
+      operationId: authLogout
+      description: 清除会话并跳转 Casdoor 登出
+      responses:
+        '303':
+          $ref: '#/components/responses/AuthRedirect'
+    post:
+      operationId: authLogoutSession
+      description: 仅清除本地会话
+      responses:
+        '200':
+          $ref: '#/components/responses/AuthLogout200'
+  /auth/me:
+    get:
+      operationId: authMe
+      description: 查询当前登录用户
+      responses:
+        '200':
+          $ref: '#/components/responses/AuthMe200'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
   /healthz:
     get:
       operationId: getHealthz
@@ -149,6 +211,19 @@ paths:
           $ref: '#/components/responses/UnprocessableEntity'
 components:
   schemas:
+    AuthRedirect:
+      description: 认证跳转 - 空响应体
+      type: object
+      additionalProperties: false
+    Error:
+      description: 通用错误响应 - 与 FastAPI HTTPException 一致
+      type: object
+      required:
+        - detail
+      properties:
+        detail:
+          type: string
+      additionalProperties: false
     Response:
       type: object
       required:
@@ -163,14 +238,35 @@ components:
         data:
           type: object
       additionalProperties: false
-    Error:
-      description: 通用错误响应 - 与 FastAPI HTTPException 一致
+    AuthUser:
+      description: 当前登录用户与权限
       type: object
       required:
-        - detail
+        - user_id
+        - tenant_id
+        - roles
+        - permissions
       properties:
-        detail:
+        user_id:
           type: string
+        tenant_id:
+          type: string
+        email:
+          type:
+            - string
+            - 'null'
+        name:
+          type:
+            - string
+            - 'null'
+        roles:
+          type: array
+          items:
+            type: string
+        permissions:
+          type: array
+          items:
+            type: string
       additionalProperties: false
     ValidationErrorItem:
       description: FastAPI 请求校验错误条目
@@ -320,7 +416,74 @@ components:
         - running
         - succeeded
         - failed
+    WorkflowRun:
+      type: object
+      required:
+        - run_id
+        - status
+      properties:
+        run_id:
+          type: string
+        status:
+          $ref: '#/components/schemas/WorkflowRunStatus'
+      additionalProperties: false
   responses:
+    AuthRedirect:
+      description: 跳转认证服务
+      headers:
+        Location:
+          description: 跳转地址
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AuthRedirect'
+    AuthUnavailable:
+      description: 认证未启用或未配置
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: 请求体解析失败
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: 未认证或令牌无效
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadGateway:
+      description: 认证服务不可用
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    AuthLogout200:
+      description: 已清除会话
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Response'
+              - properties:
+                  data:
+                    type: object
+                    additionalProperties: false
+    AuthMe200:
+      description: 当前登录用户
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/Response'
+              - properties:
+                  data:
+                    $ref: '#/components/schemas/AuthUser'
     Healthz200:
       description: 存活
       content:
@@ -404,12 +567,6 @@ components:
               - properties:
                   data:
                     $ref: '#/components/schemas/TelemetryAccepted'
-    BadRequest:
-      description: 请求体解析失败
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     WorkflowRuns202:
       description: 已受理
       content:
@@ -429,7 +586,7 @@ components:
               - $ref: '#/components/schemas/Response'
               - properties:
                   data:
-                    $ref: '#/components/schemas/WorkflowRunStatus'
+                    $ref: '#/components/schemas/WorkflowRun'
   parameters:
     Key:
       name: key

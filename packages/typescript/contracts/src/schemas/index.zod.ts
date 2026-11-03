@@ -20,14 +20,10 @@
  */
 import * as zod from "zod";
 
-export const Response = zod.object({
-  code: zod.int(),
-  message: zod.string(),
-  data: zod.looseObject({}),
-});
+export const AuthRedirect = zod.object({}).describe("认证跳转 - 空响应体");
 
-export type Response = zod.input<typeof Response>;
-export type ResponseOutput = zod.output<typeof Response>;
+export type AuthRedirect = zod.input<typeof AuthRedirect>;
+export type AuthRedirectOutput = zod.output<typeof AuthRedirect>;
 
 export const Error = zod
   .object({
@@ -37,6 +33,29 @@ export const Error = zod
 
 export type Error = zod.input<typeof Error>;
 export type ErrorOutput = zod.output<typeof Error>;
+
+export const Response = zod.object({
+  code: zod.int(),
+  message: zod.string(),
+  data: zod.looseObject({}),
+});
+
+export type Response = zod.input<typeof Response>;
+export type ResponseOutput = zod.output<typeof Response>;
+
+export const AuthUser = zod
+  .object({
+    user_id: zod.string(),
+    tenant_id: zod.string(),
+    email: zod.string().nullish(),
+    name: zod.string().nullish(),
+    roles: zod.array(zod.string()),
+    permissions: zod.array(zod.string()),
+  })
+  .describe("当前登录用户与权限");
+
+export type AuthUser = zod.input<typeof AuthUser>;
+export type AuthUserOutput = zod.output<typeof AuthUser>;
 
 export const ValidationErrorItem = zod
   .looseObject({
@@ -168,6 +187,96 @@ export const WorkflowRunStatus = zod
 
 export type WorkflowRunStatus = zod.input<typeof WorkflowRunStatus>;
 export type WorkflowRunStatusOutput = zod.output<typeof WorkflowRunStatus>;
+
+export const WorkflowRun = zod.object({
+  run_id: zod.string(),
+  status: zod
+    .enum(["submitted", "running", "succeeded", "failed"])
+    .describe("工作流 run 状态 - 与 worker 状态回写一致"),
+});
+
+export type WorkflowRun = zod.input<typeof WorkflowRun>;
+export type WorkflowRunOutput = zod.output<typeof WorkflowRun>;
+
+export const AuthRedirectResponse = zod.object({}).describe("认证跳转 - 空响应体");
+
+export type AuthRedirectResponse = zod.input<typeof AuthRedirectResponse>;
+export type AuthRedirectResponseOutput = zod.output<typeof AuthRedirectResponse>;
+
+export const AuthUnavailableResponse = zod
+  .object({
+    detail: zod.string(),
+  })
+  .describe("通用错误响应 - 与 FastAPI HTTPException 一致");
+
+export type AuthUnavailableResponse = zod.input<typeof AuthUnavailableResponse>;
+export type AuthUnavailableResponseOutput = zod.output<typeof AuthUnavailableResponse>;
+
+export const BadRequestResponse = zod
+  .object({
+    detail: zod.string(),
+  })
+  .describe("通用错误响应 - 与 FastAPI HTTPException 一致");
+
+export type BadRequestResponse = zod.input<typeof BadRequestResponse>;
+export type BadRequestResponseOutput = zod.output<typeof BadRequestResponse>;
+
+export const UnauthorizedResponse = zod
+  .object({
+    detail: zod.string(),
+  })
+  .describe("通用错误响应 - 与 FastAPI HTTPException 一致");
+
+export type UnauthorizedResponse = zod.input<typeof UnauthorizedResponse>;
+export type UnauthorizedResponseOutput = zod.output<typeof UnauthorizedResponse>;
+
+export const BadGatewayResponse = zod
+  .object({
+    detail: zod.string(),
+  })
+  .describe("通用错误响应 - 与 FastAPI HTTPException 一致");
+
+export type BadGatewayResponse = zod.input<typeof BadGatewayResponse>;
+export type BadGatewayResponseOutput = zod.output<typeof BadGatewayResponse>;
+
+export const AuthLogout200Response = zod
+  .object({
+    code: zod.int(),
+    message: zod.string(),
+    data: zod.looseObject({}),
+  })
+  .and(
+    zod.object({
+      data: zod.object({}),
+    }),
+  );
+
+export type AuthLogout200Response = zod.input<typeof AuthLogout200Response>;
+export type AuthLogout200ResponseOutput = zod.output<typeof AuthLogout200Response>;
+
+export const AuthMe200Response = zod
+  .object({
+    code: zod.int(),
+    message: zod.string(),
+    data: zod.looseObject({}),
+  })
+  .and(
+    zod.object({
+      data: zod
+        .object({
+          user_id: zod.string(),
+          tenant_id: zod.string(),
+          email: zod.string().nullish(),
+          name: zod.string().nullish(),
+          roles: zod.array(zod.string()),
+          permissions: zod.array(zod.string()),
+        })
+        .describe("当前登录用户与权限"),
+    }),
+  );
+
+export type AuthMe200Response = zod.input<typeof AuthMe200Response>;
+export type AuthMe200ResponseOutput = zod.output<typeof AuthMe200Response>;
 
 export const Healthz200Response = zod
   .object({
@@ -305,15 +414,6 @@ export const TelemetryEvents202Response = zod
 export type TelemetryEvents202Response = zod.input<typeof TelemetryEvents202Response>;
 export type TelemetryEvents202ResponseOutput = zod.output<typeof TelemetryEvents202Response>;
 
-export const BadRequestResponse = zod
-  .object({
-    detail: zod.string(),
-  })
-  .describe("通用错误响应 - 与 FastAPI HTTPException 一致");
-
-export type BadRequestResponse = zod.input<typeof BadRequestResponse>;
-export type BadRequestResponseOutput = zod.output<typeof BadRequestResponse>;
-
 export const WorkflowRuns202Response = zod
   .object({
     code: zod.int(),
@@ -340,9 +440,12 @@ export const WorkflowRun200Response = zod
   })
   .and(
     zod.object({
-      data: zod
-        .enum(["submitted", "running", "succeeded", "failed"])
-        .describe("工作流 run 状态 - 与 worker 状态回写一致"),
+      data: zod.object({
+        run_id: zod.string(),
+        status: zod
+          .enum(["submitted", "running", "succeeded", "failed"])
+          .describe("工作流 run 状态 - 与 worker 状态回写一致"),
+      }),
     }),
   );
 
@@ -393,6 +496,21 @@ export const WorkflowInputBody = zod.object({
 
 export type WorkflowInputBody = zod.input<typeof WorkflowInputBody>;
 export type WorkflowInputBodyOutput = zod.output<typeof WorkflowInputBody>;
+export const AuthLoginParams = zod.object({
+  next: zod.string().optional(),
+});
+
+export type AuthLoginParams = zod.input<typeof AuthLoginParams>;
+export type AuthLoginParamsOutput = zod.output<typeof AuthLoginParams>;
+
+export const AuthCallbackParams = zod.object({
+  code: zod.string(),
+  state: zod.string(),
+});
+
+export type AuthCallbackParams = zod.input<typeof AuthCallbackParams>;
+export type AuthCallbackParamsOutput = zod.output<typeof AuthCallbackParams>;
+
 export const PutStorageHeaders = zod.object({
   "x-tenant": zod.string(),
 });

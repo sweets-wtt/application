@@ -8,19 +8,13 @@
 	admin off
 }
 
-# 认证门户
+# 认证服务 - Casdoor 登录/注册/管理台
 auth.{$AUTH_DOMAIN} {
-	reverse_proxy authelia:9090
+	reverse_proxy casdoor:8000
 }
 
-# Web 应用 - 唯一公网入口
+# Web 应用 - 唯一公网入口, 鉴权由 FastAPI 校验 JWT
 web.{$AUTH_DOMAIN} {
-	# 前置于应用的前置鉴权 - 成功后透传用户头
-	forward_auth authelia:9090 {
-		uri /api/authz/forward-auth
-		copy_headers Remote-User Remote-Groups Remote-Email Remote-Name
-	}
-
-	# 静态资源与 SPA 回退由 Nginx 处理
+	# 静态资源、SPA 回退与 API 反代由 Nginx 处理
 	reverse_proxy web:80
 }

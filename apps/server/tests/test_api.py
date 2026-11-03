@@ -93,6 +93,10 @@ app.dependency_overrides[get_ticket_store] = _fake_ticket_store
 
 @schema.parametrize()
 def test_api(case):
+    # 认证端点涉及浏览器跳转与 Cookie, 由 test_auth 覆盖
+    if case.operation.path.startswith("/auth/"):
+        return
+
     # WebSocket 端点仅通过 WS 协议访问 - HTTP 方法不支持检查不适用
     if case.operation.path == "/realtime/ws":
         case.call_and_validate(app=app, excluded_checks=[unsupported_method])

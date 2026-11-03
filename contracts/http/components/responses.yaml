@@ -78,11 +78,70 @@ responses:
             - $ref: "schemas.yaml#/schemas/Response"
             - properties:
                 data:
-                  $ref: "schemas.yaml#/schemas/WorkflowRunStatus"
+                  $ref: "schemas.yaml#/schemas/WorkflowRun"
+
+  # 当前用户
+  AuthMe200:
+    description: 当前登录用户
+    content:
+      application/json:
+        schema:
+          allOf:
+            - $ref: "schemas.yaml#/schemas/Response"
+            - properties:
+                data:
+                  $ref: "schemas.yaml#/schemas/AuthUser"
+
+  # 登出
+  AuthLogout200:
+    description: 已清除会话
+    content:
+      application/json:
+        schema:
+          allOf:
+            - $ref: "schemas.yaml#/schemas/Response"
+            - properties:
+                data:
+                  type: object
+                  additionalProperties: false
+
+  # 认证跳转
+  AuthRedirect:
+    description: 跳转认证服务
+    headers:
+      Location:
+        description: 跳转地址
+        schema:
+          type: string
+    content:
+      application/json:
+        schema:
+          $ref: "schemas.yaml#/schemas/AuthRedirect"
 
   # 错误响应
   BadRequest:
     description: 请求体解析失败
+    content:
+      application/json:
+        schema:
+          $ref: "schemas.yaml#/schemas/Error"
+
+  AuthUnavailable:
+    description: 认证未启用或未配置
+    content:
+      application/json:
+        schema:
+          $ref: "schemas.yaml#/schemas/Error"
+
+  Unauthorized:
+    description: 未认证或令牌无效
+    content:
+      application/json:
+        schema:
+          $ref: "schemas.yaml#/schemas/Error"
+
+  BadGateway:
+    description: 认证服务不可用
     content:
       application/json:
         schema:

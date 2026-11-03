@@ -7,6 +7,19 @@ extensions:
 
 # 接收器
 receivers:
+  # OTLP - 应用遥测统一入口
+  otlp:
+    # 协议
+    protocols:
+      # gRPC
+      grpc:
+        # 监听地址
+        endpoint: 0.0.0.0:4317
+      # HTTP
+      http:
+        # 监听地址
+        endpoint: 0.0.0.0:4318
+
   # 主机指标 - 采集间隔默认 1m
   hostmetrics:
     # 采集器
@@ -60,6 +73,20 @@ receivers:
 
 # 处理器
 processors:
+  # 内存限制 - 超限先丢弃, 保护 Collector
+  memory_limiter:
+    # 检查间隔
+    check_interval: 1s
+    # 软限制
+    limit_mib: 512
+    # 峰值余量
+    spike_limit_mib: 128
+
+  # 批处理 - 降低导出请求数
+  batch:
+    # 批次超时
+    timeout: 5s
+
   # 脱敏
   redaction:
     # 保留全部键
@@ -92,19 +119,27 @@ service:
   extensions: [file_storage]
   # 管道
   pipelines:
-    # 指标 - 仅基础设施
-    metrics:
+    # 追踪 - 应用 OTLP
+    traces:
       # 接收器
-      receivers: [hostmetrics, postgresql]
+      receivers: [otlp]
       # 处理器
-      processors: [redaction]
+      processors: [memory_limiter, redaction, batch]
       # 导出器
       exporters: [otlphttp/openobserve]
-    # 日志 - 仅容器日志(应用日志由 SDK 直连)
+    # 指标 - 应用与基础设施
+    metrics:
+      # 接收器
+      receivers: [otlp, hostmetrics, postgresql]
+      # 处理器
+      processors: [memory_limiter, redaction, batch]
+      # 导出器
+      exporters: [otlphttp/openobserve]
+    # 日志 - 容器日志
     logs:
       # 接收器
       receivers: [journald]
       # 处理器
-      processors: [redaction]
+      processors: [memory_limiter, redaction, batch]
       # 导出器
       exporters: [otlphttp/openobserve]

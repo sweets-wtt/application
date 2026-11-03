@@ -64,6 +64,44 @@ schemas:
           $ref: "#/schemas/ValidationErrorItem"
     additionalProperties: false
 
+  # 认证跳转 - 空响应体
+  AuthRedirect:
+    description: 认证跳转 - 空响应体
+    type: object
+    additionalProperties: false
+
+  # 当前登录用户
+  AuthUser:
+    description: 当前登录用户与权限
+    type: object
+    required:
+      - user_id
+      - tenant_id
+      - roles
+      - permissions
+    properties:
+      user_id:
+        type: string
+      tenant_id:
+        type: string
+      email:
+        type:
+          - string
+          - "null"
+      name:
+        type:
+          - string
+          - "null"
+      roles:
+        type: array
+        items:
+          type: string
+      permissions:
+        type: array
+        items:
+          type: string
+    additionalProperties: false
+
   # 单条前端遥测事件 - 批量载荷中 events 的元素
   TelemetryEvent:
     description: 单条前端遥测事件 - 批量载荷中 events 的元素

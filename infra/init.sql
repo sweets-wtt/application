@@ -7,11 +7,5 @@ CREATE ROLE app LOGIN PASSWORD :'app_password';
 -- 应用库
 CREATE DATABASE app OWNER app;
 
--- Authelia 口令
-\getenv authelia_password POSTGRES_AUTHELIA_PASSWORD
-
--- Authelia 角色
-CREATE ROLE authelia LOGIN PASSWORD :'authelia_password';
-
--- Authelia 库
-CREATE DATABASE authelia OWNER authelia;
+-- Casdoor 库 - 复用应用角色
+CREATE DATABASE casdoor OWNER app;

@@ -16,6 +16,24 @@ class Data(BaseModel):
     status: str
 
 
+class AuthRedirect(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+
+
+class AuthUser(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    user_id: str
+    tenant_id: str
+    email: str | None = None
+    name: str | None = None
+    roles: list[str]
+    permissions: list[str]
+
+
 class Error(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
@@ -79,13 +97,6 @@ class WorkflowRunAccepted(BaseModel):
     status: Status
 
 
-class WorkflowRunStatus(StrEnum):
-    submitted = 'submitted'
-    running = 'running'
-    succeeded = 'succeeded'
-    failed = 'failed'
-
-
 class Level(StrEnum):
     debug = 'debug'
     info = 'info'
@@ -113,6 +124,21 @@ class ValidationErrorItem(BaseModel):
     type: str
 
 
+class WorkflowRunStatus(StrEnum):
+    submitted = 'submitted'
+    running = 'running'
+    succeeded = 'succeeded'
+    failed = 'failed'
+
+
+class AuthLogoutPostResponse(Response):
+    data: dict[str, Any]
+
+
+class AuthMeGetResponse(Response):
+    data: AuthUser
+
+
 class HealthzGetResponse(Response):
     data: Data
 
@@ -133,10 +159,6 @@ class WorkflowRunsPostResponse(Response):
     data: WorkflowRunAccepted
 
 
-class WorkflowRunsRunIdGetResponse(Response):
-    data: WorkflowRunStatus
-
-
 class TelemetryBatch(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
@@ -151,3 +173,15 @@ class ValidationError(BaseModel):
         extra='forbid',
     )
     detail: list[ValidationErrorItem]
+
+
+class WorkflowRun(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    run_id: str
+    status: WorkflowRunStatus
+
+
+class WorkflowRunsRunIdGetResponse(Response):
+    data: WorkflowRun

@@ -107,6 +107,61 @@ class RateLimitSettings(BaseModel):
     storage_limit: str = "120/minute"
 
 
+class AuthSettings(BaseModel):
+    """认证配置 - Casdoor OIDC"""
+
+    # 是否启用 - 测试环境默认关闭
+    enabled: bool = False
+
+    # 签发方 - 令牌 iss 校验
+    issuer: str = ""
+
+    # 公网地址 - 浏览器跳转
+    public_url: str = ""
+
+    # 内网地址 - 服务端换取令牌与拉取 JWKS
+    internal_url: str = ""
+
+    # 客户端标识
+    client_id: str = ""
+
+    # 客户端密钥
+    client_secret: str = ""
+
+    # 回调地址
+    redirect_uri: str = ""
+
+    # 登出后回跳地址
+    post_logout_redirect_uri: str = ""
+
+    # 状态签名密钥 - 缺省回落到客户端密钥
+    state_secret: str = ""
+
+    # Cookie 是否仅 HTTPS
+    cookie_secure: bool = True
+
+    # Cookie 域 - 留空为当前主机
+    cookie_domain: str = ""
+
+    # 租户声明 - Casdoor 用户归属组织
+    tenant_claim: str = "owner"
+
+    # 角色声明
+    role_claim: str = "roles"
+
+    # JWKS 地址 - 留空按内网地址推导
+    jwks_url: str = ""
+
+    # 授权地址 - 留空按公网地址推导
+    authorize_url: str = ""
+
+    # 换令牌地址 - 留空按内网地址推导
+    token_url: str = ""
+
+    # 登出地址 - 留空按公网地址推导
+    logout_url: str = ""
+
+
 class Settings(BaseSettings):
     """应用配置"""
 
@@ -136,6 +191,9 @@ class Settings(BaseSettings):
 
     # 限流
     rate_limit: RateLimitSettings = RateLimitSettings()
+
+    # 认证
+    auth: AuthSettings = AuthSettings()
 
 
 # 应用配置实例
@@ -198,21 +256,46 @@ WORKFLOW_NAME = "request"
 
 
 def _instrument() -> None:
-    """接线遥测 - OpenObserve 官方 SDK
+    """接线遥测 - 标准 OTel SDK 经 Collector 导出
 
-    提供方与导出器由 SDK 装配, 框架埋点仍需显式启用
+    追踪与指标统一走 OTLP, 后端由 Collector 决定
     """
 
-    from openobserve import openobserve_init
+    from opentelemetry import metrics, trace
+    from opentelemetry.exporter.otlp.proto.http.metric_exporter import (
+        OTLPMetricExporter,
+    )
+    from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
     from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+    from opentelemetry.sdk.metrics import MeterProvider
+    from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
+    from opentelemetry.sdk.resources import Resource
+    from opentelemetry.sdk.trace import TracerProvider
+    from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
-    # 追踪与指标 - 服务名取 OTEL_SERVICE_NAME
-    openobserve_init(
-        traces=True,
-        metrics=True,
-        resource_attributes={
-            "service.name": os.environ.get("OTEL_SERVICE_NAME", "server")
-        },
+    # 资源 - 服务名取 OTEL_SERVICE_NAME
+    resource = Resource.create(
+        {"service.name": os.environ.get("OTEL_SERVICE_NAME", "server")}
+    )
+
+    # 追踪提供方 - OTLP 批处理导出
+    tracer_provider = TracerProvider(resource=resource)
+    tracer_provider.add_span_processor(BatchSpanProcessor(OTLPSpanExporter()))
+    trace.set_tracer_provider(tracer_provider)
+
+    # 指标提供方 - OTLP 周期导出
+    metrics.set_meter_provider(
+        MeterProvider(
+            resource=resource,
+            metric_readers=[
+                PeriodicExportingMetricReader(
+                    OTLPMetricExporter(),
+                    export_interval_millis=int(
+                        os.environ.get("OTEL_METRIC_EXPORT_INTERVAL", "60000")
+                    ),
+                )
+            ],
+        )
     )
 
     # FastAPI 埋点 - 须在应用实例化前替换类
@@ -229,6 +312,13 @@ def setup() -> None:
     # 初始化日志
     configure()
 
-    # 存在 OpenObserve 令牌才接线遥测 - 测试离线安全
-    if os.environ.get("OPENOBSERVE_AUTH_TOKEN"):
+    # 存在 OTLP 端点才接线遥测 - 测试离线安全
+    if any(
+        os.environ.get(key)
+        for key in (
+            "OTEL_EXPORTER_OTLP_ENDPOINT",
+            "OTEL_EXPORTER_OTLP_TRACES_ENDPOINT",
+            "OTEL_EXPORTER_OTLP_METRICS_ENDPOINT",
+        )
+    ):
         _instrument()

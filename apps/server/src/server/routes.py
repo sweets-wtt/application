@@ -32,6 +32,7 @@ from server.adapters import (
     get_ticket_store,
     get_workflow_client,
 )
+from server.auth import Principal, auth_router, get_principal, require_permission
 from server.core import (
     MAX_TELEMETRY_BODY_BYTES,
     TICKET_TTL_SECONDS,
@@ -62,6 +63,14 @@ def origin_allowed(origin: str | None) -> bool:
     return origin is None or origin in settings.realtime.origins
 
 
+def resolve_tenant(principal: Principal, requested: str) -> str:
+    """租户校验 - 认证开启时请求头必须与令牌租户一致"""
+    if settings.auth.enabled and requested != principal.tenant_id:
+        raise HTTPException(status_code=403, detail="租户不匹配")
+
+    return requested
+
+
 @healthz_router.get(path="/healthz", description="存活探针")
 @limiter.limit(DEFAULT_LIMIT)
 async def get_healthz(request: Request) -> dict:
@@ -69,42 +78,62 @@ async def get_healthz(request: Request) -> dict:
     return {"code": 0, "message": "ok", "data": {"status": "ok"}}
 
 
-@storage_router.put("/{key:path}", description="流式上传对象")
+@storage_router.put(
+    "/{key:path}",
+    description="流式上传对象",
+    dependencies=[Depends(require_permission("storage:write"))],
+)
 @limiter.limit(STORAGE_LIMIT)
 async def put_object(
     request: Request,
     key: str,
     x_tenant: Annotated[str, Header(description="租户标识")],
+    principal: Annotated[Principal, Depends(get_principal)],
     client: Annotated[AioBaseClient, Depends(get_storage_client)],
 ) -> dict:
     """流式上传对象 - 超限返回 413"""
+    # 租户隔离
+    tenant = resolve_tenant(principal, x_tenant)
+
     # 流式读取请求体并计数
     try:
-        size = await services.upload(client, x_tenant, key, request.stream())
+        size = await services.upload(client, tenant, key, request.stream())
     except services.UploadTooLarge:
         raise HTTPException(status_code=413, detail="上传超过 10 MiB") from None
 
     return {"code": 0, "message": "ok", "data": {"key": key, "size": size}}
 
 
-@storage_router.get("/{key:path}", description="流式下载对象")
+@storage_router.get(
+    "/{key:path}",
+    description="流式下载对象",
+    dependencies=[Depends(require_permission("storage:read"))],
+)
 @limiter.limit(STORAGE_LIMIT)
 async def get_object(
     request: Request,
     key: str,
     x_tenant: Annotated[str, Header(description="租户标识")],
+    principal: Annotated[Principal, Depends(get_principal)],
     client: Annotated[AioBaseClient, Depends(get_storage_client)],
 ) -> Response:
     """流式下载对象 - 不存在返回 404"""
+    # 租户隔离
+    tenant = resolve_tenant(principal, x_tenant)
+
     try:
-        stream = await services.download(client, x_tenant, key)
+        stream = await services.download(client, tenant, key)
     except services.NotFound:
         raise HTTPException(status_code=404, detail="对象不存在") from None
 
     return StreamingResponse(stream, media_type="application/octet-stream")
 
 
-@realtime_router.post("/ticket", description="签发一次性票据")
+@realtime_router.post(
+    "/ticket",
+    description="签发一次性票据",
+    dependencies=[Depends(require_permission("realtime:connect"))],
+)
 @limiter.limit(DEFAULT_LIMIT)
 async def issue_ticket(
     request: Request,
@@ -208,7 +237,10 @@ async def connect_realtime(
 
 
 @telemetry_router.post(
-    path="/telemetry/events", status_code=202, description="批量接收前端遥测事件"
+    path="/telemetry/events",
+    status_code=202,
+    description="批量接收前端遥测事件",
+    dependencies=[Depends(require_permission("telemetry:write"))],
 )
 @limiter.limit(DEFAULT_LIMIT)
 async def ingest_telemetry(request: Request, payload: TelemetryBatch) -> dict:
@@ -226,7 +258,12 @@ async def ingest_telemetry(request: Request, payload: TelemetryBatch) -> dict:
     return {"code": 0, "message": "ok", "data": {"accepted": accepted}}
 
 
-@workflow_router.post(path="/runs", status_code=202, description="提交工作流 run")
+@workflow_router.post(
+    path="/runs",
+    status_code=202,
+    description="提交工作流 run",
+    dependencies=[Depends(require_permission("workflow:write"))],
+)
 @limiter.limit(WORKFLOW_LIMIT)
 async def create_workflow_run(
     request: Request,
@@ -247,7 +284,11 @@ async def create_workflow_run(
     }
 
 
-@workflow_router.get(path="/runs/{run_id}", description="查询工作流 run")
+@workflow_router.get(
+    path="/runs/{run_id}",
+    description="查询工作流 run",
+    dependencies=[Depends(require_permission("workflow:read"))],
+)
 @limiter.limit(DEFAULT_LIMIT)
 async def get_workflow_run(
     request: Request,
@@ -265,6 +306,7 @@ async def get_workflow_run(
 
 def include_routes(app: fastapi.FastAPI) -> None:
     """注册全部路由"""
+    app.include_router(auth_router)
     app.include_router(healthz_router)
     app.include_router(storage_router)
     app.include_router(realtime_router)

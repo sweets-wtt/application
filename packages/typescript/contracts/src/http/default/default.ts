@@ -35,6 +35,13 @@ import { computed, toValue, unref } from "vue";
 import type { MaybeRefOrGetter } from "vue";
 
 import type {
+  AuthCallbackParams,
+  AuthLoginParams,
+  AuthLogout200Response,
+  AuthMe200Response,
+  AuthRedirectResponse,
+  AuthUnavailableResponse,
+  BadGatewayResponse,
   BadRequestResponse,
   BinaryContentBody,
   ConnectRealtimeParams,
@@ -49,6 +56,7 @@ import type {
   StoragePut200Response,
   TelemetryBatchBody,
   TelemetryEvents202Response,
+  UnauthorizedResponse,
   UnprocessableEntityResponse,
   WorkflowInputBody,
   WorkflowRun200Response,
@@ -62,6 +70,447 @@ type AwaitedInput<T> = PromiseLike<T> | T;
 type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+export type authLoginResponse302 = {
+  data: AuthRedirectResponse;
+  status: 302;
+};
+
+export type authLoginResponse503 = {
+  data: AuthUnavailableResponse;
+  status: 503;
+};
+export type authLoginResponseError = (authLoginResponse302 | authLoginResponse503) & {
+  headers: Headers;
+};
+
+export type authLoginResponse = authLoginResponseError;
+
+export const getAuthLoginUrl = (params?: AuthLoginParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/auth/login?${stringifiedParams}` : `/auth/login`;
+};
+
+/**
+ * 跳转 Casdoor 登录页
+ */
+export const authLogin = async (
+  params?: AuthLoginParams,
+  options?: Parameters<typeof appFetch>[1],
+): Promise<authLoginResponse> => {
+  return appFetch<authLoginResponse>(getAuthLoginUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getAuthLoginQueryKey = (params?: MaybeRefOrGetter<AuthLoginParams>) => {
+  return ["auth", "login", ...(params ? [params] : [])] as const;
+};
+
+export const getAuthLoginQueryOptions = <
+  TData = Awaited<ReturnType<typeof authLogin>>,
+  TError = AuthRedirectResponse | AuthUnavailableResponse,
+>(
+  params?: MaybeRefOrGetter<AuthLoginParams>,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof authLogin>>, TError, TData>>;
+    request?: SecondParameter<typeof appFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = getAuthLoginQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof authLogin>>> = ({ signal }) =>
+    authLogin(toValue(params), { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof authLogin>>,
+    TError,
+    TData
+  >;
+};
+
+export type AuthLoginQueryResult = NonNullable<Awaited<ReturnType<typeof authLogin>>>;
+export type AuthLoginQueryError = AuthRedirectResponse | AuthUnavailableResponse;
+
+export function useAuthLogin<
+  TData = Awaited<ReturnType<typeof authLogin>>,
+  TError = AuthRedirectResponse | AuthUnavailableResponse,
+>(
+  params?: MaybeRefOrGetter<AuthLoginParams>,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof authLogin>>, TError, TData>>;
+    request?: SecondParameter<typeof appFetch>;
+  },
+  queryClient?: QueryClient,
+): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getAuthLoginQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
+
+  return query;
+}
+
+export type authCallbackResponse303 = {
+  data: AuthRedirectResponse;
+  status: 303;
+};
+
+export type authCallbackResponse400 = {
+  data: BadRequestResponse;
+  status: 400;
+};
+
+export type authCallbackResponse401 = {
+  data: UnauthorizedResponse;
+  status: 401;
+};
+
+export type authCallbackResponse502 = {
+  data: BadGatewayResponse;
+  status: 502;
+};
+export type authCallbackResponseError = (
+  | authCallbackResponse303
+  | authCallbackResponse400
+  | authCallbackResponse401
+  | authCallbackResponse502
+) & {
+  headers: Headers;
+};
+
+export type authCallbackResponse = authCallbackResponseError;
+
+export const getAuthCallbackUrl = (params: AuthCallbackParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/auth/callback?${stringifiedParams}` : `/auth/callback`;
+};
+
+/**
+ * Casdoor 授权码回调
+ */
+export const authCallback = async (
+  params: AuthCallbackParams,
+  options?: Parameters<typeof appFetch>[1],
+): Promise<authCallbackResponse> => {
+  return appFetch<authCallbackResponse>(getAuthCallbackUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getAuthCallbackQueryKey = (params?: MaybeRefOrGetter<AuthCallbackParams>) => {
+  return ["auth", "callback", ...(params ? [params] : [])] as const;
+};
+
+export const getAuthCallbackQueryOptions = <
+  TData = Awaited<ReturnType<typeof authCallback>>,
+  TError = AuthRedirectResponse | BadRequestResponse | UnauthorizedResponse | BadGatewayResponse,
+>(
+  params: MaybeRefOrGetter<AuthCallbackParams>,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof authCallback>>, TError, TData>>;
+    request?: SecondParameter<typeof appFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = getAuthCallbackQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof authCallback>>> = ({ signal }) =>
+    authCallback(toValue(params), { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof authCallback>>,
+    TError,
+    TData
+  >;
+};
+
+export type AuthCallbackQueryResult = NonNullable<Awaited<ReturnType<typeof authCallback>>>;
+export type AuthCallbackQueryError =
+  | AuthRedirectResponse
+  | BadRequestResponse
+  | UnauthorizedResponse
+  | BadGatewayResponse;
+
+export function useAuthCallback<
+  TData = Awaited<ReturnType<typeof authCallback>>,
+  TError = AuthRedirectResponse | BadRequestResponse | UnauthorizedResponse | BadGatewayResponse,
+>(
+  params: MaybeRefOrGetter<AuthCallbackParams>,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof authCallback>>, TError, TData>>;
+    request?: SecondParameter<typeof appFetch>;
+  },
+  queryClient?: QueryClient,
+): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getAuthCallbackQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
+
+  return query;
+}
+
+export type authLogoutResponse303 = {
+  data: AuthRedirectResponse;
+  status: 303;
+};
+export type authLogoutResponseError = authLogoutResponse303 & {
+  headers: Headers;
+};
+
+export type authLogoutResponse = authLogoutResponseError;
+
+export const getAuthLogoutUrl = () => {
+  return `/auth/logout`;
+};
+
+/**
+ * 清除会话并跳转 Casdoor 登出
+ */
+export const authLogout = async (
+  options?: Parameters<typeof appFetch>[1],
+): Promise<authLogoutResponse> => {
+  return appFetch<authLogoutResponse>(getAuthLogoutUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getAuthLogoutQueryKey = () => {
+  return ["auth", "logout"] as const;
+};
+
+export const getAuthLogoutQueryOptions = <
+  TData = Awaited<ReturnType<typeof authLogout>>,
+  TError = AuthRedirectResponse,
+>(options?: {
+  query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof authLogout>>, TError, TData>>;
+  request?: SecondParameter<typeof appFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = getAuthLogoutQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof authLogout>>> = ({ signal }) =>
+    authLogout({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof authLogout>>,
+    TError,
+    TData
+  >;
+};
+
+export type AuthLogoutQueryResult = NonNullable<Awaited<ReturnType<typeof authLogout>>>;
+export type AuthLogoutQueryError = AuthRedirectResponse;
+
+export function useAuthLogout<
+  TData = Awaited<ReturnType<typeof authLogout>>,
+  TError = AuthRedirectResponse,
+>(
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof authLogout>>, TError, TData>>;
+    request?: SecondParameter<typeof appFetch>;
+  },
+  queryClient?: QueryClient,
+): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getAuthLogoutQueryOptions(options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
+
+  return query;
+}
+
+export type authLogoutSessionResponse200 = {
+  data: AuthLogout200Response;
+  status: 200;
+};
+
+export type authLogoutSessionResponseSuccess = authLogoutSessionResponse200 & {
+  headers: Headers;
+};
+
+export type authLogoutSessionResponse = authLogoutSessionResponseSuccess;
+
+export const getAuthLogoutSessionUrl = () => {
+  return `/auth/logout`;
+};
+
+/**
+ * 仅清除本地会话
+ */
+export const authLogoutSession = async (
+  options?: Parameters<typeof appFetch>[1],
+): Promise<authLogoutSessionResponse> => {
+  return appFetch<authLogoutSessionResponse>(getAuthLogoutSessionUrl(), {
+    ...options,
+    method: "POST",
+  });
+};
+
+export const getAuthLogoutSessionMutationKey = () => ["authLogoutSession"] as const;
+
+export const getAuthLogoutSessionMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof authLogoutSession>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof appFetch>;
+}): UseMutationOptions<Awaited<ReturnType<typeof authLogoutSession>>, TError, void, TContext> => {
+  const mutationKey = getAuthLogoutSessionMutationKey();
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof authLogoutSession>>, void> = () => {
+    return authLogoutSession(requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type AuthLogoutSessionMutationResult = NonNullable<
+  Awaited<ReturnType<typeof authLogoutSession>>
+>;
+
+export type AuthLogoutSessionMutationError = unknown;
+
+export const useAuthLogoutSession = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof authLogoutSession>>,
+      TError,
+      void,
+      TContext
+    >;
+    request?: SecondParameter<typeof appFetch>;
+  },
+  queryClient?: QueryClient,
+): UseMutationReturnType<Awaited<ReturnType<typeof authLogoutSession>>, TError, void, TContext> => {
+  return useMutation(getAuthLogoutSessionMutationOptions(options), queryClient);
+};
+export type authMeResponse200 = {
+  data: AuthMe200Response;
+  status: 200;
+};
+
+export type authMeResponse401 = {
+  data: UnauthorizedResponse;
+  status: 401;
+};
+
+export type authMeResponseSuccess = authMeResponse200 & {
+  headers: Headers;
+};
+export type authMeResponseError = authMeResponse401 & {
+  headers: Headers;
+};
+
+export type authMeResponse = authMeResponseSuccess | authMeResponseError;
+
+export const getAuthMeUrl = () => {
+  return `/auth/me`;
+};
+
+/**
+ * 查询当前登录用户
+ */
+export const authMe = async (options?: Parameters<typeof appFetch>[1]): Promise<authMeResponse> => {
+  return appFetch<authMeResponse>(getAuthMeUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getAuthMeQueryKey = () => {
+  return ["auth", "me"] as const;
+};
+
+export const getAuthMeQueryOptions = <
+  TData = Awaited<ReturnType<typeof authMe>>,
+  TError = UnauthorizedResponse,
+>(options?: {
+  query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof authMe>>, TError, TData>>;
+  request?: SecondParameter<typeof appFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = getAuthMeQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof authMe>>> = ({ signal }) =>
+    authMe({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof authMe>>,
+    TError,
+    TData
+  >;
+};
+
+export type AuthMeQueryResult = NonNullable<Awaited<ReturnType<typeof authMe>>>;
+export type AuthMeQueryError = UnauthorizedResponse;
+
+export function useAuthMe<
+  TData = Awaited<ReturnType<typeof authMe>>,
+  TError = UnauthorizedResponse,
+>(
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof authMe>>, TError, TData>>;
+    request?: SecondParameter<typeof appFetch>;
+  },
+  queryClient?: QueryClient,
+): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getAuthMeQueryOptions(options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
+
+  return query;
+}
 
 export type getHealthzResponse200 = {
   data: Healthz200Response;
