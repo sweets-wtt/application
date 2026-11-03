@@ -10,10 +10,6 @@ declare module "*.vue" {
 // 环境变量类型
 interface ImportMetaEnv {
   readonly VITE_API_BASE_URL?: string;
-  readonly VITE_TELEMETRY_URL?: string;
-  readonly VITE_OIDC_ISSUER?: string;
-  readonly VITE_OIDC_CLIENT_ID?: string;
-  readonly VITE_RELEASE?: string;
   readonly VITE_HEARTBEAT_INTERVAL?: string;
 }
 

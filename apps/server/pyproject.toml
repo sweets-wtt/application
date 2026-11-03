@@ -15,12 +15,8 @@ dependencies = [
   "pydantic-settings>=2.15.0",
   "granian>=2.8.2",
   "schemathesis>=4.26.1",
-  "httpx>=0.28.0",
-  "itsdangerous>=2.2.0",
-  "pyjwt[crypto]>=2.10.0",
   "app-contracts",
   "app-log",
-  "app-workflow",
   "slowapi>=0.1.9",
 ]
 
@@ -42,5 +38,3 @@ module-name = "server"
 app-contracts = { workspace = true }
 # 结构化日志
 app-log = { workspace = true }
-# 工作流客户端
-app-workflow = { workspace = true }

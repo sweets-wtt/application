@@ -9,9 +9,8 @@ info:
   description: |
     HTTP 契约（源文件入口）。
 
-    结构：`paths/` 按资源域一文件（与 server/routes 一一对应，
-    多路径项文件内用语义键，如 `workflow.yaml#/runs`）；
-    `components/` 参数、请求体、响应与模式。
+    结构：`paths/` 按资源域一文件（与 server/routes 一一对应，整文件引用）；
+    `components/` 响应与模式。
     修改源文件后执行 `mise run bundle` 重新打包 `dist/openapi.yaml` -
     制品是 datamodel-codegen / Orval / vacuum / oasdiff / schemathesis 的唯一消费入口。
 
@@ -27,21 +26,7 @@ jsonSchemaDialect: "https://json-schema.org/draft/2020-12/schema"
 servers:
   - url: /
 
-# 路径 - 按资源域一文件（与 server/routes 一一对应；单路径项整文件引用，多路径项用语义键）
+# 路径 - 整文件引用
 paths:
-  /auth/login:
-    $ref: "./paths/auth.yaml#/login"
-  /auth/callback:
-    $ref: "./paths/auth.yaml#/callback"
-  /auth/logout:
-    $ref: "./paths/auth.yaml#/logout"
-  /auth/me:
-    $ref: "./paths/auth.yaml#/me"
   /healthz:
     $ref: "./paths/healthz.yaml"
-  /telemetry/events:
-    $ref: "./paths/telemetry.yaml"
-  /workflow/runs:
-    $ref: "./paths/workflow.yaml#/runs"
-  /workflow/runs/{run_id}:
-    $ref: "./paths/workflow.yaml#/run"

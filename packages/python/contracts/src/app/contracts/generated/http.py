@@ -3,10 +3,9 @@
 
 from __future__ import annotations
 
-from enum import StrEnum
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from pydantic import BaseModel, ConfigDict, StrictInt
 
 
 class Data(BaseModel):
@@ -14,31 +13,6 @@ class Data(BaseModel):
         extra='forbid',
     )
     status: str
-
-
-class AuthRedirect(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-
-
-class AuthUser(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    user_id: str
-    tenant_id: str
-    email: str | None = None
-    name: str | None = None
-    roles: list[str]
-    permissions: list[str]
-
-
-class Error(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    detail: str
 
 
 class Response(BaseModel):
@@ -50,114 +24,5 @@ class Response(BaseModel):
     data: dict[str, Any]
 
 
-class TelemetryAccepted(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    accepted: StrictInt
-
-
-class Service(StrEnum):
-    web = 'web'
-    miniapp = 'miniapp'
-
-
-class WorkflowInput(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    message: str = Field(..., max_length=8192)
-
-
-class Status(StrEnum):
-    submitted = 'submitted'
-
-
-class WorkflowRunAccepted(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    run_id: str
-    status: Status
-
-
-class Level(StrEnum):
-    debug = 'debug'
-    info = 'info'
-    warn = 'warn'
-    error = 'error'
-
-
-class TelemetryEvent(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    level: Level
-    fingerprint: str = Field(..., max_length=1024)
-    message: str = Field(..., max_length=8192)
-    timestamp: StrictInt
-    context: dict[str, Any] | None = None
-
-
-class ValidationErrorItem(BaseModel):
-    model_config = ConfigDict(
-        extra='allow',
-    )
-    loc: list[str | StrictInt]
-    msg: str
-    type: str
-
-
-class WorkflowRunStatus(StrEnum):
-    submitted = 'submitted'
-    running = 'running'
-    succeeded = 'succeeded'
-    failed = 'failed'
-
-
-class AuthLogoutPostResponse(Response):
-    data: dict[str, Any]
-
-
-class AuthMeGetResponse(Response):
-    data: AuthUser
-
-
 class HealthzGetResponse(Response):
     data: Data
-
-
-class TelemetryEventsPostResponse(Response):
-    data: TelemetryAccepted
-
-
-class WorkflowRunsPostResponse(Response):
-    data: WorkflowRunAccepted
-
-
-class TelemetryBatch(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    service: Service
-    release: str = Field(..., max_length=128)
-    events: list[TelemetryEvent] = Field(..., max_length=100)
-
-
-class ValidationError(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    detail: list[ValidationErrorItem]
-
-
-class WorkflowRun(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    run_id: str
-    status: WorkflowRunStatus
-
-
-class WorkflowRunsRunIdGetResponse(Response):
-    data: WorkflowRun

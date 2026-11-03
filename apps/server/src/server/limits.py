@@ -14,4 +14,3 @@ limiter = Limiter(
 
 # 各端点限额 - 按成本区分
 DEFAULT_LIMIT = settings.rate_limit.default_limit
-WORKFLOW_LIMIT = settings.rate_limit.workflow_limit

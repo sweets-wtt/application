@@ -1,35 +1,19 @@
 """Server 入口"""
 
-from contextlib import asynccontextmanager
-
 import fastapi
 from fastapi import Request
 from fastapi.responses import JSONResponse
 from slowapi.errors import RateLimitExceeded
 
 from server import routes
-from server.adapters import get_workflow_client
 from server.core import setup
 from server.limits import limiter
 
 # 装配依赖 - 初始化日志等, 须先于应用实例化
 setup()
 
-
-@asynccontextmanager
-async def lifespan(_: fastapi.FastAPI):
-    """应用生命周期 - 启动前拉起工作流
-
-    工作流在应用启动前拉起 - 进程内仅一次
-    """
-    workflow_client = get_workflow_client()
-    workflow_client.launch()
-
-    yield
-
-
 # 应用实例
-app = fastapi.FastAPI(title="Server", lifespan=lifespan)
+app = fastapi.FastAPI(title="Server")
 
 # 限流 - 状态挂到应用供装饰器解析, 超限统一返回 429
 

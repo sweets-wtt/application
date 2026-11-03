@@ -50,8 +50,7 @@ application（根项目）
 ├── packages（共享包）
 │   ├── python
 │   │   ├── contracts（契约模型）→ pydantic
-│   │   ├── log（结构化日志）→ structlog
-│   │   └── workflow（工作流）→ dbos
+│   │   └── log（结构化日志）→ structlog
 │   └── typescript
 │       ├── contracts（契约客户端）→ vue-query / msw / zod
 │       ├── log（结构化日志）→ consola
@@ -121,26 +120,4 @@ application（根项目）
 ├── uv.lock                          # Python 依赖
 ├── zizmor.yaml                      # 安全审计
 └── README.md                        # 项目说明
-```
-
-## 契约
-
-源文件按职责拆分，`dist/openapi.yaml` 是机器消费的唯一入口：
-
-```text
-源（人写）                                            制品（生成）
-contracts/http/openapi.yaml      ┐
-paths/*.yaml                     ├─ mise run bundle → dist/openapi.yaml
-components/{parameters,responses,schemas}.yaml ┘
-                                       ├── datamodel-codegen → Python Pydantic 模型
-                                       ├── Orval            → TS 客户端 / Zod / MSW
-                                       └── vacuum / oasdiff / schemathesis
-```
-
-修改契约后：
-
-```bash
-mise run bundle         # 重新打包制品
-mise run codegen        # 打包并生成 Python 与 TypeScript 代码
-mise run check:codegen  # 校验制品与生成物无漂移（CI 使用）
 ```
