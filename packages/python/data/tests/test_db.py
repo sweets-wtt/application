@@ -1,31 +1,22 @@
 """数据库会话测试"""
 
-from app.data.db import _engine_kwargs, create_engine, create_session_factory
+from app.data.db import create_engine, create_session_factory
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.pool import NullPool
 
 
-def test_engine_kwargs_pgbouncer_defaults() -> None:
-    """引擎参数默认兼容 PgBouncer"""
-    kwargs = _engine_kwargs({})
-
-    assert kwargs["poolclass"] is NullPool
-    assert kwargs["connect_args"]["statement_cache_size"] == 0
-
-
-def test_engine_kwargs_options_override() -> None:
-    """显式参数覆盖默认值"""
-    kwargs = _engine_kwargs({"poolclass": None, "connect_args": {"timeout": 5}})
-
-    assert kwargs["poolclass"] is None
-    assert kwargs["connect_args"] == {"timeout": 5, "statement_cache_size": 0}
-
-
-def test_create_engine_pool() -> None:
-    """引擎使用空连接池"""
+def test_create_engine_uses_default_pool() -> None:
+    """引擎使用 SQLAlchemy 默认连接池"""
     engine = create_engine("postgresql+asyncpg://")
 
-    assert isinstance(engine.pool, NullPool)
+    # 直连场景不再强制空连接池
+    assert engine.pool.__class__.__name__ != "NullPool"
+
+
+def test_create_engine_options_passthrough() -> None:
+    """显式参数原样透传给引擎"""
+    engine = create_engine("postgresql+asyncpg://", echo=False)
+
+    assert engine.echo is False
 
 
 def test_create_session_factory_yields_session() -> None:

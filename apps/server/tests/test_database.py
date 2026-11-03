@@ -5,9 +5,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.pool import NullPool
 
 
-def test_engine_pgbouncer_defaults() -> None:
-    """引擎默认兼容 PgBouncer"""
-    assert isinstance(engine.pool, NullPool)
+def test_engine_uses_default_pool() -> None:
+    """引擎使用 SQLAlchemy 默认连接池 - 直连场景不强制空池"""
+    assert not isinstance(engine.pool, NullPool)
 
 
 def test_session_factory_reusable() -> None:
