@@ -24,8 +24,8 @@ volumes:
   openobserve-data:
   # Collector 存储
   collector-storage:
-  # Traefik 证书
-  traefik-acme:
+  # Caddy 证书与配置
+  caddy-data:
 
 # 服务公共字段
 x-service: &service # 重启策略
@@ -323,7 +323,7 @@ services:
       <<: *healthcheck
       # 就绪探测
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:9090/api/health"]
-    # 网络 - 入口网供 Traefik 转发,内部网供 PostgreSQL 存储
+    # 网络 - 入口网供 Caddy 转发,内部网供 PostgreSQL 存储
     networks:
       # 入口网
       - "edge"
@@ -335,16 +335,6 @@ services:
       postgresql:
         # 条件
         condition: "service_healthy"
-    # 标签
-    labels:
-      # 启用路由
-      traefik.enable: "true"
-      # 门户路由
-      traefik.http.routers.authelia.rule: "Host(`auth.${AUTH_DOMAIN}`)"
-      traefik.http.routers.authelia.tls: "true"
-      traefik.http.routers.authelia.tls.certresolver: "le"
-      traefik.http.routers.authelia.service: "authelia"
-      traefik.http.services.authelia.loadbalancer.server.port: "9090"
 
   # OpenObserve
   openobserve:
@@ -436,78 +426,41 @@ services:
         # 就绪条件
         condition: "service_healthy"
 
-  # Traefik
-  traefik:
+  # Caddy - 入口代理
+  caddy:
     # 公共字段
     <<: *service
     # 镜像
-    image: "traefik:v3.7.13@sha256:1c32e7c368204fd72812152ebdd2ac0425993df6fd982317deb02e48f2d5423c"
-    # 启动命令
-    command:
-      # Podman 发现 - 经 Docker 兼容层读取容器标签
-      - "--providers.docker=true"
-      - "--providers.docker.exposedByDefault=false"
-      # 容器多网络时默认路由网
-      - "--providers.docker.network=application_edge"
-      # HTTP 入口
-      - "--entrypoints.web.address=:80"
-      # HTTPS 重定向
-      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
-      # HTTPS 入口
-      - "--entrypoints.websecure.address=:443"
-      # ACME 证书
-      - "--certificatesresolvers.le.acme.email=${ACME_EMAIL:?}"
-      - "--certificatesresolvers.le.acme.storage=/acme/acme.json"
-      - "--certificatesresolvers.le.acme.httpchallenge=true"
-      - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
-      # 仪表板
-      - "--api.dashboard=true"
-      # 健康检查
-      - "--ping=true"
+    image: "caddy:2.11.7@sha256:36c24ad91a7ff7bc4c87fe22bfa8df3c4b18da0773d73fc12ee2c52b98c0bb7e"
+    # 环境变量 - Caddyfile 内插值
+    environment:
+      # 根域名
+      AUTH_DOMAIN: "${AUTH_DOMAIN:?}"
+      # ACME 证书邮箱
+      ACME_EMAIL: "${ACME_EMAIL:?}"
     # 端口
     ports:
       # HTTP 入口
       - "80:80"
       # HTTPS 入口
       - "443:443"
+      # HTTP/3
+      - "443:443/udp"
     # 数据卷
     volumes:
-      # Podman 套接字
-      - "/run/podman/podman.sock:/var/run/docker.sock:ro"
-      # ACME 证书
-      - "traefik-acme:/acme"
-    # 安全选项
-    security_opt:
-      # 允许容器访问挂载的套接字(SELinux)
-      - "label=disable"
+      # 配置文件
+      - "./Caddyfile:/etc/caddy/Caddyfile:ro"
+      # 证书与自动保存配置
+      - "caddy-data:/data"
     # 健康检查
     healthcheck:
       <<: *healthcheck
-      # 就绪探测
-      test: ["CMD", "traefik", "healthcheck", "--ping"]
+      # 就绪探测 - 管理接口已关闭, 改为校验二进制可用
+      test: ["CMD", "caddy", "version"]
     # 网络
     networks:
       # 入口网
       - "edge"
-    # 标签
-    labels:
-      # 启用路由
-      traefik.enable: "true"
-      # 仪表板路由
-      traefik.http.routers.dashboard.rule: "Host(`traefik.${AUTH_DOMAIN}`)"
-      traefik.http.routers.dashboard.service: "api@internal"
-      traefik.http.routers.dashboard.middlewares: "authelia,ratelimit"
-      traefik.http.routers.dashboard.tls: "true"
-      traefik.http.routers.dashboard.tls.certresolver: "le"
-      # forward-auth 中间件
-      traefik.http.middlewares.authelia.forwardauth.address: "http://authelia:9090/api/verify"
-      traefik.http.middlewares.authelia.forwardauth.trustForwardHeader: "true"
-      traefik.http.middlewares.authelia.forwardauth.authResponseHeaders: "Remote-User,Remote-Groups,Remote-Email,Remote-Name"
-      # 限流中间件
-      traefik.http.middlewares.ratelimit.ratelimit.average: "100"
-      traefik.http.middlewares.ratelimit.ratelimit.period: "1m"
-      traefik.http.middlewares.ratelimit.ratelimit.burst: "50"
 
   # 数据库迁移 - 一次性任务,完成后退出
   migrate:
@@ -609,7 +562,7 @@ services:
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/ | grep -q app"]
       # 启动宽限期
       start_period: "10s"
-    # 网络 - 入口网供 Traefik 转发,内部网供访问 API
+    # 网络 - 入口网供 Caddy 转发,内部网供访问 API
     networks:
       # 入口网
       - "edge"
@@ -621,16 +574,3 @@ services:
       api:
         # 条件 - API 就绪后启动
         condition: "service_healthy"
-    # 标签
-    labels:
-      # 启用路由
-      traefik.enable: "true"
-      # HTTP 路由
-      traefik.http.routers.web.rule: "Host(`web.${AUTH_DOMAIN}`)"
-      traefik.http.routers.web.entrypoints: "websecure"
-      traefik.http.routers.web.tls: "true"
-      traefik.http.routers.web.tls.certresolver: "le"
-      traefik.http.routers.web.service: "web"
-      # forward-auth 与限流 - Web 为唯一公网入口
-      traefik.http.routers.web.middlewares: "authelia,ratelimit"
-      traefik.http.services.web.loadbalancer.server.port: "80"

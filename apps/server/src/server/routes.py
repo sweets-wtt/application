@@ -39,6 +39,7 @@ from server.core import (
     WsCloseCode,
     settings,
 )
+from server.limits import DEFAULT_LIMIT, STORAGE_LIMIT, WORKFLOW_LIMIT, limiter
 
 # 存活探针
 healthz_router = APIRouter(tags=["health"])
@@ -62,12 +63,14 @@ def origin_allowed(origin: str | None) -> bool:
 
 
 @healthz_router.get(path="/healthz", description="存活探针")
-async def get_healthz() -> dict:
+@limiter.limit(DEFAULT_LIMIT)
+async def get_healthz(request: Request) -> dict:
     """存活探针 - 返回 ok"""
     return {"code": 0, "message": "ok", "data": {"status": "ok"}}
 
 
 @storage_router.put("/{key:path}", description="流式上传对象")
+@limiter.limit(STORAGE_LIMIT)
 async def put_object(
     request: Request,
     key: str,
@@ -85,7 +88,9 @@ async def put_object(
 
 
 @storage_router.get("/{key:path}", description="流式下载对象")
+@limiter.limit(STORAGE_LIMIT)
 async def get_object(
+    request: Request,
     key: str,
     x_tenant: Annotated[str, Header(description="租户标识")],
     client: Annotated[AioBaseClient, Depends(get_storage_client)],
@@ -100,7 +105,9 @@ async def get_object(
 
 
 @realtime_router.post("/ticket", description="签发一次性票据")
+@limiter.limit(DEFAULT_LIMIT)
 async def issue_ticket(
+    request: Request,
     store: Annotated[TicketStore, Depends(get_ticket_store)],
     origin: Annotated[str | None, Header(description="请求来源")] = None,
 ) -> dict:
@@ -203,6 +210,7 @@ async def connect_realtime(
 @telemetry_router.post(
     path="/telemetry/events", status_code=202, description="批量接收前端遥测事件"
 )
+@limiter.limit(DEFAULT_LIMIT)
 async def ingest_telemetry(request: Request, payload: TelemetryBatch) -> dict:
     """批量接收前端遥测事件 - 超限返回 413"""
     # 请求体超限 - 413 - 缺失长度时跳过、由后续读取环节兜底
@@ -219,7 +227,9 @@ async def ingest_telemetry(request: Request, payload: TelemetryBatch) -> dict:
 
 
 @workflow_router.post(path="/runs", status_code=202, description="提交工作流 run")
+@limiter.limit(WORKFLOW_LIMIT)
 async def create_workflow_run(
+    request: Request,
     payload: WorkflowInput,
     idempotency_key: Annotated[
         str, Header(alias="Idempotency-Key", description="幂等键")
@@ -238,7 +248,9 @@ async def create_workflow_run(
 
 
 @workflow_router.get(path="/runs/{run_id}", description="查询工作流 run")
+@limiter.limit(DEFAULT_LIMIT)
 async def get_workflow_run(
+    request: Request,
     run_id: str,
     client: Annotated[WorkflowClient, Depends(get_workflow_client)],
     session: Annotated[AsyncSession, Depends(get_session)],

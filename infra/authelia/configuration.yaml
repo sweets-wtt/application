@@ -10,13 +10,15 @@ notifier:
     filename: /config/notifications.txt
 
 # 访问控制 - 仅作用于 forward-auth 校验(OIDC 模式不适用)
+# 未命中任何规则时按 default_policy 处理, 缺省即 deny
 access_control:
+  # 默认策略 - 未命中规则的请求一律拒绝
+  default_policy: "deny"
   # 规则 - 按序匹配
   rules:
-    # Traefik 仪表板 - 仅 admins 且强制 2FA
-    - domain: 'traefik.{{ env "AUTH_DOMAIN" }}'
-      subject: ["group:admins"]
-      policy: two_factor
+    # Web 应用 - 单因子即可访问
+    - domain: 'web.{{ env "AUTH_DOMAIN" }}'
+      policy: one_factor
 
 # 会话
 session:
