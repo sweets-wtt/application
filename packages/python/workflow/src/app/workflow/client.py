@@ -41,16 +41,32 @@ class WorkflowClient:
     def launch(self) -> None:
         """初始化并启动 DBOS - 进程内仅调用一次"""
         self._ensure_sqlite_dir()
+        is_sqlite = self._settings.system_database_url.startswith("sqlite")
+
         config: DBOSConfig = {
             "name": self._settings.app_name,
             "system_database_url": self._settings.system_database_url,
+            # 执行器标识 - 重启时只恢复同标识的未完成工作流
+            # 取容器主机名而非进程标识, 多 worker 共享同一标识,
+            # 否则 worker 重启后其旧任务无人认领而永久滞留
+            "executor_id": self._executor_id(),
         }
-        # SQLite 不接受 PostgreSQL 连接池参数, 需显式换用 NullPool 由 DBOS 剥离
-        if self._settings.system_database_url.startswith("sqlite"):
+
+        if is_sqlite:
+            # SQLite 不接受连接池参数, 换用 NullPool 由 DBOS 剥离
+            # 此时也不能设 sys_db_pool_size, DBOS 会把它转成 pool_size 传入而报错
             config["db_engine_kwargs"] = {"poolclass": NullPool}
+        else:
+            # 系统库连接池 - 默认 20 对低频控制面操作过剩, 压低以留出应用侧余量
+            config["sys_db_pool_size"] = 5
 
         DBOS(config=config)
         DBOS.launch()
+
+    @staticmethod
+    def _executor_id() -> str:
+        """执行器标识 - 显式配置优先, 否则取容器主机名"""
+        return os.environ.get("DBOS__VMID") or os.environ.get("HOSTNAME") or "local"
 
     def _ensure_sqlite_dir(self) -> None:
         """SQLite 系统库的父目录不存在时创建
