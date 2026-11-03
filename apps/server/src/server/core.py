@@ -66,7 +66,7 @@ class RealtimeSettings(BaseModel):
 class WorkflowSettings(BaseModel):
     """工作流配置"""
 
-    # 系统库连接串 - 工作流与步骤状态落库
+    # 系统库连接串 - 缺省用 SQLite 落 data/, 已随 data/ 一并忽略
     system_database_url: str = "sqlite:///./data/workflow.sqlite"
 
     # 应用名 - 同一系统库内区分应用归属

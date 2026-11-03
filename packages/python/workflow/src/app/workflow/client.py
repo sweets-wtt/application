@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any, Self
 
 from dbos import DBOS, DBOSConfig, SetWorkflowID
+from sqlalchemy.pool import NullPool
 
 
 @dataclass(frozen=True)
@@ -44,6 +45,10 @@ class WorkflowClient:
             "name": self._settings.app_name,
             "system_database_url": self._settings.system_database_url,
         }
+        # SQLite 不接受 PostgreSQL 连接池参数, 需显式换用 NullPool 由 DBOS 剥离
+        if self._settings.system_database_url.startswith("sqlite"):
+            config["db_engine_kwargs"] = {"poolclass": NullPool}
+
         DBOS(config=config)
         DBOS.launch()
 
