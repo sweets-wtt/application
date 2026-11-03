@@ -1,28 +1,29 @@
-# 工具（命令： `mise use <tool>@<version>` ）
+# 设置
+[settings]
+# 锁文件
+lockfile = true
+# 严格锁定
+locked = true
+# 自动安装
+auto_install = false
+# 缺失自动安装
+not_found_auto_install = false
+# 系统回退
+not_found_system_fallback = false
+
+# 工具
 [tools]
-# 格式化 - `https://dprint.dev/`
 "aqua:dprint/dprint" = "0.57.4"
-# 拼写检查 - `https://github.com/crate-ci/typos`
 "aqua:crate-ci/typos" = "1.50.1"
-# 提交检查 - `https://docs.cocogitto.io/`
 "aqua:cocogitto/cocogitto" = "7.0.0"
-# 钩子管理 - `https://lefthook.dev/`
 "aqua:evilmartians/lefthook" = "2.1.14"
-# 密钥扫描 - `https://github.com/gitleaks/gitleaks`
 "aqua:gitleaks/gitleaks" = "8.30.1"
-# 漏洞扫描 - `https://trivy.dev/`
 "aqua:aquasecurity/trivy" = "0.74.0"
-# 语法检查 - `https://rhysd.github.io/actionlint/`
 "aqua:rhysd/actionlint" = "1.7.12"
-# 工作流审计 - `https://docs.zizmor.sh/`
 "aqua:zizmorcore/zizmor" = "1.30.0"
-# 契约检查 - `https://quobix.com/vacuum/`
 "aqua:daveshanley/vacuum" = "0.30.3"
-# 兼容检查 - `https://github.com/tufin/oasdiff`
 "github:tufin/oasdiff" = "v1.31.0"
-# Python 依赖管理 - `https://docs.astral.sh/uv/`
 "aqua:astral-sh/uv" = "0.12.10"
-# JavaScript 依赖管理 - `https://bun.com/`
 bun = "1.4.2"
 
 # 环境变量
@@ -32,34 +33,29 @@ COMPOSE = "docker compose -f infra/compose.yaml --project-directory infra"
 
 # 任务
 [tasks]
-# 默认 - 列出任务
+
 [tasks.default]
 run = "mise tasks ls"
 description = "列出任务"
 
-# 安装 - 工具与全部依赖
 [tasks.install]
-description = "安装工具与依赖"
+description = "安装"
 depends = ["install:python", "install:typescript"]
 
-# 安装 - 工具
 [tasks."install:tools"]
 run = "mise install --locked"
-description = "按锁文件安装工具"
+description = "安装工具"
 
-# 安装 - Python 依赖(需工具)
 [tasks."install:python"]
 run = "uv sync --locked --all-packages"
-description = "安装 Python 依赖"
+description = "安装 Python"
 depends = ["install:tools"]
 
-# 安装 - TypeScript 依赖(需工具)
 [tasks."install:typescript"]
 run = "bun install --frozen-lockfile"
-description = "安装 TypeScript 依赖"
+description = "安装 TypeScript"
 depends = ["install:tools"]
 
-# 检查 - 全部
 [tasks.lint]
 description = "检查"
 depends = [
@@ -69,37 +65,31 @@ depends = [
   "lint:github",
   "lint:compose",
   "lint:python",
-  "lint:ts",
+  "lint:typescript",
   "lint:app",
 ]
 
-# 检查 - 格式
 [tasks."lint:format"]
 run = "dprint check"
 description = "检查代码格式"
 
-# 检查 - 拼写
 [tasks."lint:spell"]
 run = "typos"
 description = "检查拼写"
 
-# 检查 - 密钥
 [tasks."lint:secret"]
 run = "gitleaks git --config .gitleaks.toml ."
 description = "扫描泄露密钥"
 
-# 检查 - GitHub 工作流(语法与审计)
 [tasks."lint:github"]
 run = ["actionlint", "zizmor .github"]
 description = "检查 GitHub 工作流"
 
-# 检查 - 编排
 [tasks."lint:compose"]
 run = "$COMPOSE config --quiet"
 shell = "bash -c"
 description = "校验编排"
 
-# 检查 - Python(格式、静态、类型)
 [tasks."lint:python"]
 run = [
   "uv run ruff format --check .",
@@ -108,8 +98,7 @@ run = [
 ]
 description = "检查 Python"
 
-# 检查 - TypeScript(格式、静态、类型)
-[tasks."lint:ts"]
+[tasks."lint:typescript"]
 run = [
   """bunx oxfmt --check --no-error-on-unmatched-pattern '**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs}'""",
   "bunx oxlint --no-error-on-unmatched-pattern",
@@ -118,63 +107,51 @@ run = [
 shell = "bash -c"
 description = "检查 TypeScript"
 
-# 检查 - 应用类型
 [tasks."lint:app"]
 run = "bun run --filter @app/web typecheck"
 description = "检查应用类型"
 
-# 检查 - 契约
 [tasks."lint:api"]
 run = "vacuum lint --ruleset contracts/http/vacuum.yaml contracts/http/dist/openapi.yaml"
 description = "校验契约"
 
-# 格式化 - 全部
 [tasks.format]
 description = "格式化"
 depends = ["format:code", "format:python", "format:ts"]
 
-# 格式化 - 通用
 [tasks."format:code"]
 run = "dprint fmt"
 description = "格式化通用文件"
 
-# 格式化 - Python
 [tasks."format:python"]
 run = "uv run ruff format ."
 description = "格式化 Python"
 
-# 格式化 - TypeScript
 [tasks."format:ts"]
 run = """bunx oxfmt --no-error-on-unmatched-pattern '**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs}'"""
 shell = "bash -c"
 description = "格式化 TypeScript"
 
-# 审计 - 全部
 [tasks.audit]
 description = "审计"
 depends = ["audit:vuln", "audit:config"]
 
-# 审计 - 依赖漏洞
 [tasks."audit:vuln"]
 run = "trivy fs --scanners vuln --severity HIGH,CRITICAL --exit-code 1 ."
 description = "扫描依赖漏洞"
 
-# 审计 - 配置漏洞
 [tasks."audit:config"]
 run = "trivy fs --scanners misconfig --severity HIGH,CRITICAL --exit-code 1 ."
 description = "扫描配置漏洞"
 
-# 集成 - 检查与审计
 [tasks.ci]
 description = "集成检查"
 depends = ["lint", "audit"]
 
-# 构建 - 前端产物
 [tasks.build]
 description = "构建前端产物"
 depends = ["build:web"]
 
-# 构建 - 前端产物
 [tasks."build:web"]
 run = "bun run --filter @app/web build"
 description = "构建前端产物"
@@ -187,34 +164,28 @@ sources = [
 ]
 outputs = ["apps/web/dist/**"]
 
-# 构建 - 镜像
 [tasks."build:image"]
 run = "docker buildx bake -f docker-bake.hcl apps"
 description = "构建应用镜像"
 
-# 测试 - 全部
 [tasks.test]
 description = "测试"
 depends = ["test:python", "test:js"]
 
-# 测试 - Python
 [tasks."test:python"]
 run = "uv run --locked --all-packages pytest"
 description = "测试 Python"
 
-# 测试 - TypeScript
 [tasks."test:js"]
 run = "bun run --filter @app/* test"
 description = "测试 TypeScript"
 
-# 测试 - 端到端(浏览器需先安装： bun x playwright install chromium)
 [tasks."test:e2e"]
 run = "bun x playwright test"
 dir = "apps/web"
 description = "测试端到端"
 depends = ["build:web"]
 
-# 打包契约制品
 [tasks.bundle]
 run = [
   "mkdir -p contracts/http/dist",
@@ -230,12 +201,10 @@ sources = [
 ]
 outputs = ["contracts/http/dist/openapi.yaml"]
 
-# 生成契约代码 - 全部
 [tasks.codegen]
 description = "生成契约代码"
 depends = ["codegen:py", "codegen:ts"]
 
-# 生成契约代码 - Python
 [tasks."codegen:py"]
 run = [
   "uv sync --locked --all-packages",
@@ -246,7 +215,6 @@ shell = "bash -c"
 description = "生成 Python 契约"
 depends = ["bundle"]
 
-# 生成契约代码 - TypeScript
 [tasks."codegen:ts"]
 run = [
   "cd packages/typescript/contracts && bun x orval",
@@ -256,55 +224,35 @@ shell = "bash -c"
 description = "生成 TypeScript 契约"
 depends = ["bundle"]
 
-# 校验 - 制品无差异
 [tasks."check:bundle"]
 run = "git diff --exit-code -- contracts/http/dist"
 description = "校验契约制品无差异"
 depends = ["bundle"]
 
-# 校验 - 生成物无差异
 [tasks."check:codegen"]
 run = "git diff --exit-code -- packages/python/contracts/src/app/contracts/generated packages/typescript/contracts/src/http packages/typescript/contracts/src/schemas contracts/http/dist"
 description = "校验契约生成物无差异"
 depends = ["codegen"]
 
-# 体积预算检查 - 先构建再测量
 [tasks.size]
 run = "bun run --filter @app/web size"
 description = "体积预算检查"
 depends = ["build:web"]
 
-# 迁移
 [tasks.migrate]
 run = "uv run alembic -c apps/server/alembic.ini upgrade head"
 description = "执行数据库迁移"
 
-# 启动服务
 [tasks.up]
 run = "$COMPOSE up -d --remove-orphans --wait"
 shell = "bash -c"
 description = "启动服务"
 
-# 停止服务
 [tasks.down]
 run = "$COMPOSE down --remove-orphans"
 shell = "bash -c"
 description = "停止服务"
 
-# 钩子
 [tasks.hooks]
 run = "lefthook install"
 description = "安装钩子"
-
-# 设置
-[settings]
-# 锁文件
-lockfile = true
-# 严格锁定
-locked = true
-# 自动安装
-auto_install = false
-# 缺失自动安装
-not_found_auto_install = false
-# 系统回退
-not_found_system_fallback = false
