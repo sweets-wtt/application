@@ -17,6 +17,8 @@ __pycache__/
 .pytest_cache
 *.tsbuildinfo
 .hypothesis
+# pytest 临时目录根 - TMPDIR 指向仓库时生成
+pytest-of-*/
 
 # 生成
 .coverage
