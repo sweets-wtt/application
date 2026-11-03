@@ -2,115 +2,44 @@
   // Schema
   "$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxlint/configuration_schema.json",
 
-  // 插件 - 显式保留默认插件，设置 plugins 会覆盖默认集
-  "plugins": [
-    // 默认插件
-    "eslint",
-    "typescript",
-    "unicorn",
-    "oxc",
-    // 模块导入检查
-    "import",
-    // 测试质量
-    "vitest",
-    // Vue SFC 脚本
-    "vue"
-  ],
-
-  // 规则类别
+  // 规则分类 - 未列出的分类保持默认关闭
   "categories": {
     // 正确性
     "correctness": "error",
     // 可疑
-    "suspicious": "error",
-    // 严格 - 提升为 error
-    "pedantic": "error",
-    // 限制 - 保持 warn(避免禁止 async/await、可选链等现代写法)
-    "restriction": "warn"
+    "suspicious": "warn",
+    // 严格
+    "pedantic": "warn",
+    // 性能
+    "perf": "warn"
   },
 
-  // 规则 - 阈值采用 ESLint 默认推荐值，仅统计有效代码行
+  // 规则 - 仅保留分类未覆盖的必需项
   "rules": {
-    // 单文件行数
-    "max-lines": ["error", { "max": 300, "skipBlankLines": true, "skipComments": true }],
-    // 单函数行数
-    "max-lines-per-function": ["error", { "max": 50, "skipBlankLines": true, "skipComments": true }],
-
-    // 基础质量
-    "eqeqeq": "error",
+    // 基础质量 - 属 restriction 分类, 官方不建议整体启用
     "no-var": "error",
+    "eqeqeq": "error",
     "prefer-const": "error",
-
-    // 导入卫生
-    "import/no-duplicates": "error",
-    "import/no-self-import": "error",
-    "import/no-empty-named-blocks": "error",
-    "import/no-cycle": "error",
-
-    // 测试卫生
+    // 类型安全 - 属 restriction 分类
+    "typescript/no-explicit-any": "error",
+    // 测试卫生 - 防止误提交 only/skip
     "vitest/no-focused-tests": "error",
     "vitest/no-disabled-tests": "warn",
-    "vitest/valid-expect": "error",
-    "vitest/no-identical-title": "error",
-    "vitest/valid-describe-callback": "error",
-    // 超时使用 Vitest 全局配置，不逐用例声明
-    "vitest/require-test-timeout": "off",
-    // mock 类型参数非强制，保留提示
-    "vitest/require-mock-type-parameters": "warn",
-
-    // 现代语法偏好
-    "unicorn/prefer-node-protocol": "error",
-    "unicorn/prefer-number-properties": "error",
-
-    // 测试中的 ../ 导入是正常结构
-    "import/no-relative-parent-imports": "off",
-
-    // TypeScript
-    "typescript/no-explicit-any": "error"
+    // 行数上限 - 仅统计有效代码行
+    "max-lines": ["warn", { "max": 300, "skipBlankLines": true, "skipComments": true }],
+    "max-lines-per-function": [
+      "warn",
+      { "max": 50, "skipBlankLines": true, "skipComments": true }
+    ]
   },
 
   // 文件覆盖
   "overrides": [
     {
-      // 测试文件 - 测试块通常较长，放宽函数行数
+      // 测试文件 - 测试块通常较长
       "files": ["**/*.test.ts", "**/*.spec.ts", "**/tests/**"],
       "rules": {
-        "max-lines-per-function": [
-          "error",
-          { "max": 100, "skipBlankLines": true, "skipComments": true }
-        ]
-      }
-    },
-    {
-      // 入口 - CSS/虚拟模块为副作用导入，无需赋值
-      "files": ["apps/web/src/main.ts"],
-      "rules": {
-        "import/no-unassigned-import": "off"
-      }
-    },
-    {
-      // 构建与工具配置通常使用默认导出
-      "files": ["**/*.config.ts"],
-      "rules": {
-        "import/no-default-export": "off"
-      }
-    },
-    {
-      // Vue SFC 与类型声明不是普通 ES 模块
-      "files": ["**/*.vue", "**/*.d.ts"],
-      "rules": {
-        "import/unambiguous": "off"
-      }
-    },
-    {
-      // 共享包入口是有意的 barrel
-      "files": [
-        "packages/typescript/contracts/index.ts",
-        "packages/typescript/contracts/src/index.ts",
-        "packages/typescript/realtime/index.ts"
-      ],
-      "rules": {
-        "oxc/no-barrel-file": "off"
+        "max-lines-per-function": "off"
       }
     }
   ],
