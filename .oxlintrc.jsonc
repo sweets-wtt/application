@@ -50,7 +50,7 @@
 
   // 忽略路径
   "ignorePatterns": [
-    "**/packages/typescript/contracts/src/http/**",
-    "**/packages/typescript/contracts/src/schemas/**"
+    "**/apps/web/src/contracts/http/**",
+    "**/apps/web/src/contracts/schemas/**"
   ]
 }

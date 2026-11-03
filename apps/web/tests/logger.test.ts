@@ -1,19 +1,32 @@
 /** 日志测试 */
-import { describe, expect, it, vi } from "vitest";
-import { configureLogger } from "../src/core/logger";
+import { expect, it, vi } from "vitest";
+import { configure, configureLogger, logger } from "../src/core/logger";
 
-describe("logger", () => {
-  it("configureLogger 不抛错", () => {
-    expect(() => configureLogger()).not.toThrow();
+// 模拟 Consola
+const instance = vi.hoisted(() => ({
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
+  level: 3,
+}));
+
+vi.mock("consola", () => ({ createConsola: () => instance }));
+
+it("info 输出脱敏数据", () => {
+  logger.info("hello", { user: "app", token: "x" });
+
+  expect(instance.info).toHaveBeenCalledWith("hello", {
+    user: "app",
+    token: "***",
   });
+});
 
-  it("未注入遥测端点时上报关闭", () => {
-    const fetchMock = vi.fn();
-    vi.stubGlobal("fetch", fetchMock);
+it("configure 配置级别", () => {
+  configure(4);
 
-    configureLogger();
+  expect(instance.level).toBe(4);
+});
 
-    // 无端点不调用 fetch
-    expect(fetchMock).not.toHaveBeenCalled();
-  });
+it("configureLogger 不抛错", () => {
+  expect(() => configureLogger()).not.toThrow();
 });

@@ -1,7 +1,7 @@
 /** 应用入口 */
 import { createApp } from "vue";
 import { VueQueryPlugin } from "@tanstack/vue-query";
-import { setBaseUrl } from "@app/contracts";
+import { setBaseUrl } from "@/contracts";
 import "virtual:uno.css";
 
 import App from "@/App.vue";
@@ -12,7 +12,7 @@ import { configureLogger } from "@/core/logger";
 import { API_BASE_URL } from "@/core/settings";
 import "@/styles/main.css";
 
-// 配置日志与遥测上报
+// 配置日志级别
 configureLogger();
 
 // 契约客户端基地址

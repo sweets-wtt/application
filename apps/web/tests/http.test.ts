@@ -1,6 +1,6 @@
 /** 契约客户端测试 */
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { appFetch, setBaseUrl } from "@app/contracts";
+import { appFetch, setBaseUrl } from "@/contracts";
 
 // 每个用例后恢复基地址
 afterEach(() => {

@@ -28,7 +28,7 @@ import { unref } from "vue";
 
 import type { Healthz200Response } from "../../schemas/index.zod";
 
-import { appFetch } from "../../../client";
+import { appFetch } from "../../client";
 
 type AwaitedInput<T> = PromiseLike<T> | T;
 

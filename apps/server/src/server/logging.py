@@ -1,4 +1,4 @@
-"""日志配置"""
+"""结构化日志"""
 
 import logging
 import os

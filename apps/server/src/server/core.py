@@ -2,9 +2,10 @@
 
 import os
 
-from app.log import configure
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
+
+from server.logging import configure
 
 
 class RateLimitSettings(BaseModel):

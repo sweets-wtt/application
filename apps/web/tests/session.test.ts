@@ -1,6 +1,14 @@
-/** 状态测试 */
+/** 状态持久化测试 */
 import { describe, expect, it } from "vitest";
-import { defaultState, load, parse, STORAGE_KEY, type State, save, serialize } from "../src/index";
+import {
+  defaultState,
+  load,
+  parse,
+  STORAGE_KEY,
+  type State,
+  save,
+  serialize,
+} from "../src/core/session";
 
 /** 内存存储 */
 const memory = (initial: Record<string, string> = {}) => {

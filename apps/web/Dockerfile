@@ -12,8 +12,6 @@ WORKDIR /app
 
 # 工作区配置
 COPY package.json bun.lock ./
-# 共享包
-COPY packages/typescript/ packages/typescript/
 # Web 应用
 COPY apps/web/ apps/web/
 

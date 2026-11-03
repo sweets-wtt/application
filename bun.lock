@@ -18,16 +18,15 @@
       "name": "@app/web",
       "version": "0.1.0",
       "dependencies": {
-        "@app/contracts": "workspace:*",
-        "@app/log": "workspace:*",
-        "@app/session": "workspace:*",
         "@tanstack/vue-query": "catalog:",
         "@vueuse/core": "catalog:",
+        "consola": "catalog:",
         "pinia": "catalog:",
         "pinia-plugin-persistedstate": "catalog:",
         "reka-ui": "catalog:",
         "vue": "catalog:",
         "vue-router": "catalog:",
+        "zod": "catalog:",
       },
       "devDependencies": {
         "@iconify-json/carbon": "catalog:",
@@ -44,29 +43,6 @@
         "unplugin-icons": "catalog:",
         "unplugin-vue-components": "catalog:",
         "vite": "catalog:",
-      },
-    },
-    "packages/typescript/contracts": {
-      "name": "@app/contracts",
-      "version": "0.1.0",
-      "dependencies": {
-        "@tanstack/vue-query": "catalog:",
-        "vue": "catalog:",
-        "zod": "catalog:",
-      },
-    },
-    "packages/typescript/log": {
-      "name": "@app/log",
-      "version": "0.1.0",
-      "dependencies": {
-        "consola": "catalog:",
-      },
-    },
-    "packages/typescript/session": {
-      "name": "@app/session",
-      "version": "0.1.0",
-      "dependencies": {
-        "zod": "catalog:",
       },
     },
   },
@@ -101,12 +77,6 @@
     "@antfu/install-pkg": ["@antfu/install-pkg@0.5.0", "", { "dependencies": { "package-manager-detector": "^0.2.5", "tinyexec": "^0.3.1" } }, "sha512-dKnk2xlAyC7rvTkpkHmu+Qy/2Zc3Vm/l8PtNyIOGDBtXPY3kThfU4ORNEp3V7SXw5XSOb+tOJaUYpfquPzL/Tg=="],
 
     "@antfu/utils": ["@antfu/utils@0.7.10", "", {}, "sha512-+562v9k4aI80m1+VuMHehNJWLOFjBnXn3tdOitzD0il5b7smkSBal4+a3oKiQTbrwMmN/TBUMDvbdoWDehgOww=="],
-
-    "@app/contracts": ["@app/contracts@workspace:packages/typescript/contracts"],
-
-    "@app/log": ["@app/log@workspace:packages/typescript/log"],
-
-    "@app/session": ["@app/session@workspace:packages/typescript/session"],
 
     "@app/web": ["@app/web@workspace:apps/web"],
 

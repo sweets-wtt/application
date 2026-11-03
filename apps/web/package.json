@@ -10,19 +10,18 @@
     "preview": "vite preview",
     "test": "vitest run",
     "size": "size-limit",
-    "typecheck": "tsc -b --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@app/contracts": "workspace:*",
-    "@app/log": "workspace:*",
-    "@app/session": "workspace:*",
     "@tanstack/vue-query": "catalog:",
     "@vueuse/core": "catalog:",
+    "consola": "catalog:",
     "pinia": "catalog:",
     "pinia-plugin-persistedstate": "catalog:",
     "reka-ui": "catalog:",
     "vue": "catalog:",
-    "vue-router": "catalog:"
+    "vue-router": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@iconify-json/carbon": "catalog:",

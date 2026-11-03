@@ -6,8 +6,8 @@ export default defineConfig({
   contracts: {
     // 输入
     input: {
-      // 契约来源
-      target: "../../../contracts/http/dist/openapi.yaml",
+      // 契约来源（仓库根 contracts/http/dist）
+      target: "../../contracts/http/dist/openapi.yaml",
     },
 
     // 输出
@@ -17,12 +17,12 @@ export default defineConfig({
       // 输出模式
       mode: "tags-split",
       // 输出目录
-      target: "./src/http",
+      target: "./src/contracts/http",
 
       // 模式定义
       schemas: {
         // 模式目录
-        path: "./src/schemas",
+        path: "./src/contracts/schemas",
         // 校验器类型
         type: "zod",
         // 单文件模式 - 全部 zod 模式合并为一个模块
@@ -34,7 +34,7 @@ export default defineConfig({
         // 自定义客户端
         mutator: {
           // 文件路径
-          path: "./client.ts",
+          path: "./src/contracts/client.ts",
           // 函数名
           name: "appFetch",
         },

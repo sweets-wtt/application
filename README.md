@@ -47,20 +47,19 @@ application（根项目）
 ├── podman（容器平台）
 │   └── 平台
 │       └── caddy（入口代理）
-├── packages（共享包）
-│   ├── python
-│   │   ├── contracts（契约模型）→ pydantic
-│   │   └── log（结构化日志）→ structlog
-│   └── typescript
-│       ├── contracts（契约客户端）→ vue-query / msw / zod
-│       ├── log（结构化日志）→ consola
-│       └── session（状态与会话）→ zod
 └── apps（应用）
-    └── server（Server 应用）
-        ├── fastapi（web 框架）
-        ├── granian（ASGI 服务器）
-        ├── pydantic-settings（配置管理）
-        └── schemathesis（契约测试）
+    ├── server（Server 应用）
+    │   ├── fastapi（web 框架）
+    │   ├── granian（ASGI 服务器）
+    │   ├── pydantic-settings（配置管理）
+    │   ├── structlog（结构化日志）
+    │   ├── pydantic（契约模型）→ openapi
+    │   └── schemathesis（契约测试）
+    └── web（Web 应用）
+        ├── vue（框架）
+        ├── vue-query（契约客户端）
+        ├── zod（模式校验）
+        └── consola（结构化日志）
 ```
 
 ## 结构
@@ -76,7 +75,13 @@ application（根项目）
 │       └── release.yaml             # 版本发行
 ├── apps                             # 应用
 │   ├── server                       # Server
+│   │   ├── pyproject.toml           # Python 配置
+│   │   ├── schemathesis.toml        # 契约模糊测试
+│   │   ├── uv.lock                  # Python 依赖
+│   │   └── src/server               # 源码（含契约生成物）
 │   └── web                          # Web
+│       ├── orval.config.ts          # 契约客户端生成
+│       └── src                      # 源码（含契约生成物）
 ├── contracts                         # 契约
 │   └── http                         # HTTP
 │       ├── components               # 组件（参数/请求体/响应/模式）
@@ -89,15 +94,6 @@ application（根项目）
 │   ├── Caddyfile                    # 入口代理配置
 │   ├── compose.yaml                 # 容器编排
 │   └── .env.example                 # 环境变量
-├── packages                         # 共享包
-│   ├── python                       # Python
-│   │   ├── contracts                # 契约模型
-│   │   ├── log                      # 结构化日志
-│   │   └── workflow                 # 工作流
-│   └── typescript                   # TypeScript
-│       ├── contracts                # 契约客户端
-│       ├── log                      # 结构化日志
-│       └── session                  # 状态与会话
 ├── .containerignore                 # 构建忽略
 ├── .editorconfig                    # 代码风格
 ├── .gitattributes                   # Git 属性
@@ -112,12 +108,8 @@ application（根项目）
 ├── mise.lock                        # 工具版本
 ├── mise.toml                        # 开发环境与任务
 ├── package.json                     # JavaScript 包
-├── pyproject.toml                   # Python 配置
 ├── renovate.jsonc                   # 依赖更新
-├── schemathesis.toml                # 契约模糊测试
 ├── tsconfig.base.json               # JavaScript 基础
-├── tsconfig.json                    # JavaScript 配置
-├── uv.lock                          # Python 依赖
 ├── zizmor.yaml                      # 安全审计
 └── README.md                        # 项目说明
 ```
