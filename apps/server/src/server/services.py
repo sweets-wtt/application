@@ -268,7 +268,8 @@ async def submit(
         return existing
 
     # 触发工作流 - 以幂等键为 workflow_id, DBOS 自身亦去重
-    run_id = client.start(workflow_process, payload, key)
+    # DBOS 启动为同步调用, 移出事件循环避免并发提交时串行阻塞
+    run_id = await asyncio.to_thread(client.start, workflow_process, payload, key)
 
     # 同事务记录幂等键
     session.add(Idempotency(key=key, workflow_name=WORKFLOW_NAME, run_id=run_id))
