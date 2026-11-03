@@ -97,6 +97,12 @@ run = [
   "uv run ty check .",
 ]
 description = "检查 Python"
+sources = [
+  "apps/server/**/*.py",
+  "packages/python/**/*.py",
+  "pyproject.toml",
+  "uv.lock",
+]
 
 [tasks."lint:typescript"]
 run = [
@@ -106,6 +112,12 @@ run = [
 ]
 shell = "bash -c"
 description = "检查 TypeScript"
+sources = [
+  "apps/web/**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs,vue}",
+  "packages/typescript/**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs}",
+  "tsconfig*.json",
+  "bun.lock",
+]
 
 [tasks."lint:app"]
 run = "bun run --filter @app/web typecheck"
@@ -185,10 +197,22 @@ depends = ["test:python", "test:js"]
 [tasks."test:python"]
 run = "uv run --locked --all-packages pytest"
 description = "测试 Python"
+sources = [
+  "apps/server/**/*.py",
+  "packages/python/**/*.py",
+  "pyproject.toml",
+  "uv.lock",
+]
 
 [tasks."test:js"]
 run = "bun run --filter @app/* test"
 description = "测试 TypeScript"
+sources = [
+  "apps/web/**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs,vue,html}",
+  "packages/typescript/**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs}",
+  "tsconfig*.json",
+  "bun.lock",
+]
 
 [tasks."test:e2e"]
 run = "bun x playwright test"
@@ -224,6 +248,8 @@ run = [
 shell = "bash -c"
 description = "生成 Python 契约"
 depends = ["bundle"]
+sources = ["contracts/http/dist/openapi.yaml"]
+outputs = ["packages/python/contracts/src/app/contracts/generated/http.py"]
 
 [tasks."codegen:ts"]
 run = [
@@ -233,6 +259,11 @@ run = [
 shell = "bash -c"
 description = "生成 TypeScript 契约"
 depends = ["bundle"]
+sources = ["contracts/http/dist/openapi.yaml"]
+outputs = [
+  "packages/typescript/contracts/src/http/**",
+  "packages/typescript/contracts/src/schemas/**",
+]
 
 [tasks."check:bundle"]
 run = "git diff --exit-code -- contracts/http/dist"
