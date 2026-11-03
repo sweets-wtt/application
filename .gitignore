@@ -22,7 +22,7 @@ __pycache__/
 .coverage
 dist/
 # 工作流系统库（DBOS 运行时生成）
-data/
+/data/
 # 测试期工作流系统库
 .test-data/
 # 契约制品入库

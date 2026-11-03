@@ -4,10 +4,10 @@ import asyncio
 from logging.config import fileConfig
 
 from alembic import context
+from app.data import Base
+from server.core import settings
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import async_engine_from_config
-
-from server.core import settings
 
 # Alembic Config 对象
 config = context.config
@@ -19,8 +19,8 @@ if config.config_file_name is not None:
 # 数据源名称 - 单一来源 settings
 config.set_main_option("sqlalchemy.url", settings.database.url)
 
-# 迁移目标元数据 - 尚无 ORM 模型
-target_metadata = None
+# 迁移目标元数据 - 由 ORM 模型提供, 供 autogenerate 比对
+target_metadata = Base.metadata
 
 
 def run_migrations_offline() -> None:
@@ -41,7 +41,14 @@ def run_migrations_offline() -> None:
 
 def do_run_migrations(connection) -> None:
     """在既有连接上执行迁移"""
-    context.configure(connection=connection, target_metadata=target_metadata)
+    context.configure(
+        connection=connection,
+        target_metadata=target_metadata,
+        # 类型比对 - 避免方言差异导致的等价类型被误判
+        compare_type=True,
+        # 默认值比对 - 服务端默认值参与比较
+        compare_server_default=True,
+    )
 
     with context.begin_transaction():
         context.run_migrations()

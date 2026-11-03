@@ -9,10 +9,11 @@ from typing import Any, Final
 
 from aiobotocore.client import AioBaseClient
 from app.contracts.generated.http import TelemetryBatch, WorkflowInput
+from app.data import Idempotency
 from app.log import get_logger
 from app.workflow import WorkflowClient
 from botocore.exceptions import ClientError
-from sqlalchemy import text
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from server.adapters import tenant_key
@@ -260,25 +261,17 @@ async def submit(
     已有 Idempotency-Key 则返回已记录 run_id;否则触发 run 并同事务记录
     """
     # 幂等查询 - 已有则直接返回
-    existing = await session.execute(
-        text("SELECT run_id FROM idempotency WHERE key = :key"),
-        {"key": key},
+    existing = await session.scalar(
+        select(Idempotency.run_id).where(Idempotency.key == key)
     )
-    row = existing.first()
-    if row is not None:
-        return row.run_id
+    if existing is not None:
+        return existing
 
     # 触发工作流 - 以幂等键为 workflow_id, DBOS 自身亦去重
     run_id = client.start(workflow_process, payload, key)
 
     # 同事务记录幂等键
-    await session.execute(
-        text(
-            "INSERT INTO idempotency (key, workflow_name, run_id) "
-            "VALUES (:key, :workflow, :run_id)"
-        ),
-        {"key": key, "workflow": WORKFLOW_NAME, "run_id": run_id},
-    )
+    session.add(Idempotency(key=key, workflow_name=WORKFLOW_NAME, run_id=run_id))
     await session.commit()
 
     return run_id
@@ -294,11 +287,10 @@ async def get_status(
     未记录的 run 返回 None; 终态常驻缓存; 非终态短 TTL 缓存;
     DBOS 查询失败/超时降级为 submitted(本地已受理)且不写缓存
     """
-    result = await session.execute(
-        text("SELECT run_id FROM idempotency WHERE run_id = :run_id"),
-        {"run_id": run_id},
+    result = await session.scalar(
+        select(Idempotency.run_id).where(Idempotency.run_id == run_id)
     )
-    if result.first() is None:
+    if result is None:
         return None
 
     # 命中缓存 - 终态常驻; 非终态未过期直接返回

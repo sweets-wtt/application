@@ -36,18 +36,14 @@ class _FakeClient:
         return SimpleNamespace(status="SUCCESS")
 
 
-class _FakeResult:
-    """查询结果桩"""
+class _FakeSession:
+    """数据库会话桩 - 查询恒空, 写入忽略"""
 
-    def first(self) -> None:
+    async def scalar(self, _stmt: object) -> None:
         return None
 
-
-class _FakeSession:
-    """数据库会话桩"""
-
-    async def execute(self, _stmt: object, _params: object = None) -> _FakeResult:
-        return _FakeResult()
+    def add(self, _instance: object) -> None:
+        pass
 
     async def commit(self) -> None:
         pass

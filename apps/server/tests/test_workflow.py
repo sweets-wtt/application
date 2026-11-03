@@ -57,27 +57,21 @@ class FakeClient:
         return SimpleNamespace(status=self.remote_status)
 
 
-class FakeResult:
-    """查询结果桩"""
-
-    def __init__(self, row: Any = None) -> None:
-        self._row = row
-
-    def first(self) -> Any:
-        return self._row
-
-
 class FakeSession:
-    """数据库会话桩"""
+    """数据库会话桩 - 记录 scalar 查询与 add 写入"""
 
     def __init__(self, row: Any = None) -> None:
         self._row = row
-        self.executed: list[tuple[Any, Any]] = []
+        self.queried: list[Any] = []
+        self.added: list[Any] = []
         self.committed = False
 
-    async def execute(self, stmt: Any, params: Any = None) -> FakeResult:
-        self.executed.append((stmt, params))
-        return FakeResult(self._row)
+    async def scalar(self, stmt: Any) -> Any:
+        self.queried.append(stmt)
+        return self._row
+
+    def add(self, instance: Any) -> None:
+        self.added.append(instance)
 
     async def commit(self) -> None:
         self.committed = True
@@ -96,15 +90,15 @@ async def test_submit_starts_workflow_and_records_idempotency() -> None:
     assert run_id == "key-1"
     assert client.started[0][1] == payload
     assert client.started[0][2] == "key-1"
-    assert len(session.executed) == 2
+    assert len(session.queried) == 1
+    assert len(session.added) == 1
     assert session.committed
 
 
 async def test_submit_returns_existing_on_idempotent_key() -> None:
     """重复幂等键 - 返回已记录 run_id,不启动工作流"""
-    existing = SimpleNamespace(run_id="existing-run")
     client = FakeClient()
-    session = FakeSession(row=existing)
+    session = FakeSession(row="existing-run")
 
     run_id = await workflow_service.submit(
         cast("Any", client),
@@ -121,7 +115,7 @@ async def test_submit_returns_existing_on_idempotent_key() -> None:
 async def test_get_status_returns_submitted_for_known_run() -> None:
     """已知 run 返回 queued 对应状态"""
     client = FakeClient()
-    session = FakeSession(row=SimpleNamespace(run_id="run-1"))
+    session = FakeSession(row="run-1")
 
     status = await workflow_service.get_status(
         cast("Any", client), cast("AsyncSession", session), "run-1"
@@ -155,7 +149,7 @@ async def test_get_status_returns_submitted_for_known_run() -> None:
 async def test_get_status_maps_dbos_status(remote: str, expected: str) -> None:
     """DBOS 状态映射到契约枚举"""
     client = FakeClient(status=remote)
-    session = FakeSession(row=SimpleNamespace(run_id="run-1"))
+    session = FakeSession(row="run-1")
 
     status = await workflow_service.get_status(
         cast("Any", client), cast("AsyncSession", session), "run-1"
@@ -167,7 +161,7 @@ async def test_get_status_maps_dbos_status(remote: str, expected: str) -> None:
 async def test_get_status_returns_submitted_for_unknown_status() -> None:
     """未知远端状态降级为 submitted"""
     client = FakeClient(status="SOMETHING_NEW")
-    session = FakeSession(row=SimpleNamespace(run_id="run-1"))
+    session = FakeSession(row="run-1")
 
     status = await workflow_service.get_status(
         cast("Any", client), cast("AsyncSession", session), "run-1"
@@ -179,7 +173,7 @@ async def test_get_status_returns_submitted_for_unknown_status() -> None:
 async def test_get_status_returns_submitted_when_query_fails() -> None:
     """查询异常 - 降级为 submitted"""
     client = FakeClient(error=RuntimeError("dbos unavailable"))
-    session = FakeSession(row=SimpleNamespace(run_id="run-1"))
+    session = FakeSession(row="run-1")
 
     status = await workflow_service.get_status(
         cast("Any", client), cast("AsyncSession", session), "run-1"
@@ -191,7 +185,7 @@ async def test_get_status_returns_submitted_when_query_fails() -> None:
 async def test_get_status_caches_non_terminal_within_ttl() -> None:
     """非终态 TTL 内重复查询 - 只查一次远端"""
     client = FakeClient(status="PENDING")
-    session = FakeSession(row=SimpleNamespace(run_id="run-1"))
+    session = FakeSession(row="run-1")
 
     first = await workflow_service.get_status(
         cast("Any", client), cast("AsyncSession", session), "run-1"
@@ -209,7 +203,7 @@ async def test_get_status_caches_non_terminal_within_ttl() -> None:
 async def test_get_status_caches_terminal_status_permanently() -> None:
     """终态结果常驻缓存 - 重复查询不再查远端"""
     client = FakeClient(status="SUCCESS")
-    session = FakeSession(row=SimpleNamespace(run_id="run-1"))
+    session = FakeSession(row="run-1")
 
     statuses = [
         await workflow_service.get_status(
@@ -230,7 +224,7 @@ async def test_get_status_refreshes_non_terminal_after_ttl(
     clock = [1000.0]
     monkeypatch.setattr(workflow_service, "monotonic", lambda: clock[0])
     client = FakeClient(status="PENDING")
-    session = FakeSession(row=SimpleNamespace(run_id="run-1"))
+    session = FakeSession(row="run-1")
 
     first = await workflow_service.get_status(
         cast("Any", client), cast("AsyncSession", session), "run-1"
@@ -254,7 +248,7 @@ async def test_get_status_refreshes_non_terminal_after_ttl(
 async def test_get_status_retries_after_failure() -> None:
     """查询异常不写缓存 - 下次请求重试"""
     client = FakeClient(error=RuntimeError("dbos unavailable"))
-    session = FakeSession(row=SimpleNamespace(run_id="run-1"))
+    session = FakeSession(row="run-1")
 
     first = await workflow_service.get_status(
         cast("Any", client), cast("AsyncSession", session), "run-1"
@@ -280,7 +274,7 @@ async def test_get_status_times_out_and_retries(
     """查询超时 - 降级为 submitted 且下次重试"""
     monkeypatch.setattr(workflow_service, "_QUERY_TIMEOUT_SECONDS", 0.01)
     client = FakeClient(status="PENDING", delay=0.05)
-    session = FakeSession(row=SimpleNamespace(run_id="run-1"))
+    session = FakeSession(row="run-1")
 
     first = await workflow_service.get_status(
         cast("Any", client), cast("AsyncSession", session), "run-1"
