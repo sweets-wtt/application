@@ -23,7 +23,11 @@ commit-msg:
       run: "{just} check-commit {1}"
 
 # 推送前 - 最后一道闸
+# test 与 check-codegen 相互独立, 并行执行
 pre-push:
+  parallel: true
   jobs:
     - name: test
       run: "{just} test"
+    - name: contract
+      run: "{just} check-codegen"
