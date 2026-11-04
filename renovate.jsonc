@@ -1,22 +1,20 @@
 {
   // 继承推荐配置
   "extends": ["config:best-practices"],
-
   // 锁文件维护
   "lockFileMaintenance": { "enabled": true },
-
-  "packageRules": [
-    {
-      // monorepo 类依赖 - minor/patch 分组批量更新
-      "groupName": "monorepos",
-      "matchUpdateTypes": ["minor", "patch"]
-    },
-    {
-      // bun 依赖 - 精确升版本
-      "matchManagers": ["bun"],
-      "rangeStrategy": "bump"
-    }
-  ],
-
+  // 包匹配规则
+  "packageRules": [{
+    // monorepo 类依赖 - minor/patch 分组批量更新
+    "groupName": "monorepos",
+    // 匹配的更新类型
+    "matchUpdateTypes": ["minor", "patch"]
+  }, {
+    // bun 依赖 - 精确升版本
+    "matchManagers": ["bun"],
+    // 版本范围策略: bump - 新版本满足现有范围时也提升范围
+    "rangeStrategy": "bump"
+  }],
+  // 启用的管理器白名单 - 未列出的一律禁用
   "enabledManagers": ["mise", "dockerfile", "docker-compose", "pep621", "bun", "github-actions"]
 }

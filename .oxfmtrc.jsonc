@@ -1,0 +1,7 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  // 行宽
+  "printWidth": 100,
+  // import 排序
+  "sortImports": true
+}

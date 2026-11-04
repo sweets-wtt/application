@@ -8,9 +8,7 @@
     "module": "ESNext",
     "target": "ESNext",
     "types": ["node", "vitest/globals"],
-    "paths": {
-      "@/*": ["./src/*"]
-    },
+    "paths": { "@/*": ["./src/*"] },
     // 严格
     "strict": true,
     "noUncheckedIndexedAccess": true,

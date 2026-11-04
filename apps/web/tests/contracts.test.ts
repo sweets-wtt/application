@@ -1,4 +1,5 @@
 import { expect, it } from "vitest";
+
 import { Healthz200Response, getHealthz } from "../src/contracts";
 
 it("zod 模式解析标准响应", () => {

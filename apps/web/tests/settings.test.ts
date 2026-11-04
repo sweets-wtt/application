@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { DEFAULT_HEARTBEAT_INTERVAL, parseHeartbeatInterval } from "../src/core/settings";
 
 describe("parseHeartbeatInterval", () => {

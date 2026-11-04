@@ -8,11 +8,11 @@ useDefault = true
 
 # 自定义规则
 [[rules]]
-# 规则唯一标识
-id = "pipe-to-shell"
 # 规则描述
 description = "检测管道执行远程脚本"
-# 检测正则
-regex = '(?i)(curl|wget)[^|\n]*\|\s*(sudo\s+)?(sh|bash|zsh|ksh|dash)(\s|$)'
+# 规则唯一标识
+id = "pipe-to-shell"
 # 预筛选关键词
 keywords = ["curl", "wget"]
+# 检测正则
+regex = '(?i)(curl|wget)[^|\n]*\|\s*(sudo\s+)?(sh|bash|zsh|ksh|dash)(\s|$)'

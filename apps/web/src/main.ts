@@ -1,14 +1,17 @@
-import { createApp } from "vue";
 import { VueQueryPlugin } from "@tanstack/vue-query";
-import { setBaseUrl } from "@/contracts";
-import "virtual:uno.css";
+import { createApp } from "vue";
 
 import App from "@/App.vue";
+
+import "virtual:uno.css";
+
+import { setBaseUrl } from "@/contracts";
+import { configureLogger } from "@/core/logger";
+import { queryClient } from "@/core/query";
+import { API_BASE_URL } from "@/core/settings";
 import { router } from "@/router";
 import { pinia } from "@/stores";
-import { queryClient } from "@/core/query";
-import { configureLogger } from "@/core/logger";
-import { API_BASE_URL } from "@/core/settings";
+
 import "@/styles/main.css";
 
 // 配置日志级别

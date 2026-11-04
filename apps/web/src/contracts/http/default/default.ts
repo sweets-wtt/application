@@ -22,12 +22,10 @@ import type {
   UseQueryOptions,
   UseQueryReturnType,
 } from "@tanstack/vue-query";
-
 import { unref } from "vue";
 
-import type { Healthz200Response } from "../../schemas/index.zod";
-
 import { appFetch } from "../../client";
+import type { Healthz200Response } from "../../schemas/index.zod";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 

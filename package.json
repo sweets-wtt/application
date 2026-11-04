@@ -2,12 +2,6 @@
   "$schema": "https://json.schemastore.org/package.json",
   "name": "application",
   "private": true,
-  "workspaces": [
-    "apps/web"
-  ],
-  "devDependencies": {
-    "@redocly/cli": "^2.72.1",
-    "oxfmt": "^0.70.0",
-    "oxlint": "1.85.0"
-  }
+  "workspaces": ["apps/web"],
+  "devDependencies": { "@redocly/cli": "^2.72.1", "oxfmt": "^0.70.0", "oxlint": "1.85.0" }
 }

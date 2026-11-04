@@ -1,4 +1,6 @@
 {
+  // 全局 - 各插件未显式覆盖时继承
+  "lineWidth": 120,
   // 排除
   "excludes": [
     // 打包制品
@@ -8,7 +10,31 @@
     "apps/web/src/contracts/schemas/**",
     "apps/server/src/server/generated/contracts.py"
   ],
-
+  // JSON / JSONC
+  "json": {
+    // 放得下的数组强制单行
+    "array.preferSingleLine": true,
+    // 放得下的对象强制单行
+    "object.preferSingleLine": true,
+    // 禁止尾逗号
+    "trailingCommas": "never"
+  },
+  // Markdown
+  "markdown": {
+    // 强调符号
+    "emphasisKind": "asterisks",
+    // 无序列表标记
+    "list.unorderedMarker": "asterisks"
+  },
+  // TOML
+  "toml": {
+    // 放得下的数组强制单行
+    "array.preferSingleLine": true,
+    // 放得下的内联表强制单行
+    "inlineTable.preferSingleLine": true,
+    // 键按字母排序
+    "sortKeys": true
+  },
   // 插件
   "plugins": [
     // Dockerfile

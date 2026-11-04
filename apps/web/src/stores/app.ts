@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+
 import { parse, serialize, type Storage } from "@/core/session";
 
 // localStorage 适配为状态包 Storage 接口

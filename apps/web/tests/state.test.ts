@@ -1,5 +1,6 @@
 import { setActivePinia, createPinia } from "pinia";
 import { beforeEach, describe, expect, it } from "vitest";
+
 import { useAppStore } from "../src/stores/app";
 
 describe("app store", () => {

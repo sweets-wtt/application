@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { routes } from "../src/router/routes";
 
 describe("routes", () => {

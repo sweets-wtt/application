@@ -42,10 +42,5 @@
     "vite": "^7.1.3",
     "vitest": "^5.0.0"
   },
-  "size-limit": [
-    {
-      "path": "dist/assets/index-*.js",
-      "limit": "250 KB"
-    }
-  ]
+  "size-limit": [{ "path": "dist/assets/index-*.js", "limit": "250 KB" }]
 }
