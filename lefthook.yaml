@@ -1,23 +1,29 @@
+# 模板 - 收敛命令前缀
+# just 不在裸 PATH, 须经 mise 激活工具链
+# 注意: lefthook 不支持模板嵌套, 此处不可写成 "{mise} just"
+templates:
+  just: mise exec -- just
+
 # 下拉后 - 依赖可能已变更，先同步
 post-merge:
   jobs:
     - name: install
-      run: mise exec -- just install
+      run: "{just} install"
 
 # 提交前 - 在取得提交信息之前执行
 pre-commit:
   jobs:
     - name: lint
-      run: mise exec -- just lint
+      run: "{just} lint"
 
 # 提交信息 - 在提交信息准备完成后执行
 commit-msg:
   jobs:
     - name: cog
-      run: mise exec -- cog verify --file {1}
+      run: "{just} lint-commit {1}"
 
 # 推送前 - 最后一道闸
 pre-push:
   jobs:
     - name: test
-      run: mise exec -- just test
+      run: "{just} test"
