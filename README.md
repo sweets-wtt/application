@@ -8,56 +8,53 @@
 ## 架构
 
 ```text
-application（根项目）
-├── mise（环境管理）
-│   ├── 代码
-│   │   ├── 代码格式：dprint
-│   │   └── 拼写检查：typos
-│   ├── 提交
-│   │   ├── 提交检查：cocogitto
-│   │   └── 钩子管理：lefthook → cocogitto
-│   ├── 安全
-│   │   ├── 密钥扫描：gitleaks
-│   │   ├── 漏洞扫描：trivy
-│   │   ├── 语法检查：actionlint → github
-│   │   └── 工作流审计：zizmor → github
-│   ├── 契约
-│   │   ├── 契约检查：vacuum → openapi
-│   │   └── 兼容检查：oasdiff → openapi
-│   └── 任务编排：just
-│       ├── 工作区：uv
-│       │   ├── 测试
-│       │   │   ├── 测试框架：pytest → uv
-│       │   │   ├── 异步测试：pytest-asyncio → uv
-│       │   │   └── 覆盖率：pytest-cov → uv
-│       │   └── 代码
-│       │       ├── 代码检查：ruff → uv
-│       │       └── 类型检查：ty → uv
-│       └── 工作区：bun
-│           ├── 测试
-│           │   └── 测试框架：vitest → bun
-│           └── 代码
-│               ├── 代码检查：oxlint → bun
-│               ├── 代码格式化：oxfmt → bun
-│               └── 类型检查：typescript → bun
-├── renovate（依赖更新）→ mise
-├── github（GitHub）
-├── podman（容器平台）
-│   └── 平台
-│       └── caddy（入口代理）
-└── apps（应用）
-    ├── server（Server 应用）
-    │   ├── fastapi（web 框架）
-    │   ├── granian（ASGI 服务器）
-    │   ├── pydantic-settings（配置管理）
-    │   ├── structlog（结构化日志）
-    │   ├── pydantic（契约模型）→ openapi
-    │   └── schemathesis（契约测试）
-    └── web（Web 应用）
-        ├── vue（框架）
-        ├── vue-query（契约客户端）
-        ├── zod（模式校验）
-        └── consola（结构化日志）
+根: application
+├── 环境管理: mise
+│   ├── 任务管理: just
+│   ├── 代码格式: dprint
+│   ├── 拼写检查: typos
+│   ├── 提交检查: cocogitto
+│   ├── 钩子管理: lefthook
+│   ├── 密钥扫描: gitleaks
+│   ├── 漏洞扫描: trivy
+│   ├── 语法检查: actionlint
+│   ├── 工作流审计: zizmor
+│   ├── 契约检查: vacuum
+│   ├── 兼容检查: oasdiff
+│   ├── 运行时管理: uv
+│   └── 运行时管理: bun
+├── 依赖更新: renovate
+├── 持续集成: github
+├── 容器平台: podman
+│   └── 入口代理: caddy
+├── Python 工具链
+│   ├── 测试框架: pytest
+│   ├── 异步测试: pytest-asyncio
+│   ├── 覆盖率: pytest-cov
+│   ├── 代码检查: ruff
+│   └── 类型检查: ty
+├── TypeScript 工具链
+│   ├── 测试框架: vitest
+│   ├── 代码检查: oxlint
+│   ├── 代码格式化: oxfmt
+│   └── 类型检查: typescript
+└── 应用: apps
+    ├── server
+    │   ├── web 框架: fastapi
+    │   ├── ASGI 服务器: granian
+    │   ├── 配置管理: pydantic-settings
+    │   ├── 结构化日志: structlog
+    │   ├── 契约模型: pydantic
+    │   ├── 限流: slowapi
+    │   └── 契约测试: schemathesis
+    └── web
+        ├── 框架: vue
+        ├── 路由: vue-router
+        ├── 状态管理: pinia
+        ├── 契约客户端: vue-query
+        ├── 模式校验: zod
+        ├── 组件库: reka-ui
+        └── 结构化日志: consola
 ```
 
 ## 结构
