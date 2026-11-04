@@ -7,19 +7,21 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 # 工作目录
 WORKDIR /app
 
-# 项目配置与锁文件
-COPY apps/server/pyproject.toml apps/server/uv.lock ./apps/server/
+# 工作区配置与锁文件 - 锁文件位于工作区根, 覆盖全部成员
+COPY pyproject.toml uv.lock ./
+# Server 项目配置
+COPY apps/server/pyproject.toml ./apps/server/
 # Server 源码
 COPY apps/server/src/ ./apps/server/src/
 
-# 安装依赖（非可编辑模式安装 server 包）
-RUN uv sync --frozen --no-editable --project apps/server
+# 安装依赖 - 仅目标成员且不含开发依赖
+RUN uv sync --frozen --no-editable --no-dev --package server
 
 # 运行层
 FROM python:3.12-slim
 
 # 虚拟环境
-COPY --from=builder /app/apps/server/.venv /app/.venv
+COPY --from=builder /app/.venv /app/.venv
 
 # 环境变量
 ENV PATH="/app/.venv/bin:$PATH"
