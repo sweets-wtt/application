@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@tanstack/vue-query": "catalog:",
-    "@vueuse/core": "catalog:",
     "consola": "catalog:",
     "pinia": "catalog:",
     "pinia-plugin-persistedstate": "catalog:",

@@ -8,7 +8,7 @@
 	admin off
 }
 
-# Web 应用 - 唯一公网入口, 鉴权由 FastAPI 校验 JWT
+# Web 应用 - 唯一公网入口
 web.{$AUTH_DOMAIN} {
 	# 静态资源、SPA 回退与 API 反代由 Nginx 处理
 	reverse_proxy web:80

@@ -15,7 +15,6 @@
       "@unocss/preset-icons": "^66.1.0",
       "@vitejs/plugin-vue": "^5.2.4",
       "@vue/test-utils": "^2.4.6",
-      "@vueuse/core": "^12.5.0",
       "consola": "^3.4.2",
       "jsdom": "^27.1.0",
       "pinia": "^3.0.4",

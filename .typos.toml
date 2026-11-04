@@ -1,5 +1,2 @@
 [files]
 extend-exclude = ["*.lock"]
-
-[default.extend-words]
-RTO = "RTO"
