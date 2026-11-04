@@ -7,7 +7,7 @@ from fastapi.responses import JSONResponse
 from server.core.exceptions import AppError, handle_app_error
 
 
-class NotFound(AppError):
+class NotFoundError(AppError):
     """找不到资源"""
 
     status_code = 404
@@ -30,7 +30,7 @@ def payload(response: JSONResponse) -> object:
 
 async def test_app_error_default_detail(request_stub: Request) -> None:
     """默认描述 - 使用类属性"""
-    response = await handle_app_error(request_stub, NotFound())
+    response = await handle_app_error(request_stub, NotFoundError())
 
     assert response.status_code == 404
     assert payload(response) == {"detail": "资源不存在"}
@@ -38,7 +38,7 @@ async def test_app_error_default_detail(request_stub: Request) -> None:
 
 async def test_app_error_custom_detail(request_stub: Request) -> None:
     """自定义描述 - 覆盖类属性"""
-    response = await handle_app_error(request_stub, NotFound("画布不存在"))
+    response = await handle_app_error(request_stub, NotFoundError("画布不存在"))
 
     assert response.status_code == 404
     assert payload(response) == {"detail": "画布不存在"}

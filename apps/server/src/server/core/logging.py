@@ -1,8 +1,11 @@
+"""日志配置"""
+
 import logging
 import os
 import re
 import sys
-from typing import Any, Final, cast
+from collections.abc import MutableMapping
+from typing import Any, Final
 
 import structlog
 
@@ -36,8 +39,8 @@ def _mask(value: str) -> str:
 
 
 def redact(
-    logger: Any, method_name: str, event_dict: dict[str, Any], /
-) -> dict[str, Any]:
+    logger: Any, method_name: str, event_dict: MutableMapping[str, Any], /
+) -> MutableMapping[str, Any]:
     """脱敏敏感键与值内嵌明文"""
     for key, value in event_dict.items():
         if str(key).lower() in SENSITIVE_KEYS:
@@ -70,19 +73,16 @@ def _trailing_and_renderer() -> tuple[
 
 
 def configure() -> None:
-    """配置日志
+    """配置日志.
 
     structlog 与标准库日志经 ProcessorFormatter 合流输出
     """
-    shared = cast(
-        "list[structlog.typing.Processor]",
-        [
-            structlog.contextvars.merge_contextvars,
-            structlog.processors.add_log_level,
-            structlog.processors.TimeStamper(fmt="iso", utc=True),
-            redact,
-        ],
-    )
+    shared: list[structlog.typing.Processor] = [
+        structlog.contextvars.merge_contextvars,
+        structlog.processors.add_log_level,
+        structlog.processors.TimeStamper(fmt="iso", utc=True),
+        redact,
+    ]
     trailing, renderer = _trailing_and_renderer()
     structlog.configure(
         processors=[

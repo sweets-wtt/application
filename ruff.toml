@@ -1,0 +1,48 @@
+# 追加排除
+extend-exclude = ["apps/server/src/server/generated/**"]
+# 源码根
+src = ["apps/server/src"]
+
+# Lint 配置
+[lint]
+# 忽略 - 中文 docstring 不加英文尾点
+ignore = ["D415"]
+# 规则集
+select = [
+  "E",
+  "W",
+  "F",
+  "I",
+  "UP",
+  "B",
+  "C4",
+  "SIM",
+  "RUF",
+  "ASYNC",
+  "DTZ",
+  "FA",
+  "PERF",
+  "TC",
+  "N",
+  "A",
+  "RSE",
+  "RET",
+  "T20",
+  "PT",
+  "S",
+  "FAST",
+  "PGH",
+  "PIE",
+  "C90",
+  "TRY",
+  "D",
+]
+
+# 文档字符串惯例
+[lint.pydocstyle]
+convention = "google"
+
+# 按路径豁免
+[lint.per-file-ignores]
+# 测试目录 - 允许 assert, 不强制 docstring
+"apps/server/tests/**" = ["S101", "D"]

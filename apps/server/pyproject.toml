@@ -1,8 +1,13 @@
+# 项目元数据 - PEP 621
 [project]
-name = "server"
-version = "0.1.0"
+# 描述
 description = "Server 应用"
+# 项目名
+name = "server"
+# 支持的 Python 版本
 requires-python = ">=3.12"
+# 版本
+version = "0.1.0"
 
 # 依赖
 dependencies = [
@@ -19,27 +24,29 @@ dependencies = [
 
 # 开发依赖 - lint 与类型检查工具由工作区根统一管理
 [dependency-groups]
-dev = [
-  "datamodel-code-generator>=0.87.0",
-  "pytest>=9.0",
-  "pytest-asyncio>=1.3",
-  "pytest-cov>=7.0",
-]
+# 开发
+dev = ["datamodel-code-generator>=0.87.0", "pytest>=9.0", "pytest-asyncio>=1.3", "pytest-cov>=7.0"]
 
 # 构建
 [build-system]
-requires = ["uv_build>=0.12.10"]
+# 构建后端
 build-backend = "uv_build"
+# 构建依赖
+requires = ["uv_build>=0.12.10"]
 
+# uv 构建后端选项
 [tool.uv.build-backend]
+# 模块名
 module-name = "server"
 
 # pytest - https://docs.pytest.org/
 [tool.pytest.ini_options]
 # importlib 模式允许非包目录下同名测试模块共存
 addopts = "--strict-markers --strict-config --cov --cov-branch --import-mode=importlib"
+# 异步测试自动处理模式
 asyncio_mode = "auto"
 
 # coverage - https://coverage.readthedocs.io/
 [tool.coverage.run]
+# 分支覆盖率
 branch = true

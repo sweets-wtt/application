@@ -1,42 +1,9 @@
-# uv 工作区 - 虚拟根, 不声明 [project] 表, 仅承载工作区与仓库级 Python 工具
+# uv 工作区
 [tool.uv.workspace]
 # 成员
 members = ["apps/server"]
 
-# 依赖组 - 仅仓库级 lint/format 工具, 运行时与测试依赖见各成员
+# 依赖组
 [dependency-groups]
 # 开发
 dev = ["ruff>=0.16.6", "ty>=0.0.78"]
-
-# Ruff - https://docs.astral.sh/ruff/
-[tool.ruff]
-# 源码根 - 供 isort 判定 first-party, 迁移到工作区根后须显式声明
-src = ["apps/server/src"]
-# 契约生成物不参与检查
-extend-exclude = ["apps/server/src/server/generated/contracts.py"]
-
-[tool.ruff.lint]
-# 规则集
-select = [
-  "E",
-  "W",
-  "F",
-  "I",
-  "UP",
-  "B",
-  "C4",
-  "SIM",
-  "RUF",
-  "ASYNC",
-  "DTZ",
-  "FA",
-  "PERF",
-  "TC",
-]
-
-# ty - https://docs.astral.sh/ty/
-[tool.ty.analysis]
-# 严格等式比较
-strict-equality-semantics = true
-# 严格泛型窄化
-strict-generic-narrowing = true

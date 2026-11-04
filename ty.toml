@@ -1,0 +1,17 @@
+# 分析配置
+[analysis]
+# 严格等式比较
+strict-equality-semantics = true
+# 严格泛型窄化
+strict-generic-narrowing = true
+
+# 规则
+[rules]
+# 全面 ignore 注释
+blanket-ignore-comment = "warn"
+# cast 到不相交类型
+disjoint-cast = "warn"
+# 除零
+division-by-zero = "warn"
+# 覆写缺 @override
+missing-override-decorator = "warn"
