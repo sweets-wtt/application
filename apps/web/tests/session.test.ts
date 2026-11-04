@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   defaultState,
   load,
+  migrate,
   parse,
   STORAGE_KEY,
   type State,
@@ -37,8 +38,24 @@ describe("parse", () => {
     expect(parse("{broken")).toEqual(defaultState);
   });
 
-  it("非法数据回退默认状态", () => {
+  it("未知版本回退默认状态", () => {
     expect(parse('{"version":"9"}')).toEqual(defaultState);
+  });
+});
+
+describe("migrate", () => {
+  it("当前版本原样返回", () => {
+    const data = { version: "1", locale: "en-US" };
+
+    expect(migrate(data)).toEqual(data);
+  });
+
+  it("缺失版本视为最早版本 - 无迁移时返回 null", () => {
+    expect(migrate({ locale: "en-US" })).toBeNull();
+  });
+
+  it("未知版本返回 null", () => {
+    expect(migrate({ version: "9" })).toBeNull();
   });
 });
 

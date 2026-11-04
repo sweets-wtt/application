@@ -3,9 +3,12 @@ import { z } from "zod";
 // 存储键
 export const STORAGE_KEY = "app";
 
+// 当前状态版本
+const CURRENT_VERSION = "1";
+
 // 状态模式（版本化）
 const stateSchema = z.object({
-  version: z.literal("1"),
+  version: z.literal(CURRENT_VERSION),
   locale: z.enum(["zh-CN", "en-US"]),
 });
 
@@ -13,12 +16,33 @@ const stateSchema = z.object({
 export type State = z.infer<typeof stateSchema>;
 
 // 默认状态
-export const defaultState: State = { version: "1", locale: "zh-CN" };
+export const defaultState: State = { version: CURRENT_VERSION, locale: "zh-CN" };
 
 // 相邻迁移（旧版本 → 下一版本）
+// 键为源版本，值返回升一级后的数据；缺失版本视为最早版本
 const migrations: Record<string, (state: Record<string, unknown>) => Record<string, unknown>> = {};
 
-/** 解析并迁移到当前版本：损坏数据回退默认状态 */
+/** 逐级迁移到当前版本：无对应迁移或过程中出错则返回 null */
+export const migrate = (data: Record<string, unknown>): Record<string, unknown> | null => {
+  let current = data;
+  let version = typeof current.version === "string" ? current.version : "0";
+
+  // 逐级升级，最多迭代次数防止迁移表成环
+  for (let step = 0; version !== CURRENT_VERSION && step < 16; step += 1) {
+    const upgrade = migrations[version];
+
+    if (upgrade === undefined) {
+      return version === CURRENT_VERSION ? current : null;
+    }
+
+    current = upgrade(current);
+    version = typeof current.version === "string" ? current.version : version;
+  }
+
+  return version === CURRENT_VERSION ? current : null;
+};
+
+/** 解析并迁移到当前版本：损坏或无法迁移的数据回退默认状态 */
 export const parse = (raw: string | null): State => {
   if (raw === null) {
     return defaultState;
@@ -32,10 +56,10 @@ export const parse = (raw: string | null): State => {
     return defaultState;
   }
 
-  const version = typeof data.version === "string" ? data.version : "1";
-  const migrated = migrations[version]?.(data) ?? data;
+  const migrated = migrate(data);
+  const result = migrated === null ? null : stateSchema.safeParse(migrated);
 
-  return stateSchema.safeParse(migrated).success ? stateSchema.parse(migrated) : defaultState;
+  return result?.success === true ? result.data : defaultState;
 };
 
 /** 序列化 */
