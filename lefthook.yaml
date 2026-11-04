@@ -13,14 +13,14 @@ post-merge:
 # 提交前 - 在取得提交信息之前执行
 pre-commit:
   jobs:
-    - name: lint
-      run: "{just} lint"
+    - name: check
+      run: "{just} check"
 
 # 提交信息 - 在提交信息准备完成后执行
 commit-msg:
   jobs:
     - name: cog
-      run: "{just} lint-commit {1}"
+      run: "{just} check-commit {1}"
 
 # 推送前 - 最后一道闸
 pre-push:
