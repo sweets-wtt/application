@@ -29,10 +29,6 @@ import type { Healthz200Response } from "../../schemas/index.zod";
 
 import { appFetch } from "../../client";
 
-type AwaitedInput<T> = PromiseLike<T> | T;
-
-type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
-
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 export type getHealthzResponse200 = {
