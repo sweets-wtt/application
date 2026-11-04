@@ -173,8 +173,8 @@ codegen: codegen-py codegen-ts
 [group("contract")]
 [doc("生成 Python 模型")]
 codegen-py: bundle
-    uv run --locked datamodel-codegen --input contracts/http/dist/openapi.yaml --output apps/server/src/server/contracts.py --disable-timestamp --openapi-scopes paths --strict-types int
-    uv run python -c "from pathlib import Path; p=Path('apps/server/src/server/contracts.py'); p.write_bytes(p.read_bytes().replace(b'\r\n', b'\n'))"
+    uv run --locked datamodel-codegen --input contracts/http/dist/openapi.yaml --output apps/server/src/server/generated/contracts.py --disable-timestamp --openapi-scopes paths --strict-types int
+    uv run python -c "from pathlib import Path; p=Path('apps/server/src/server/generated/contracts.py'); p.write_bytes(p.read_bytes().replace(b'\r\n', b'\n'))"
 
 [group("contract")]
 [doc("生成 TypeScript 客户端")]
@@ -186,7 +186,33 @@ codegen-ts: bundle
 [group("contract")]
 [doc("检查契约漂移")]
 check-codegen: codegen
-    git diff --exit-code -- apps/server/src/server/contracts.py apps/web/src/contracts/http apps/web/src/contracts/schemas contracts/http/dist
+    git diff --exit-code -- apps/server/src/server/generated/contracts.py apps/web/src/contracts/http apps/web/src/contracts/schemas contracts/http/dist
+
+# ── 数据库 ───────────────────────
+
+[group("db")]
+[doc("应用迁移")]
+[working-directory("apps/server")]
+migrate:
+    uv run --locked alembic upgrade head
+
+[group("db")]
+[doc("生成迁移")]
+[working-directory("apps/server")]
+migration message:
+    uv run --locked alembic revision --autogenerate -m "{{message}}"
+
+[group("db")]
+[doc("回退迁移")]
+[working-directory("apps/server")]
+rollback:
+    uv run --locked alembic downgrade -1
+
+[group("db")]
+[doc("查看迁移状态")]
+[working-directory("apps/server")]
+migrate-status:
+    uv run --locked alembic current
 
 # ── 质量与发布 ───────────────────
 

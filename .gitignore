@@ -28,3 +28,9 @@ dist/
 # 契约制品入库
 !contracts/http/dist/
 
+# 数据库
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+

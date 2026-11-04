@@ -11,8 +11,10 @@ dependencies = [
   "pydantic-settings>=2.15.0",
   "granian>=2.8.2",
   "schemathesis>=4.26.1",
-  "slowapi>=0.1.9",
   "structlog>=25.4.0",
+  "sqlalchemy[asyncio]>=2.0.44",
+  "aiosqlite>=0.21",
+  "alembic>=1.16.6",
 ]
 
 # 开发依赖 - lint 与类型检查工具由工作区根统一管理
