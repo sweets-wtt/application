@@ -1,2 +1,9 @@
+# 文件
 [files]
+# 额外排除
 extend-exclude = ["*.lock"]
+
+# 默认规则
+[default]
+# 自定义词表
+[default.extend-words]

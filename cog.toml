@@ -1,18 +1,21 @@
 # 标签前缀
 tag_prefix = "v"
-
-# 从最新标签起
+# 从最新标签起算版本
 from_latest_tag = true
-
 # 忽略合并提交
 ignore_merge_commits = true
 
 # 更新日志
 [changelog]
+# 使用远端模板生成链接
 template = "remote"
+# 输出路径
 path = "CHANGELOG.md"
+# 远端主机
 remote = "github.com"
+# 仓库所有者
 owner = "sweets-wtt"
+# 仓库名
 repository = "application"
 
 # 提交类型
