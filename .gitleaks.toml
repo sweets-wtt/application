@@ -1,15 +1,18 @@
 # 最低版本
 minVersion = "8.30.0"
 
+# 继承
 [extend]
+# 使用默认规则集
 useDefault = true
 
-# 管道执行远程脚本
+# 自定义规则
 [[rules]]
+# 规则唯一标识
 id = "pipe-to-shell"
-description = "检测 curl/wget 管道执行远程脚本"
+# 规则描述
+description = "检测管道执行远程脚本"
+# 检测正则
 regex = '(?i)(curl|wget)[^|\n]*\|\s*(sudo\s+)?(sh|bash|zsh|ksh|dash)(\s|$)'
+# 预筛选关键词
 keywords = ["curl", "wget"]
-
-[files]
-extend-exclude = ["*.lock"]
