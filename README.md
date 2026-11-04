@@ -45,7 +45,6 @@
     │   ├── 配置管理: pydantic-settings
     │   ├── 结构化日志: structlog
     │   ├── 契约模型: pydantic
-    │   ├── 限流: slowapi
     │   └── 契约测试: schemathesis
     └── web
         ├── 框架: vue
@@ -73,7 +72,25 @@
 │   │   ├── .python-version          # Python 版本
 │   │   ├── pyproject.toml           # Python 项目配置（工作区成员）
 │   │   ├── schemathesis.toml        # 契约模糊测试
-│   │   └── src/server               # 源码（含契约生成物）
+│   │   ├── alembic.ini              # 迁移配置
+│   │   ├── alembic                  # 迁移脚本（env.py 启用 batch 模式）
+│   │   ├── data                     # SQLite 数据文件（忽略）
+│   │   ├── tests                    # 测试（镜像源码结构）
+│   │   └── src/server               # 源码
+│   │       ├── main.py              # 应用实例与装配
+│   │       ├── api                  # HTTP 层
+│   │       │   ├── deps.py          # 共享依赖
+│   │       │   ├── router.py        # 路由聚合
+│   │       │   └── routes           # 路由（按资源域一文件）
+│   │       ├── core                 # 基础设施
+│   │       │   ├── config.py        # 配置
+│   │       │   ├── db.py            # 引擎、会话与模型基类
+│   │       │   ├── logging.py       # 日志
+│   │       │   ├── exceptions.py    # 异常
+│   │       │   └── setup.py         # 装配
+│   │       ├── models               # 模型汇总（供迁移发现）
+│   │       └── generated            # 生成物（只读）
+│   │           └── contracts.py     # 契约模型
 │   └── web                          # Web
 │       ├── orval.config.ts          # 契约客户端生成
 │       └── src                      # 源码（含契约生成物）
