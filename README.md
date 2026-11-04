@@ -24,18 +24,16 @@ application（根项目）
 │   ├── 契约
 │   │   ├── 契约检查：vacuum → openapi
 │   │   └── 兼容检查：oasdiff → openapi
-│   └── 工作区
-│       └── 运行时与依赖管理：uv
-│           ├── 测试
-│           │   ├── 测试框架：pytest → uv
-│           │   ├── 异步测试：pytest-asyncio → uv
-│           │   └── 覆盖率：pytest-cov → uv
-│           ├── HTTP
-│           │   └── 客户端：httpx2 → uv
-│           └── 代码
-│               ├── 代码检查：ruff → uv
-│               └── 类型检查：ty → uv
-│       └── 运行时与依赖管理：bun
+│   └── 任务编排：just
+│       ├── 工作区：uv
+│       │   ├── 测试
+│       │   │   ├── 测试框架：pytest → uv
+│       │   │   ├── 异步测试：pytest-asyncio → uv
+│       │   │   └── 覆盖率：pytest-cov → uv
+│       │   └── 代码
+│       │       ├── 代码检查：ruff → uv
+│       │       └── 类型检查：ty → uv
+│       └── 工作区：bun
 │           ├── 测试
 │           │   └── 测试框架：vitest → bun
 │           └── 代码
@@ -76,9 +74,8 @@ application（根项目）
 ├── apps                             # 应用
 │   ├── server                       # Server
 │   │   ├── .python-version          # Python 版本
-│   │   ├── pyproject.toml           # Python 配置
+│   │   ├── pyproject.toml           # Python 项目配置（工作区成员）
 │   │   ├── schemathesis.toml        # 契约模糊测试
-│   │   ├── uv.lock                  # Python 依赖
 │   │   └── src/server               # 源码（含契约生成物）
 │   └── web                          # Web
 │       ├── orval.config.ts          # 契约客户端生成
@@ -105,11 +102,14 @@ application（根项目）
 ├── bun.lock                         # JavaScript 依赖
 ├── cog.toml                         # 提交检查
 ├── dprint.jsonc                     # 代码格式
+├── justfile                         # 任务配方
 ├── lefthook.yaml                    # 钩子管理
 ├── mise.lock                        # 工具版本
-├── mise.toml                        # 开发环境与任务
+├── mise.toml                        # 开发环境（工具链）
 ├── package.json                     # JavaScript 包
+├── pyproject.toml                   # Python 工作区根（含仓库级工具）
 ├── renovate.jsonc                   # 依赖更新
+├── uv.lock                          # Python 依赖（工作区统一）
 ├── zizmor.yaml                      # 安全审计
 └── README.md                        # 项目说明
 ```

@@ -30,7 +30,7 @@ runs:
         version: "2026.8.14"
     # 全量依赖（mise + uv + bun）
     - if: inputs.dependencies == 'all'
-      run: mise run install
+      run: just install
       shell: bash
     # 容器运行时
     - if: inputs.container-runtime == 'true'

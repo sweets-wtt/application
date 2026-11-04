@@ -52,6 +52,6 @@ jobs:
           REGISTRY: ghcr.io/${{ github.repository_owner }}/
           TAG: ${{ steps.tag.outputs.tag }}
         run: |
-          mise run build:image
+          just build-image
           podman push "${REGISTRY}server:${TAG}"
           podman push "${REGISTRY}web:${TAG}"

@@ -26,7 +26,7 @@ jobs:
         with:
           fetch-depth: 0
           env-file: false
-      - run: mise run ci
+      - run: just ci
 
   # 测试
   test:
@@ -36,11 +36,11 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           fetch-depth: 0
-      - run: mise run test
+      - run: just test
       # 体积预算（含前端构建）
-      - run: mise run size
+      - run: just size
       # 契约生成物无漂移
-      - run: mise run check:codegen
+      - run: just check-codegen
 
   # 端到端测试
   e2e:
@@ -52,7 +52,7 @@ jobs:
           dependencies: bun
           env-file: false
       - run: mise exec -- bun x playwright install --with-deps chromium
-      - run: mise run test:e2e
+      - run: just test-e2e
 
   # 镜像构建
   images:
@@ -63,7 +63,7 @@ jobs:
         with:
           env-file: false
           container-runtime: "true"
-      - run: mise run build:image
+      - run: just build-image
 
   # 依赖更新配置校验
   renovate:

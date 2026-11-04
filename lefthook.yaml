@@ -2,13 +2,13 @@
 post-merge:
   jobs:
     - name: install
-      run: mise run install
+      run: mise exec -- just install
 
 # 提交前 - 在取得提交信息之前执行
 pre-commit:
   jobs:
     - name: lint
-      run: mise run lint
+      run: mise exec -- just lint
 
 # 提交信息 - 在提交信息准备完成后执行
 commit-msg:
@@ -20,4 +20,4 @@ commit-msg:
 pre-push:
   jobs:
     - name: test
-      run: mise run test
+      run: mise exec -- just test

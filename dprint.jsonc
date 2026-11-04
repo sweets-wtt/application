@@ -1,7 +1,7 @@
 {
   // 排除
   "excludes": [
-    // 打包制品 - 由 mise run bundle 生成，格式由生成器决定
+    // 打包制品 - 由 just bundle 生成，格式由生成器决定
     "contracts/http/dist/**",
     // 契约生成物
     "apps/web/src/contracts/http/**",
