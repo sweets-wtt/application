@@ -1,5 +1,3 @@
-"""结构化日志"""
-
 import logging
 import os
 import re

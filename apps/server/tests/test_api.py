@@ -1,5 +1,3 @@
-"""契约模糊测试"""
-
 from pathlib import Path
 
 import schemathesis

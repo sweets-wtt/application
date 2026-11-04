@@ -13,7 +13,7 @@ dev = ["ruff>=0.16.6", "ty>=0.0.78"]
 # 源码根 - 供 isort 判定 first-party, 迁移到工作区根后须显式声明
 src = ["apps/server/src"]
 # 契约生成物不参与检查
-extend-exclude = ["apps/server/src/server/contracts.py"]
+extend-exclude = ["apps/server/src/server/generated/contracts.py"]
 
 [tool.ruff.lint]
 # 规则集

@@ -6,7 +6,7 @@
     // 契约生成物
     "apps/web/src/contracts/http/**",
     "apps/web/src/contracts/schemas/**",
-    "apps/server/src/server/contracts.py"
+    "apps/server/src/server/generated/contracts.py"
   ],
 
   // 插件 - npm 形式在前,其余按工具字母序
