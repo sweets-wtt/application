@@ -4,4 +4,4 @@
 # 生成物
 apps/web/src/contracts/http/** linguist-generated=true
 apps/web/src/contracts/schemas/** linguist-generated=true
-apps/server/src/server/contracts.py linguist-generated=true
+apps/server/src/server/generated/** linguist-generated=true
