@@ -1,3 +1,5 @@
+"""应用入口"""
+
 import fastapi
 
 from server.api.router import api_router

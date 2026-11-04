@@ -1,3 +1,5 @@
+"""路由聚合"""
+
 from fastapi import APIRouter
 
 from server.api.routes import utils

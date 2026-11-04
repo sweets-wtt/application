@@ -1,3 +1,5 @@
+"""应用异常"""
+
 from fastapi import Request
 from fastapi.responses import JSONResponse
 
@@ -12,6 +14,7 @@ class AppError(Exception):
     detail: str = "内部错误"
 
     def __init__(self, detail: str | None = None) -> None:
+        """初始化业务异常"""
         if detail is not None:
             self.detail = detail
 

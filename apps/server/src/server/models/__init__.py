@@ -1,3 +1,5 @@
+"""模型汇总"""
+
 from server.core.db import Base
 
 # 模型在此汇总 - 供 Alembic autogenerate 发现

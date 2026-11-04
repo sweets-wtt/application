@@ -1,3 +1,5 @@
+"""应用配置"""
+
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 

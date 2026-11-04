@@ -1,3 +1,5 @@
+"""数据库引擎与会话"""
+
 from collections.abc import AsyncIterator
 
 from sqlalchemy import MetaData
