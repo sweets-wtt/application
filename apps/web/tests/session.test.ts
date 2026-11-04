@@ -1,4 +1,3 @@
-/** 状态持久化测试 */
 import { describe, expect, it } from "vitest";
 import {
   defaultState,

@@ -1,4 +1,3 @@
-/** Pinia 实例 */
 import { createPinia } from "pinia";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 

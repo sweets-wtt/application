@@ -1,4 +1,3 @@
-/** 契约测试 */
 import { expect, it } from "vitest";
 import { Healthz200Response, getHealthz } from "../src/contracts";
 

@@ -1,4 +1,3 @@
-/** 日志配置 - 结构化输出与脱敏 */
 import { type ConsolaInstance, createConsola } from "consola";
 
 // 敏感键

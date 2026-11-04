@@ -1,4 +1,3 @@
-/** 路由配置 */
 import type { RouteRecordRaw } from "vue-router";
 
 // 路由：本阶段仅首页嵌套布局

@@ -1,4 +1,3 @@
-/** 应用配置测试 */
 import { describe, expect, it } from "vitest";
 import { DEFAULT_HEARTBEAT_INTERVAL, parseHeartbeatInterval } from "../src/core/settings";
 

@@ -1,4 +1,3 @@
-/** 应用入口 */
 import { createApp } from "vue";
 import { VueQueryPlugin } from "@tanstack/vue-query";
 import { setBaseUrl } from "@/contracts";

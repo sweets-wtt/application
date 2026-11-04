@@ -1,5 +1,3 @@
-/** 应用 fetch 客户端：Orval mutator */
-
 /** API 基地址（默认同源相对路径） */
 let baseUrl = "";
 

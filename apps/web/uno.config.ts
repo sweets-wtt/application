@@ -1,4 +1,3 @@
-/** UnoCSS - https://unocss.dev/ */
 import { defineConfig, presetIcons, presetWind3 } from "unocss";
 
 export default defineConfig({

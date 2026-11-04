@@ -1,4 +1,3 @@
-/** 服务端健康检查（心跳） */
 import { computed, type ComputedRef, type Ref } from "vue";
 import { useGetHealthz, type Healthz200Response } from "@/contracts";
 import { HEARTBEAT_INTERVAL } from "@/core/settings";

@@ -1,5 +1,3 @@
-# pyproject.toml - https://packaging.python.org/en/latest/specifications/pyproject-toml/
-
 # uv 工作区 - 虚拟根, 不声明 [project] 表, 仅承载工作区与仓库级 Python 工具
 [tool.uv.workspace]
 # 成员

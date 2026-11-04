@@ -1,4 +1,3 @@
-/** TanStack Query 客户端 */
 import { QueryClient } from "@tanstack/vue-query";
 
 // 全局查询客户端

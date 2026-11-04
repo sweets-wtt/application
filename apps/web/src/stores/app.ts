@@ -1,4 +1,3 @@
-/** 应用状态 */
 import { defineStore } from "pinia";
 import { parse, serialize, type Storage } from "@/core/session";
 

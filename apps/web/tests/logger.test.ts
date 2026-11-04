@@ -1,4 +1,3 @@
-/** 日志测试 */
 import { expect, it, vi } from "vitest";
 import { configure, configureLogger, logger } from "../src/core/logger";
 

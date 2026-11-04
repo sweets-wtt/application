@@ -1,4 +1,3 @@
-/** 路由实例 */
 import { createRouter, createWebHistory } from "vue-router";
 import { routes } from "@/router/routes";
 

@@ -1,4 +1,3 @@
-/** Orval - https://orval.dev/reference/configuration/overview */
 import { defineConfig } from "orval";
 
 export default defineConfig({

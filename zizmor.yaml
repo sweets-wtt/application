@@ -1,4 +1,3 @@
-# 审计规则 - https://docs.zizmor.sh/audits/
 rules:
   # actionlint 1.7.12 尚不支持 `$/` 语法，忽略 self-repository 建议
   self-repository:

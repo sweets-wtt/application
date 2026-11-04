@@ -1,4 +1,3 @@
-/** 状态持久化测试 */
 import { setActivePinia, createPinia } from "pinia";
 import { beforeEach, describe, expect, it } from "vitest";
 import { useAppStore } from "../src/stores/app";

@@ -1,5 +1,3 @@
-/** 应用配置：集中环境变量与运行时常量 */
-
 // 心跳默认间隔（毫秒）
 export const DEFAULT_HEARTBEAT_INTERVAL = 30_000;
 

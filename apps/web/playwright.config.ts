@@ -1,4 +1,3 @@
-/** Playwright - https://playwright.dev/ */
 import { defineConfig } from "@playwright/test";
 
 export default defineConfig({

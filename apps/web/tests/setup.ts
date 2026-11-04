@@ -1,4 +1,3 @@
-/** 阻断网络 */
 import { beforeAll, vi } from "vitest";
 
 beforeAll(() => {

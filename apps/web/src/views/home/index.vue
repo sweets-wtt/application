@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// 首页视图
 import { computed } from "vue";
 import { useHealthCheck } from "@/features/health/useHealthCheck";
 

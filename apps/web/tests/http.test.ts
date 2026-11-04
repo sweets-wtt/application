@@ -1,4 +1,3 @@
-/** 契约客户端测试 */
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { appFetch, setBaseUrl } from "@/contracts";
 
