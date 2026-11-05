@@ -19,7 +19,7 @@ class AppError(Exception):
             self.detail = detail
 
 
-async def handle_app_error(request: Request, exc: Exception) -> JSONResponse:
+async def handle_app_error(_request: Request, exc: Exception) -> JSONResponse:
     """业务异常响应 - 统一错误结构"""
     # 业务异常 - 使用自定义状态码与描述
     if isinstance(exc, AppError):

@@ -29,83 +29,44 @@ skip-magic-trailing-comma = false
 ignore = ["D415"]
 # 规则集
 select = [
-  # 内置规则
   "A",
-  # 类型注解
   "ANN",
-  # 未使用参数
   "ARG",
-  # 异步
   "ASYNC",
-  # Bugbear
   "B",
-  # 盲异常
   "BLE",
-  # 推导式
   "C4",
-  # 复杂度
   "C90",
-  # docstring
   "D",
-  # 时区
   "DTZ",
-  # pycodestyle
   "E",
-  # 错误消息
   "EM",
-  # pyflakes
   "F",
-  # future annotations
   "FA",
-  # FastAPI
   "FAST",
-  # 布尔位置参数
   "FBT",
-  # 日志格式
   "G",
-  # isort
   "I",
-  # 隐式命名空间包
   "INP",
-  # 日志调用
   "LOG",
-  # 命名
   "N",
-  # 性能
   "PERF",
-  # pygrep
   "PGH",
-  # flake8-pie
   "PIE",
-  # Pylint refactor
   "PLR",
-  # pytest
   "PT",
-  # pathlib
   "PTH",
-  # return
   "RET",
-  # raise
   "RSE",
-  # Ruff
   "RUF",
-  # bandit
   "S",
-  # 简化
   "SIM",
-  # 私有成员
   "SLF",
-  # print
   "T20",
-  # type-checking
   "TC",
-  # TODO
   "TD",
-  # tryceratops
   "TRY",
-  # pyupgrade
   "UP",
-  # pycodestyle warnings
   "W",
 ]
 
@@ -135,12 +96,8 @@ max-complexity = 10
 
 # 按路径豁免
 [lint.per-file-ignores]
-# 异常处理器
-"apps/server/src/server/core/exceptions.py" = ["ARG001"]
-# 日志工具
-"apps/server/src/server/core/logging.py" = ["ANN401", "ARG001"]
-# 测试目录
-"apps/server/tests/**" = ["ANN", "ARG001", "ARG002", "D", "INP001", "PLR2004", "S101"]
+# 测试目录 - 断言使用 assert
+"apps/server/tests/**" = ["S101"]
 
 # pycodestyle
 [lint.pycodestyle]
@@ -149,4 +106,5 @@ max-line-length = 100
 
 # 文档字符串惯例
 [lint.pydocstyle]
+# 约定
 convention = "google"

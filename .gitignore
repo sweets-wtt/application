@@ -26,8 +26,6 @@ Thumbs.db
 # 轮转日志
 *.log.*
 
-# 通用缓存
-.cache/
 # Python 字节码
 __pycache__/
 # Ruff 缓存
@@ -50,17 +48,11 @@ blob-report/
 
 # 覆盖率
 .coverage
-# 覆盖率 XML 报告
-coverage.xml
-# 覆盖率 HTML 报告
-htmlcov/
 
 # 构建产物
 dist/
 # 契约制品入库
 !contracts/*/dist/
-# Turborepo 缓存
-.turbo/
 
 # Python 构建元数据
 *.egg-info/

@@ -17,6 +17,4 @@ extend-exclude = [
   "apps/server/src/server/generated/**",
   # TypeScript 契约生成物
   "apps/web/src/api/generated/**",
-  # 契约打包制品
-  "contracts/http/dist/**",
 ]

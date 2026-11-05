@@ -1,97 +1,156 @@
 # 工作流名称
 name: ci
 
+# 触发条件
 on:
+  # 拉取请求
   pull_request:
+  # 推送
   push:
+    # 分支
     branches:
       - main
 
+# 权限
 permissions:
+  # 内容
   contents: read
 
-# 同一引用取消旧运行
+# 并发控制
 concurrency:
+  # 分组
   group: ${{ github.workflow }}-${{ github.ref }}
+  # 取消进行中
   cancel-in-progress: true
 
+# 任务
 jobs:
   # 代码检查
   lint:
+    # 运行环境
     runs-on: ubuntu-latest
+    # 超时分钟
     timeout-minutes: 15
+    # 步骤
     steps:
-      # 全量历史供密钥扫描
+      # 检出并准备环境
       - uses: ./.github/actions/setup
+        # 输入参数
         with:
+          # 检出深度
           fetch-depth: 0
+          # 生成环境文件
           env-file: false
+      # 运行检查
       - run: just ci
 
   # 测试
   test:
+    # 运行环境
     runs-on: ubuntu-latest
+    # 超时分钟
     timeout-minutes: 20
+    # 步骤
     steps:
+      # 检出并准备环境
       - uses: ./.github/actions/setup
+        # 输入参数
         with:
+          # 检出深度
           fetch-depth: 0
+      # 运行测试
       - run: just test
-      # 体积预算（含前端构建）
+      # 检查产物体积
       - run: just size
-      # 契约生成物无漂移
+      # 检查契约漂移
       - run: just check-codegen
 
   # 端到端测试
   e2e:
+    # 运行环境
     runs-on: ubuntu-latest
+    # 超时分钟
     timeout-minutes: 20
+    # 步骤
     steps:
+      # 检出并准备环境
       - uses: ./.github/actions/setup
+        # 输入参数
         with:
+          # 依赖安装方式
           dependencies: bun
+          # 生成环境文件
           env-file: false
+      # 安装浏览器
       - run: mise exec -- bun x playwright install --with-deps chromium
+      # 运行端到端测试
       - run: just test-e2e
 
   # 镜像构建
   images:
+    # 运行环境
     runs-on: ubuntu-latest
+    # 超时分钟
     timeout-minutes: 20
+    # 步骤
     steps:
+      # 检出并准备环境
       - uses: ./.github/actions/setup
+        # 输入参数
         with:
+          # 生成环境文件
           env-file: false
+          # 安装容器运行时
           container-runtime: "true"
+      # 构建镜像
       - run: just build-image
 
   # 依赖更新配置校验
   renovate:
+    # 运行环境
     runs-on: ubuntu-latest
+    # 超时分钟
     timeout-minutes: 5
+    # 步骤
     steps:
+      # 检出并准备环境
       - uses: ./.github/actions/setup
+        # 输入参数
         with:
+          # 依赖安装方式
           dependencies: none
+          # 生成环境文件
           env-file: false
+      # 安装 Node
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      # 校验 renovate 配置
       - uses: suzuki-shunsuke/github-action-renovate-config-validator@ee9f69e1f683ed0d08225086482b34fc9abe9300 # v2.1.0
+        # 输入参数
         with:
+          # 配置文件路径
           config_file_path: renovate.jsonc
 
   # API 兼容检查
   compat:
+    # 运行条件
     if: github.event_name == 'pull_request'
+    # 运行环境
     runs-on: ubuntu-latest
+    # 超时分钟
     timeout-minutes: 10
+    # 步骤
     steps:
-      # 对比基线需全量历史
+      # 检出并准备环境
       - uses: ./.github/actions/setup
+        # 输入参数
         with:
+          # 检出深度
           fetch-depth: 0
+          # 依赖安装方式
           dependencies: none
+          # 生成环境文件
           env-file: false
-      # 制品对比，基线缺失时跳过
+      # 对比契约基线
       - run: |
           if git cat-file -e "origin/main:contracts/http/dist/openapi.yaml" 2>/dev/null; then
             oasdiff breaking --fail-on ERR "origin/main:contracts/http/dist/openapi.yaml" contracts/http/dist/openapi.yaml
@@ -101,17 +160,27 @@ jobs:
 
   # 提交规范
   commit-lint:
+    # 运行条件
     if: github.event_name == 'pull_request'
+    # 运行环境
     runs-on: ubuntu-latest
+    # 超时分钟
     timeout-minutes: 5
+    # 步骤
     steps:
-      # 校验提交需全量历史
+      # 检出并准备环境
       - uses: ./.github/actions/setup
+        # 输入参数
         with:
+          # 检出深度
           fetch-depth: 0
+          # 依赖安装方式
           dependencies: none
+          # 生成环境文件
           env-file: false
+      # 校验提交信息
       - env:
+          # 基线提交
           BASE: ${{ github.event.pull_request.base.sha }}
         run: |
           for sha in $(git rev-list --no-merges "$BASE"..HEAD); do
@@ -120,12 +189,21 @@ jobs:
 
   # 依赖审查
   deps-review:
+    # 运行条件
     if: github.event_name == 'pull_request'
+    # 运行环境
     runs-on: ubuntu-latest
+    # 超时分钟
     timeout-minutes: 10
+    # 步骤
     steps:
+      # 检出并准备环境
       - uses: ./.github/actions/setup
+        # 输入参数
         with:
+          # 依赖安装方式
           dependencies: none
+          # 生成环境文件
           env-file: false
+      # 审查依赖变更
       - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0

@@ -16,7 +16,7 @@
   },
   // 忽略模式
   // Playwright E2E 不适用 Vitest 规则
-  "ignorePatterns": ["apps/web/src/api/generated/**", "apps/web/tests/e2e/**"],
+  "ignorePatterns": ["apps/web/src/api/generated/**"],
   // 按文件模式覆盖
   "overrides": [{
     // 测试文件
@@ -26,6 +26,13 @@
       "max-lines": "off",
       // 测试文件不限制函数长度
       "max-lines-per-function": "off"
+    }
+  }, {
+    // 端到端测试 - Playwright 约定
+    "files": ["**/tests/e2e/**"],
+    "rules": {
+      // 允许 Playwright 用例命名
+      "vitest/consistent-test-filename": "off"
     }
   }, {
     // 测试环境配置 - 顶层 hook 与显式导入

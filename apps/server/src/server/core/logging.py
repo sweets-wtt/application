@@ -5,7 +5,6 @@ import logging
 import os
 import re
 import sys
-from typing import Any
 from typing import Final
 
 import structlog
@@ -41,8 +40,8 @@ def _mask(value: str) -> str:
 
 
 def redact(
-    logger: Any, method_name: str, event_dict: MutableMapping[str, Any], /
-) -> MutableMapping[str, Any]:
+    _logger: object, _method_name: str, event_dict: MutableMapping[str, object], /
+) -> MutableMapping[str, object]:
     """脱敏敏感键与值内嵌明文"""
     for key, value in event_dict.items():
         if str(key).lower() in SENSITIVE_KEYS:
@@ -115,6 +114,6 @@ def configure() -> None:
     root.setLevel(_level())
 
 
-def get_logger(name: str | None = None, **initial_values: Any) -> structlog.stdlib.BoundLogger:
+def get_logger(name: str | None = None, **initial_values: object) -> structlog.stdlib.BoundLogger:
     """获取结构化日志器"""
     return structlog.get_logger(name, **initial_values)

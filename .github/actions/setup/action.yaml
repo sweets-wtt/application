@@ -3,44 +3,70 @@ name: setup
 # 动作说明
 description: 检出仓库并准备工具链、依赖与环境变量
 
+# 输入参数
 inputs:
+  # 检出深度
   fetch-depth:
+    # 说明
     description: 检出深度
+    # 默认值
     default: "1"
+  # 依赖安装方式
   dependencies:
+    # 说明
     description: 依赖安装方式（all | bun | none）
+    # 默认值
     default: all
+  # 生成环境文件
   env-file:
+    # 说明
     description: 是否生成 infra/.env
+    # 默认值
     default: "true"
+  # 安装容器运行时
   container-runtime:
+    # 说明
     description: 是否安装 podman
+    # 默认值
     default: "false"
 
+# 执行配置
 runs:
+  # 动作类型
   using: composite
+  # 步骤
   steps:
+    # 检出仓库
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # 输入参数
       with:
+        # 检出深度
         fetch-depth: ${{ inputs.fetch-depth }}
+        # 持久化凭据
         persist-credentials: false
-    # 环境管理（版本号唯一来源）
+    # 安装工具链
     - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
+      # 输入参数
       with:
+        # 工具版本
         version: "2026.8.14"
-    # 全量依赖（mise + uv + bun）
+    # 安装全部依赖
     - if: inputs.dependencies == 'all'
       run: just install
+      # 执行环境
       shell: bash
-    # 容器运行时
+    # 安装容器运行时
     - if: inputs.container-runtime == 'true'
       run: sudo apt-get update && sudo apt-get install -y podman podman-compose
+      # 执行环境
       shell: bash
-    # 前端依赖
+    # 安装前端依赖
     - if: inputs.dependencies == 'bun'
       run: mise exec -- bun install --frozen-lockfile
+      # 执行环境
       shell: bash
-    # 环境变量文件（compose 校验用）
+    # 生成环境文件
     - if: inputs.env-file == 'true'
       run: sed 's/=$/=placeholder/' infra/.env.example > infra/.env
+      # 执行环境
       shell: bash
