@@ -16,10 +16,10 @@ FastAPI 服务的目录规范与代码编写说明新增代码按本文档放置
 ## 目录结构
 
 ```text
-apps/server/                      # Server 应用
-├── src/                          # 源码
-│   └── server/                   # 应用包
-│       ├── api/                  # HTTP 层
+apps/server/                      # 服务应用
+├── src/                          # 源码目录
+│   └── server/                   # 应用包体
+│       ├── api/                  # 接口分层
 │       │   ├── deps.py           # 共享依赖
 │       │   └── router.py         # 路由聚合
 │       ├── core/                 # 基础设施
@@ -30,18 +30,18 @@ apps/server/                      # Server 应用
 │       ├── features/             # 业务功能
 │       │   └── health/           # 健康检查
 │       │       └── router.py     # 存活探针
-│       ├── generated/            # 契约生成物
+│       ├── generated/            # 契约生成
 │       │   └── contracts.py      # 契约模型
 │       ├── __init__.py           # 包初始化
 │       └── main.py               # 应用入口
-├── tests/                        # 测试
-│   ├── core/                     # 基础设施测试
+├── tests/                        # 测试目录
+│   ├── core/                     # 基础测试
 │   │   └── test_exceptions.py    # 异常测试
-│   └── features/                 # 业务功能测试
-│       └── health/               # 健康检查测试
+│   └── features/                 # 业务测试
+│       └── health/               # 健康测试
 │           └── test_router.py    # 路由测试
-├── pyproject.toml                # Python 项目配置
-├── schemathesis.toml             # 契约模糊测试
+├── pyproject.toml                # 项目配置
+├── schemathesis.toml             # 契约测试
 └── Dockerfile                    # 容器镜像
 ```
 

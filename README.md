@@ -55,35 +55,35 @@
 ## 结构
 
 ```text
-.                       # 项目根目录
+.                       # 根级目录
 ├── .github/            # 持续集成
-├── apps/               # 应用
-│   ├── server/         # Server
-│   └── web/            # Web
-├── contracts/          # 契约
+├── apps/               # 应用目录
+│   ├── server/         # 服务应用
+│   └── web/            # 前端应用
+├── contracts/          # 契约目录
 ├── infra/              # 服务编排
 ├── .containerignore    # 构建忽略
 ├── .editorconfig       # 代码风格
-├── .gitattributes      # Git 属性
-├── .gitignore          # Git 忽略
+├── .gitattributes      # 版本属性
+├── .gitignore          # 版本忽略
 ├── .gitleaks.toml      # 密钥扫描
-├── .oxfmtrc.jsonc      # JavaScript 格式化
-├── .oxlintrc.jsonc     # JavaScript 检查
-├── .python-version     # Python 版本
+├── .oxfmtrc.jsonc      # 格式配置
+├── .oxlintrc.jsonc     # 检查配置
+├── .python-version     # 语言版本
 ├── .typos.toml         # 拼写检查
-├── bun.lock            # JavaScript 依赖
-├── cog.toml            # 提交检查
+├── bun.lock            # 前端依赖
+├── cog.toml            # 提交规范
 ├── dprint.jsonc        # 代码格式
 ├── justfile            # 任务配方
 ├── lefthook.yaml       # 钩子管理
 ├── mise.lock           # 工具版本
 ├── mise.toml           # 开发环境
-├── package.json        # JavaScript 包
-├── pyproject.toml      # Python 工作区
+├── package.json        # 包体配置
+├── pyproject.toml      # 工作区根
 ├── renovate.jsonc      # 依赖更新
-├── ruff.toml           # Python 检查
-├── ty.toml             # Python 类型检查
-├── uv.lock             # Python 依赖
+├── ruff.toml           # 后端检查
+├── ty.toml             # 类型检查
+├── uv.lock             # 后端依赖
 ├── zizmor.yaml         # 安全审计
 └── README.md           # 项目说明
 ```

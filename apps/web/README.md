@@ -21,54 +21,54 @@ Vue 3 单页应用的目录规范与代码编写说明新增代码按本文档�
 ## 目录结构
 
 ```text
-apps/web/                                # Web 应用
-├── src/                                 # 源码
-│   ├── api/                             # HTTP 客户端
-│   │   ├── generated/                   # 契约生成物
-│   │   │   ├── http/                    # HTTP 客户端
-│   │   │   │   ├── default/             # 默认客户端
-│   │   │   │   │   └── default.ts       # 客户端实现
-│   │   │   │   └── index.ts             # 客户端出口
-│   │   │   └── schemas/                 # Zod 模式
+apps/web/                                # 前端应用
+├── src/                                 # 源码目录
+│   ├── api/                             # 接口访问
+│   │   ├── generated/                   # 契约生成
+│   │   │   ├── http/                    # 接口生成
+│   │   │   │   ├── default/             # 默认分组
+│   │   │   │   │   └── default.ts       # 实现文件
+│   │   │   │   └── index.ts             # 出口文件
+│   │   │   └── schemas/                 # 模式校验
 │   │   │       └── index.zod.ts         # 模式出口
-│   │   ├── client.ts                    # fetch 客户端
-│   │   └── index.ts                     # API 出口
+│   │   ├── client.ts                    # 请求封装
+│   │   └── index.ts                     # 接口导出
 │   ├── config/                          # 环境配置
 │   │   └── env.ts                       # 环境变量
 │   ├── features/                        # 业务功能
 │   │   └── health/                      # 健康检查
-│   │       ├── composables/             # 组合式函数
+│   │       ├── composables/             # 组合函数
 │   │       │   └── useHealthCheck.ts    # 健康检查
-│   │       ├── constants.ts             # 常量
-│   │       └── index.ts                 # 出口
+│   │       ├── constants.ts             # 常量定义
+│   │       └── index.ts                 # 模块出口
 │   ├── layouts/                         # 页面布局
 │   │   └── DefaultLayout.vue            # 默认布局
 │   ├── lib/                             # 通用工具
-│   │   ├── logger.ts                    # 日志
-│   │   ├── query.ts                     # 查询客户端
-│   │   └── storage.ts                   # 存储
-│   ├── router/                          # 路由
+│   │   ├── logger.ts                    # 日志工具
+│   │   ├── query.ts                     # 查询封装
+│   │   └── storage.ts                   # 存储工具
+│   ├── router/                          # 路由目录
 │   │   ├── index.ts                     # 路由实例
 │   │   └── routes.ts                    # 路由定义
 │   ├── stores/                          # 状态仓库
 │   │   ├── app.ts                       # 应用状态
-│   │   └── index.ts                     # Pinia 实例
+│   │   └── index.ts                     # 状态实例
 │   ├── styles/                          # 全局样式
-│   │   └── main.css                     # 主样式
-│   ├── views/                           # 页面
-│   │   └── HomeView.vue                 # 首页
+│   │   └── main.css                     # 主样式表
+│   ├── views/                           # 页面目录
+│   │   └── HomeView.vue                 # 首页页面
 │   ├── env.d.ts                         # 环境类型
 │   ├── main.ts                          # 应用入口
-│   └── App.vue                          # 根组件
-├── tests/                               # 测试
-│   ├── e2e/                             # 端到端测试
+│   └── App.vue                          # 根级组件
+├── tests/                               # 测试目录
+│   ├── e2e/                             # 端到端测
 │   │   └── smoke.spec.ts                # 冒烟测试
 │   ├── unit/                            # 单元测试
-│   │   ├── api/                         # API 测试
-│   │   │   ├── client.test.ts           # 客户端测试
-│   │   │   └── index.test.ts            # 出口测试
+│   │   ├── api/                         # 接口测试
+│   │   │   ├── client.test.ts           # 请求测试
+│   │   │   └── index.test.ts            # 导出测试
 │   │   ├── features/                    # 业务测试
-│   │   │   └── health/                  # 健康检查测试
+│   │   │   └── health/                  # 健康测试
 │   │   │       └── constants.test.ts    # 常量测试
 │   │   ├── lib/                         # 工具测试
 │   │   │   ├── logger.test.ts           # 日志测试
@@ -77,17 +77,17 @@ apps/web/                                # Web 应用
 │   │   │   └── router.test.ts           # 路由测试
 │   │   ├── stores/                      # 状态测试
 │   │   │   └── app.test.ts              # 状态测试
-│   │   └── App.test.ts                  # 根组件测试
+│   │   └── App.test.ts                  # 组件测试
 │   └── setup.ts                         # 测试配置
-├── .env.example                         # 环境变量示例
+├── .env.example                         # 变量示例
 ├── index.html                           # 页面模板
-├── nginx.conf                           # Nginx 配置
-├── orval.config.ts                      # 契约客户端配置
-├── package.json                         # 包配置
-├── playwright.config.ts                 # E2E 配置
-├── tsconfig.json                        # TypeScript 配置
-├── uno.config.ts                        # UnoCSS 配置
-├── vite.config.ts                       # Vite 配置
+├── nginx.conf                           # 代理配置
+├── orval.config.ts                      # 契约配置
+├── package.json                         # 包体配置
+├── playwright.config.ts                 # 端到端配
+├── tsconfig.json                        # 脚本配置
+├── uno.config.ts                        # 样式配置
+├── vite.config.ts                       # 构建配置
 └── Dockerfile                           # 容器镜像
 ```
 
@@ -173,7 +173,7 @@ mise exec -- just install
 
 # 检查与测试
 mise exec -- just check-typescript
-mise exec -- just test-js
+mise exec -- just test-typescript
 mise exec -- just test-e2e
 mise exec -- just size
 

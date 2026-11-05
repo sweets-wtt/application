@@ -37,15 +37,15 @@ install-typescript:
 [parallel]
 check: check-format check-justfile check-spell check-secret check-github check-compose check-python check-typescript check-api
 
-[doc("检查文件格式")]
-[group("check")]
-check-format:
-    dprint check
-
 [doc("检查任务文件")]
 [group("check")]
 check-justfile:
     just --fmt --check
+
+[doc("检查文件格式")]
+[group("check")]
+check-format:
+    dprint check
 
 [doc("检查拼写")]
 [group("check")]
@@ -62,6 +62,11 @@ check-secret:
 check-github:
     actionlint
     zizmor .github
+
+[doc("校验 OpenAPI 契约")]
+[group("check")]
+check-api:
+    vacuum lint --ruleset contracts/ruleset.yaml contracts/http/dist/openapi.yaml
 
 [doc("校验容器编排配置")]
 [group("check")]
@@ -85,25 +90,20 @@ check-typescript:
     bunx oxlint --no-error-on-unmatched-pattern
     bunx tsc -p apps/web/tsconfig.json --noEmit
 
-[doc("校验 OpenAPI 契约")]
-[group("check")]
-check-api:
-    vacuum lint --ruleset contracts/http/vacuum.yaml contracts/http/dist/openapi.yaml
-
 [doc("格式化")]
 [group("format")]
 [parallel]
 format: format-code format-justfile format-python format-ts
 
-[doc("格式化配置与文档")]
-[group("format")]
-format-code:
-    dprint fmt
-
 [doc("格式化任务文件")]
 [group("format")]
 format-justfile:
     just --fmt
+
+[doc("格式化配置与文档")]
+[group("format")]
+format-code:
+    dprint fmt
 
 [doc("格式化 Python")]
 [group("format")]
@@ -135,20 +135,20 @@ build-web:
 [parallel]
 build-image: build-image-server build-image-web
 
-[doc("构建 Server 镜像")]
-[group("build")]
-build-image-server:
-    podman build -f apps/server/Dockerfile -t {{ registry }}server:{{ tag }} .
-
 [doc("构建 Web 镜像")]
 [group("build")]
 build-image-web:
     podman build -f apps/web/Dockerfile -t {{ registry }}web:{{ tag }} .
 
+[doc("构建 Server 镜像")]
+[group("build")]
+build-image-server:
+    podman build -f apps/server/Dockerfile -t {{ registry }}server:{{ tag }} .
+
 [doc("测试")]
 [group("test")]
 [parallel]
-test: test-python test-js
+test: test-python test-typescript
 
 [doc("测试 Python")]
 [group("test")]
@@ -158,7 +158,7 @@ test-python:
 
 [doc("测试 Web")]
 [group("test")]
-test-js:
+test-typescript:
     bun run --filter @app/* test
 
 [doc("测试端到端")]
@@ -179,11 +179,11 @@ bundle:
 
 [doc("生成契约")]
 [group("contract")]
-codegen: codegen-py codegen-ts
+codegen: codegen-python codegen-typescript
 
 [doc("生成 Python 模型")]
 [group("contract")]
-codegen-py: bundle
+codegen-python: bundle
     # 生成 Python 模型
     uv run --locked datamodel-codegen --input contracts/http/dist/openapi.yaml --output apps/server/src/server/generated/contracts.py --disable-timestamp --openapi-scopes paths --strict-types int --formatters black isort
     # 统一换行符
@@ -192,7 +192,7 @@ codegen-py: bundle
 [doc("生成 TypeScript 客户端")]
 [group("contract")]
 [working-directory("apps/web")]
-codegen-ts: bundle
+codegen-typescript: bundle
     # 生成 TypeScript 客户端
     bunx orval
     # 格式化生成物

@@ -1,15 +1,21 @@
 # Infra
 
-部署与本地编排配置生产入口由 Caddy 统一终止 TLS，Web 由 Nginx 托管并反代 API
+部署与本地编排配置，生产入口由 Caddy 统一终止 TLS，Web 由 Nginx 托管并反代 API
 
 ## 结构
 
 ```text
 infra/              # 部署配置
-├── .env.example    # 环境变量示例
+├── caddy/          # 代理配置
+│   └── sites/      # 站点配置
+├── secrets/        # 部署密钥
+├── .env.example    # 变量示例
+├── Caddyfile       # 入口代理
 ├── compose.yaml    # 容器编排
-└── Caddyfile       # 入口代理
+└── README.md       # 部署说明
 ```
+
+空目录仅在需要时创建，文件均需实际存在
 
 ## 职责
 
@@ -24,10 +30,23 @@ infra/              # 部署配置
 * `SERVER_IMAGE` 与 `WEB_IMAGE` 生产环境应使用不可变 tag 或 digest，避免 `latest`
 * `api` 只加入 `internal` 网络；`web` 同时加入 `edge` 与 `internal`；只有 Caddy 暴露公网端口
 * `api` 服务只声明镜像，不负责构建；启动编排前先执行 `just build-image`
+* Dockerfile 保留在 `apps/`，由 compose 通过 `context` 与 `dockerfile` 引用
 * `VITE_*` 是 Web 构建时变量，修改后需要重新构建 Web 镜像
 * 当前没有数据库服务；server 启动不依赖数据库
+* 本地开发差异写入 `compose.override.yaml`，不要用 profiles 模拟环境
+* 拆多个 compose 文件时使用 `include`，不要用多个 `-f`，避免相对路径解析错误
+* 生产密钥通过 sops、age 或部署平台注入，不要写进镜像
 * 修改编排或代理配置后运行 `just check-compose`
-* 生产密钥应通过容器环境变量、密钥管理或部署平台注入，不要写进镜像
+
+## 命名约定
+
+| 对象     | 规则                 | 示例                                               |
+| -------- | -------------------- | -------------------------------------------------- |
+| 编排文件 | `compose.yaml`       | 不使用 `docker-compose.yml`                        |
+| 环境叠加 | `compose.<env>.yaml` | `compose.override.yaml`、`compose.production.yaml` |
+| 代理配置 | `Caddyfile`          | 站点拆分放 `caddy/sites/`                          |
+| 变量模板 | `.env.example`       | 不使用 `.env.template`                             |
+| 密钥目录 | `secrets/`           | 内容不入库                                         |
 
 ## 常用命令
 

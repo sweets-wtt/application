@@ -1,0 +1,16 @@
+# 存活响应
+description: 存活
+content:
+  application/json:
+    schema:
+      allOf:
+        - $ref: "../schemas/Response.yaml"
+        - properties:
+            data:
+              type: object
+              required:
+                - status
+              properties:
+                status:
+                  type: string
+              additionalProperties: false

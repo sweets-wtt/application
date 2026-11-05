@@ -1,0 +1,15 @@
+# 标准响应信封
+type: object
+required:
+  - code
+  - message
+  - data
+properties:
+  # 状态码 - 0 表示成功
+  code:
+    type: integer
+  message:
+    type: string
+  data:
+    type: object
+additionalProperties: false

@@ -58,7 +58,7 @@ htmlcov/
 # 构建产物
 dist/
 # 契约制品入库
-!contracts/http/dist/
+!contracts/*/dist/
 # Turborepo 缓存
 .turbo/
 
@@ -68,3 +68,8 @@ dist/
 .mypy_cache/
 # Pyright 缓存
 .pyright/
+
+# 本地编排叠加
+infra/compose.override.yaml
+# 部署密钥
+infra/secrets/*
