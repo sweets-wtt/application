@@ -3,10 +3,8 @@
   "excludes": [
     // 契约打包制品
     "contracts/http/dist/**",
-    // TypeScript 契约客户端
-    "apps/web/src/contracts/http/**",
-    // TypeScript 契约模式
-    "apps/web/src/contracts/schemas/**",
+    // TypeScript 契约生成物
+    "apps/web/src/api/generated/**",
     // Python 契约模型
     "apps/server/src/server/generated/contracts.py",
     // JavaScript 依赖

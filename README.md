@@ -1,10 +1,5 @@
 # application
 
-## 概览
-
-* 用途：框架
-* 状态：应用
-
 ## 架构
 
 ```text
@@ -60,75 +55,35 @@
 ## 结构
 
 ```text
-.
-├── .github                          # 持续集成
-│   ├── actions                      # 复合动作
-│   │   └── setup                    # 环境准备
-│   │       └── action.yml           # 检出与工具链
-│   └── workflows                    # 工作流
-│       ├── ci.yaml                  # 持续集成
-│       └── release.yaml             # 版本发行
-├── apps                             # 应用
-│   ├── server                       # Server
-│   │   ├── .python-version          # Python 版本
-│   │   ├── pyproject.toml           # Python 项目配置（工作区成员）
-│   │   ├── schemathesis.toml        # 契约模糊测试
-│   │   ├── alembic.ini              # 迁移配置
-│   │   ├── alembic                  # 迁移脚本（env.py 启用 batch 模式）
-│   │   ├── data                     # SQLite 数据文件（忽略）
-│   │   ├── tests                    # 测试（镜像源码结构）
-│   │   └── src/server               # 源码
-│   │       ├── main.py              # 应用实例与装配
-│   │       ├── api                  # HTTP 层
-│   │       │   ├── deps.py          # 共享依赖
-│   │       │   ├── router.py        # 路由聚合
-│   │       │   └── routes           # 路由（按资源域一文件）
-│   │       ├── core                 # 基础设施
-│   │       │   ├── config.py        # 配置
-│   │       │   ├── db.py            # 引擎、会话与模型基类
-│   │       │   ├── logging.py       # 日志
-│   │       │   ├── exceptions.py    # 异常
-│   │       │   └── setup.py         # 装配
-│   │       ├── models               # 模型汇总（供迁移发现）
-│   │       └── generated            # 生成物（只读）
-│   │           └── contracts.py     # 契约模型
-│   └── web                          # Web
-│       ├── orval.config.ts          # 契约客户端生成
-│       └── src                      # 源码（含契约生成物）
-├── contracts                         # 契约
-│   └── http                         # HTTP
-│       ├── components               # 组件（参数/请求体/响应/模式）
-│       ├── dist                     # 打包制品
-│       │   └── openapi.yaml         # 接口规范（生成）
-│       ├── openapi.yaml             # 契约入口
-│       ├── paths                    # 路径（按资源域一文件）
-│       └── vacuum.yaml              # 契约检查
-├── infra                            # 服务编排
-│   ├── Caddyfile                    # 入口代理配置
-│   ├── compose.yaml                 # 容器编排
-│   └── .env.example                 # 环境变量
-├── .containerignore                 # 构建忽略
-├── .editorconfig                    # 代码风格
-├── .gitattributes                   # Git 属性
-├── .gitignore                       # Git 忽略
-├── .gitleaks.toml                   # 密钥扫描
-├── .oxfmtrc.jsonc                   # JavaScript 代码格式化
-├── .oxlintrc.jsonc                  # JavaScript 代码检查
-├── .python-version                  # Python 版本
-├── .typos.toml                      # 拼写检查
-├── bun.lock                         # JavaScript 依赖
-├── cog.toml                         # 提交检查
-├── dprint.jsonc                     # 代码格式
-├── justfile                         # 任务配方
-├── lefthook.yaml                    # 钩子管理
-├── mise.lock                        # 工具版本
-├── mise.toml                        # 开发环境（工具链）
-├── package.json                     # JavaScript 包
-├── pyproject.toml                   # Python 工作区根（含仓库级工具）
-├── renovate.jsonc                   # 依赖更新
-├── ruff.toml                        # Python 代码检查与格式化
-├── ty.toml                          # Python 类型检查
-├── uv.lock                          # Python 依赖（工作区统一）
-├── zizmor.yaml                      # 安全审计
-└── README.md                        # 项目说明
+.                       # 项目根目录
+├── .github/            # 持续集成
+├── apps/               # 应用
+│   ├── server/         # Server
+│   └── web/            # Web
+├── contracts/          # 契约
+├── infra/              # 服务编排
+├── .containerignore    # 构建忽略
+├── .editorconfig       # 代码风格
+├── .gitattributes      # Git 属性
+├── .gitignore          # Git 忽略
+├── .gitleaks.toml      # 密钥扫描
+├── .oxfmtrc.jsonc      # JavaScript 格式化
+├── .oxlintrc.jsonc     # JavaScript 检查
+├── .python-version     # Python 版本
+├── .typos.toml         # 拼写检查
+├── bun.lock            # JavaScript 依赖
+├── cog.toml            # 提交检查
+├── dprint.jsonc        # 代码格式
+├── justfile            # 任务配方
+├── lefthook.yaml       # 钩子管理
+├── mise.lock           # 工具版本
+├── mise.toml           # 开发环境
+├── package.json        # JavaScript 包
+├── pyproject.toml      # Python 工作区
+├── renovate.jsonc      # 依赖更新
+├── ruff.toml           # Python 检查
+├── ty.toml             # Python 类型检查
+├── uv.lock             # Python 依赖
+├── zizmor.yaml         # 安全审计
+└── README.md           # 项目说明
 ```

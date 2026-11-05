@@ -1,17 +1,7 @@
-# 固定种子与确定性生成，保证模糊测试可复现
+# 随机种子
 seed = 42
 
+# 生成配置
 [generation]
+# 确定性生成
 deterministic = true
-
-[phases.coverage]
-enabled = true
-
-[phases.examples]
-enabled = true
-
-[phases.fuzzing]
-enabled = true
-
-[phases.stateful]
-enabled = true

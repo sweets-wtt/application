@@ -1,4 +1,4 @@
-import { fileURLToPath, URL } from "node:url";
+import { URL, fileURLToPath } from "node:url";
 
 import vue from "@vitejs/plugin-vue";
 import RekaResolver from "reka-ui/resolver";
@@ -20,10 +20,10 @@ export default defineConfig({
     Icons({ autoInstall: false }),
   ],
 
-  resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
+  resolve: { alias: { "@": fileURLToPath(new URL("src", import.meta.url)) } },
 
   test: {
-    // threads：forks 池在 Windows 下临时目录会 EPERM
+    // Threads：forks 池在 Windows 下临时目录会 EPERM
     pool: "threads",
     environment: "jsdom",
     setupFiles: ["./tests/setup.ts"],

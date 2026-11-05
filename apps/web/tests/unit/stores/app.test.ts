@@ -1,0 +1,16 @@
+import { createPinia, setActivePinia } from "pinia";
+import { beforeEach, describe, expect, it } from "vitest";
+
+import { useAppStore } from "@/stores/app";
+
+describe("app store", () => {
+  beforeEach(() => {
+    setActivePinia(createPinia());
+  });
+
+  it("可创建实例", () => {
+    const store = useAppStore();
+
+    expect(store).toBeDefined();
+  });
+});

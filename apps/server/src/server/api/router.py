@@ -2,8 +2,10 @@
 
 from fastapi import APIRouter
 
-from server.api.routes import utils
+from server.features.health.router import router as health_router
 
 
 api_router = APIRouter()
-api_router.include_router(utils.router)
+
+# 注册业务路由
+api_router.include_router(health_router)

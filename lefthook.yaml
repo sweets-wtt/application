@@ -6,7 +6,6 @@ assert_lefthook_installed: true
 no_tty: true
 
 # 模板
-# just 命令前缀
 templates:
   # just 配方入口
   just: mise exec -- just

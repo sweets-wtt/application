@@ -15,7 +15,8 @@
     "suspicious": "warn"
   },
   // 忽略模式
-  "ignorePatterns": ["apps/web/src/contracts/http/**", "apps/web/src/contracts/schemas/**"],
+  // Playwright E2E 不适用 Vitest 规则
+  "ignorePatterns": ["apps/web/src/api/generated/**", "apps/web/tests/e2e/**"],
   // 按文件模式覆盖
   "overrides": [{
     // 测试文件
@@ -25,6 +26,17 @@
       "max-lines": "off",
       // 测试文件不限制函数长度
       "max-lines-per-function": "off"
+    }
+  }, {
+    // 测试环境配置 - 顶层 hook 与显式导入
+    "files": ["**/tests/setup.ts"],
+    "rules": {
+      // 允许顶层 hook
+      "vitest/require-hook": "off",
+      // 允许顶层 describe 之外调用
+      "vitest/require-top-level-describe": "off",
+      // 允许使用 hook
+      "vitest/no-hooks": "off"
     }
   }],
   // 插件
@@ -119,8 +131,16 @@
     "vitest/no-identical-title": "warn",
     // 禁止 .skip/.only 前缀式聚焦
     "vitest/no-test-prefixes": "warn",
+    // 显式导入 Vitest API, 项目未开启 globals
+    "vitest/no-importing-vitest-globals": "off",
+    // 保留字符串测试标题
+    "vitest/prefer-describe-function-title": "off",
     // hooks 须置于测试之前
     "vitest/prefer-hooks-on-top": "warn",
+    // 保持 vi.mock 字符串写法以兼容严格类型
+    "vitest/prefer-import-in-mock": "off",
+    // 显式导入 Vitest API, 项目未开启 globals
+    "vitest/prefer-importing-vitest-globals": "off",
     // 优先使用严格相等断言
     "vitest/prefer-strict-equal": "warn",
     // 断言优先 toBe
@@ -131,8 +151,8 @@
     "vitest/prefer-to-have-been-called-times": "warn",
     // 长度断言优先 toHaveLength
     "vitest/prefer-to-have-length": "warn",
-    // 测试钩子须在用例之前
-    "vitest/require-hook": "warn",
+    // 显式导入 Vitest API, 项目未开启 globals
+    "vitest/require-hook": "off",
     // 要求 mock 类型参数过于严格
     "vitest/require-mock-type-parameters": "off",
     // 统一 defineEmits 声明方式

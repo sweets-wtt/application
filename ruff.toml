@@ -1,7 +1,5 @@
 # 追加排除
 extend-exclude = [
-  # Alembic 自动生成迁移
-  "apps/server/alembic/versions/**",
   # 契约生成物
   "apps/server/src/server/generated/**",
 ]
@@ -137,8 +135,6 @@ max-complexity = 10
 
 # 按路径豁免
 [lint.per-file-ignores]
-# 迁移环境
-"apps/server/alembic/**" = ["ANN", "ARG001", "D", "INP001"]
 # 异常处理器
 "apps/server/src/server/core/exceptions.py" = ["ARG001"]
 # 日志工具

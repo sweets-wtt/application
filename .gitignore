@@ -68,12 +68,3 @@ dist/
 .mypy_cache/
 # Pyright 缓存
 .pyright/
-
-# 数据库文件
-*.db
-# 数据库日志
-*.db-journal
-# SQLite 文件
-*.sqlite
-# SQLite 文件
-*.sqlite3

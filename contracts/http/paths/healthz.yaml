@@ -1,7 +1,7 @@
 get:
   operationId: getHealthz
   summary: 存活探针
-  description: 返回服务存活状态。
+  description: 返回服务存活状态
   responses:
     "200":
       $ref: "../components/responses.yaml#/responses/Healthz200"

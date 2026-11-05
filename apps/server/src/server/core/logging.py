@@ -75,13 +75,18 @@ def configure() -> None:
 
     structlog 与标准库日志经 ProcessorFormatter 合流输出
     """
+    # 共享处理器
     shared: list[structlog.typing.Processor] = [
         structlog.contextvars.merge_contextvars,
         structlog.processors.add_log_level,
         structlog.processors.TimeStamper(fmt="iso", utc=True),
         redact,
     ]
+
+    # 输出处理器
     trailing, renderer = _trailing_and_renderer()
+
+    # structlog 配置
     structlog.configure(
         processors=[
             *shared,
@@ -92,6 +97,8 @@ def configure() -> None:
         wrapper_class=structlog.make_filtering_bound_logger(_level()),
         cache_logger_on_first_use=True,
     )
+
+    # 标准库格式化器
     formatter = structlog.stdlib.ProcessorFormatter(
         foreign_pre_chain=[*shared, *trailing],
         processors=[
@@ -99,6 +106,8 @@ def configure() -> None:
             renderer,
         ],
     )
+
+    # 根日志器
     handler = logging.StreamHandler(sys.stdout)
     handler.setFormatter(formatter)
     root = logging.getLogger()

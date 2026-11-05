@@ -116,10 +116,10 @@ format-python:
 [doc("格式化 TypeScript")]
 [group("format")]
 format-ts:
-    # 格式化 TypeScript 与 Vue
-    bunx oxfmt --no-error-on-unmatched-pattern '**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs,vue,html,css}'
     # 自动修复
     bunx oxlint --fix --no-error-on-unmatched-pattern
+    # 格式化 TypeScript 与 Vue
+    bunx oxfmt --no-error-on-unmatched-pattern '**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs,vue,html,css}'
 
 [doc("构建")]
 [group("build")]
@@ -196,36 +196,12 @@ codegen-ts: bundle
     # 生成 TypeScript 客户端
     bunx orval
     # 格式化生成物
-    bunx oxfmt src/contracts
+    bunx oxfmt src/api/generated
 
 [doc("检查契约漂移")]
 [group("contract")]
 check-codegen: codegen
-    git diff --exit-code -- apps/server/src/server/generated/contracts.py apps/web/src/contracts/http apps/web/src/contracts/schemas contracts/http/dist
-
-[doc("应用迁移")]
-[group("db")]
-[working-directory("apps/server")]
-migrate:
-    uv run --locked alembic upgrade head
-
-[doc("生成迁移")]
-[group("db")]
-[working-directory("apps/server")]
-migration message:
-    uv run --locked alembic revision --autogenerate -m "{{ message }}"
-
-[doc("回退迁移")]
-[group("db")]
-[working-directory("apps/server")]
-rollback:
-    uv run --locked alembic downgrade -1
-
-[doc("查看迁移状态")]
-[group("db")]
-[working-directory("apps/server")]
-migrate-status:
-    uv run --locked alembic current
+    git diff --exit-code -- apps/server/src/server/generated/contracts.py apps/web/src/api/generated/http apps/web/src/api/generated/schemas contracts/http/dist
 
 [doc("扫描漏洞")]
 [group("ci")]

@@ -16,12 +16,12 @@ export default defineConfig({
       // 输出模式
       mode: "tags-split",
       // 输出目录
-      target: "./src/contracts/http",
+      target: "./src/api/generated/http",
 
       // 模式定义
       schemas: {
         // 模式目录
-        path: "./src/contracts/schemas",
+        path: "./src/api/generated/schemas",
         // 校验器类型
         type: "zod",
         // 单文件模式 - 全部 zod 模式合并为一个模块
@@ -33,9 +33,9 @@ export default defineConfig({
         // 自定义客户端
         mutator: {
           // 文件路径
-          path: "./src/contracts/client.ts",
+          path: "./src/api/client.ts",
           // 函数名
-          name: "appFetch",
+          name: "apiFetch",
         },
       },
     },

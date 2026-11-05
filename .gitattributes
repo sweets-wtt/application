@@ -2,6 +2,5 @@
 * text=auto eol=lf
 
 # 生成物
-apps/web/src/contracts/http/** linguist-generated=true
-apps/web/src/contracts/schemas/** linguist-generated=true
+apps/web/src/api/generated/** linguist-generated=true
 apps/server/src/server/generated/** linguist-generated=true

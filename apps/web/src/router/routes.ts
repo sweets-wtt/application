@@ -5,7 +5,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/",
     // 布局
-    component: () => import("@/layouts/index.vue"),
+    component: () => import("@/layouts/DefaultLayout.vue"),
     // 根路径重定向至首页
     redirect: "/home",
     children: [
@@ -13,7 +13,8 @@ export const routes: RouteRecordRaw[] = [
         // 首页
         path: "home",
         name: "home",
-        component: () => import("@/views/home/index.vue"),
+        // 页面组件
+        component: () => import("@/views/HomeView.vue"),
         meta: {
           // 页面标题
           title: "首页",

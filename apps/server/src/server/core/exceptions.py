@@ -21,7 +21,9 @@ class AppError(Exception):
 
 async def handle_app_error(request: Request, exc: Exception) -> JSONResponse:
     """业务异常响应 - 统一错误结构"""
+    # 业务异常 - 使用自定义状态码与描述
     if isinstance(exc, AppError):
         return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
 
+    # 非业务异常 - 回退内部错误
     return JSONResponse(status_code=500, content={"detail": "内部错误"})

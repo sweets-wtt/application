@@ -1,28 +1,22 @@
 import { defineStore } from "pinia";
 
-import { parse, serialize, type Storage } from "@/core/session";
+import { type Storage, parseState, serializeState } from "@/lib/storage";
 
-// localStorage 适配为状态包 Storage 接口
+// LocalStorage 适配为状态包 Storage 接口
 const stateStorage: Storage = {
   getItem: (key) => localStorage.getItem(key),
   setItem: (key, value) => localStorage.setItem(key, value),
 };
 
 /** 应用状态仓库：持久化接状态包 */
-export const useAppStore = defineStore(
-  "app",
-  () => {
-    return {};
-  },
-  {
-    persist: {
-      // 序列化
-      serializer: {
-        serialize: (state) => serialize(state as never),
-        deserialize: (raw) => parse(raw) as never,
-      },
-      // 存储
-      storage: stateStorage,
+export const useAppStore = defineStore("app", () => ({}), {
+  persist: {
+    // 序列化
+    serializer: {
+      deserialize: (raw) => parseState(raw) as never,
+      serialize: (state) => serializeState(state as never),
     },
+    // 存储
+    storage: stateStorage,
   },
-);
+});
