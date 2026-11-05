@@ -1,8 +1,5 @@
 # 追加排除
-extend-exclude = [
-  # 契约生成物
-  "apps/server/src/server/generated/**",
-]
+extend-exclude = ["apps/server/src/server/generated/**"]
 # 行宽
 line-length = 100
 # 源码根
@@ -26,7 +23,26 @@ skip-magic-trailing-comma = false
 # Lint 配置
 [lint]
 # 忽略规则
-ignore = ["D415"]
+ignore = [
+  # 中文 docstring 不加英文尾点
+  "D415",
+  # 路由签名使用布尔参数
+  "FBT001",
+  "FBT002",
+  # structlog 使用 f-string
+  "G004",
+  # 中文全角标点
+  "RUF001",
+  "RUF002",
+  "RUF003",
+  # 部分类不要求 __slots__
+  "SLOT000",
+  # 接口层长错误消息
+  "TRY003",
+  "TRY300",
+]
+# 日志对象
+logger-objects = ["server.core.logging.get_logger"]
 # 规则集
 select = [
   "A",
@@ -45,6 +61,8 @@ select = [
   "FA",
   "FAST",
   "FBT",
+  "FLY",
+  "FURB",
   "G",
   "I",
   "INP",
@@ -53,7 +71,7 @@ select = [
   "PERF",
   "PGH",
   "PIE",
-  "PLR",
+  "PL",
   "PT",
   "PTH",
   "RET",
@@ -62,9 +80,11 @@ select = [
   "S",
   "SIM",
   "SLF",
+  "SLOT",
   "T20",
   "TC",
   "TD",
+  "TID",
   "TRY",
   "UP",
   "W",
@@ -89,6 +109,18 @@ relative-imports-order = "furthest-to-closest"
 # 尾逗号拆分
 split-on-trailing-comma = true
 
+# 导入别名约定
+[lint.flake8-import-conventions]
+# 禁止从 typing 直接导入
+banned-from = ["typing"]
+
+# 导入禁令
+[lint.flake8-tidy-imports.banned-api]
+# 禁止 naive UTC
+"datetime.datetime.utcnow".msg = "使用 datetime.now(UTC)"
+# 统一 HTTP 客户端
+"requests".msg = "使用 httpx"
+
 # mccabe
 [lint.mccabe]
 # 最大圈复杂度
@@ -96,8 +128,12 @@ max-complexity = 10
 
 # 按路径豁免
 [lint.per-file-ignores]
-# 测试目录 - 断言使用 assert
-"apps/server/tests/**" = ["S101"]
+# 接口层 - 依赖注入参数
+"apps/server/src/server/api/**" = ["ARG001"]
+# 日志工具 - 框架签名
+"apps/server/src/server/core/logging.py" = ["ARG001"]
+# 测试目录 - 断言与 fixture 约定
+"apps/server/tests/**" = ["ANN001", "ANN201", "D103", "PLR2004", "S101", "S105", "S106"]
 
 # pycodestyle
 [lint.pycodestyle]
@@ -108,3 +144,5 @@ max-line-length = 100
 [lint.pydocstyle]
 # 约定
 convention = "google"
+# 豁免装饰器
+ignore-decorators = ["*/delete", "*/get", "*/patch", "*/post", "*/put", "typing.overload"]

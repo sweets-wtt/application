@@ -1,5 +1,5 @@
 # 最低版本
-min_version: "2.1.14"
+min_version: "2.2.2"
 # 未安装时直接报错
 assert_lefthook_installed: true
 # 非交互环境不分配 TTY

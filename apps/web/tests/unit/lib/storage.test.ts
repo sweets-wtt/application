@@ -25,22 +25,22 @@ const memory = (initial: Record<string, string> = {}) => {
 
 describe("parseState", () => {
   it("空数据回退默认状态", () => {
-    expect(parseState(null)).toEqual(defaultState);
+    expect(parseState(null)).toStrictEqual(defaultState);
   });
 
   it("合法数据解析为状态", () => {
-    expect(parseState('{"version":"1","locale":"en-US"}')).toEqual({
+    expect(parseState('{"version":"1","locale":"en-US"}')).toStrictEqual({
       locale: "en-US",
       version: "1",
     });
   });
 
   it("损坏 JSON 回退默认状态", () => {
-    expect(parseState("{broken")).toEqual(defaultState);
+    expect(parseState("{broken")).toStrictEqual(defaultState);
   });
 
   it("未知版本回退默认状态", () => {
-    expect(parseState('{"version":"9"}')).toEqual(defaultState);
+    expect(parseState('{"version":"9"}')).toStrictEqual(defaultState);
   });
 });
 
@@ -48,7 +48,7 @@ describe("migrate", () => {
   it("当前版本原样返回", () => {
     const data = { locale: "en-US", version: "1" };
 
-    expect(migrate(data)).toEqual(data);
+    expect(migrate(data)).toStrictEqual(data);
   });
 
   it("缺失版本视为最早版本 - 无迁移时返回 null", () => {
@@ -68,6 +68,6 @@ describe("loadState/saveState", () => {
     saveState(storage, state);
 
     expect(storage.getItem(STORAGE_KEY)).toBe(serializeState(state));
-    expect(loadState(storage)).toEqual(state);
+    expect(loadState(storage)).toStrictEqual(state);
   });
 });

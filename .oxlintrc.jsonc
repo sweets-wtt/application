@@ -9,8 +9,8 @@
     "pedantic": "warn",
     // 运行时性能相关
     "perf": "warn",
-    // 可自动修复的惯用风格
-    "style": "warn",
+    // 可自动修复的惯用风格 - 排序交由 oxfmt
+    "style": "off",
     // 可能错误或无用的代码
     "suspicious": "warn"
   },
@@ -46,12 +46,35 @@
       "vitest/no-hooks": "off"
     }
   }],
+  // 选项
+  "options": {
+    // 警告视为失败
+    "denyWarnings": true,
+    // 报告未使用的禁用指令
+    "reportUnusedDisableDirectives": "warn"
+  },
   // 插件
-  "plugins": ["import", "oxc", "typescript", "unicorn", "vitest", "vue"],
+  "plugins": [
+    "eslint",
+    "import",
+    "node",
+    "oxc",
+    "promise",
+    "typescript",
+    "unicorn",
+    "vitest",
+    "vue"
+  ],
   // 规则
   "rules": {
     // if 语句强制花括号
     "curly": "warn",
+    // import 排序交由 oxfmt
+    "sort-imports": "off",
+    // 对象键排序交由 oxfmt
+    "sort-keys": "off",
+    // 变量声明顺序保留逻辑依赖
+    "sort-vars": "off",
     // switch/case 的 default 须在最后
     "default-case-last": "warn",
     // 带默认值的参数须放在最后

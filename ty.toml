@@ -1,5 +1,7 @@
 # 分析配置
 [analysis]
+# 返回类型推断
+return-type-inference = "always"
 # 严格等式比较
 strict-equality-semantics = true
 # 严格泛型窄化
@@ -7,6 +9,8 @@ strict-generic-narrowing = true
 
 # 运行环境
 [environment]
+# 目标平台
+python-platform = "linux"
 # 目标 Python 版本
 python-version = "3.12"
 
@@ -25,6 +29,8 @@ missing-override-decorator = "error"
 [src]
 # 排除契约生成物
 exclude = ["apps/server/src/server/generated"]
+# 源码根
+include = ["apps/server/src"]
 
 # 终端输出
 [terminal]

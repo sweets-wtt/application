@@ -41,7 +41,7 @@
     // 忽略大小写
     "ignoreCase": true,
     // 内部模块前缀
-    "internalPattern": ["@/"],
+    "internalPattern": ["@/", "~/", "#"],
     // 分组之间空行
     "newlinesBetween": true,
     // 组内顺序
@@ -49,6 +49,8 @@
     // 副作用导入排序
     "sortSideEffects": true
   },
+  // package.json 排序交由 dprint
+  "sortPackageJson": false,
   // 多行结构尾逗号
   "trailingComma": "all",
   // Vue 的 script/style 缩进

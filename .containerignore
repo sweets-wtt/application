@@ -34,6 +34,17 @@ pytest-of-*/
 **/dist/
 # Python 构建元数据
 **/*.egg-info/
+# Mypy 缓存
+.mypy_cache
+# Pyright 缓存
+.pyright
+
+# 测试结果
+test-results/
+# Playwright 报告
+playwright-report/
+# Playwright Blob 报告
+blob-report/
 
 # 仓库元数据
 .github/

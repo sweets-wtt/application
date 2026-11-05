@@ -24,7 +24,7 @@ describe("apiFetch", () => {
       "/healthz",
     );
 
-    expect(result.data).toEqual(body);
+    expect(result.data).toStrictEqual(body);
     expect(result.status).toBe(200);
     expect(result.headers.get("content-type")).toContain("application/json");
     expect(fetchMock).toHaveBeenCalledWith("/healthz", undefined);

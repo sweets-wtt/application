@@ -40,6 +40,7 @@ apps/server/                      # 服务应用
 │   └── features/                 # 业务测试
 │       └── health/               # 健康测试
 │           └── test_router.py    # 路由测试
+├── .python-version               # 语言版本
 ├── pyproject.toml                # 项目配置
 ├── schemathesis.toml             # 契约测试
 └── Dockerfile                    # 容器镜像
