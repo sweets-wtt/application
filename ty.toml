@@ -5,20 +5,10 @@ strict-equality-semantics = true
 # 严格泛型窄化
 strict-generic-narrowing = true
 
-# 源码范围
-[src]
-# 排除契约生成物
-exclude = ["apps/server/src/server/generated"]
-
 # 运行环境
 [environment]
-# 目标 Python 版本 - 与根 .python-version 一致
+# 目标 Python 版本
 python-version = "3.12"
-
-# 终端输出
-[terminal]
-# 警告视为失败, 保证 CI 阻断
-error-on-warning = true
 
 # 规则
 [rules]
@@ -30,3 +20,13 @@ disjoint-cast = "error"
 division-by-zero = "error"
 # 覆写缺 @override
 missing-override-decorator = "error"
+
+# 源码范围
+[src]
+# 排除契约生成物
+exclude = ["apps/server/src/server/generated"]
+
+# 终端输出
+[terminal]
+# 警告视为失败
+error-on-warning = true

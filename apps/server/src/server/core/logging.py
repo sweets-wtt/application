@@ -1,11 +1,12 @@
 """日志配置"""
 
+from collections.abc import MutableMapping
 import logging
 import os
 import re
 import sys
-from collections.abc import MutableMapping
-from typing import Any, Final
+from typing import Any
+from typing import Final
 
 import structlog
 

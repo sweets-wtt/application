@@ -3,7 +3,8 @@
 import fastapi
 
 from server.api.router import api_router
-from server.core.exceptions import AppError, handle_app_error
+from server.core.exceptions import AppError
+from server.core.exceptions import handle_app_error
 from server.core.setup import setup
 
 

@@ -1,36 +1,35 @@
 # 追加排除
 extend-exclude = [
-  # 契约生成物
-  "apps/server/src/server/generated/**",
   # Alembic 自动生成迁移
   "apps/server/alembic/versions/**",
+  # 契约生成物
+  "apps/server/src/server/generated/**",
 ]
-
+# 行宽
+line-length = 100
 # 源码根
 src = ["apps/server/src"]
-
-# 目标 Python 版本 - 与根 .python-version 一致
+# 目标 Python 版本
 target-version = "py312"
-
-# 行宽 - 与 oxfmt、dprint 统一为 100
-line-length = 100
 
 # 格式化
 [format]
-# docstring 内代码 - 一并格式化
+# docstring 内代码
 docstring-code-format = true
-# 缩进 - 统一空格
+# 缩进
 indent-style = "space"
-# 换行符 - 统一 LF
+# 换行符
 line-ending = "lf"
-# 字符串引号 - 统一双引号
+# 字符串引号
 quote-style = "double"
-# 魔法尾逗号 - 保留, 与 isort 拆分策略一致
+# 魔法尾逗号
 skip-magic-trailing-comma = false
 
 # Lint 配置
 [lint]
-# 规则集 - 按字母排序
+# 忽略规则
+ignore = ["D415"]
+# 规则集
 select = [
   # 内置规则
   "A",
@@ -74,12 +73,12 @@ select = [
   "LOG",
   # 命名
   "N",
+  # 性能
+  "PERF",
   # pygrep
   "PGH",
   # flake8-pie
   "PIE",
-  # 性能
-  "PERF",
   # Pylint refactor
   "PLR",
   # pytest
@@ -112,28 +111,24 @@ select = [
   "W",
 ]
 
-# 忽略 - 中文 docstring 不加英文尾点
-ignore = ["D415"]
-
-# 文档字符串惯例
-[lint.pydocstyle]
-convention = "google"
-
 # isort
 [lint.isort]
 # 合并同一模块的 as 导入
-combine-as-imports = true
+combine-as-imports = false
+# 每个 import 独占一行
+force-single-line = true
+# 同一 section 内强制排序
+force-sort-within-sections = true
 # 第一方模块
 known-first-party = ["server"]
-# import 块后空两行
+# import 块后空行数
 lines-after-imports = 2
-# 尾逗号触发多行拆分
+# from import 内按常量、类、函数排序
+order-by-type = true
+# 相对导入顺序
+relative-imports-order = "furthest-to-closest"
+# 尾逗号拆分
 split-on-trailing-comma = true
-
-# pycodestyle
-[lint.pycodestyle]
-# 行宽 - 与 line-length 一致
-max-line-length = 100
 
 # mccabe
 [lint.mccabe]
@@ -142,11 +137,20 @@ max-complexity = 10
 
 # 按路径豁免
 [lint.per-file-ignores]
-# 迁移环境 - 允许无 docstring、无注解与隐式命名空间
-"apps/server/alembic/**" = ["D", "ANN", "INP001", "ARG001"]
-# 异常处理器 - request 参数为 FastAPI 签名所需
+# 迁移环境
+"apps/server/alembic/**" = ["ANN", "ARG001", "D", "INP001"]
+# 异常处理器
 "apps/server/src/server/core/exceptions.py" = ["ARG001"]
-# 日志工具 - structlog processor 签名为框架约定
+# 日志工具
 "apps/server/src/server/core/logging.py" = ["ANN401", "ARG001"]
-# 测试目录 - 允许 assert, 不强制 docstring 与注解
-"apps/server/tests/**" = ["S101", "D", "ANN", "ARG001", "ARG002", "PLR2004", "INP001"]
+# 测试目录
+"apps/server/tests/**" = ["ANN", "ARG001", "ARG002", "D", "INP001", "PLR2004", "S101"]
+
+# pycodestyle
+[lint.pycodestyle]
+# 行宽
+max-line-length = 100
+
+# 文档字符串惯例
+[lint.pydocstyle]
+convention = "google"

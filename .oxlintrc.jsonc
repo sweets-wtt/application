@@ -1,101 +1,102 @@
 {
   // Schema
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  // 插件 - 显式列全, 覆盖默认插件集
-  "plugins": ["unicorn", "typescript", "oxc", "import", "vitest", "vue"],
   // 规则分类
   "categories": {
     // 确定错误或无用的代码
     "correctness": "error",
-    // 可能错误或无用的代码
-    "suspicious": "warn",
     // 更严格但可能误报的规则
     "pedantic": "warn",
     // 运行时性能相关
     "perf": "warn",
     // 可自动修复的惯用风格
-    "style": "warn"
+    "style": "warn",
+    // 可能错误或无用的代码
+    "suspicious": "warn"
   },
+  // 忽略模式
+  "ignorePatterns": ["apps/web/src/contracts/http/**", "apps/web/src/contracts/schemas/**"],
+  // 按文件模式覆盖
+  "overrides": [{
+    // 测试文件
+    "files": ["**/*.{test,spec}.ts", "**/tests/**"],
+    "rules": {
+      // 测试文件不限制文件长度
+      "max-lines": "off",
+      // 测试文件不限制函数长度
+      "max-lines-per-function": "off"
+    }
+  }],
+  // 插件
+  "plugins": ["import", "oxc", "typescript", "unicorn", "vitest", "vue"],
   // 规则
   "rules": {
-    // 要求 === / !==
-    "eqeqeq": "error",
-    // 单文件最大行数
-    "max-lines": ["warn", { "max": 300, "skipBlankLines": true, "skipComments": true }],
-    // 单函数最大行数
-    "max-lines-per-function": ["warn", { "max": 50, "skipBlankLines": true, "skipComments": true }],
-    // 禁止直接使用 console
-    "no-console": "warn",
-    // 禁止 var
-    "no-var": "error",
-    // 声明后未重新赋值的变量要求 const
-    "prefer-const": "error",
-    // 禁止重复导入
-    "import/no-duplicates": "warn",
-    // 禁止循环依赖
-    "import/no-cycle": "error",
-    // type 导入显式声明
-    "typescript/consistent-type-imports": "warn",
-    // 与 typescript/consistent-type-imports 二选一, 显式关闭避免修复冲突
-    "import/consistent-type-specifier-style": "off",
-    // 副作用导入白名单
-    "import/no-unassigned-import": ["warn", { "allow": ["**/*.css", "virtual:*"] }],
-    // 禁止显式 any
-    "typescript/no-explicit-any": "error",
-    // 禁止空对象类型
-    "typescript/no-empty-object-type": "warn",
-    // 统一 interface 与 type 的选择
-    "typescript/consistent-type-definitions": "warn",
-    // 优先使用 ??
-    "typescript/prefer-nullish-coalescing": "warn",
-    // 禁止无断言的测试
-    "vitest/expect-expect": "warn",
-    // 禁止条件断言
-    "vitest/no-conditional-expect": "warn",
-    // 提示存在被禁用的测试
-    "vitest/no-disabled-tests": "warn",
-    // 禁止 .only 聚焦测试
-    "vitest/no-focused-tests": "error",
-    // 测试钩子须在用例之前
-    "vitest/require-hook": "warn",
-    // 优先使用严格相等断言
-    "vitest/prefer-strict-equal": "warn",
-    // 要求 mock 类型参数过于严格
-    "vitest/require-mock-type-parameters": "off",
     // if 语句强制花括号
     "curly": "warn",
     // switch/case 的 default 须在最后
     "default-case-last": "warn",
     // 带默认值的参数须放在最后
     "default-param-last": "warn",
+    // 要求 === / !==
+    "eqeqeq": "error",
+    // 类型导入说明符风格
+    "import/consistent-type-specifier-style": "off",
+    // import 须置于文件顶部
+    "import/first": "warn",
+    // import 之后须空行
+    "import/newline-after-import": "warn",
+    // 禁止循环依赖
+    "import/no-cycle": "error",
+    // 禁止重复导入
+    "import/no-duplicates": "warn",
+    // 副作用导入白名单
+    "import/no-unassigned-import": ["warn", { "allow": ["**/*.css", "virtual:*"] }],
+    // 单文件最大行数
+    "max-lines": ["warn", { "max": 300, "skipBlankLines": true, "skipComments": true }],
+    // 单函数最大行数
+    "max-lines-per-function": ["warn", { "max": 50, "skipBlankLines": true, "skipComments": true }],
+    // 禁止直接使用 console
+    "no-console": "warn",
     // 禁止隐式类型转换
     "no-implicit-coercion": "warn",
     // 赋值不得作为返回表达式
     "no-return-assign": "warn",
     // 普通字符串中不得出现模板占位符
     "no-template-curly-in-string": "warn",
+    // 禁止 var
+    "no-var": "error",
     // 对象属性简写
     "object-shorthand": "warn",
-    // 字符串拼接改用模板字符串
-    "prefer-template": "warn",
+    // 声明后未重新赋值的变量要求 const
+    "prefer-const": "error",
     // 对象展开代替 Object.assign
     "prefer-object-spread": "warn",
+    // 字符串拼接改用模板字符串
+    "prefer-template": "warn",
     // 数组类型注解风格统一
     "typescript/array-type": "warn",
+    // 统一 interface 与 type 的选择
+    "typescript/consistent-type-definitions": "warn",
+    // type 导入显式声明
+    "typescript/consistent-type-imports": "warn",
+    // 禁止空 interface
+    "typescript/no-empty-interface": "warn",
+    // 禁止空对象类型
+    "typescript/no-empty-object-type": "warn",
+    // 禁止显式 any
+    "typescript/no-explicit-any": "error",
     // 禁止可推断的显式类型
     "typescript/no-inferrable-types": "warn",
     // 数组遍历用 for...of
     "typescript/prefer-for-of": "warn",
+    // 优先使用 ??
+    "typescript/prefer-nullish-coalescing": "warn",
     // 优先 startsWith/endsWith
     "typescript/prefer-string-starts-ends-with": "warn",
-    // 禁止空 interface
-    "typescript/no-empty-interface": "warn",
-    // throw 须 new Error
-    "unicorn/throw-new-error": "warn",
-    // Error 消息非空
-    "unicorn/error-message": "warn",
     // catch 参数命名统一
     "unicorn/catch-error-name": "warn",
+    // Error 消息非空
+    "unicorn/error-message": "warn",
     // includes 代替 indexOf 比较
     "unicorn/prefer-includes": "warn",
     // Node 内置模块使用 node: 前缀
@@ -104,50 +105,49 @@
     "unicorn/prefer-optional-catch-binding": "warn",
     // 优先 trimStart/trimEnd
     "unicorn/prefer-string-trim-start-end": "warn",
+    // throw 须 new Error
+    "unicorn/throw-new-error": "warn",
+    // 禁止无断言的测试
+    "vitest/expect-expect": "warn",
+    // 禁止条件断言
+    "vitest/no-conditional-expect": "warn",
+    // 提示存在被禁用的测试
+    "vitest/no-disabled-tests": "warn",
+    // 禁止 .only 聚焦测试
+    "vitest/no-focused-tests": "error",
+    // 禁止重复的测试标题
+    "vitest/no-identical-title": "warn",
+    // 禁止 .skip/.only 前缀式聚焦
+    "vitest/no-test-prefixes": "warn",
+    // hooks 须置于测试之前
+    "vitest/prefer-hooks-on-top": "warn",
+    // 优先使用严格相等断言
+    "vitest/prefer-strict-equal": "warn",
     // 断言优先 toBe
     "vitest/prefer-to-be": "warn",
     // 数组断言优先 toContain
     "vitest/prefer-to-contain": "warn",
-    // 长度断言优先 toHaveLength
-    "vitest/prefer-to-have-length": "warn",
     // 调用断言优先 toHaveBeenCalledTimes
     "vitest/prefer-to-have-been-called-times": "warn",
-    // 禁止重复的测试标题
-    "vitest/no-identical-title": "warn",
-    // hooks 须置于测试之前
-    "vitest/prefer-hooks-on-top": "warn",
-    // 禁止 .skip/.only 前缀式聚焦
-    "vitest/no-test-prefixes": "warn",
-    // import 之后须空行
-    "import/newline-after-import": "warn",
-    // import 须置于文件顶部
-    "import/first": "warn",
+    // 长度断言优先 toHaveLength
+    "vitest/prefer-to-have-length": "warn",
+    // 测试钩子须在用例之前
+    "vitest/require-hook": "warn",
+    // 要求 mock 类型参数过于严格
+    "vitest/require-mock-type-parameters": "off",
+    // 统一 defineEmits 声明方式
+    "vue/define-emits-declaration": "warn",
+    // 统一 defineProps 声明方式
+    "vue/define-props-declaration": "warn",
+    // 限制单个组件的 props 数量
+    "vue/max-props": ["warn", { "maxProps": 10 }],
+    // 禁止 await 后调用 expose
+    "vue/no-expose-after-await": "error",
     // 禁止在 setup 外导入编译器宏
     "vue/no-import-compiler-macros": "error",
     // 优先从 vue 导入运行时 API
     "vue/prefer-import-from-vue": "warn",
-    // 禁止 await 后调用 expose
-    "vue/no-expose-after-await": "error",
     // 要求 ref 带类型
-    "vue/require-typed-ref": "warn",
-    // 统一 defineProps 声明方式
-    "vue/define-props-declaration": "warn",
-    // 统一 defineEmits 声明方式
-    "vue/define-emits-declaration": "warn",
-    // 限制单个组件的 props 数量
-    "vue/max-props": ["warn", { "maxProps": 10 }]
-  },
-  // 按文件模式覆盖
-  "overrides": [{
-    // 测试文件
-    "files": ["**/tests/**", "**/*.{test,spec}.ts"],
-    "rules": {
-      // 测试文件不限制函数长度
-      "max-lines-per-function": "off",
-      // 测试文件不限制文件长度
-      "max-lines": "off"
-    }
-  }],
-  // 忽略模式 - 契约生成物由 orval 负责
-  "ignorePatterns": ["apps/web/src/contracts/http/**", "apps/web/src/contracts/schemas/**"]
+    "vue/require-typed-ref": "warn"
+  }
 }

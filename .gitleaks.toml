@@ -14,14 +14,7 @@ description = "检测管道执行远程脚本"
 id = "pipe-to-shell"
 # 预筛选关键词
 keywords = ["curl", "wget"]
-# 检测正则 - 覆盖 sudo 选项、绝对路径 shell 与多级管道
+# 检测正则
 regex = '''(?i)\b(?:curl|wget)\b[^\n]*?\|\s*(?:sudo\s+(?:-\S+\s+)*)?(?:\S*/)?(?:sh|bash|zsh|ksh|dash)\b'''
 # 规则分类
 tags = ["supply-chain"]
-
-# 允许清单
-[[allowlists]]
-# 规则文件自身 - 避免正则自匹配
-description = "规则文件自身"
-# 匹配配置文件
-paths = ['''\.gitleaks\.toml$''']

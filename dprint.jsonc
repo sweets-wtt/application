@@ -1,15 +1,5 @@
 {
-  // 行宽 - 与 Ruff、oxfmt 统一为 100
-  "lineWidth": 100,
-  // 缩进宽度 - 与 .editorconfig 一致
-  "indentWidth": 2,
-  // 缩进 - 空格
-  "useTabs": false,
-  // 换行符 - 统一 LF
-  "newLineKind": "lf",
-  // 增量格式化 - 仅处理变更文件
-  "incremental": true,
-  // 排除 - 生成物与依赖目录
+  // 排除
   "excludes": [
     // 契约打包制品
     "contracts/http/dist/**",
@@ -24,33 +14,34 @@
     // Python 虚拟环境
     ".venv/**"
   ],
+  // 增量格式化
+  "incremental": true,
+  // 缩进宽度
+  "indentWidth": 2,
   // JSON / JSONC
   "json": {
     // 放得下的数组强制单行
     "array.preferSingleLine": true,
     // 放得下的对象强制单行
     "object.preferSingleLine": true,
+    // package.json 按 npm 约定顺序
+    "packageJson.applyConventions": true,
     // 禁止尾逗号
     "trailingCommas": "never"
   },
+  // 行宽
+  "lineWidth": 100,
   // Markdown
   "markdown": {
     // 强调符号
     "emphasisKind": "asterisks",
     // 无序列表标记
     "list.unorderedMarker": "asterisks",
-    // 文本折行 - 按行宽统一
+    // 文本折行
     "textWrap": "always"
   },
-  // TOML
-  "toml": {
-    // 放得下的数组强制单行
-    "array.preferSingleLine": true,
-    // 放得下的内联表强制单行
-    "inlineTable.preferSingleLine": true,
-    // 键按字母排序
-    "sortKeys": true
-  },
+  // 换行符
+  "newLineKind": "lf",
   // 插件
   "plugins": [
     // Dockerfile
@@ -63,5 +54,20 @@
     "https://plugins.dprint.dev/g-plane/pretty_yaml-v0.6.0.wasm",
     // TOML
     "https://plugins.dprint.dev/toml-0.9.0.wasm"
-  ]
+  ],
+  // TOML
+  "toml": {
+    // 放得下的数组强制单行
+    "array.preferSingleLine": true,
+    // 放得下的内联表强制单行
+    "inlineTable.preferSingleLine": true,
+    // 数组值字母序
+    "sortArrays": true,
+    // 内联表键字母序
+    "sortInlineTables": true,
+    // 表内键字母序
+    "sortKeys": true
+  },
+  // 缩进
+  "useTabs": false
 }

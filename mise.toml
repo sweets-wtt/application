@@ -1,12 +1,12 @@
 # 设置
 [settings]
-# 缺失时自动安装 - 默认 true, 显式关闭
+# 缺失时自动安装
 auto_install = false
-# 严格锁文件模式 - 默认 false
+# 严格锁文件模式
 locked = true
-# 锁文件 - 非默认, 显式开启
+# 锁文件
 lockfile = true
-# 未找到命令回退系统 - 默认 true
+# 未找到命令回退系统
 not_found_system_fallback = false
 
 # 工具

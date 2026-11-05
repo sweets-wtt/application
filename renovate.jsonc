@@ -1,21 +1,21 @@
 {
-  // 继承推荐配置
+  // 启用的管理器
+  "enabledManagers": ["mise", "dockerfile", "docker-compose", "pep621", "bun", "github-actions"],
+  // 继承配置
   "extends": ["config:best-practices"],
-  // 时区 - 与维护者一致
-  "timezone": "Asia/Shanghai",
-  // 更新窗口 - 每周一上午前集中处理
-  "schedule": ["before 9am on monday"],
-  // 漏洞告警 - 有安全公告时立即创建 PR
+  // 漏洞告警
   "osvVulnerabilityAlerts": true,
   // 包匹配规则
   "packageRules": [{
-    // bun 运行时依赖 - 新版本满足现有范围时也提升范围
-    "matchManagers": ["bun"],
-    // 只处理运行时依赖, 避免与 pinDevDependencies 冲突
+    // 依赖类型
     "matchDepTypes": ["dependencies"],
-    // 版本范围策略: bump - 新版本满足现有范围时也提升范围
+    // bun 运行时依赖
+    "matchManagers": ["bun"],
+    // 版本范围策略
     "rangeStrategy": "bump"
   }],
-  // 启用的管理器白名单 - 未列出的一律禁用
-  "enabledManagers": ["mise", "dockerfile", "docker-compose", "pep621", "bun", "github-actions"]
+  // 更新窗口
+  "schedule": ["before 9am on monday"],
+  // 时区
+  "timezone": "Asia/Shanghai"
 }

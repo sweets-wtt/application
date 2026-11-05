@@ -1,10 +1,11 @@
 import json
 
-import pytest
 from fastapi import Request
 from fastapi.responses import JSONResponse
+import pytest
 
-from server.core.exceptions import AppError, handle_app_error
+from server.core.exceptions import AppError
+from server.core.exceptions import handle_app_error
 
 
 class NotFoundError(AppError):

@@ -2,9 +2,6 @@ import { VueQueryPlugin } from "@tanstack/vue-query";
 import { createApp } from "vue";
 
 import App from "@/App.vue";
-
-import "virtual:uno.css";
-
 import { setBaseUrl } from "@/contracts";
 import { configureLogger } from "@/core/logger";
 import { queryClient } from "@/core/query";
@@ -13,6 +10,7 @@ import { router } from "@/router";
 import { pinia } from "@/stores";
 
 import "@/styles/main.css";
+import "virtual:uno.css";
 
 // 配置日志级别
 configureLogger();

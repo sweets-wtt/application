@@ -4,10 +4,10 @@ seed = 42
 [generation]
 deterministic = true
 
-[phases.examples]
+[phases.coverage]
 enabled = true
 
-[phases.coverage]
+[phases.examples]
 enabled = true
 
 [phases.fuzzing]
