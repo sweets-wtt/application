@@ -10,7 +10,11 @@ export const DEFAULT_HEARTBEAT_INTERVAL = 30_000;
 export const parseHeartbeatInterval = (raw?: string): number => {
   const value = Number(raw);
 
-  return Number.isFinite(value) && value > 0 ? value : DEFAULT_HEARTBEAT_INTERVAL;
+  if (!Number.isFinite(value) || value <= 0) {
+    return DEFAULT_HEARTBEAT_INTERVAL;
+  }
+
+  return value;
 };
 
 // 心跳轮询间隔（毫秒）

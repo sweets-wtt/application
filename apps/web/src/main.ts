@@ -3,11 +3,11 @@ import { createApp } from "vue";
 
 import { setBaseUrl } from "@/api";
 import App from "@/App.vue";
-import { API_BASE_URL } from "@/config/env";
+import API_BASE_URL from "@/config/env";
 import { configureLogger } from "@/lib/logger";
-import { queryClient } from "@/lib/query";
-import { router } from "@/router";
-import { pinia } from "@/stores";
+import queryClient from "@/lib/query";
+import router from "@/router";
+import pinia from "@/stores";
 
 import "@/styles/main.css";
 import "virtual:uno.css";

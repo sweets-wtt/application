@@ -5,19 +5,19 @@ import logging
 import os
 import re
 import sys
-from typing import Final
+import typing
 
 import structlog
 
 
 # 敏感键
-SENSITIVE_KEYS: Final[frozenset[str]] = frozenset(
+SENSITIVE_KEYS: typing.Final[frozenset[str]] = frozenset(
     {"password", "secret", "token", "authorization", "api_key"}
 )
 
 # 敏感值模式 - 覆盖键名之外的明文形态
 # 顺序敏感: 先匹配更具体的形态, 再由通用键值对收尾
-SENSITIVE_PATTERNS: Final[tuple[re.Pattern[str], ...]] = (
+SENSITIVE_PATTERNS: typing.Final[tuple[re.Pattern[str], ...]] = (
     # Bearer 令牌 - 须先于通用键值对, 否则 Authorization: Bearer xxx 只脱去前缀
     re.compile(r"(?i)bearer\s+[a-z0-9._~+/-]+=*"),
     # AWS 访问密钥
@@ -29,7 +29,7 @@ SENSITIVE_PATTERNS: Final[tuple[re.Pattern[str], ...]] = (
 )
 
 # 默认级别
-DEFAULT_LOG_LEVEL: Final[str] = "INFO"
+DEFAULT_LOG_LEVEL: typing.Final[str] = "INFO"
 
 
 def _mask(value: str) -> str:

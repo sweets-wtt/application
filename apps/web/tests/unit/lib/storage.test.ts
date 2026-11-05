@@ -62,8 +62,8 @@ describe("migrate", () => {
 
 describe("loadState/saveState", () => {
   it("保存后可读取", () => {
-    const storage = memory(),
-      state: State = { locale: "en-US", version: "1" };
+    const storage = memory();
+    const state: State = { locale: "en-US", version: "1" };
 
     saveState(storage, state);
 

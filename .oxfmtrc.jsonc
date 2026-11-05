@@ -10,8 +10,14 @@
   "embeddedLanguageFormatting": "auto",
   // 换行符
   "endOfLine": "lf",
+  // 运算符在换行时的位置：置于新行行首
+  "experimentalOperatorPosition": "start",
+  // HTML/Vue 空白敏感度：忽略空白差异
+  "htmlWhitespaceSensitivity": "ignore",
   // 文件末尾换行
   "insertFinalNewline": true,
+  // JSDoc 格式化：中文注释按语义手工断行，不自动重排
+  "jsdoc": false,
   // JSX 属性引号
   "jsxSingleQuote": false,
   // 对象换行
@@ -53,6 +59,8 @@
   "sortPackageJson": false,
   // 多行结构尾逗号
   "trailingComma": "all",
+  // 缩进宽度（覆盖 .editorconfig）
+  "tabWidth": 2,
   // Vue 的 script/style 缩进
   "vueIndentScriptAndStyle": false
 }

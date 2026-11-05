@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { routes } from "@/router/routes";
+import routes from "@/router/routes";
 
 describe("routes", () => {
   it("包含首页路由", () => {

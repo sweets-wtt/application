@@ -1,59 +1,93 @@
 {
-  // Schema
+  // 配置文件的 JSON Schema 地址
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  // 规则分类
+  // 规则分类及其严重级别
   "categories": {
-    // 确定错误或无用的代码
+    // 检测确定错误或无用的代码
     "correctness": "error",
     // 更严格但可能误报的规则
     "pedantic": "warn",
     // 运行时性能相关
     "perf": "warn",
-    // 可自动修复的惯用风格 - 排序交由 oxfmt
-    "style": "off",
+    // 可自动修复的惯用风格
+    "style": "warn",
     // 可能错误或无用的代码
     "suspicious": "warn"
   },
-  // 忽略模式
-  // Playwright E2E 不适用 Vitest 规则
+  // 忽略的文件模式
   "ignorePatterns": ["apps/web/src/api/generated/**"],
-  // 按文件模式覆盖
+  // 按文件模式覆盖的规则
   "overrides": [{
     // 测试文件
     "files": ["**/*.{test,spec}.ts", "**/tests/**"],
     "rules": {
-      // 测试文件不限制文件长度
+      // 单文件最大行数
       "max-lines": "off",
-      // 测试文件不限制函数长度
+      // 单函数最大行数
       "max-lines-per-function": "off"
     }
   }, {
     // 端到端测试 - Playwright 约定
     "files": ["**/tests/e2e/**"],
     "rules": {
-      // 允许 Playwright 用例命名
+      // 测试文件命名规范
       "vitest/consistent-test-filename": "off"
     }
   }, {
     // 测试环境配置 - 顶层 hook 与显式导入
     "files": ["**/tests/setup.ts"],
     "rules": {
-      // 允许顶层 hook
+      // 测试 hook 的放置位置
       "vitest/require-hook": "off",
-      // 允许顶层 describe 之外调用
+      // 顶层 describe 包裹
       "vitest/require-top-level-describe": "off",
-      // 允许使用 hook
+      // ban hook 使用
       "vitest/no-hooks": "off"
     }
+  }, {
+    // 路由记录按语义顺序（path → component → children）
+    "files": ["apps/web/src/router/**"],
+    "rules": { "sort-keys": "off" }
+  }, {
+    // 具名导出：barrel 与多导出模块无法用单个 default 表达
+    "files": [
+      "apps/web/src/api/**",
+      "apps/web/src/features/health/**",
+      "apps/web/src/lib/logger.ts",
+      "apps/web/src/lib/storage.ts"
+    ],
+    "rules": {
+      // 禁止具名导出
+      "import/no-named-export": "off",
+      // 单导出文件优先 default
+      "import/prefer-default-export": "off",
+      // 导出语句置于文件末尾
+      "import/exports-last": "off",
+      // 合并具名导出声明
+      "import/group-exports": "off"
+    }
+  }, {
+    // localStorage 契约返回 null，无法以 undefined 替代
+    "files": ["apps/web/src/lib/storage.ts", "apps/web/tests/unit/lib/storage.test.ts"],
+    "rules": { "unicorn/no-null": "off" }
+  }, {
+    // Vite 插件工厂以大写命名，构建配置需引入 node 内置模块
+    "files": ["apps/web/vite.config.ts"],
+    "rules": {
+      // 构造函数命名大写约束
+      "new-cap": "off",
+      // 禁止导入 Node 内置模块
+      "import/no-nodejs-modules": "off"
+    }
   }],
-  // 选项
+  // 全局选项
   "options": {
-    // 警告视为失败
+    // 警告是否视为失败
     "denyWarnings": true,
-    // 报告未使用的禁用指令
+    // 是否报告未使用的禁用指令
     "reportUnusedDisableDirectives": "warn"
   },
-  // 插件
+  // 启用的插件
   "plugins": [
     "eslint",
     "import",
@@ -65,16 +99,20 @@
     "vitest",
     "vue"
   ],
-  // 规则
+  // 规则开关及参数
   "rules": {
+    // 圈复杂度上限，与 ruff 的 max-complexity 对齐
+    "complexity": ["warn", 10],
     // if 语句强制花括号
     "curly": "warn",
-    // import 排序交由 oxfmt
+    // 变量声明合并模式：每条声明独立成句
+    "one-var": ["warn", "never"],
+    // Import 语句排序：由 oxfmt sortImports 负责分组排序
     "sort-imports": "off",
-    // 对象键排序交由 oxfmt
-    "sort-keys": "off",
-    // 变量声明顺序保留逻辑依赖
-    "sort-vars": "off",
+    // 对象键字母序
+    "sort-keys": ["warn", "asc", { "caseSensitive": true, "natural": true }],
+    // 变量声明按字母序排列
+    "sort-vars": "warn",
     // switch/case 的 default 须在最后
     "default-case-last": "warn",
     // 带默认值的参数须放在最后
@@ -97,12 +135,32 @@
     "max-lines": ["warn", { "max": 300, "skipBlankLines": true, "skipComments": true }],
     // 单函数最大行数
     "max-lines-per-function": ["warn", { "max": 50, "skipBlankLines": true, "skipComments": true }],
+    // 禁止 alert
+    "no-alert": "error",
+    // 禁止 debugger
+    "no-debugger": "error",
     // 禁止直接使用 console
     "no-console": "warn",
+    // 禁止 eval
+    "no-eval": "error",
+    // 禁止 else 分支仅含 if
+    "no-else-return": "warn",
     // 禁止隐式类型转换
     "no-implicit-coercion": "warn",
+    // 禁止隐式 eval
+    "no-implied-eval": "error",
+    // 禁止 if 作为 else 唯一语句
+    "no-lonely-if": "warn",
+    // 禁止 new Function
+    "no-new-func": "error",
+    // 魔法数字豁免值
+    "no-magic-numbers": ["warn", { "ignore": [-1, 0, 1, 2], "ignoreArrayIndexes": true }],
+    // 禁止脚本 URL
+    "no-script-url": "error",
     // 赋值不得作为返回表达式
     "no-return-assign": "warn",
+    // 禁止无用重命名
+    "no-useless-rename": "warn",
     // 普通字符串中不得出现模板占位符
     "no-template-curly-in-string": "warn",
     // 禁止 var
@@ -111,6 +169,8 @@
     "object-shorthand": "warn",
     // 声明后未重新赋值的变量要求 const
     "prefer-const": "error",
+    // 优先 Object.hasOwn
+    "prefer-object-has-own": "warn",
     // 对象展开代替 Object.assign
     "prefer-object-spread": "warn",
     // 字符串拼接改用模板字符串
@@ -139,6 +199,8 @@
     "unicorn/catch-error-name": "warn",
     // Error 消息非空
     "unicorn/error-message": "warn",
+    // 文件名命名规范 - 与 Vue 组件 PascalCase 惯例冲突
+    "unicorn/filename-case": "off",
     // includes 代替 indexOf 比较
     "unicorn/prefer-includes": "warn",
     // Node 内置模块使用 node: 前缀
@@ -163,6 +225,8 @@
     "vitest/no-test-prefixes": "warn",
     // 显式导入 Vitest API, 项目未开启 globals
     "vitest/no-importing-vitest-globals": "off",
+    // 测试用例须声明断言数量
+    "vitest/prefer-expect-assertions": ["warn", { "onlyFunctionsWithAsyncKeyword": true }],
     // 保留字符串测试标题
     "vitest/prefer-describe-function-title": "off",
     // hooks 须置于测试之前
@@ -175,6 +239,8 @@
     "vitest/prefer-strict-equal": "warn",
     // 断言优先 toBe
     "vitest/prefer-to-be": "warn",
+    // 布尔断言优先 toBeTruthy - 与 prefer-strict-boolean-matchers 冲突，取更严格的后者
+    "vitest/prefer-to-be-truthy": "off",
     // 数组断言优先 toContain
     "vitest/prefer-to-contain": "warn",
     // 调用断言优先 toHaveBeenCalledTimes
@@ -183,6 +249,8 @@
     "vitest/prefer-to-have-length": "warn",
     // 显式导入 Vitest API, 项目未开启 globals
     "vitest/require-hook": "off",
+    // 测试须包在顶层 describe 中
+    "vitest/require-top-level-describe": "warn",
     // 要求 mock 类型参数过于严格
     "vitest/require-mock-type-parameters": "off",
     // 统一 defineEmits 声明方式

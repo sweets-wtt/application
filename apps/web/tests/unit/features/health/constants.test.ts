@@ -2,9 +2,12 @@ import { describe, expect, it } from "vitest";
 
 import { DEFAULT_HEARTBEAT_INTERVAL, parseHeartbeatInterval } from "@/features/health/constants";
 
+/** 测试用心跳间隔 */
+const TEST_INTERVAL = "5000";
+
 describe("parseHeartbeatInterval", () => {
   it("解析正整数", () => {
-    expect(parseHeartbeatInterval("5000")).toBe(5000);
+    expect(parseHeartbeatInterval(TEST_INTERVAL)).toBe(Number(TEST_INTERVAL));
   });
 
   it("未注入回退默认", () => {

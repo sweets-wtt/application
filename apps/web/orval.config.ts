@@ -15,29 +15,30 @@ export default defineConfig({
       client: "vue-query",
       // 输出模式
       mode: "tags-split",
-      // 输出目录
-      target: "./src/api/generated/http",
-
-      // 模式定义
-      schemas: {
-        // 模式目录
-        path: "./src/api/generated/schemas",
-        // 校验器类型
-        type: "zod",
-        // 单文件模式 - 全部 zod 模式合并为一个模块
-        mode: "single",
-      },
 
       // 覆盖
       override: {
         // 自定义客户端
         mutator: {
-          // 文件路径
-          path: "./src/api/client.ts",
           // 函数名
           name: "apiFetch",
+          // 文件路径
+          path: "./src/api/client.ts",
         },
       },
+
+      // 模式定义
+      schemas: {
+        // 单文件模式 - 全部 zod 模式合并为一个模块
+        mode: "single",
+        // 模式目录
+        path: "./src/api/generated/schemas",
+        // 校验器类型
+        type: "zod",
+      },
+
+      // 输出目录
+      target: "./src/api/generated/http",
     },
   },
 });

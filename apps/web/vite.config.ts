@@ -23,11 +23,11 @@ export default defineConfig({
   resolve: { alias: { "@": fileURLToPath(new URL("src", import.meta.url)) } },
 
   test: {
+    environment: "jsdom",
+    exclude: ["**/e2e/**", "**/node_modules/**"],
+    include: ["tests/**/*.test.ts"],
     // Threads：forks 池在 Windows 下临时目录会 EPERM
     pool: "threads",
-    environment: "jsdom",
     setupFiles: ["./tests/setup.ts"],
-    include: ["tests/**/*.test.ts"],
-    exclude: ["**/e2e/**", "**/node_modules/**"],
   },
 });

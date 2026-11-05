@@ -3,35 +3,35 @@ import { computed } from "vue";
 
 import { useHealthCheck } from "@/features/health";
 
-const { status } = useHealthCheck(),
-  // 状态样式
-  statusClass = computed(() => {
-    switch (status.value) {
-      case "online": {
-        return "bg-green-500";
-      }
-      case "offline": {
-        return "bg-red-500";
-      }
-      default: {
-        return "bg-gray-400 animate-pulse";
-      }
+const { status } = useHealthCheck();
+// 状态样式
+const statusClass = computed(() => {
+  switch (status.value) {
+    case "online": {
+      return "bg-green-500";
     }
-  }),
-  // 状态文案
-  statusText = computed(() => {
-    switch (status.value) {
-      case "online": {
-        return "服务端在线";
-      }
-      case "offline": {
-        return "服务端离线";
-      }
-      default: {
-        return "连接中...";
-      }
+    case "offline": {
+      return "bg-red-500";
     }
-  });
+    default: {
+      return "bg-gray-400 animate-pulse";
+    }
+  }
+});
+// 状态文案
+const statusText = computed(() => {
+  switch (status.value) {
+    case "online": {
+      return "服务端在线";
+    }
+    case "offline": {
+      return "服务端离线";
+    }
+    default: {
+      return "连接中...";
+    }
+  }
+});
 </script>
 
 <template>

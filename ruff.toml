@@ -65,6 +65,7 @@ select = [
   "FURB",
   "G",
   "I",
+  "ICN",
   "INP",
   "LOG",
   "N",

@@ -1,18 +1,38 @@
 import { type ConsolaInstance, createConsola } from "consola";
 
+/** 敏感值掩码 */
+const MASK = "***";
+
+/** 日志级别：info */
+const LOG_LEVEL_INFO = 3;
+
 // 敏感键
-const SENSITIVE_KEYS = new Set(["password", "secret", "token", "authorization", "api_key"]),
-  /** 数据脱敏 */
-  redact = (data: Record<string, unknown> = {}): Record<string, unknown> =>
-    Object.fromEntries(
-      Object.entries(data).map(([key, value]) => [
-        key,
-        SENSITIVE_KEYS.has(key.toLowerCase()) ? "***" : value,
-      ]),
-    ),
-  /** 多端实例：无 console 环境降级为空实现 */
-  instance: ConsolaInstance | undefined =
-    globalThis.console === undefined ? undefined : createConsola({ level: 3 });
+const SENSITIVE_KEYS = new Set(["password", "secret", "token", "authorization", "api_key"]);
+
+/** 按键脱敏单个字段 */
+const maskValue = (key: string, value: unknown): unknown => {
+  if (SENSITIVE_KEYS.has(key.toLowerCase())) {
+    return MASK;
+  }
+
+  return value;
+};
+
+/** 数据脱敏 */
+const redact = (data: Record<string, unknown> = {}): Record<string, unknown> =>
+  Object.fromEntries(Object.entries(data).map(([key, value]) => [key, maskValue(key, value)]));
+
+/** 创建 Consola 实例：无 console 环境返回 undefined */
+const createInstance = (): ConsolaInstance | undefined => {
+  if (globalThis.console === undefined) {
+    return undefined;
+  }
+
+  return createConsola({ level: LOG_LEVEL_INFO });
+};
+
+/** 多端实例：无 console 环境降级为空实现 */
+const instance = createInstance();
 
 /** 结构化日志器：应用不直接依赖 Consola */
 export const logger = {
@@ -27,8 +47,17 @@ export const logger = {
   },
 };
 
+/** 日志级别取值范围 */
+const LOG_LEVEL_WARN = 4;
+
+/** 日志级别取值范围 */
+const LOG_LEVEL_ERROR = 5;
+
+/** 可用日志级别 */
+type LogLevel = 0 | 1 | 2 | typeof LOG_LEVEL_INFO | typeof LOG_LEVEL_WARN | typeof LOG_LEVEL_ERROR;
+
 /** 配置日志级别 */
-export const configure = (level: 0 | 1 | 2 | 3 | 4 | 5): void => {
+export const configure = (level: LogLevel): void => {
   if (instance) {
     instance.level = level;
   }
@@ -37,5 +66,5 @@ export const configure = (level: 0 | 1 | 2 | 3 | 4 | 5): void => {
 /** 配置日志 */
 export const configureLogger = (): void => {
   // 日志级别
-  configure(3);
+  configure(LOG_LEVEL_INFO);
 };

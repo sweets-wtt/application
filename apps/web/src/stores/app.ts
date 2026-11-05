@@ -9,7 +9,7 @@ const stateStorage: Storage = {
 };
 
 /** 应用状态仓库：持久化接状态包 */
-export const useAppStore = defineStore("app", () => ({}), {
+const useAppStore = defineStore("app", () => ({}), {
   persist: {
     // 序列化
     serializer: {
@@ -20,3 +20,5 @@ export const useAppStore = defineStore("app", () => ({}), {
     storage: stateStorage,
   },
 });
+
+export default useAppStore;
