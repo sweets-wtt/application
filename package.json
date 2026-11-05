@@ -3,5 +3,7 @@
   "name": "application",
   "private": true,
   "workspaces": ["apps/web"],
-  "devDependencies": { "@redocly/cli": "^2.72.1", "oxfmt": "^0.70.0", "oxlint": "1.85.0" }
+  "devDependencies": { "@redocly/cli": "2.75.0", "oxfmt": "0.76.0", "oxlint": "1.91.0" },
+  "packageManager": "bun@1.4.4",
+  "engines": { "bun": ">=1.4.4" }
 }

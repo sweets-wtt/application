@@ -12,6 +12,7 @@ from server import models  # noqa: F401
 from server.core.config import settings
 from server.core.db import Base
 
+
 config = context.config
 
 if config.config_file_name is not None:

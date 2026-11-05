@@ -9,6 +9,7 @@ from typing import Any, Final
 
 import structlog
 
+
 # 敏感键
 SENSITIVE_KEYS: Final[frozenset[str]] = frozenset(
     {"password", "secret", "token", "authorization", "api_key"}
@@ -56,14 +57,10 @@ def _level() -> int:
     return logging.getLevelNamesMapping().get(name, logging.INFO)
 
 
-def _trailing_and_renderer() -> tuple[
-    list[structlog.typing.Processor], structlog.typing.Processor
-]:
+def _trailing_and_renderer() -> tuple[list[structlog.typing.Processor], structlog.typing.Processor]:
     """按环境返回收尾链与渲染器"""
     json_mode = os.environ.get("APP_LOG_FORMAT") == "json"
-    trailing: list[structlog.typing.Processor] = [
-        structlog.processors.StackInfoRenderer()
-    ]
+    trailing: list[structlog.typing.Processor] = [structlog.processors.StackInfoRenderer()]
     if json_mode:
         trailing.append(structlog.processors.format_exc_info)
     trailing.append(structlog.processors.UnicodeDecoder())
@@ -108,8 +105,6 @@ def configure() -> None:
     root.setLevel(_level())
 
 
-def get_logger(
-    name: str | None = None, **initial_values: Any
-) -> structlog.stdlib.BoundLogger:
+def get_logger(name: str | None = None, **initial_values: Any) -> structlog.stdlib.BoundLogger:
     """获取结构化日志器"""
     return structlog.get_logger(name, **initial_values)

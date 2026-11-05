@@ -13,6 +13,7 @@ from sqlalchemy.orm import DeclarativeBase
 
 from server.core.config import settings
 
+
 # 约束命名约定 - 供 Alembic autogenerate 稳定识别约束
 NAMING_CONVENTION = {
     "ix": "ix_%(column_0_label)s",

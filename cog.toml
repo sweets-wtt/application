@@ -20,3 +20,25 @@ template = "remote"
 
 # 提交类型
 [commit_types]
+# 构建 - 不进入更新日志
+build = { omit_from_changelog = true }
+# 杂项 - 不进入更新日志
+chore = { omit_from_changelog = true }
+# 持续集成 - 不进入更新日志
+ci = { omit_from_changelog = true }
+# 文档 - 不进入更新日志
+docs = { omit_from_changelog = true }
+# 新功能
+feat = { changelog_title = "Features" }
+# 缺陷修复
+fix = { changelog_title = "Bug Fixes" }
+# 性能优化
+perf = { changelog_title = "Performance" }
+# 重构
+refactor = { changelog_title = "Refactors" }
+# 回滚
+revert = { changelog_title = "Reverts" }
+# 风格 - 不进入更新日志
+style = { omit_from_changelog = true }
+# 测试 - 不进入更新日志
+test = { omit_from_changelog = true }

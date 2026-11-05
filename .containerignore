@@ -1,24 +1,52 @@
 # 版本控制
 .git/
 
-# 环境
+# 环境变量
 .env
+# 环境变量派生文件
 .env.*
+# Python 虚拟环境
 .venv/
+# JavaScript 依赖
 **/node_modules/
 
 # 日志
 *.log
+# 轮转日志
 *.log.*
 
-# 缓存
+# 通用缓存
 .cache/
+# Python 字节码
 __pycache__/
+# Pytest 缓存
 .pytest_cache
+# Ruff 缓存
 .ruff_cache
+# TypeScript 增量构建缓存
 *.tsbuildinfo
+# Hypothesis 缓存
 .hypothesis
 
-# 生成
+# 覆盖率
 .coverage
+# 构建产物
 **/dist/
+
+# 仓库元数据
+.github/
+# 本地代理配置
+.reasonix/
+# 文档
+*.md
+
+# 测试与本地工具
+apps/*/tests/
+# Playwright 配置
+apps/web/playwright.config.ts
+# Web 环境变量示例
+apps/web/.env.example
+# 服务编排
+infra/
+# API 契约
+contracts/

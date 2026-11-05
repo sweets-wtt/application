@@ -48,6 +48,7 @@
     │   └── 契约测试: schemathesis
     └── web
         ├── 框架: vue
+        ├── 组合式工具: vueuse
         ├── 路由: vue-router
         ├── 状态管理: pinia
         ├── 契约客户端: vue-query
@@ -111,7 +112,9 @@
 ├── .gitattributes                   # Git 属性
 ├── .gitignore                       # Git 忽略
 ├── .gitleaks.toml                   # 密钥扫描
+├── .oxfmtrc.jsonc                   # JavaScript 代码格式化
 ├── .oxlintrc.jsonc                  # JavaScript 代码检查
+├── .python-version                  # Python 版本
 ├── .typos.toml                      # 拼写检查
 ├── bun.lock                         # JavaScript 依赖
 ├── cog.toml                         # 提交检查
@@ -123,6 +126,8 @@
 ├── package.json                     # JavaScript 包
 ├── pyproject.toml                   # Python 工作区根（含仓库级工具）
 ├── renovate.jsonc                   # 依赖更新
+├── ruff.toml                        # Python 代码检查与格式化
+├── ty.toml                          # Python 类型检查
 ├── uv.lock                          # Python 依赖（工作区统一）
 ├── zizmor.yaml                      # 安全审计
 └── README.md                        # 项目说明

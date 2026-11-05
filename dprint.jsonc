@@ -1,14 +1,28 @@
 {
-  // 全局 - 各插件未显式覆盖时继承
-  "lineWidth": 120,
-  // 排除
+  // 行宽 - 与 Ruff、oxfmt 统一为 100
+  "lineWidth": 100,
+  // 缩进宽度 - 与 .editorconfig 一致
+  "indentWidth": 2,
+  // 缩进 - 空格
+  "useTabs": false,
+  // 换行符 - 统一 LF
+  "newLineKind": "lf",
+  // 增量格式化 - 仅处理变更文件
+  "incremental": true,
+  // 排除 - 生成物与依赖目录
   "excludes": [
-    // 打包制品
+    // 契约打包制品
     "contracts/http/dist/**",
-    // 契约生成物
+    // TypeScript 契约客户端
     "apps/web/src/contracts/http/**",
+    // TypeScript 契约模式
     "apps/web/src/contracts/schemas/**",
-    "apps/server/src/server/generated/contracts.py"
+    // Python 契约模型
+    "apps/server/src/server/generated/contracts.py",
+    // JavaScript 依赖
+    "**/node_modules/**",
+    // Python 虚拟环境
+    ".venv/**"
   ],
   // JSON / JSONC
   "json": {
@@ -24,7 +38,9 @@
     // 强调符号
     "emphasisKind": "asterisks",
     // 无序列表标记
-    "list.unorderedMarker": "asterisks"
+    "list.unorderedMarker": "asterisks",
+    // 文本折行 - 按行宽统一
+    "textWrap": "always"
   },
   // TOML
   "toml": {
@@ -40,12 +56,12 @@
     // Dockerfile
     "npm:@dprint/dockerfile@0.7.0",
     // JSON / JSONC
-    "https://plugins.dprint.dev/json-0.24.0.wasm",
+    "https://plugins.dprint.dev/json-0.25.2.wasm",
     // Markdown
-    "https://plugins.dprint.dev/markdown-0.24.0.wasm",
+    "https://plugins.dprint.dev/markdown-0.28.2.wasm",
     // YAML
     "https://plugins.dprint.dev/g-plane/pretty_yaml-v0.6.0.wasm",
     // TOML
-    "https://plugins.dprint.dev/toml-0.8.0.wasm"
+    "https://plugins.dprint.dev/toml-0.9.0.wasm"
   ]
 }

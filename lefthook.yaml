@@ -1,33 +1,52 @@
+# Schema
+# yaml-language-server: $schema=https://lefthook.dev/schema.json
+
+# 最低版本
+min_version: "2.1.14"
+# 未安装时直接报错
+assert_lefthook_installed: true
+# 非交互环境不分配 TTY
+no_tty: true
+
 # 模板 - 收敛命令前缀
 # just 不在裸 PATH, 须经 mise 激活工具链
-# 注意: lefthook 不支持模板嵌套, 此处不可写成 "{mise} just"
 templates:
+  # just 配方入口
   just: mise exec -- just
 
 # 下拉后 - 依赖可能已变更，先同步
 post-merge:
   jobs:
+    # 同步依赖
     - name: install
       run: "{just} install"
+      fail_text: "依赖同步失败: just install"
 
 # 提交前 - 在取得提交信息之前执行
 pre-commit:
   jobs:
+    # 全量检查
     - name: check
       run: "{just} check"
+      fail_text: "提交前检查失败: just check"
 
 # 提交信息 - 在提交信息准备完成后执行
 commit-msg:
   jobs:
+    # Conventional Commits 校验
     - name: cog
       run: "{just} check-commit {1}"
+      fail_text: "提交信息不符合 Conventional Commits"
 
 # 推送前 - 最后一道闸
-# test 与 check-codegen 相互独立, 并行执行
+# 串行执行: check-codegen 会重写生成物, test 会读取同一份契约
 pre-push:
-  parallel: true
   jobs:
-    - name: test
-      run: "{just} test"
+    # 契约生成物漂移检查
     - name: contract
       run: "{just} check-codegen"
+      fail_text: "契约生成物存在漂移"
+    # 全量测试
+    - name: test
+      run: "{just} test"
+      fail_text: "测试失败: just test"

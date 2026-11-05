@@ -29,10 +29,7 @@ describe("parse", () => {
   });
 
   it("合法数据解析为状态", () => {
-    expect(parse('{"version":"1","locale":"en-US"}')).toEqual({
-      version: "1",
-      locale: "en-US",
-    });
+    expect(parse('{"version":"1","locale":"en-US"}')).toEqual({ version: "1", locale: "en-US" });
   });
 
   it("损坏 JSON 回退默认状态", () => {

@@ -6,6 +6,7 @@ from server.api.router import api_router
 from server.core.exceptions import AppError, handle_app_error
 from server.core.setup import setup
 
+
 # 装配依赖 - 初始化日志等, 须先于应用实例化
 setup()
 

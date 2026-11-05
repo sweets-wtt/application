@@ -1,9 +1,22 @@
 # 文件
 [files]
-# 额外排除
-extend-exclude = ["*.lock"]
+# 额外排除 - 锁文件与生成物
+extend-exclude = [
+  # 锁文件
+  "*.lock",
+  # 契约打包制品
+  "contracts/http/dist/**",
+  # TypeScript 契约生成物
+  "apps/web/src/contracts/**",
+  # Python 契约生成物
+  "apps/server/src/server/generated/**",
+]
 
 # 默认规则
 [default]
-# 自定义词表
-[default.extend-words]
+# 跳过二进制文件
+binary = false
+# 检查文件内容
+check-file = true
+# 检查文件名
+check-filename = true

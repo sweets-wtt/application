@@ -1,3 +1,4 @@
+import { useDocumentVisibility } from "@vueuse/core";
 import { computed, type ComputedRef, type Ref } from "vue";
 
 import { useGetHealthz, type Healthz200Response } from "@/contracts";
@@ -16,6 +17,10 @@ export interface HealthCheckResult {
 
 /** 健康检查 hook：轮询 /getHealthz 并推导在线状态 */
 export const useHealthCheck = (): HealthCheckResult => {
+  // 页面可见性 - 隐藏时暂停轮询, 恢复时自动重新获取
+  const visibility = useDocumentVisibility();
+  const enabled = computed(() => visibility.value === "visible");
+
   // 契约请求：定时拉取存活探针
   const {
     isSuccess,
@@ -24,6 +29,8 @@ export const useHealthCheck = (): HealthCheckResult => {
     data: result,
   } = useGetHealthz({
     query: {
+      // 页面可见时轮询
+      enabled,
       // 轮询间隔
       refetchInterval: HEARTBEAT_INTERVAL,
       // 失败重试一次

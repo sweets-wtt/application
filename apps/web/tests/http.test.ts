@@ -10,12 +10,14 @@ afterEach(() => {
 describe("appFetch", () => {
   it("返回 Orval 约定的 data/status/headers", async () => {
     const body = { code: 0, message: "ok", data: { status: "ok" } };
-    const fetchMock = vi.fn().mockResolvedValue(
-      new Response(JSON.stringify(body), {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      }),
-    );
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue(
+        new Response(JSON.stringify(body), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        }),
+      );
     vi.stubGlobal("fetch", fetchMock);
 
     const result = await appFetch<{ data: typeof body; status: number; headers: Headers }>(
@@ -29,12 +31,14 @@ describe("appFetch", () => {
   });
 
   it("拼接基地址", async () => {
-    const fetchMock = vi.fn().mockResolvedValue(
-      new Response(JSON.stringify({ code: 0 }), {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      }),
-    );
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue(
+        new Response(JSON.stringify({ code: 0 }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        }),
+      );
     vi.stubGlobal("fetch", fetchMock);
     setBaseUrl("https://api.example.com");
 
@@ -46,12 +50,14 @@ describe("appFetch", () => {
   it("非 2xx 抛错", async () => {
     vi.stubGlobal(
       "fetch",
-      vi.fn().mockResolvedValue(
-        new Response(JSON.stringify({ detail: "fail" }), {
-          status: 500,
-          headers: { "Content-Type": "application/json" },
-        }),
-      ),
+      vi
+        .fn()
+        .mockResolvedValue(
+          new Response(JSON.stringify({ detail: "fail" }), {
+            status: 500,
+            headers: { "Content-Type": "application/json" },
+          }),
+        ),
     );
 
     await expect(appFetch("/healthz")).rejects.toThrow("500");

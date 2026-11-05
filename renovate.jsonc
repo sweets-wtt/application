@@ -1,17 +1,18 @@
 {
   // 继承推荐配置
   "extends": ["config:best-practices"],
-  // 锁文件维护
-  "lockFileMaintenance": { "enabled": true },
+  // 时区 - 与维护者一致
+  "timezone": "Asia/Shanghai",
+  // 更新窗口 - 每周一上午前集中处理
+  "schedule": ["before 9am on monday"],
+  // 漏洞告警 - 有安全公告时立即创建 PR
+  "osvVulnerabilityAlerts": true,
   // 包匹配规则
   "packageRules": [{
-    // monorepo 类依赖 - minor/patch 分组批量更新
-    "groupName": "monorepos",
-    // 匹配的更新类型
-    "matchUpdateTypes": ["minor", "patch"]
-  }, {
-    // bun 依赖 - 精确升版本
+    // bun 运行时依赖 - 新版本满足现有范围时也提升范围
     "matchManagers": ["bun"],
+    // 只处理运行时依赖, 避免与 pinDevDependencies 冲突
+    "matchDepTypes": ["dependencies"],
     // 版本范围策略: bump - 新版本满足现有范围时也提升范围
     "rangeStrategy": "bump"
   }],

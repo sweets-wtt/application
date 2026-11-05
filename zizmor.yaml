@@ -1,5 +1,8 @@
+# 规则
 rules:
   # actionlint 1.7.12 尚不支持 `$/` 语法，忽略 self-repository 建议
   self-repository:
+    # 仅忽略 CI 工作流
     ignore:
+      # CI 工作流文件
       - ci.yaml

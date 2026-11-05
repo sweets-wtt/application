@@ -20,11 +20,7 @@ export default defineConfig({
     Icons({ autoInstall: false }),
   ],
 
-  resolve: {
-    alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
-    },
-  },
+  resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
 
   test: {
     // threads：forks 池在 Windows 下临时目录会 EPERM

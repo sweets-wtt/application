@@ -1,7 +1,56 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
-  // 行宽
+  // 行宽 - 与 Ruff、dprint 统一为 100
   "printWidth": 100,
+  // 字符串引号 - 统一使用双引号, 与现有代码一致
+  "singleQuote": false,
+  // JSX 属性引号 - 统一使用双引号
+  "jsxSingleQuote": false,
+  // 语句末尾分号 - 强制保留
+  "semi": true,
+  // 多行结构尾逗号 - 强制保留
+  "trailingComma": "all",
+  // 箭头函数参数括号 - 始终保留
+  "arrowParens": "always",
+  // 对象花括号内空格 - 保留
+  "bracketSpacing": true,
+  // 对象键引号 - 仅在必要时添加
+  "quoteProps": "as-needed",
+  // 对象换行 - 可单行时折叠, 消除同一对象的两种写法
+  "objectWrap": "collapse",
+  // 多属性元素 - 每个属性独占一行
+  "singleAttributePerLine": true,
+  // 多行元素闭合括号 - 不与最后一个属性同行
+  "bracketSameLine": false,
+  // Vue 的 script/style - 不额外缩进
+  "vueIndentScriptAndStyle": false,
+  // 换行符 - 统一 LF
+  "endOfLine": "lf",
+  // 文件末尾 - 保留换行
+  "insertFinalNewline": true,
+  // 内嵌语言 - 自动格式化
+  "embeddedLanguageFormatting": "auto",
   // import 排序
-  "sortImports": true
+  "sortImports": {
+    // 分组顺序 - 内置、外部、内部、相对、样式、类型、未知
+    "groups": [
+      "builtin",
+      "external",
+      ["internal", "subpath"],
+      ["parent", "sibling", "index"],
+      "style",
+      "type",
+      "unknown"
+    ],
+    // 内部模块前缀 - 匹配 Vite 别名
+    "internalPattern": ["@/"],
+    // 分组之间 - 插入空行
+    "newlinesBetween": true,
+    // 组内顺序 - 升序
+    "order": "asc",
+    // 排序 - 忽略大小写
+    "ignoreCase": true,
+    // 副作用导入 - 保持原顺序, 避免破坏初始化顺序
+    "sortSideEffects": false
+  }
 }

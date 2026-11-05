@@ -6,6 +6,11 @@
  * OpenAPI spec version: 0.1.0
  */
 import { useQuery } from "@tanstack/vue-query";
+import { unref } from "vue";
+
+import { appFetch } from "../../client";
+
+import type { Healthz200Response } from "../../schemas/index.zod";
 import type {
   DataTag,
   QueryClient,
@@ -14,21 +19,12 @@ import type {
   UseQueryOptions,
   UseQueryReturnType,
 } from "@tanstack/vue-query";
-import { unref } from "vue";
-
-import { appFetch } from "../../client";
-import type { Healthz200Response } from "../../schemas/index.zod";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-export type getHealthzResponse200 = {
-  data: Healthz200Response;
-  status: 200;
-};
+export type getHealthzResponse200 = { data: Healthz200Response; status: 200 };
 
-export type getHealthzResponseSuccess = getHealthzResponse200 & {
-  headers: Headers;
-};
+export type getHealthzResponseSuccess = getHealthzResponse200 & { headers: Headers };
 
 export type getHealthzResponse = getHealthzResponseSuccess;
 
@@ -43,10 +39,7 @@ export const getGetHealthzUrl = () => {
 export const getHealthz = async (
   options?: Parameters<typeof appFetch>[1],
 ): Promise<getHealthzResponse> => {
-  return appFetch<getHealthzResponse>(getGetHealthzUrl(), {
-    ...options,
-    method: "GET",
-  });
+  return appFetch<getHealthzResponse>(getGetHealthzUrl(), { ...options, method: "GET" });
 };
 
 export const getGetHealthzQueryKey = () => {

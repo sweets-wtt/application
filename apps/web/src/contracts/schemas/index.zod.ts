@@ -17,18 +17,8 @@ export type Response = zod.input<typeof Response>;
 export type ResponseOutput = zod.output<typeof Response>;
 
 export const Healthz200Response = zod
-  .object({
-    code: zod.int(),
-    message: zod.string(),
-    data: zod.looseObject({}),
-  })
-  .and(
-    zod.object({
-      data: zod.object({
-        status: zod.string(),
-      }),
-    }),
-  );
+  .object({ code: zod.int(), message: zod.string(), data: zod.looseObject({}) })
+  .and(zod.object({ data: zod.object({ status: zod.string() }) }));
 
 export type Healthz200Response = zod.input<typeof Healthz200Response>;
 export type Healthz200ResponseOutput = zod.output<typeof Healthz200Response>;
