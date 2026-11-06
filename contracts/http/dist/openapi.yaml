@@ -48,4 +48,6 @@ components:
                     properties:
                       status:
                         type: string
+                        enum:
+                          - ok
                     additionalProperties: false

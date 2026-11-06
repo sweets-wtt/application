@@ -13,4 +13,7 @@ content:
               properties:
                 status:
                   type: string
+                  # 存活状态取值
+                  enum:
+                    - ok
               additionalProperties: false

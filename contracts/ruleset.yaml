@@ -1,10 +1,9 @@
-# OpenAPI 契约规则集：继承 vacuum 官方推荐规则并逐条声明严重级别
-
 # 继承的规则集
 extends: [[vacuum:oas, recommended]]
 
 rules:
-  # ── 文档结构与元信息 ──────────────────────
+  # ── 文档结构与元信息 ──
+
   # info 段须包含描述
   info-description: error
   # license 的 identifier 与 url 互斥
@@ -20,12 +19,13 @@ rules:
   # servers 定义须合法
   oas3-api-servers: error
 
-  # ── Schema 与类型 ────────────────────────
+  # ── Schema 与类型 ──
+
   # allOf 组合的属性须有共同的合法类型
   allof-conflicts: error
   # schema 属性名须使用 camelCase
   camel-case-properties: error
-  # 组件须包含描述（现有契约暂缺，先告警）
+  # 组件须包含描述（契约暂缺）
   component-description: warn
   # 描述不得重复
   description-duplication: error
@@ -52,7 +52,8 @@ rules:
   # 枚举值须符合声明类型
   typed-enum: error
 
-  # ── 路径与操作 ───────────────────────────
+  # ── 路径与操作 ──
+
   # 路径不得重复定义
   duplicate-paths: error
   # 路径之间须可无歧义区分
@@ -73,7 +74,7 @@ rules:
   operation-success-response: error
   # 操作 tag 须在全局 tags 中定义
   operation-tag-defined: error
-  # 操作须声明非空 tags（现有契约暂缺，先告警）
+  # 操作须声明非空 tags（契约暂缺）
   operation-tags: warn
   # 路径参数声明不得为空
   path-declarations-must-exist: error
@@ -88,7 +89,8 @@ rules:
   # 路径段须使用 kebab-case
   paths-kebab-case: error
 
-  # ── 示例与安全 ───────────────────────────
+  # ── 示例与安全 ──
+
   # markdown 描述禁止 eval()
   no-eval-in-markdown: error
   # GET 与 DELETE 不应接受请求体
@@ -101,14 +103,15 @@ rules:
   oas2-operation-security-defined: error
   # 示例的 value 与 externalValue 互斥
   oas3-example-external-check: error
-  # 可提供示例的字段须提供示例（现有契约暂缺，先告警）
+  # 可提供示例的字段须提供示例（契约暂缺）
   oas3-missing-example: warn
   # security 须引用 components.securitySchemes 中已定义的方案
   oas3-operation-security-defined: error
   # 示例须符合对应 schema
   oas3-valid-schema-example: error
 
-  # ── 引用与清理 ───────────────────────────
+  # ── 引用与清理 ──
+
   # x-zally-ignore 应迁移为 x-lint-ignore
   migrate-zally-ignore: error
   # $ref 不得与其他属性并列
@@ -124,7 +127,8 @@ rules:
   # 禁止未使用的组件与失效引用
   oas3-unused-component: error
 
-  # ── 项目自定义规则 ───────────────────────
+  # ── 项目自定义规则 ──
+
   # 敏感字段禁止提供示例与默认值
   no-sensitive-examples:
     # 规则描述

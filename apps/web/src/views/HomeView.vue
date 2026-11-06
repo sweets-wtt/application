@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { useHealthCheck } from "@/features/health";
+import { SERVER_STATUS } from "@/features/health/constants";
 
 const { status } = useHealthCheck();
 // 状态样式
 const statusClass = computed(() => {
   switch (status.value) {
-    case "online": {
+    case SERVER_STATUS.online: {
       return "bg-green-500";
     }
-    case "offline": {
+    case SERVER_STATUS.offline: {
       return "bg-red-500";
     }
     default: {
@@ -19,10 +20,10 @@ const statusClass = computed(() => {
 // 状态文案
 const statusText = computed(() => {
   switch (status.value) {
-    case "online": {
+    case SERVER_STATUS.online: {
       return "服务端在线";
     }
-    case "offline": {
+    case SERVER_STATUS.offline: {
       return "服务端离线";
     }
     default: {

@@ -28,7 +28,7 @@ def request_stub() -> Request:
     """请求占位 - 处理器未使用该参数
 
     Returns:
-        Request: 最小可用的请求对象。
+        Request: 最小可用的请求对象
     """
     return Request({"type": "http", "headers": [], "query_string": b""})
 
@@ -37,10 +37,10 @@ def payload(response: JSONResponse) -> object:
     """响应体解析
 
     Args:
-        response: 待解析的响应对象。
+        response: 待解析的响应对象
 
     Returns:
-        object: 解析后的 JSON 数据。
+        object: 解析后的 JSON 数据
     """
     body = response.body
     raw = bytes(body) if isinstance(body, memoryview) else body

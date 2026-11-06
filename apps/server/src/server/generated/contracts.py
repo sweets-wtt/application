@@ -3,16 +3,21 @@
 
 from __future__ import annotations
 
+from enum import Enum
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, StrictInt
+
+
+class Status(Enum):
+    ok = 'ok'
 
 
 class Data(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
-    status: str
+    status: Status
 
 
 class Response(BaseModel):

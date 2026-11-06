@@ -20,3 +20,16 @@ export const parseHeartbeatInterval = (raw?: string): number => {
 
 /** 心跳轮询间隔（毫秒） */
 export const HEARTBEAT_INTERVAL = parseHeartbeatInterval(import.meta.env.VITE_HEARTBEAT_INTERVAL);
+
+/** 服务端状态值 */
+export const SERVER_STATUS = {
+  /** 检测中 */
+  checking: "checking",
+  /** 离线 */
+  offline: "offline",
+  /** 在线 */
+  online: "online",
+} as const;
+
+/** 服务端状态 */
+export type ServerStatus = (typeof SERVER_STATUS)[keyof typeof SERVER_STATUS];
