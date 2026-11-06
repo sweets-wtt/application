@@ -33,6 +33,15 @@ COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
 # Nginx 站点配置 - 覆盖默认站点以实现 SPA 回退与 API 反代
 COPY apps/web/nginx.conf /etc/nginx/conf.d/default.conf
 
+# 授予非 root 用户绑定 80 端口的能力
+RUN apk add --no-cache libcap && setcap "cap_net_bind_service=+ep" /usr/sbin/nginx
+
+# 运行期目录交由 nginx 用户持有
+RUN chown -R nginx:nginx /var/cache/nginx /var/run /usr/share/nginx/html
+
+# 运行用户 - 禁止以 root 运行
+USER nginx
+
 # 端口
 EXPOSE 80
 

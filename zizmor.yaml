@@ -1,7 +1,7 @@
 # 规则
 rules:
-  # self-repository 规则
+  # 自仓库引用
   self-repository:
-    # 忽略的文件
+    # 忽略文件
     ignore:
       - ci.yaml

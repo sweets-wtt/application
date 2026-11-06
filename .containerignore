@@ -3,11 +3,11 @@
 
 # 环境变量
 .env
-# 环境变量派生文件
+# 环境变量派生
 .env.*
-# Python 虚拟环境
+# 虚拟环境
 .venv/
-# JavaScript 依赖
+# 依赖目录
 **/node_modules/
 
 # 日志
@@ -15,13 +15,13 @@
 # 轮转日志
 *.log.*
 
-# Python 字节码
+# 字节码
 __pycache__/
 # Pytest 缓存
 .pytest_cache
 # Ruff 缓存
 .ruff_cache
-# TypeScript 增量构建缓存
+# 增量构建缓存
 *.tsbuildinfo
 # Hypothesis 缓存
 .hypothesis
@@ -32,7 +32,7 @@ pytest-of-*/
 .coverage
 # 构建产物
 **/dist/
-# Python 构建元数据
+# 构建元数据
 **/*.egg-info/
 # Mypy 缓存
 .mypy_cache
@@ -43,7 +43,7 @@ pytest-of-*/
 test-results/
 # Playwright 报告
 playwright-report/
-# Playwright Blob 报告
+# Blob 报告
 blob-report/
 
 # 仓库元数据
@@ -53,7 +53,7 @@ blob-report/
 # 部署密钥
 infra/secrets/
 
-# 测试与本地工具
+# 测试与工具
 apps/*/tests/
 # 服务编排
 infra/

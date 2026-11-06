@@ -1,4 +1,4 @@
-# 从最新标签起算版本
+# 起始标签
 from_latest_tag = true
 # 忽略合并提交
 ignore_merge_commits = true

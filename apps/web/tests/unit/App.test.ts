@@ -5,8 +5,9 @@ import App from "@/App.vue";
 
 describe("app", () => {
   it("渲染根组件", () => {
+    // 挂载根组件
     const wrapper = mount(App);
 
     expect(wrapper.exists()).toBe(true);
-  });
+  }, 5000);
 });

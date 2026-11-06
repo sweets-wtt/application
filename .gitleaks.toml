@@ -1,20 +1,20 @@
 # 最低版本
 minVersion = "8.30.0"
 
-# 继承
+# 继承配置
 [extend]
+# 禁用规则
+disabledRules = []
 # 使用默认规则集
 useDefault = true
 
 # 自定义规则
 [[rules]]
-# 规则描述
+# 描述
 description = "检测管道执行远程脚本"
-# 规则唯一标识
+# 唯一标识
 id = "pipe-to-shell"
 # 预筛选关键词
 keywords = ["curl", "wget"]
 # 检测正则
 regex = '''(?i)\b(?:curl|wget)\b[^\n]*?\|\s*(?:sudo\s+(?:-\S+\s+)*)?(?:\S*/)?(?:sh|bash|zsh|ksh|dash)\b'''
-# 规则分类
-tags = ["supply-chain"]

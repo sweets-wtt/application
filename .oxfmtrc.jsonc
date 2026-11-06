@@ -1,66 +1,116 @@
 {
+  // Schema 地址
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
-  // 箭头函数参数括号
-  "arrowParens": "always",
-  // 多行元素闭合括号
-  "bracketSameLine": false,
-  // 对象花括号内空格
-  "bracketSpacing": true,
-  // 内嵌语言格式化
-  "embeddedLanguageFormatting": "auto",
-  // 换行符
-  "endOfLine": "lf",
-  // 运算符在换行时的位置：置于新行行首
-  "experimentalOperatorPosition": "start",
-  // HTML/Vue 空白敏感度：忽略空白差异
-  "htmlWhitespaceSensitivity": "ignore",
-  // 文件末尾换行
-  "insertFinalNewline": true,
-  // JSDoc 格式化：中文注释按语义手工断行，不自动重排
-  "jsdoc": false,
-  // JSX 属性引号
-  "jsxSingleQuote": false,
-  // 对象换行
-  "objectWrap": "collapse",
   // 行宽
   "printWidth": 100,
-  // 对象键引号
-  "quoteProps": "as-needed",
-  // 语句末尾分号
+  // 缩进宽度
+  "tabWidth": 2,
+  // 制表符缩进
+  "useTabs": false,
+  // 换行符
+  "endOfLine": "lf",
+  // 末尾换行
+  "insertFinalNewline": true,
+  // 分号
   "semi": true,
-  // 多属性元素
-  "singleAttributePerLine": true,
-  // 字符串引号
+  // 单引号
   "singleQuote": false,
-  // import 排序
+  // 属性引号
+  "quoteProps": "as-needed",
+  // 尾逗号
+  "trailingComma": "all",
+  // 括号空格
+  "bracketSpacing": true,
+  // 对象换行
+  "objectWrap": "collapse",
+  // 箭头括号
+  "arrowParens": "always",
+  // 标签闭合
+  "bracketSameLine": false,
+  // 属性分行
+  "singleAttributePerLine": true,
+  // 空白敏感度
+  "htmlWhitespaceSensitivity": "ignore",
+  // Vue 块缩进
+  "vueIndentScriptAndStyle": false,
+  // 内嵌格式化
+  "embeddedLanguageFormatting": "auto",
+  // 运算符位置
+  "experimentalOperatorPosition": "start",
+  // JSDoc 格式化
+  "jsdoc": false,
+  // 忽略文件
+  "ignorePatterns": [
+    // 契约制品
+    "contracts/http/dist/**",
+    // 自动导入声明
+    "apps/web/auto-imports.d.ts",
+    // 依赖目录
+    "**/node_modules/**",
+    // 构建产物
+    "**/dist/**"
+  ],
+  // 文件覆盖
+  "overrides": [{
+    // Markdown 文件
+    "files": ["**/*.md"],
+    // 折行方式
+    "proseWrap": "preserve"
+  }, {
+    // 契约生成物
+    "files": ["apps/web/src/api/generated/**"],
+    // 导入排序
+    "sortImports": false
+  }],
+  // 语言关联
+  "associations": [],
+  // Astro 支持
+  "astro": false,
+  // Svelte 支持
+  "svelte": false,
+  // 导入排序
   "sortImports": {
-    // 分组顺序
+    // 分组
     "groups": [
+      // 内置模块
       "builtin",
+      // 第三方依赖
       "external",
+      // 内部别名
       ["internal", "subpath"],
+      // 相对路径
       ["parent", "sibling", "index"],
+      // 样式
       "style",
+      // 类型
       "type",
+      // 未归类
       "unknown"
     ],
+    // 排序方向
+    "order": "asc",
     // 忽略大小写
     "ignoreCase": true,
-    // 内部模块前缀
-    "internalPattern": ["@/", "~/", "#"],
-    // 分组之间空行
+    // 分组空行
     "newlinesBetween": true,
-    // 组内顺序
-    "order": "asc",
+    // 内部前缀
+    "internalPattern": ["@/", "~/", "#"],
     // 副作用导入排序
-    "sortSideEffects": true
+    "sortSideEffects": true,
+    // 按注释分区
+    "partitionByComment": false,
+    // 按空行分区
+    "partitionByNewline": false,
+    // 自定义分组
+    "customGroups": [ // 业务模块
+      { "groupName": "app-features", "elementNamePattern": ["@/features/**"] }, // 基础模块
+      { "groupName": "app-core", "elementNamePattern": ["@/lib/**", "@/config/**", "@/stores/**"] }
+    ]
   },
-  // package.json 排序交由 dprint
+  // package.json 排序
   "sortPackageJson": false,
-  // 多行结构尾逗号
-  "trailingComma": "all",
-  // 缩进宽度（覆盖 .editorconfig）
-  "tabWidth": 2,
-  // Vue 的 script/style 缩进
-  "vueIndentScriptAndStyle": false
+  // Tailwind 排序
+  "sortTailwindcss": false,
+  // 折行方式
+  "proseWrap": "preserve"
 }

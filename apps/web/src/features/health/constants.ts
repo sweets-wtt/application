@@ -1,4 +1,4 @@
-// 心跳默认间隔（毫秒）
+/** 心跳默认间隔（毫秒） */
 export const DEFAULT_HEARTBEAT_INTERVAL = 30_000;
 
 /**
@@ -10,6 +10,7 @@ export const DEFAULT_HEARTBEAT_INTERVAL = 30_000;
 export const parseHeartbeatInterval = (raw?: string): number => {
   const value = Number(raw);
 
+  // 非有限数或非正值回退默认
   if (!Number.isFinite(value) || value <= 0) {
     return DEFAULT_HEARTBEAT_INTERVAL;
   }
@@ -17,5 +18,5 @@ export const parseHeartbeatInterval = (raw?: string): number => {
   return value;
 };
 
-// 心跳轮询间隔（毫秒）
+/** 心跳轮询间隔（毫秒） */
 export const HEARTBEAT_INTERVAL = parseHeartbeatInterval(import.meta.env.VITE_HEARTBEAT_INTERVAL);

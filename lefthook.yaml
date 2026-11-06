@@ -1,47 +1,61 @@
 # 最低版本
 min_version: "2.2.2"
-# 未安装时直接报错
+# 安装校验
 assert_lefthook_installed: true
-# 非交互环境不分配 TTY
+# 禁用 TTY
 no_tty: true
 
-# 模板
+# 命令模板
 templates:
-  # just 配方入口
+  # just 入口
   just: mise exec -- just
 
-# 下拉后
+# 合并后
 post-merge:
+  # 任务
   jobs:
-    # 同步依赖
+    # 安装依赖
     - name: install
+      # 命令
       run: "{just} install"
+      # 失败提示
       fail_text: "依赖同步失败: just install"
 
 # 提交前
 pre-commit:
+  # 任务
   jobs:
     # 全量检查
     - name: check
+      # 命令
       run: "{just} check"
+      # 失败提示
       fail_text: "提交前检查失败: just check"
 
 # 提交信息
 commit-msg:
+  # 任务
   jobs:
-    # Conventional Commits 校验
+    # 规范校验
     - name: cog
+      # 命令
       run: "{just} check-commit {1}"
+      # 失败提示
       fail_text: "提交信息不符合 Conventional Commits"
 
-# 推送前检查
+# 推送前
 pre-push:
+  # 任务
   jobs:
-    # 契约生成物漂移检查
+    # 契约漂移
     - name: contract
+      # 命令
       run: "{just} check-codegen"
+      # 失败提示
       fail_text: "契约生成物存在漂移"
-    # 全量测试
+    # 测试
     - name: test
+      # 命令
       run: "{just} test"
+      # 失败提示
       fail_text: "测试失败: just test"

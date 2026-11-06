@@ -1,14 +1,14 @@
 # 依赖组
 [dependency-groups]
-# 开发
+# 开发依赖
 dev = ["ruff>=0.16.6", "ty>=0.0.78"]
 
 # uv 配置
 [tool.uv]
-# 最低 uv 版本
+# 最低版本
 required-version = ">=0.12.10"
 
-# uv 工作区
+# 工作区
 [tool.uv.workspace]
 # 成员
 members = ["apps/server"]

@@ -1,4 +1,4 @@
-# 声明根配置
+# 根配置
 root = true
 
 # 通用规则
@@ -11,7 +11,7 @@ end_of_line = lf
 indent_style = space
 # 缩进宽度
 indent_size = 2
-# 文件末尾
+# 末尾换行
 insert_final_newline = true
 # 行尾空白
 trim_trailing_whitespace = true

@@ -1,10 +1,10 @@
 import { QueryClient } from "@tanstack/vue-query";
 
-// 全局查询客户端
+/** 全局查询客户端 */
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      // 窗口失焦不重新请求
+      /** 窗口失焦不重新请求 */
       refetchOnWindowFocus: false,
     },
   },

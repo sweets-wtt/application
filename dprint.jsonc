@@ -1,71 +1,89 @@
 {
-  // 排除
-  "excludes": [
-    // 契约打包制品
-    "contracts/http/dist/**",
-    // TypeScript 契约生成物
-    "apps/web/src/api/generated/**",
-    // Python 契约模型
-    "apps/server/src/server/generated/contracts.py",
-    // JavaScript 依赖
-    "**/node_modules/**",
-    // Python 虚拟环境
-    ".venv/**"
+  // 包含文件
+  "includes": [
+    "**/*.json",
+    "**/*.jsonc",
+    "**/*.md",
+    "**/*.yaml",
+    "**/*.yml",
+    "**/*.toml",
+    "**/Dockerfile"
   ],
-  // 增量格式化
-  "incremental": true,
-  // 缩进宽度
-  "indentWidth": 2,
-  // JSON / JSONC
-  "json": {
-    // 放得下的数组强制单行
-    "array.preferSingleLine": true,
-    // 放得下的对象强制单行
-    "object.preferSingleLine": true,
-    // package.json 按 npm 约定顺序
-    "packageJson.applyConventions": true,
-    // 禁止尾逗号
-    "trailingCommas": "never"
-  },
+  // 排除文件
+  "excludes": [
+    "contracts/http/dist/**",
+    "apps/web/src/api/generated/**",
+    "apps/server/src/server/generated/contracts.py",
+    "**/node_modules/**",
+    ".venv/**",
+    "**/dist/**"
+  ],
+  // shebang 识别
+  "shebangs": { "#!/usr/bin/env bash": "sh", "#!/bin/sh": "sh", "#!/usr/bin/env python": "py" },
   // 行宽
   "lineWidth": 100,
-  // Markdown
-  "markdown": {
-    // 强调符号
-    "emphasisKind": "asterisks",
-    // 无序列表标记
-    "list.unorderedMarker": "asterisks",
-    // 文本折行
-    "textWrap": "always"
-  },
-  // 换行符
-  "newLineKind": "lf",
   // 插件
   "plugins": [
-    // Dockerfile
     "npm:@dprint/dockerfile@0.7.0",
-    // JSON / JSONC
     "https://plugins.dprint.dev/json-0.25.2.wasm",
-    // Markdown
     "https://plugins.dprint.dev/markdown-0.28.2.wasm",
-    // YAML
     "https://plugins.dprint.dev/g-plane/pretty_yaml-v0.6.0.wasm",
-    // TOML
     "https://plugins.dprint.dev/toml-0.9.0.wasm"
   ],
-  // TOML
-  "toml": {
-    // 放得下的数组强制单行
+  // Dockerfile 插件
+  "dockerfile": { "locked": true },
+  "json": {
+    // 配置锁定
+    "locked": true,
+    // 数组单行
     "array.preferSingleLine": true,
-    // 放得下的内联表强制单行
-    "inlineTable.preferSingleLine": true,
-    // 数组值字母序
-    "sortArrays": true,
-    // 内联表键字母序
-    "sortInlineTables": true,
-    // 表内键字母序
-    "sortKeys": true
+    // 对象单行
+    "object.preferSingleLine": true,
+    // 行宽
+    "lineWidth": 100,
+    // 尾逗号
+    "trailingCommas": "never"
   },
-  // 缩进
-  "useTabs": false
+  "markdown": {
+    // 配置锁定
+    "locked": true,
+    // 强调符号
+    "emphasisKind": "asterisks",
+    // 列表符号
+    "list.unorderedMarker": "asterisks",
+    // 行宽
+    "lineWidth": 100,
+    // 折行
+    "textWrap": "always"
+  },
+  "yaml": {
+    // 配置锁定
+    "locked": true,
+    // 行宽
+    "printWidth": 100,
+    // 引号
+    "quotes": "preferDouble",
+    // 破折号空格
+    "dashSpacing": "oneSpace",
+    // 流式序列单行
+    "flowSequence.preferSingleLine": false,
+    // 流式映射单行
+    "flowMap.preferSingleLine": false
+  },
+  "toml": {
+    // 配置锁定
+    "locked": true,
+    // 行宽
+    "lineWidth": 100,
+    // 键排序
+    "sortKeys": true,
+    // 数组排序
+    "sortArrays": true,
+    // 内联表排序
+    "sortInlineTables": true,
+    // 内联表单行
+    "inlineTable.preferSingleLine": true,
+    // 数组单行
+    "array.preferSingleLine": true
+  }
 }

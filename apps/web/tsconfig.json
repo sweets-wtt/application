@@ -1,22 +1,68 @@
 {
   "compilerOptions": {
-    // 应用仅做类型检查，不产出编译物
+    // 仅做类型检查，不产出编译物
     "noEmit": true,
-    "jsx": "preserve",
-    // Bundler 解析以识别包 exports 子路径
+    // 模块解析策略：bundler 可识别 package.json 的 exports 子路径
     "moduleResolution": "bundler",
+    // 输出的模块格式
     "module": "ESNext",
-    "target": "ESNext",
-    "types": ["node", "vitest/globals"],
+    // 文件模块判定方式：强制按 ES 模块处理
+    "moduleDetection": "force",
+    // 是否按 package.json 的 exports 字段解析子路径
+    "resolvePackageJsonExports": true,
+    // 是否按 package.json 的 imports 字段解析内部映射
+    "resolvePackageJsonImports": true,
+    // 是否允许导入 JSON 模块
+    "resolveJsonModule": true,
+    // 路径别名映射
     "paths": { "@/*": ["./src/*"] },
-    // 严格
+    // 编译目标 ECMAScript 版本
+    "target": "ESNext",
+    // JSX 处理方式：保留，交由构建器转换
+    "jsx": "preserve",
+    // 类字段是否按 ECMAScript 标准语义定义
+    "useDefineForClassFields": true,
+    // 需加载的全局类型声明包
+    "types": ["node", "vitest/globals"],
+    // 是否开启全部严格类型检查（含 noImplicitAny、strictNullChecks 等 9 项）
     "strict": true,
+    // 是否要求通过下标访问索引签名属性
+    "noPropertyAccessFromIndexSignature": true,
+    // 是否将下标访问结果视为可能含 undefined
     "noUncheckedIndexedAccess": true,
+    // 是否禁止给可选属性显式赋 undefined
     "exactOptionalPropertyTypes": true,
+    // 是否要求覆写成员标注 override
     "noImplicitOverride": true,
+    // 是否禁止 switch 分支落空
     "noFallthroughCasesInSwitch": true,
+    // 是否要求所有代码路径显式返回
+    "noImplicitReturns": true,
+    // 是否报告未使用的局部变量
+    "noUnusedLocals": true,
+    // 是否报告未使用的函数参数
+    "noUnusedParameters": true,
+    // 是否允许存在不可达代码
+    "allowUnreachableCode": false,
+    // 是否允许存在未使用的标签
+    "allowUnusedLabels": false,
+    // 是否校验副作用导入能解析到模块
+    "noUncheckedSideEffectImports": true,
+    // 是否要求类型导入显式标注 type
     "verbatimModuleSyntax": true,
+    // 是否要求每个文件可独立转译
+    "isolatedModules": true,
+    // 是否仅允许可擦除语法（禁用 enum、namespace、参数属性）
+    "erasableSyntaxOnly": true,
+    // 是否兼容 CommonJS 模块的默认导入
+    "esModuleInterop": true,
+    // 是否允许默认导入没有默认导出的模块
+    "allowSyntheticDefaultImports": true,
+    // 是否强制文件名大小写与实际一致
+    "forceConsistentCasingInFileNames": true,
+    // 是否跳过依赖库的类型检查
     "skipLibCheck": true
   },
-  "include": ["src", "tests"]
+  // 参与编译的文件范围
+  "include": ["src", "tests", "auto-imports.d.ts"]
 }

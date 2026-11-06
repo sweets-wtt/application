@@ -116,4 +116,4 @@ def configure() -> None:
 
 def get_logger(name: str | None = None, **initial_values: object) -> structlog.stdlib.BoundLogger:
     """获取结构化日志器"""
-    return structlog.get_logger(name, **initial_values)
+    return structlog.stdlib.get_logger(name, **initial_values)

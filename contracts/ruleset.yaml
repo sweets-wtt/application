@@ -1,20 +1,142 @@
-# 规则集继承
+# OpenAPI 契约规则集：继承 vacuum 官方推荐规则并逐条声明严重级别
+
+# 继承的规则集
 extends: [[vacuum:oas, recommended]]
 
-# 规则
 rules:
-  # 敏感字段禁例
+  # ── 文档结构与元信息 ──────────────────────
+  # info 段须包含描述
+  info-description: error
+  # license 的 identifier 与 url 互斥
+  info-license-spdx: error
+  # OpenAPI 2 须声明非空 host
+  oas2-api-host: error
+  # OpenAPI 2 须声明非空 schemes
+  oas2-api-schemes: error
+  # host 不得指向 example.com
+  oas2-host-not-example: error
+  # host 不得以斜杠结尾
+  oas2-host-trailing-slash: error
+  # servers 定义须合法
+  oas3-api-servers: error
+
+  # ── Schema 与类型 ────────────────────────
+  # allOf 组合的属性须有共同的合法类型
+  allof-conflicts: error
+  # schema 属性名须使用 camelCase
+  camel-case-properties: error
+  # 组件须包含描述（现有契约暂缺，先告警）
+  component-description: warn
+  # 描述不得重复
+  description-duplication: error
+  # 枚举值不得重复
+  duplicated-entry-in-enum: error
+  # 单元素组合器应直接内联
+  no-unnecessary-combinator: error
+  # 可空枚举须显式包含 null
+  nullable-enum-contains-null: error
+  # schema 及其属性须声明 type
+  oas-missing-type: error
+  # 文档 schema 须声明合法 type
+  oas-schema-check: error
+  # OpenAPI 2 不支持 anyOf
+  oas2-anyOf: error
+  # discriminator 用法须正确
+  oas2-discriminator: error
+  # OpenAPI 2 不支持 oneOf
+  oas2-oneOf: error
+  # OpenAPI 2 文档须合法
+  oas2-schema: error
+  # OpenAPI 3+ 文档须合法
+  oas3-schema: error
+  # 枚举值须符合声明类型
+  typed-enum: error
+
+  # ── 路径与操作 ───────────────────────────
+  # 路径不得重复定义
+  duplicate-paths: error
+  # 路径之间须可无歧义区分
+  no-ambiguous-paths: error
+  # 路径段不得包含 HTTP 动词
+  no-http-verbs-in-path: error
+  # 操作须包含描述
+  operation-description: error
+  # 每个操作须声明 operationId
+  operation-operationId: error
+  # operationId 须唯一
+  operation-operationId-unique: error
+  # operationId 须使用 URL 友好字符
+  operation-operationId-valid-in-url: error
+  # 操作参数须唯一且不重复
+  operation-parameters: error
+  # 操作须至少包含一个 2xx 或 3xx 响应
+  operation-success-response: error
+  # 操作 tag 须在全局 tags 中定义
+  operation-tag-defined: error
+  # 操作须声明非空 tags（现有契约暂缺，先告警）
+  operation-tags: warn
+  # 路径参数声明不得为空
+  path-declarations-must-exist: error
+  # path item 内的操作不得使用 $ref
+  path-item-refs: error
+  # 路径不得以斜杠结尾
+  path-keys-no-trailing-slash: error
+  # 路径不得包含查询串
+  path-not-include-query: error
+  # 路径参数须定义且合法
+  path-params: error
+  # 路径段须使用 kebab-case
+  paths-kebab-case: error
+
+  # ── 示例与安全 ───────────────────────────
+  # markdown 描述禁止 eval()
+  no-eval-in-markdown: error
+  # GET 与 DELETE 不应接受请求体
+  no-request-body: error
+  # markdown 描述禁止 script 标签
+  no-script-tags-in-markdown: error
+  # formData 参数须在 consumes 中声明对应类型
+  oas2-operation-formData-consume-check: error
+  # security 须引用 securityDefinitions 中已定义的方案
+  oas2-operation-security-defined: error
+  # 示例的 value 与 externalValue 互斥
+  oas3-example-external-check: error
+  # 可提供示例的字段须提供示例（现有契约暂缺，先告警）
+  oas3-missing-example: warn
+  # security 须引用 components.securitySchemes 中已定义的方案
+  oas3-operation-security-defined: error
+  # 示例须符合对应 schema
+  oas3-valid-schema-example: error
+
+  # ── 引用与清理 ───────────────────────────
+  # x-zally-ignore 应迁移为 x-lint-ignore
+  migrate-zally-ignore: error
+  # $ref 不得与其他属性并列
+  no-$ref-siblings: error
+  # 参数须包含描述
+  oas2-parameter-description: error
+  # 禁止未使用的定义与失效引用
+  oas2-unused-definition: error
+  # $ref 不得与其他属性并列（description 与 summary 除外）
+  oas3-no-$ref-siblings: error
+  # 参数须包含描述
+  oas3-parameter-description: error
+  # 禁止未使用的组件与失效引用
+  oas3-unused-component: error
+
+  # ── 项目自定义规则 ───────────────────────
+  # 敏感字段禁止提供示例与默认值
   no-sensitive-examples:
-    # 描述
+    # 规则描述
     description: 敏感字段禁止示例与默认值
-    # 严重级别
+    # 违规级别
     severity: error
-    # 作用目标
+    # 作用目标：敏感字段
     given:
       - "$..password"
       - "$..secret"
       - "$..token"
-    # 断言
+    # 断言：示例与默认值均不得出现
     then:
       - field: example
         function: falsy

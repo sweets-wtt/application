@@ -18,26 +18,29 @@ const STATUS_RESET_CONTENT = 205;
 /** 无响应体的状态码集合 */
 const EMPTY_BODY_STATUS = new Set([STATUS_NO_CONTENT, STATUS_RESET_CONTENT]);
 
-/** 无响应体状态 */
+/** 判断状态码是否表示无响应体 */
 const hasEmptyBody = (response: Response): boolean => EMPTY_BODY_STATUS.has(response.status);
 
-/** 文本响应：空串视为无响应体，否则尝试按 JSON 解析 */
+/** 解析文本响应：空串视为无响应体，否则尝试按 JSON 解析 */
 const parseText = (text: string): unknown => {
+  // 空串无内容
   if (text === "") {
-    return undefined;
+    return;
   }
 
   try {
     return JSON.parse(text) as unknown;
   } catch {
+    // 非 JSON 时按纯文本返回
     return text;
   }
 };
 
 /** 按响应类型解析响应体 */
 const parseBody = async (response: Response): Promise<unknown> => {
+  // 无响应体状态码
   if (hasEmptyBody(response)) {
-    return undefined;
+    return;
   }
 
   const contentType = response.headers.get("content-type") ?? "";
@@ -60,7 +63,7 @@ const parseBody = async (response: Response): Promise<unknown> => {
 export const apiFetch = async <TData>(path: string, init?: RequestInit): Promise<TData> => {
   const response = await fetch(`${baseUrl}${path}`, init);
 
-  // 非 2xx 响应
+  // 非 2xx 响应统一抛错
   if (!response.ok) {
     throw new Error(`${response.status} ${path}`);
   }

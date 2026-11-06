@@ -1,20 +1,20 @@
 {
-  // 启用的管理器
+  // 管理器
   "enabledManagers": ["mise", "dockerfile", "docker-compose", "pep621", "bun", "github-actions"],
   // 继承配置
   "extends": ["config:best-practices"],
   // 漏洞告警
   "osvVulnerabilityAlerts": true,
-  // 包匹配规则
+  // 包规则
   "packageRules": [{
     // 依赖类型
     "matchDepTypes": ["dependencies"],
-    // bun 运行时依赖
+    // bun 依赖
     "matchManagers": ["bun"],
-    // 版本范围策略
+    // 版本策略
     "rangeStrategy": "bump"
   }],
-  // 更新窗口
+  // 更新时段
   "schedule": ["before 9am on monday"],
   // 时区
   "timezone": "Asia/Shanghai"

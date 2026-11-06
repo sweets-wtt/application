@@ -1,0 +1,20 @@
+# actionlint 配置：29 项检查内置于二进制，无法逐条开关
+
+# 自托管 runner 的标签列表
+self-hosted-runner:
+  # 项目仅使用 GitHub 托管 runner
+  labels: []
+
+# 仓库级配置变量校验；null 表示不校验
+config-variables: null
+
+# 按文件路径配置的忽略规则
+paths:
+  # 工作流文件
+  .github/workflows/**/*.yaml:
+    # 忽略的错误消息正则
+    ignore: []
+  # 复合动作定义
+  .github/actions/**/action.yaml:
+    # 忽略的错误消息正则
+    ignore: []

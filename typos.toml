@@ -1,11 +1,13 @@
 # 默认规则
 [default]
-# 跳过二进制文件
+# 跳过二进制
 binary = false
-# 检查文件内容
+# 检查内容
 check-file = true
 # 检查文件名
 check-filename = true
+# 忽略正则
+extend-ignore-re = ["[\"']?[A-Z]{2,5}[0-9]{3}[\"']?"]
 
 # 文件
 [files]
@@ -13,8 +15,10 @@ check-filename = true
 extend-exclude = [
   # 锁文件
   "*.lock",
-  # Python 契约生成物
+  # Python 生成物
   "apps/server/src/server/generated/**",
-  # TypeScript 契约生成物
+  # 自动导入声明
+  "apps/web/auto-imports.d.ts",
+  # TypeScript 生成物
   "apps/web/src/api/generated/**",
 ]
