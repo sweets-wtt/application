@@ -1,25 +1,10 @@
 {
+  // Schema 地址
+  "$schema": "https://dprint.dev/schemas/v0.json",
   // 包含文件
-  "includes": [
-    "**/*.json",
-    "**/*.jsonc",
-    "**/*.md",
-    "**/*.yaml",
-    "**/*.yml",
-    "**/*.toml",
-    "**/Dockerfile"
-  ],
+  "includes": ["**/*.{json,jsonc,md,yaml,toml}", "**/Dockerfile"],
   // 排除文件
-  "excludes": [
-    "contracts/http/dist/**",
-    "apps/web/src/api/generated/**",
-    "apps/server/src/server/generated/contracts.py",
-    "**/node_modules/**",
-    ".venv/**",
-    "**/dist/**"
-  ],
-  // shebang 识别
-  "shebangs": { "#!/usr/bin/env bash": "sh", "#!/bin/sh": "sh", "#!/usr/bin/env python": "py" },
+  "excludes": ["**/node_modules/**", ".venv/**", "**/dist/**"],
   // 行宽
   "lineWidth": 100,
   // 插件
@@ -31,59 +16,44 @@
     "https://plugins.dprint.dev/toml-0.9.0.wasm"
   ],
   // Dockerfile 插件
-  "dockerfile": { "locked": true },
+  "dockerfile": {
+    // 缩进构建阶段
+    "indentStages": true
+  },
+  // JSON 插件
   "json": {
-    // 配置锁定
-    "locked": true,
     // 数组单行
     "array.preferSingleLine": true,
     // 对象单行
     "object.preferSingleLine": true,
-    // 行宽
-    "lineWidth": 100,
     // 尾逗号
     "trailingCommas": "never"
   },
+  // Markdown 插件
   "markdown": {
-    // 配置锁定
-    "locked": true,
     // 强调符号
     "emphasisKind": "asterisks",
     // 列表符号
     "list.unorderedMarker": "asterisks",
-    // 行宽
-    "lineWidth": 100,
     // 折行
     "textWrap": "always"
   },
+  // YAML 插件
   "yaml": {
-    // 配置锁定
-    "locked": true,
-    // 行宽
-    "printWidth": 100,
-    // 引号
-    "quotes": "preferDouble",
-    // 破折号空格
-    "dashSpacing": "oneSpace",
-    // 流式序列单行
-    "flowSequence.preferSingleLine": false,
-    // 流式映射单行
-    "flowMap.preferSingleLine": false
+    // 注释空格
+    "formatComments": true
   },
+  // TOML 插件
   "toml": {
-    // 配置锁定
-    "locked": true,
-    // 行宽
-    "lineWidth": 100,
-    // 键排序
-    "sortKeys": true,
+    // 数组单行
+    "array.preferSingleLine": true,
+    // 内联表单行
+    "inlineTable.preferSingleLine": true,
     // 数组排序
     "sortArrays": true,
     // 内联表排序
     "sortInlineTables": true,
-    // 内联表单行
-    "inlineTable.preferSingleLine": true,
-    // 数组单行
-    "array.preferSingleLine": true
+    // 键排序
+    "sortKeys": true
   }
 }

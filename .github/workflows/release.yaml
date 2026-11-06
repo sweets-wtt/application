@@ -86,6 +86,6 @@ jobs:
           # 镜像标签
           TAG: ${{ steps.tag.outputs.tag }}
         run: |
-          just build-image
+          task build-image
           podman push "${REGISTRY}server:${TAG}"
           podman push "${REGISTRY}web:${TAG}"

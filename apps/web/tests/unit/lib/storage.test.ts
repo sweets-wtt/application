@@ -2,8 +2,6 @@ import { describe, expect, it } from "vitest";
 
 import {
   STORAGE_KEY,
-  type State,
-  type Storage,
   defaultState,
   loadState,
   migrate,
@@ -11,6 +9,8 @@ import {
   saveState,
   serializeState,
 } from "@/lib/storage";
+
+import type { State, Storage } from "@/lib/storage";
 
 /** 内存存储：替代 localStorage */
 const memory = (initial: Record<string, string> = {}): Storage => {

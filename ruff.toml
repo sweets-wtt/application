@@ -11,6 +11,7 @@ target-version = "py312"
 # 不安全修复
 unsafe-fixes = false
 
+# 格式化
 [format]
 # docstring 代码
 docstring-code-format = true
@@ -23,7 +24,10 @@ quote-style = "double"
 # 魔法尾逗号
 skip-magic-trailing-comma = false
 
+# 检查
 [lint]
+# 预览规则须显式指定完整规则码
+explicit-preview-rules = true
 # 禁用规则
 ignore = [
   # 尾逗号
@@ -61,9 +65,12 @@ ignore = [
 ]
 # 日志器对象
 logger-objects = ["server.core.logging.get_logger"]
+# 预览规则（仅 lint，不影响格式化）
+preview = true
 # 启用规则
-select = ["ALL"]
+select = ["ALL", "DOC201", "RUF029"]
 
+# 导入排序
 [lint.isort]
 # 合并别名导入
 combine-as-imports = false
@@ -82,20 +89,24 @@ relative-imports-order = "furthest-to-closest"
 # 尾逗号拆分
 split-on-trailing-comma = true
 
+# 导入约定
 [lint.flake8-import-conventions]
 # 禁用导入
 banned-from = ["typing"]
 
+# 禁用导入
 [lint.flake8-tidy-imports.banned-api]
 # 统一用 UTC
 "datetime.datetime.utcnow".msg = "使用 datetime.now(UTC)"
 # 统一用 httpx
 "requests".msg = "使用 httpx"
 
+# 复杂度
 [lint.mccabe]
 # 复杂度上限
 max-complexity = 10
 
+# 按文件禁用
 [lint.per-file-ignores]
 # 依赖注入参数
 "apps/server/src/server/api/**" = ["ARG001"]
@@ -104,10 +115,12 @@ max-complexity = 10
 # 测试放宽
 "apps/server/tests/**" = ["ANN001", "ANN201", "D103", "PLR2004", "S101", "S105", "S106"]
 
+# 代码风格
 [lint.pycodestyle]
 # 行宽上限
 max-line-length = 100
 
+# 文档字符串
 [lint.pydocstyle]
 # 文档约定
 convention = "google"

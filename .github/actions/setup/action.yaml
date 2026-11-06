@@ -52,7 +52,7 @@ runs:
         version: "2026.8.14"
     # 安装全部依赖
     - if: inputs.dependencies == 'all'
-      run: just install
+      run: task install
       # 执行环境
       shell: bash
     # 安装容器运行时

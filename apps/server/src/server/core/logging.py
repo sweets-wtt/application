@@ -33,7 +33,14 @@ DEFAULT_LOG_LEVEL: typing.Final[str] = "INFO"
 
 
 def _mask(value: str) -> str:
-    """屏蔽字符串内嵌的敏感明文"""
+    """屏蔽字符串内嵌的敏感明文
+
+    Args:
+        value: 待处理字符串。
+
+    Returns:
+        str: 脱敏后的字符串。
+    """
     for pattern in SENSITIVE_PATTERNS:
         value = pattern.sub("***", value)
     return value
@@ -42,7 +49,14 @@ def _mask(value: str) -> str:
 def redact(
     _logger: object, _method_name: str, event_dict: MutableMapping[str, object], /
 ) -> MutableMapping[str, object]:
-    """脱敏敏感键与值内嵌明文"""
+    """脱敏敏感键与值内嵌明文
+
+    Args:
+        event_dict: 日志事件字段。
+
+    Returns:
+        MutableMapping[str, object]: 脱敏后的字段表。
+    """
     for key, value in event_dict.items():
         if str(key).lower() in SENSITIVE_KEYS:
             event_dict[key] = "***"
@@ -52,13 +66,21 @@ def redact(
 
 
 def _level() -> int:
-    """按环境解析日志级别"""
+    """按环境解析日志级别
+
+    Returns:
+        int: 标准库日志级别数值。
+    """
     name = os.environ.get("APP_LOG_LEVEL", DEFAULT_LOG_LEVEL).upper()
     return logging.getLevelNamesMapping().get(name, logging.INFO)
 
 
 def _trailing_and_renderer() -> tuple[list[structlog.typing.Processor], structlog.typing.Processor]:
-    """按环境返回收尾链与渲染器"""
+    """按环境返回收尾链与渲染器
+
+    Returns:
+        tuple: 收尾处理器列表与渲染器。
+    """
     json_mode = os.environ.get("APP_LOG_FORMAT") == "json"
     trailing: list[structlog.typing.Processor] = [structlog.processors.StackInfoRenderer()]
     if json_mode:
@@ -115,5 +137,13 @@ def configure() -> None:
 
 
 def get_logger(name: str | None = None, **initial_values: object) -> structlog.stdlib.BoundLogger:
-    """获取结构化日志器"""
+    """获取结构化日志器
+
+    Args:
+        name: 日志器名称。
+        **initial_values: 预置绑定字段。
+
+    Returns:
+        structlog.stdlib.BoundLogger: 绑定了上下文的日志器。
+    """
     return structlog.stdlib.get_logger(name, **initial_values)

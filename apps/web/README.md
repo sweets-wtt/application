@@ -2,21 +2,37 @@
 
 Vue 3 单页应用的目录规范与代码编写说明新增代码按本文档放置，避免后期再次迁移
 
-## 技术栈
+## 技术架构
 
-* 框架：Vue 3
-* 构建：Vite
-* 语言：TypeScript
-* 路由：Vue Router
-* 状态：Pinia
-* 数据请求：TanStack Query
-* 组合式工具：VueUse
-* 契约客户端：Orval + Zod
-* 样式：UnoCSS
-* 组件库：Reka UI
-* 日志：Consola
-* 测试：Vitest + Playwright
-* 检查：oxfmt、oxlint、tsc
+```text
+应用: web
+├── 运行时: bun
+├── 框架: vue
+├── 构建工具: vite
+├── 语言: typescript
+├── 路由: vue-router
+├── 状态管理: pinia
+├── 状态持久化: pinia-plugin-persistedstate
+├── 数据请求: @tanstack/vue-query
+├── 组合式工具: @vueuse/core
+├── 契约客户端: orval
+├── 模式校验: zod
+├── 样式: unocss
+├── 图标: @iconify-json/carbon
+├── 组件库: reka-ui
+├── 日志: consola
+└── 开发工具
+    ├── 类型检查: typescript
+    ├── 单元测试: vitest
+    ├── 测试环境: jsdom
+    ├── 组件测试: @vue/test-utils
+    ├── 端到端测试: playwright
+    ├── 体积检查: size-limit
+    ├── 构建插件: @vitejs/plugin-vue
+    ├── 自动导入: unplugin-auto-import
+    ├── 图标按需: unplugin-icons
+    └── 组件按需: unplugin-vue-components
+```
 
 ## 目录结构
 
@@ -169,13 +185,13 @@ apps/web/                                # 前端应用
 
 ```bash
 # 安装依赖
-mise exec -- just install
+mise exec -- task install
 
 # 检查与测试
-mise exec -- just check-typescript
-mise exec -- just test-typescript
-mise exec -- just test-e2e
-mise exec -- just size
+mise exec -- task check-typescript
+mise exec -- task test-typescript
+mise exec -- task test-e2e
+mise exec -- task check-size
 
 # 本地开发（在 apps/web 下）
 bun run dev
@@ -183,8 +199,8 @@ bun run build
 bun run preview
 
 # 契约生成与漂移检查
-mise exec -- just codegen
-mise exec -- just check-codegen
+mise exec -- task codegen
+mise exec -- task check-codegen
 ```
 
 ## 代码要求
@@ -196,5 +212,5 @@ mise exec -- just check-codegen
 * 业务请求通过 feature 的 `api.ts` 或生成的契约客户端发起，不在组件中直接拼接 URL
 * 不手改 `src/api/generated/`
 * 不重复定义契约模型；需要新类型时先改 OpenAPI 并重新生成
-* 提交前运行 `mise exec -- just check` 与 `mise exec -- just test`
+* 提交前运行 `mise exec -- task check` 与 `mise exec -- task test`
 * 禁止提交 `.env`、密钥、构建产物

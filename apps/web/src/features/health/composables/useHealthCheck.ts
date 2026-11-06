@@ -1,5 +1,7 @@
-import { type Healthz200Response, useGetHealthz } from "@/api";
+import { useGetHealthz } from "@/api";
 import { HEARTBEAT_INTERVAL } from "@/features/health/constants";
+
+import type { Healthz200Response } from "@/api";
 
 /** 服务端状态 */
 export type ServerStatus = "online" | "offline" | "checking";

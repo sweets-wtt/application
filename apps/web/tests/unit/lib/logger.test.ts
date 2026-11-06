@@ -2,14 +2,21 @@ import { describe, expect, it, vi } from "vitest";
 
 import { configure, configureLogger, logger } from "@/lib/logger";
 
+import type { ConsolaInstance } from "consola";
+
 /** 日志级别：warn */
 const LEVEL_WARN = 4;
 
 /** 模拟 Consola 实例 */
-const instance = vi.hoisted(() => ({ error: vi.fn(), info: vi.fn(), level: 3, warn: vi.fn() }));
+const instance = vi.hoisted(() => ({
+  error: vi.fn<(message: string, data?: Record<string, unknown>) => void>(),
+  info: vi.fn<(message: string, data?: Record<string, unknown>) => void>(),
+  level: 3,
+  warn: vi.fn<(message: string, data?: Record<string, unknown>) => void>(),
+}));
 
-vi.mock("consola", (): { createConsola: () => typeof instance } => ({
-  createConsola: () => instance,
+vi.mock(import("consola"), () => ({
+  createConsola: (): ConsolaInstance => instance as unknown as ConsolaInstance,
 }));
 
 describe("logger", () => {

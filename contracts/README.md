@@ -36,15 +36,15 @@ contracts/                         # 契约目录
 * `http/paths/`：按资源域拆分的路径文件，每个文件对应一个资源或探针
 * `http/components/schemas/`：一组件一文件，文件名使用组件名
 * `http/components/responses/`：一响应一文件，文件名使用响应名
-* `http/dist/openapi.yaml`：打包制品，由 `just bundle` 生成，禁止手改
+* `http/dist/openapi.yaml`：打包制品，由 `task bundle-spec` 生成，禁止手改
 * `ruleset.yaml`：跨协议共享的契约检查规则，继承 `vacuum:oas` 推荐规则并追加敏感字段禁例
 
 ## 修改流程
 
 1. 修改 `http/openapi.yaml`、`http/paths/` 或 `http/components/`
-2. 运行 `just bundle` 重新打包 `dist/openapi.yaml`
-3. 运行 `just codegen` 重新生成 server 与 web 的契约代码
-4. 运行 `just check-api`、`just check-codegen` 和相关测试
+2. 运行 `task bundle-spec` 重新打包 `dist/openapi.yaml`
+3. 运行 `task codegen` 重新生成 server 与 web 的契约代码
+4. 运行 `task check-api`、`task check-codegen` 和相关测试
 5. 提交契约源头与生成物，保持两者一致
 
 ## 注意事项
@@ -58,9 +58,9 @@ contracts/                         # 契约目录
 * `dist/` 与两个应用的生成物都由工具生成，禁止手改
 * server 生成物：`apps/server/src/server/generated/contracts.py`
 * web 生成物：`apps/web/src/api/generated/http` 与 `apps/web/src/api/generated/schemas`
-* `just bundle` 会统一写入 LF 换行，避免 Windows CRLF 漂移
+* `task bundle-spec` 会统一写入 LF 换行，避免 Windows CRLF 漂移
 * 不要在契约中放置真实密钥；`vacuum` 会检查敏感字段的示例与默认值
-* 修改契约后必须同步生成物，否则 `just check-codegen` 会失败
+* 修改契约后必须同步生成物，否则 `task check-codegen` 会失败
 
 ## 命名约定
 
@@ -77,18 +77,18 @@ contracts/                         # 契约目录
 
 ```bash
 # 打包契约
-mise exec -- just bundle
+mise exec -- task bundle-spec
 
 # 生成 server / web 契约代码
-mise exec -- just codegen
+mise exec -- task codegen
 
 # 检查生成物漂移
-mise exec -- just check-codegen
+mise exec -- task check-codegen
 
 # 校验 OpenAPI 契约
-mise exec -- just check-api
+mise exec -- task check-api
 
 # 运行完整检查与测试
-mise exec -- just check
-mise exec -- just test
+mise exec -- task check
+mise exec -- task test
 ```

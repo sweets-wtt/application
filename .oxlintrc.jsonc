@@ -18,6 +18,7 @@
   // 插件
   "plugins": [
     "eslint",
+    "jsdoc",
     "typescript",
     "unicorn",
     "vue",
@@ -63,7 +64,7 @@
     // 禁用指定标识符
     "eslint/id-denylist": "warn",
     // 标识符长度范围
-    "eslint/id-length": "off",
+    "eslint/id-length": ["warn", { "max": 40, "min": 2 }],
     // 标识符须匹配指定格式
     "eslint/id-match": "warn",
     // 声明时须初始化
@@ -445,11 +446,14 @@
     // 定时器须显式指定延迟
     "unicorn/explicit-timer-delay": "warn",
     // 文件名命名规范
-    "unicorn/filename-case": "off",
+    "unicorn/filename-case": [
+      "warn",
+      { "cases": { "camelCase": true, "kebabCase": true, "pascalCase": true } }
+    ],
     // 导入统一
     "unicorn/import-style": "warn",
     // 嵌套调用层数上限
-    "unicorn/max-nested-calls": "off",
+    "unicorn/max-nested-calls": ["warn", { "max": 4 }],
     // 禁止无规则的 eslint-disable
     "unicorn/no-abusive-eslint-disable": "warn",
     // 禁止访问器递归调用
@@ -487,7 +491,7 @@
     // 禁止 new Buffer
     "unicorn/no-new-buffer": "warn",
     // 禁止 null
-    "unicorn/no-null": "off",
+    "unicorn/no-null": "warn",
     // 禁止用对象作默认参数
     "unicorn/no-object-as-default-parameter": "warn",
     // 禁止纯静态类
@@ -774,7 +778,7 @@
     "vitest/prefer-called-with": "warn",
     // 优先比较类断言
     "vitest/prefer-comparison-matcher": "warn",
-    // describe 优先用函数名描述
+    // describe 优先用函数名描述（与 valid-title 互斥）
     "vitest/prefer-describe-function-title": "off",
     // 优先 each 参数化
     "vitest/prefer-each": "warn",
@@ -791,7 +795,7 @@
     // 钩子须置于测试之前
     "vitest/prefer-hooks-on-top": "warn",
     // 优先在 mock 中导入
-    "vitest/prefer-import-in-mock": "off",
+    "vitest/prefer-import-in-mock": "warn",
     // 优先 vitest 全局 API
     "vitest/prefer-importing-vitest-globals": "off",
     // 测试标题须小写开头
@@ -814,7 +818,7 @@
     "vitest/prefer-to-be-falsy": "warn",
     // 优先 toBeObject
     "vitest/prefer-to-be-object": "warn",
-    // 优先 toBeTruthy
+    // 优先 toBeTruthy（与 prefer-strict-boolean-matchers 互斥）
     "vitest/prefer-to-be-truthy": "off",
     // 优先 toContain
     "vitest/prefer-to-contain": "warn",
@@ -831,7 +835,7 @@
     // 并发快照须使用局部测试上下文
     "vitest/require-local-test-context-for-concurrent-snapshots": "warn",
     // 要求 mock 声明类型参数
-    "vitest/require-mock-type-parameters": "off",
+    "vitest/require-mock-type-parameters": "warn",
     // 要求测试设置超时
     "vitest/require-test-timeout": "warn",
     // toThrow 须指定错误消息
@@ -850,7 +854,7 @@
     "vitest/warn-todo": "warn",
     // ── import（30 条）
     // 类型说明符统一
-    "import/consistent-type-specifier-style": "off",
+    "import/consistent-type-specifier-style": "warn",
     // 须存在默认导出
     "import/default": "warn",
     // 须存在具名导出
@@ -898,7 +902,7 @@
     // 禁止导入 Node 内置模块
     "import/no-nodejs-modules": "warn",
     // 禁止相对路径导入父级模块
-    "import/no-relative-parent-imports": "off",
+    "import/no-relative-parent-imports": "warn",
     // 禁止模块导入自身
     "import/no-self-import": "warn",
     // 禁止无赋值的副作用导入
@@ -973,7 +977,7 @@
     // 禁止异步端点处理器
     "oxc/no-async-endpoint-handlers": "warn",
     // 禁止桶文件
-    "oxc/no-barrel-file": "off",
+    "oxc/no-barrel-file": ["warn", { "threshold": 300 }],
     // 禁止 const enum
     "oxc/no-const-enum": "warn",
     // 禁止对 map 结果展开
@@ -986,46 +990,77 @@
     "oxc/no-this-in-exported-function": "warn"
   },
   // 按文件模式覆盖
-  "overrides": [
-    {
-      "files": ["**/*.{test,spec}.ts", "**/tests/**"],
-      "rules": { "max-lines": "off", "max-lines-per-function": "off" }
-    },
-    { "files": ["**/tests/e2e/**"], "rules": { "vitest/consistent-test-filename": "off" } },
-    {
-      "files": ["**/tests/setup.ts"],
-      "rules": {
-        "vitest/require-hook": "off",
-        "vitest/require-top-level-describe": "off",
-        "vitest/no-hooks": "off"
-      }
-    },
-    { "files": ["apps/web/src/router/**"], "rules": { "sort-keys": "off" } },
-    {
-      "files": [
-        "apps/web/src/api/**",
-        "apps/web/src/features/health/**",
-        "apps/web/src/lib/logger.ts",
-        "apps/web/src/lib/storage.ts"
-      ],
-      "rules": {
-        "import/no-named-export": "off",
-        "import/prefer-default-export": "off",
-        "import/exports-last": "off",
-        "import/group-exports": "off"
-      }
-    },
-    {
-      "files": ["apps/web/src/lib/storage.ts", "apps/web/tests/unit/lib/storage.test.ts"],
-      "rules": { "unicorn/no-null": "off" }
-    },
-    {
-      "files": ["apps/web/vite.config.ts", "apps/web/playwright.config.ts"],
-      "rules": {
-        "new-cap": "off",
-        "import/no-nodejs-modules": "off",
-        "node/no-process-env": "off"
-      }
+  "overrides": [{
+    // 测试文件
+    "files": ["**/*.{test,spec}.ts", "**/tests/**"],
+    "rules": {
+      // 文件行数上限
+      "max-lines": "off",
+      // 函数行数上限
+      "max-lines-per-function": "off",
+      // setup 须置于钩子
+      "vitest/require-hook": "warn"
     }
-  ]
+  }, {
+    // 端到端测试
+    "files": ["**/tests/e2e/**"],
+    "rules": {
+      // 测试文件命名统一
+      "vitest/consistent-test-filename": "off"
+    }
+  }, {
+    // 测试初始化
+    "files": ["**/tests/setup.ts"],
+    "rules": {
+      // 要求使用钩子
+      "vitest/require-hook": "off",
+      // 要求顶层 describe
+      "vitest/require-top-level-describe": "off",
+      // 禁止使用钩子
+      "vitest/no-hooks": "off"
+    }
+  }, {
+    // 路由表
+    "files": ["apps/web/src/router/**"],
+    "rules": {
+      // 对象键排序
+      "sort-keys": "off"
+    }
+  }, {
+    // 单模块导出
+    "files": [
+      "apps/web/src/api/**",
+      "apps/web/src/features/health/**",
+      "apps/web/src/lib/logger.ts",
+      "apps/web/src/lib/storage.ts"
+    ],
+    "rules": {
+      // 禁止具名导出
+      "import/no-named-export": "off",
+      // 优先默认导出
+      "import/prefer-default-export": "off",
+      // 导出语句置末
+      "import/exports-last": "off",
+      // 导出声明合并
+      "import/group-exports": "off"
+    }
+  }, {
+    // 存储模块
+    "files": ["apps/web/src/lib/storage.ts", "apps/web/tests/unit/lib/storage.test.ts"],
+    "rules": {
+      // 禁止 null
+      "unicorn/no-null": "off"
+    }
+  }, {
+    // 构建配置
+    "files": ["apps/web/vite.config.ts", "apps/web/playwright.config.ts"],
+    "rules": {
+      // 构造函数大写
+      "new-cap": "off",
+      // 禁止导入 Node 内置模块
+      "import/no-nodejs-modules": "off",
+      // 禁止读取环境变量
+      "node/no-process-env": "off"
+    }
+  }]
 }

@@ -12,5 +12,9 @@ router = APIRouter(tags=["health"])
 
 @router.get(path="/healthz", description="存活探针")
 async def get_health() -> HealthzGetResponse:
-    """存活探针 - 返回 ok"""
+    """存活探针 - 返回 ok
+
+    Returns:
+        HealthzGetResponse: 统一信封的存活状态。
+    """
     return HealthzGetResponse(code=0, message="ok", data=Data(status="ok"))

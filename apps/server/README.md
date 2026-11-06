@@ -2,14 +2,23 @@
 
 FastAPI 服务的目录规范与代码编写说明新增代码按本文档放置
 
-## 技术栈
+## 技术架构
 
-* Web 框架：FastAPI
-* ASGI 服务器：Granian
-* 配置：pydantic-settings
-* 日志：structlog
-* 契约：OpenAPI + Schemathesis
-* 检查：Ruff、ty、pytest
+```text
+应用: server
+├── 运行时: uv
+├── Web 框架: fastapi
+├── ASGI 服务器: granian
+├── 配置管理: pydantic-settings
+├── 数据校验: pydantic
+├── 结构化日志: structlog
+├── 契约测试: schemathesis
+└── 开发工具
+    ├── 测试框架: pytest
+    ├── 异步测试: pytest-asyncio
+    ├── 覆盖率: pytest-cov
+    └── 契约生成: datamodel-code-generator
+```
 
 当前不包含数据库层；需要时再引入，并同步更新依赖、配置与本文件
 
@@ -107,18 +116,18 @@ apps/server/                      # 服务应用
 
 ```bash
 # 安装依赖
-mise exec -- just install
+mise exec -- task install
 
 # 检查与测试
-mise exec -- just check
-mise exec -- just test-python
+mise exec -- task check
+mise exec -- task test-python
 
 # 本地启动（在 apps/server 下）
 mise exec -- uv run --locked granian --interface asgi --host 127.0.0.1 --port 8000 server.main:app
 
 # 契约生成与漂移检查
-mise exec -- just codegen
-mise exec -- just check-codegen
+mise exec -- task codegen
+mise exec -- task check-codegen
 ```
 
 ## 代码要求
@@ -127,7 +136,7 @@ mise exec -- just check-codegen
 * 业务异常统一继承 `AppError`，不要在路由中直接返回裸 `dict` 错误
 * 使用 `structlog` 记录日志，不直接使用 `print`
 * Ruff 规则已包含 `ANN`、`ARG`、`BLE`、`EM`、`G`、`LOG`、`PLR`、`PTH`、`SLF`、`TD`、`INP`
-  等；提交前运行 `just check`
+  等；提交前运行 `task check`
 * Python import 使用 isort 规则，每个 import 独占一行
 * 禁止手改 `src/server/generated/`
 * 禁止在 feature 之间直接导入内部实现；跨域能力放 `core/` 或共享 `schemas/`

@@ -1,4 +1,6 @@
-import { type ConsolaInstance, createConsola } from "consola";
+import { createConsola } from "consola";
+
+import type { ConsolaInstance } from "consola";
 
 /** 敏感值掩码 */
 const MASK = "***";

@@ -15,7 +15,7 @@ describe("apiFetch", () => {
     // 构造 JSON 响应
     const body = { code: 0, data: { status: "ok" }, message: "ok" };
     const fetchMock = vi
-      .fn()
+      .fn<(input: RequestInfo | URL, init?: RequestInit) => Promise<Response>>()
       .mockResolvedValue(
         Response.json(body, { headers: { "Content-Type": "application/json" }, status: STATUS_OK }),
       );
@@ -38,7 +38,7 @@ describe("apiFetch", () => {
 
     // 构造 JSON 响应
     const fetchMock = vi
-      .fn()
+      .fn<(input: RequestInfo | URL, init?: RequestInit) => Promise<Response>>()
       .mockResolvedValue(
         Response.json(
           { code: 0 },

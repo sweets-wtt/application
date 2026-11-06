@@ -1,11 +1,11 @@
 # application
 
-## 架构
+## 技术架构
 
 ```text
 根: application
 ├── 环境管理: mise
-│   ├── 任务管理: just
+│   ├── 任务管理: task
 │   ├── 代码格式: dprint
 │   ├── 拼写检查: typos
 │   ├── 提交检查: cocogitto
@@ -35,24 +35,32 @@
 │   └── 类型检查: typescript
 └── 应用: apps
     ├── server
+    │   ├── 运行时: uv
     │   ├── web 框架: fastapi
     │   ├── ASGI 服务器: granian
     │   ├── 配置管理: pydantic-settings
+    │   ├── 数据校验: pydantic
     │   ├── 结构化日志: structlog
-    │   ├── 契约模型: pydantic
     │   └── 契约测试: schemathesis
     └── web
+        ├── 运行时: bun
         ├── 框架: vue
-        ├── 组合式工具: vueuse
+        ├── 构建工具: vite
+        ├── 语言: typescript
         ├── 路由: vue-router
         ├── 状态管理: pinia
-        ├── 契约客户端: vue-query
+        ├── 状态持久化: pinia-plugin-persistedstate
+        ├── 数据请求: @tanstack/vue-query
+        ├── 组合式工具: @vueuse/core
+        ├── 契约客户端: orval
         ├── 模式校验: zod
+        ├── 样式: unocss
+        ├── 图标: @iconify-json/carbon
         ├── 组件库: reka-ui
         └── 结构化日志: consola
 ```
 
-## 结构
+## 项目结构
 
 ```text
 .                       # 根级目录
@@ -73,7 +81,7 @@
 ├── bun.lock            # 前端依赖
 ├── cog.toml            # 提交规范
 ├── dprint.jsonc        # 代码格式
-├── justfile            # 任务配方
+├── Taskfile.yaml       # 任务配方
 ├── lefthook.yaml       # 钩子管理
 ├── mise.lock           # 工具版本
 ├── mise.toml           # 开发环境

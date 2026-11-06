@@ -144,66 +144,6 @@ url = "https://github.com/astral-sh/uv/releases/download/0.13.7/uv-x86_64-pc-win
 url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/704009796"
 provenance = "github-attestations"
 
-[[tools."aqua:casey/just"]]
-version = "1.59.0"
-backend = "aqua:casey/just"
-specifiers = ["1.59.0"]
-
-[tools."aqua:casey/just"."platforms.linux-arm64"]
-checksum = "sha256:23871b1702bfd550fb5f901778fd4290ecf2ee034a45a889fbe96d89b188086d"
-url = "https://github.com/casey/just/releases/download/1.59.0/just-1.59.0-aarch64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/casey/just/releases/assets/642950086"
-
-[tools."aqua:casey/just"."platforms.linux-arm64-musl"]
-checksum = "sha256:23871b1702bfd550fb5f901778fd4290ecf2ee034a45a889fbe96d89b188086d"
-url = "https://github.com/casey/just/releases/download/1.59.0/just-1.59.0-aarch64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/casey/just/releases/assets/642950086"
-
-[tools."aqua:casey/just"."platforms.linux-x64"]
-checksum = "sha256:409044617b6f06517c1035e55ca38c8c856ff8b650e41bc2aa1ef82d5903a23e"
-url = "https://github.com/casey/just/releases/download/1.59.0/just-1.59.0-x86_64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/casey/just/releases/assets/642949555"
-
-[tools."aqua:casey/just"."platforms.linux-x64-baseline"]
-checksum = "sha256:409044617b6f06517c1035e55ca38c8c856ff8b650e41bc2aa1ef82d5903a23e"
-url = "https://github.com/casey/just/releases/download/1.59.0/just-1.59.0-x86_64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/casey/just/releases/assets/642949555"
-
-[tools."aqua:casey/just"."platforms.linux-x64-musl"]
-checksum = "sha256:409044617b6f06517c1035e55ca38c8c856ff8b650e41bc2aa1ef82d5903a23e"
-url = "https://github.com/casey/just/releases/download/1.59.0/just-1.59.0-x86_64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/casey/just/releases/assets/642949555"
-
-[tools."aqua:casey/just"."platforms.linux-x64-musl-baseline"]
-checksum = "sha256:409044617b6f06517c1035e55ca38c8c856ff8b650e41bc2aa1ef82d5903a23e"
-url = "https://github.com/casey/just/releases/download/1.59.0/just-1.59.0-x86_64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/casey/just/releases/assets/642949555"
-
-[tools."aqua:casey/just"."platforms.macos-arm64"]
-checksum = "sha256:6574cea774ed4cae12e24b6aa11857de33e80dab4667cf628fd5840df96a2a9d"
-url = "https://github.com/casey/just/releases/download/1.59.0/just-1.59.0-aarch64-apple-darwin.tar.gz"
-url_api = "https://api.github.com/repos/casey/just/releases/assets/643129724"
-
-[tools."aqua:casey/just"."platforms.macos-x64"]
-checksum = "sha256:036ead9df9bc31dbae9934ae3b4236ed124d0bafcffd33439460ae084d5c9cb7"
-url = "https://github.com/casey/just/releases/download/1.59.0/just-1.59.0-x86_64-apple-darwin.tar.gz"
-url_api = "https://api.github.com/repos/casey/just/releases/assets/643131819"
-
-[tools."aqua:casey/just"."platforms.macos-x64-baseline"]
-checksum = "sha256:036ead9df9bc31dbae9934ae3b4236ed124d0bafcffd33439460ae084d5c9cb7"
-url = "https://github.com/casey/just/releases/download/1.59.0/just-1.59.0-x86_64-apple-darwin.tar.gz"
-url_api = "https://api.github.com/repos/casey/just/releases/assets/643131819"
-
-[tools."aqua:casey/just"."platforms.windows-x64"]
-checksum = "sha256:9c5463e2d0974e31bee71346aa5cbf19167de1585a4abc1bae7b3b04604ea9c0"
-url = "https://github.com/casey/just/releases/download/1.59.0/just-1.59.0-x86_64-pc-windows-msvc.zip"
-url_api = "https://api.github.com/repos/casey/just/releases/assets/643131303"
-
-[tools."aqua:casey/just"."platforms.windows-x64-baseline"]
-checksum = "sha256:9c5463e2d0974e31bee71346aa5cbf19167de1585a4abc1bae7b3b04604ea9c0"
-url = "https://github.com/casey/just/releases/download/1.59.0/just-1.59.0-x86_64-pc-windows-msvc.zip"
-url_api = "https://api.github.com/repos/casey/just/releases/assets/643131303"
-
 [[tools."aqua:cocogitto/cocogitto"]]
 version = "7.0.0"
 backend = "aqua:cocogitto/cocogitto"
@@ -211,6 +151,12 @@ specifiers = ["7.0.0"]
 
 [tools."aqua:cocogitto/cocogitto"."platforms.linux-arm64"]
 checksum = "sha256:379949f50c4f8245ef9532913e83f351c048b55e40ebd52ed8a850642c07a753"
+url = "https://github.com/cocogitto/cocogitto/releases/download/7.0.0/cocogitto-7.0.0-aarch64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/cocogitto/cocogitto/releases/assets/366659384"
+
+[tools."aqua:cocogitto/cocogitto"."platforms.linux-arm64-musl"]
+checksum = "sha256:379949f50c4f8245ef9532913e83f351c048b55e40ebd52ed8a850642c07a753"
+checksum_source = "mise-versions"
 url = "https://github.com/cocogitto/cocogitto/releases/download/7.0.0/cocogitto-7.0.0-aarch64-unknown-linux-gnu.tar.gz"
 url_api = "https://api.github.com/repos/cocogitto/cocogitto/releases/assets/366659384"
 
@@ -592,6 +538,77 @@ checksum = "sha256:d29144deff3a68aa93ced33dddf84b7fdc26070add4aa0f4513094c8332af
 url = "https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_windows_x64.zip"
 url_api = "https://api.github.com/repos/gitleaks/gitleaks/releases/assets/378333178"
 
+[[tools."aqua:go-task/task"]]
+version = "3.54.0"
+backend = "aqua:go-task/task"
+specifiers = ["3.54.0"]
+
+[tools."aqua:go-task/task"."platforms.linux-arm64"]
+checksum = "sha256:d7189d439d4a6058e39e1b2acd7c8b27acd4856691b408f23b242e4294e1df5b"
+checksum_source = "mise-versions"
+url = "https://github.com/go-task/task/releases/download/v3.54.0/task_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/go-task/task/releases/assets/604090041"
+
+[tools."aqua:go-task/task"."platforms.linux-arm64-musl"]
+checksum = "sha256:d7189d439d4a6058e39e1b2acd7c8b27acd4856691b408f23b242e4294e1df5b"
+checksum_source = "mise-versions"
+url = "https://github.com/go-task/task/releases/download/v3.54.0/task_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/go-task/task/releases/assets/604090041"
+
+[tools."aqua:go-task/task"."platforms.linux-x64"]
+checksum = "sha256:680859dbb4d881a9c72d4d9a8f510825450849af8567deacd7302c01124416fb"
+checksum_source = "mise-versions"
+url = "https://github.com/go-task/task/releases/download/v3.54.0/task_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/go-task/task/releases/assets/604090073"
+
+[tools."aqua:go-task/task"."platforms.linux-x64-baseline"]
+checksum = "sha256:680859dbb4d881a9c72d4d9a8f510825450849af8567deacd7302c01124416fb"
+checksum_source = "mise-versions"
+url = "https://github.com/go-task/task/releases/download/v3.54.0/task_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/go-task/task/releases/assets/604090073"
+
+[tools."aqua:go-task/task"."platforms.linux-x64-musl"]
+checksum = "sha256:680859dbb4d881a9c72d4d9a8f510825450849af8567deacd7302c01124416fb"
+checksum_source = "mise-versions"
+url = "https://github.com/go-task/task/releases/download/v3.54.0/task_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/go-task/task/releases/assets/604090073"
+
+[tools."aqua:go-task/task"."platforms.linux-x64-musl-baseline"]
+checksum = "sha256:680859dbb4d881a9c72d4d9a8f510825450849af8567deacd7302c01124416fb"
+checksum_source = "mise-versions"
+url = "https://github.com/go-task/task/releases/download/v3.54.0/task_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/go-task/task/releases/assets/604090073"
+
+[tools."aqua:go-task/task"."platforms.macos-arm64"]
+checksum = "sha256:12a69fcf37bb8d5bc9150c44f9a936775b73e59ff044c2c245232f198c135637"
+checksum_source = "mise-versions"
+url = "https://github.com/go-task/task/releases/download/v3.54.0/task_darwin_arm64.tar.gz"
+url_api = "https://api.github.com/repos/go-task/task/releases/assets/604090068"
+
+[tools."aqua:go-task/task"."platforms.macos-x64"]
+checksum = "sha256:0543b0844a725814c0412d3f4bed12873ce9ed0da207b15775f63a97d734aac0"
+checksum_source = "mise-versions"
+url = "https://github.com/go-task/task/releases/download/v3.54.0/task_darwin_amd64.tar.gz"
+url_api = "https://api.github.com/repos/go-task/task/releases/assets/604090006"
+
+[tools."aqua:go-task/task"."platforms.macos-x64-baseline"]
+checksum = "sha256:0543b0844a725814c0412d3f4bed12873ce9ed0da207b15775f63a97d734aac0"
+checksum_source = "mise-versions"
+url = "https://github.com/go-task/task/releases/download/v3.54.0/task_darwin_amd64.tar.gz"
+url_api = "https://api.github.com/repos/go-task/task/releases/assets/604090006"
+
+[tools."aqua:go-task/task"."platforms.windows-x64"]
+checksum = "sha256:837f42f71899ea41d07a47acc81d4d6ea80cb41c68292345f915c656473efcb7"
+checksum_source = "mise-versions"
+url = "https://github.com/go-task/task/releases/download/v3.54.0/task_windows_amd64.zip"
+url_api = "https://api.github.com/repos/go-task/task/releases/assets/604090005"
+
+[tools."aqua:go-task/task"."platforms.windows-x64-baseline"]
+checksum = "sha256:837f42f71899ea41d07a47acc81d4d6ea80cb41c68292345f915c656473efcb7"
+checksum_source = "mise-versions"
+url = "https://github.com/go-task/task/releases/download/v3.54.0/task_windows_amd64.zip"
+url_api = "https://api.github.com/repos/go-task/task/releases/assets/604090005"
+
 [[tools."aqua:rhysd/actionlint"]]
 version = "1.7.12"
 backend = "aqua:rhysd/actionlint"
@@ -675,6 +692,9 @@ url_api = "https://api.github.com/repos/zizmorcore/zizmor/releases/assets/703541
 provenance = "github-attestations"
 
 [tools."aqua:zizmorcore/zizmor"."platforms.linux-arm64-musl"]
+checksum = "sha256:cb152b207f815116d7fa1c1ee4614f61578803351395052908095e79adfd9fd0"
+url = "https://github.com/zizmorcore/zizmor/releases/download/v1.32.0/zizmor-aarch64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/zizmorcore/zizmor/releases/assets/703541931"
 provenance = "github-attestations"
 
 [tools."aqua:zizmorcore/zizmor"."platforms.linux-x64"]
@@ -690,9 +710,15 @@ url_api = "https://api.github.com/repos/zizmorcore/zizmor/releases/assets/703541
 provenance = "github-attestations"
 
 [tools."aqua:zizmorcore/zizmor"."platforms.linux-x64-musl"]
+checksum = "sha256:bb110cc765eca9cd7efb2e284a956be5974c60027b0970f16397d86208a9957b"
+url = "https://github.com/zizmorcore/zizmor/releases/download/v1.32.0/zizmor-x86_64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/zizmorcore/zizmor/releases/assets/703541932"
 provenance = "github-attestations"
 
 [tools."aqua:zizmorcore/zizmor"."platforms.linux-x64-musl-baseline"]
+checksum = "sha256:bb110cc765eca9cd7efb2e284a956be5974c60027b0970f16397d86208a9957b"
+url = "https://github.com/zizmorcore/zizmor/releases/download/v1.32.0/zizmor-x86_64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/zizmorcore/zizmor/releases/assets/703541932"
 provenance = "github-attestations"
 
 [tools."aqua:zizmorcore/zizmor"."platforms.macos-arm64"]

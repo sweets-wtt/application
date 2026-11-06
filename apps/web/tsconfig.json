@@ -1,4 +1,5 @@
 {
+  // 编译选项
   "compilerOptions": {
     // 仅做类型检查，不产出编译物
     "noEmit": true,

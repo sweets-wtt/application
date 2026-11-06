@@ -42,7 +42,7 @@ jobs:
           # 生成环境文件
           env-file: false
       # 运行检查
-      - run: just ci
+      - run: task ci
 
   # 测试
   test:
@@ -59,11 +59,11 @@ jobs:
           # 检出深度
           fetch-depth: 0
       # 运行测试
-      - run: just test
+      - run: task test
       # 检查产物体积
-      - run: just size
+      - run: task check-size
       # 检查契约漂移
-      - run: just check-codegen
+      - run: task check-codegen
 
   # 端到端测试
   e2e:
@@ -84,7 +84,7 @@ jobs:
       # 安装浏览器
       - run: mise exec -- bun x playwright install --with-deps chromium
       # 运行端到端测试
-      - run: just test-e2e
+      - run: task test-e2e
 
   # 镜像构建
   images:
@@ -103,7 +103,7 @@ jobs:
           # 安装容器运行时
           container-runtime: "true"
       # 构建镜像
-      - run: just build-image
+      - run: task build-image
 
   # 依赖更新配置校验
   renovate:

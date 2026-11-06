@@ -1,4 +1,6 @@
-import { type Storage, parseState, serializeState } from "@/lib/storage";
+import { parseState, serializeState } from "@/lib/storage";
+
+import type { Storage } from "@/lib/storage";
 
 /** LocalStorage 适配为 Storage 接口 */
 const stateStorage: Storage = {

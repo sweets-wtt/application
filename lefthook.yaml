@@ -7,8 +7,8 @@ no_tty: true
 
 # 命令模板
 templates:
-  # just 入口
-  just: mise exec -- just
+  # task 入口
+  task: mise exec -- task
 
 # 合并后
 post-merge:
@@ -17,9 +17,9 @@ post-merge:
     # 安装依赖
     - name: install
       # 命令
-      run: "{just} install"
+      run: "{task} install"
       # 失败提示
-      fail_text: "依赖同步失败: just install"
+      fail_text: "依赖同步失败: task install"
 
 # 提交前
 pre-commit:
@@ -28,9 +28,9 @@ pre-commit:
     # 全量检查
     - name: check
       # 命令
-      run: "{just} check"
+      run: "{task} check"
       # 失败提示
-      fail_text: "提交前检查失败: just check"
+      fail_text: "提交前检查失败: task check"
 
 # 提交信息
 commit-msg:
@@ -39,7 +39,7 @@ commit-msg:
     # 规范校验
     - name: cog
       # 命令
-      run: "{just} check-commit {1}"
+      run: "{task} check-commit -- --file {1}"
       # 失败提示
       fail_text: "提交信息不符合 Conventional Commits"
 
@@ -50,12 +50,12 @@ pre-push:
     # 契约漂移
     - name: contract
       # 命令
-      run: "{just} check-codegen"
+      run: "{task} check-codegen"
       # 失败提示
       fail_text: "契约生成物存在漂移"
     # 测试
     - name: test
       # 命令
-      run: "{just} test"
+      run: "{task} test"
       # 失败提示
-      fail_text: "测试失败: just test"
+      fail_text: "测试失败: task test"

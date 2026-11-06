@@ -29,14 +29,14 @@ infra/              # 部署配置
 * `AUTH_DOMAIN` 是历史命名，当前仅作为站点域名使用
 * `SERVER_IMAGE` 与 `WEB_IMAGE` 生产环境应使用不可变 tag 或 digest，避免 `latest`
 * `api` 只加入 `internal` 网络；`web` 同时加入 `edge` 与 `internal`；只有 Caddy 暴露公网端口
-* `api` 服务只声明镜像，不负责构建；启动编排前先执行 `just build-image`
+* `api` 服务只声明镜像，不负责构建；启动编排前先执行 `task build-image`
 * Dockerfile 保留在 `apps/`，由 compose 通过 `context` 与 `dockerfile` 引用
 * `VITE_*` 是 Web 构建时变量，修改后需要重新构建 Web 镜像
 * 当前没有数据库服务；server 启动不依赖数据库
 * 本地开发差异写入 `compose.override.yaml`，不要用 profiles 模拟环境
 * 拆多个 compose 文件时使用 `include`，不要用多个 `-f`，避免相对路径解析错误
 * 生产密钥通过 sops、age 或部署平台注入，不要写进镜像
-* 修改编排或代理配置后运行 `just check-compose`
+* 修改编排或代理配置后运行 `task check-compose`
 
 ## 命名约定
 
@@ -55,23 +55,23 @@ infra/              # 部署配置
 cp infra/.env.example infra/.env
 
 # 构建镜像
-mise exec -- just build-image
+mise exec -- task build-image
 
 # 启动 / 停止本地服务
-mise exec -- just up
-mise exec -- just down
+mise exec -- task compose-up
+mise exec -- task compose-down
 
 # 校验 compose 配置
-mise exec -- just check-compose
+mise exec -- task check-compose
 
 # 扫描镜像与配置漏洞
-mise exec -- just audit
+mise exec -- task scan-vuln
 ```
 
 ## 修改流程
 
 1. 修改 `compose.yaml`、`Caddyfile` 或 `.env.example`
 2. 同步更新根 README 与相关应用 README
-3. 运行 `just check-compose`
-4. 本地执行 `just build-image`、`just up` 验证服务可启动
+3. 运行 `task check-compose`
+4. 本地执行 `task build-image`、`task compose-up` 验证服务可启动
 5. 生产部署使用固定镜像 tag/digest 与外部密钥
