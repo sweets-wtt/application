@@ -2,50 +2,67 @@ import { describe, expect, it, vi } from "vitest";
 
 import { apiFetch, setBaseUrl } from "@/api";
 
+import type { Mock } from "vitest";
+
 /** HTTP 状态码：成功 */
 const STATUS_OK = 200;
 
 /** HTTP 状态码：服务端错误 */
 const STATUS_SERVER_ERROR = 500;
 
+/** JSON 响应头 */
+const JSON_HEADERS = { "Content-Type": "application/json" };
+
+/** 模拟 fetch 的签名 */
+type FetchMock = Mock<(input: RequestInfo | URL, init?: RequestInit) => Promise<Response>>;
+
+/**
+ * 构造 JSON 响应
+ *
+ * @param {unknown} body 响应体
+ * @param {number} status 状态码
+ * @returns {Response} 响应对象
+ */
+const jsonResponse = (body: unknown, status: number): Response =>
+  Response.json(body, { headers: JSON_HEADERS, status });
+
+/**
+ * 安装模拟 fetch
+ *
+ * @param {Response} response 模拟返回的响应
+ * @returns {FetchMock} 模拟函数
+ */
+const stubFetch = (response: Response): FetchMock => {
+  const mock = vi.fn<(input: RequestInfo | URL, init?: RequestInit) => Promise<Response>>().mockResolvedValue(response);
+
+  vi.stubGlobal("fetch", mock);
+
+  return mock;
+};
+
 describe("apiFetch", () => {
-  it("返回 Orval 约定的 data/status/headers", async () => {
+  it("返回约定结构", async () => {
     expect.hasAssertions();
 
     // 构造 JSON 响应
     const body = { code: 0, data: { status: "ok" }, message: "ok" };
-    const fetchMock = vi
-      .fn<(input: RequestInfo | URL, init?: RequestInit) => Promise<Response>>()
-      .mockResolvedValue(
-        Response.json(body, { headers: { "Content-Type": "application/json" }, status: STATUS_OK }),
-      );
-    vi.stubGlobal("fetch", fetchMock);
+    const fetchMock = stubFetch(jsonResponse(body, STATUS_OK));
 
     // 发起请求
-    const result = await apiFetch<{ data: typeof body; status: number; headers: Headers }>(
-      "/healthz",
-    );
+    const result = await apiFetch<{ data: typeof body; status: number; headers: Headers }>("/healthz");
 
     // 校验返回值结构
     expect(result.data).toStrictEqual(body);
     expect(result.status).toBe(STATUS_OK);
     expect(result.headers.get("content-type")).toContain("application/json");
     expect(fetchMock).toHaveBeenCalledWith("/healthz", undefined);
-  }, 5000);
+  });
 
   it("拼接基地址", async () => {
-    expect.assertions(1);
+    expect.hasAssertions();
 
-    // 构造 JSON 响应
-    const fetchMock = vi
-      .fn<(input: RequestInfo | URL, init?: RequestInit) => Promise<Response>>()
-      .mockResolvedValue(
-        Response.json(
-          { code: 0 },
-          { headers: { "Content-Type": "application/json" }, status: STATUS_OK },
-        ),
-      );
-    vi.stubGlobal("fetch", fetchMock);
+    const fetchMock = stubFetch(jsonResponse({ code: 0 }, STATUS_OK));
+
     // 设置绝对基地址
     setBaseUrl("https://api.example.com");
 
@@ -56,25 +73,15 @@ describe("apiFetch", () => {
 
     // 还原默认基地址
     setBaseUrl("");
-  }, 5000);
+  });
 
   it("非 2xx 抛错", async () => {
-    expect.assertions(1);
+    expect.hasAssertions();
 
     // 构造 500 响应
-    vi.stubGlobal(
-      "fetch",
-      vi
-        .fn()
-        .mockResolvedValue(
-          Response.json(
-            { detail: "fail" },
-            { headers: { "Content-Type": "application/json" }, status: STATUS_SERVER_ERROR },
-          ),
-        ),
-    );
+    stubFetch(jsonResponse({ detail: "fail" }, STATUS_SERVER_ERROR));
 
     // 非 2xx 应抛出错误
     await expect(apiFetch("/healthz")).rejects.toThrow("500");
-  }, 5000);
+  });
 });

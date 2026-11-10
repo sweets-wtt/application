@@ -135,8 +135,7 @@ mise exec -- task check-codegen
 * 所有公开函数和方法需要类型注解与 docstring
 * 业务异常统一继承 `AppError`，不要在路由中直接返回裸 `dict` 错误
 * 使用 `structlog` 记录日志，不直接使用 `print`
-* Ruff 规则已包含 `ANN`、`ARG`、`BLE`、`EM`、`G`、`LOG`、`PLR`、`PTH`、`SLF`、`TD`、`INP`
-  等；提交前运行 `task check`
+* Ruff 规则已包含 `ANN`、`ARG`、`BLE`、`EM`、`G`、`LOG`、`PLR`、`PTH`、`SLF`、`TD`、`INP` 等；提交前运行 `task check`
 * Python import 使用 isort 规则，每个 import 独占一行
 * 禁止手改 `src/server/generated/`
 * 禁止在 feature 之间直接导入内部实现；跨域能力放 `core/` 或共享 `schemas/`

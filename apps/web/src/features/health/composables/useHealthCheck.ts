@@ -4,7 +4,15 @@ import { logger } from "@/lib/logger";
 
 import type { ServerStatus } from "@/features/health/constants";
 
-/** 按契约校验响应：不符时上报并丢弃 */
+/** 重试次数：失败重试一次 */
+const RETRY_COUNT = 1;
+
+/**
+ * 按契约校验响应：不符时上报并丢弃
+ *
+ * @param {unknown} payload 待校验的响应数据
+ * @returns {Healthz200Response | undefined} 合法时返回数据，否则为 undefined
+ */
 const validate = (payload: unknown): Healthz200Response | undefined => {
   // 数据未就绪时不校验
   if (payload === undefined) {
@@ -34,7 +42,11 @@ export interface HealthCheckResult {
   data: ComputedRef<Healthz200Response | undefined>;
 }
 
-/** 健康检查 hook：轮询存活探针并推导在线状态 */
+/**
+ * 健康检查 hook：轮询存活探针并推导在线状态
+ *
+ * @returns {HealthCheckResult} 在线状态、请求状态与响应数据
+ */
 export const useHealthCheck = (): HealthCheckResult => {
   // 页面可见性：隐藏时暂停轮询，恢复时自动重取
   const visibility = useDocumentVisibility();
@@ -53,7 +65,7 @@ export const useHealthCheck = (): HealthCheckResult => {
       // 轮询间隔
       refetchInterval: HEARTBEAT_INTERVAL,
       // 失败重试一次
-      retry: 1,
+      retry: RETRY_COUNT,
     },
   });
   // 由请求结果推导在线状态

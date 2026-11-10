@@ -1,5 +1,5 @@
 # 额外排除
-extend-exclude = ["apps/server/src/server/generated/**"]
+extend-exclude = ["**/generated/**"]
 # 行宽
 line-length = 100
 # 预览模式

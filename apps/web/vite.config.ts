@@ -1,5 +1,3 @@
-import { URL, fileURLToPath } from "node:url";
-
 import vue from "@vitejs/plugin-vue";
 import RekaResolver from "reka-ui/resolver";
 import UnoCSS from "unocss/vite";
@@ -55,7 +53,7 @@ export default defineConfig({
     Icons({ autoInstall: false }),
   ],
 
-  resolve: { alias: { "@": fileURLToPath(new URL("src", import.meta.url)) } },
+  resolve: { alias: { "@": `${import.meta.dirname}/src` } },
 
   test: {
     environment: "jsdom",
@@ -64,5 +62,7 @@ export default defineConfig({
     // 使用 threads 池：forks 池在 Windows 下临时目录会 EPERM
     pool: "threads",
     setupFiles: ["./tests/setup.ts"],
+    // 单测试超时（毫秒）
+    testTimeout: 5000,
   },
 });

@@ -6,7 +6,7 @@
   // 排除文件
   "excludes": ["**/node_modules/**", ".venv/**", "**/dist/**"],
   // 行宽
-  "lineWidth": 100,
+  "lineWidth": 120,
   // 插件
   "plugins": [
     "npm:@dprint/dockerfile@0.7.0",

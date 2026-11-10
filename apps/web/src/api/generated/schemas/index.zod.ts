@@ -7,11 +7,7 @@
  */
 import * as zod from "zod";
 
-export const Response = zod.object({
-  code: zod.int(),
-  message: zod.string(),
-  data: zod.looseObject({}),
-});
+export const Response = zod.object({ code: zod.int(), message: zod.string(), data: zod.looseObject({}) });
 
 export type Response = zod.input<typeof Response>;
 export type ResponseOutput = zod.output<typeof Response>;

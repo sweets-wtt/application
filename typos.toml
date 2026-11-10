@@ -13,12 +13,10 @@ extend-ignore-re = ["[\"']?[A-Z]{2,5}[0-9]{3}[\"']?"]
 [files]
 # 额外排除
 extend-exclude = [
+  # 自动导入声明
+  "**/auto-imports.d.ts",
+  # 生成物
+  "**/generated/**",
   # 锁文件
   "*.lock",
-  # Python 生成物
-  "apps/server/src/server/generated/**",
-  # 自动导入声明
-  "apps/web/auto-imports.d.ts",
-  # TypeScript 生成物
-  "apps/web/src/api/generated/**",
 ]

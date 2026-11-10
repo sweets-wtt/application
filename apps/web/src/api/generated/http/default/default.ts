@@ -36,9 +36,7 @@ export const getGetHealthzUrl = () => {
  * 返回服务存活状态
  * @summary 存活探针
  */
-export const getHealthz = async (
-  options?: Parameters<typeof apiFetch>[1],
-): Promise<getHealthzResponse> => {
+export const getHealthz = async (options?: Parameters<typeof apiFetch>[1]): Promise<getHealthzResponse> => {
   return apiFetch<getHealthzResponse>(getGetHealthzUrl(), { ...options, method: "GET" });
 };
 
@@ -46,10 +44,7 @@ export const getGetHealthzQueryKey = () => {
   return ["healthz"] as const;
 };
 
-export const getGetHealthzQueryOptions = <
-  TData = Awaited<ReturnType<typeof getHealthz>>,
-  TError = unknown,
->(options?: {
+export const getGetHealthzQueryOptions = <TData = Awaited<ReturnType<typeof getHealthz>>, TError = unknown>(options?: {
   query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getHealthz>>, TError, TData>>;
   request?: SecondParameter<typeof apiFetch>;
 }) => {

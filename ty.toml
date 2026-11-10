@@ -20,8 +20,8 @@ python-version = "3.12"
 exclude = [
   # 字节码缓存
   "**/__pycache__",
-  # 契约生成物
-  "apps/server/src/server/generated",
+  # 生成物
+  "**/generated",
 ]
 # 源码根
 include = ["apps/server/src", "apps/server/tests"]

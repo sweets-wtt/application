@@ -1,7 +1,6 @@
 # Contracts
 
-跨端 API 契约源头，OpenAPI 契约经过打包、校验和代码生成，产出 server 的 Pydantic 模型与 web 的
-TypeScript 客户端
+跨端 API 契约源头，OpenAPI 契约经过打包、校验和代码生成，产出 server 的 Pydantic 模型与 web 的 TypeScript 客户端
 
 ## 结构
 

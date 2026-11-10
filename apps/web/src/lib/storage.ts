@@ -12,11 +12,14 @@ const DEFAULT_VERSION = "0";
 /** 迁移最大迭代次数，防止迁移表成环 */
 const MAX_MIGRATION_STEPS = 16;
 
+/** 迁移循环起始步数 */
+const INITIAL_STEP = 0;
+
+/** 每次迁移的步长 */
+const STEP_INCREMENT = 1;
+
 /** 状态模式（版本化） */
-const stateSchema = z.object({
-  locale: z.enum(["zh-CN", "en-US"]),
-  version: z.literal(CURRENT_VERSION),
-});
+const stateSchema = z.object({ locale: z.enum(["zh-CN", "en-US"]), version: z.literal(CURRENT_VERSION) });
 
 /** 应用状态 */
 export type State = z.infer<typeof stateSchema>;
@@ -27,7 +30,13 @@ export const defaultState: State = { locale: "zh-CN", version: CURRENT_VERSION }
 /** 相邻迁移表：键为源版本，值返回升一级后的数据 */
 const migrations: Record<string, (state: Record<string, unknown>) => Record<string, unknown>> = {};
 
-/** 读取版本号：字段非字符串时回退到给定值 */
+/**
+ * 读取版本号：字段非字符串时回退到给定值
+ *
+ * @param {Record<string, unknown>} state 待读取的状态对象
+ * @param {string} fallback 无法读取时的回退值
+ * @returns {string} 版本号
+ */
 const readVersion = (state: Record<string, unknown>, fallback: string): string => {
   // 合法版本号必须为字符串
   if (typeof state["version"] === "string") {
@@ -37,11 +46,14 @@ const readVersion = (state: Record<string, unknown>, fallback: string): string =
   return fallback;
 };
 
-/** 版本匹配则返回数据，否则返回 null */
-const settle = (
-  current: Record<string, unknown>,
-  version: string,
-): Record<string, unknown> | null => {
+/**
+ * 版本匹配则返回数据，否则返回 null
+ *
+ * @param {Record<string, unknown>} current 当前数据
+ * @param {string} version 数据版本
+ * @returns {Record<string, unknown> | null} 匹配时返回数据，否则为 null
+ */
+const settle = (current: Record<string, unknown>, version: string): Record<string, unknown> | null => {
   // 仅当前版本可直接使用
   if (version === CURRENT_VERSION) {
     return current;
@@ -50,13 +62,18 @@ const settle = (
   return null;
 };
 
-/** 逐级迁移到当前版本：无对应迁移或超出迭代上限则返回 null */
+/**
+ * 逐级迁移到当前版本：无对应迁移或超出迭代上限则返回 null
+ *
+ * @param {Record<string, unknown>} data 待迁移的原始数据
+ * @returns {Record<string, unknown> | null} 迁移结果，失败时为 null
+ */
 export const migrate = (data: Record<string, unknown>): Record<string, unknown> | null => {
   let current = data;
   let version = readVersion(current, DEFAULT_VERSION);
 
   // 逐级升级，迭代次数上限防止迁移表成环
-  for (let step = 0; version !== CURRENT_VERSION && step < MAX_MIGRATION_STEPS; step += 1) {
+  for (let step = INITIAL_STEP; version !== CURRENT_VERSION && step < MAX_MIGRATION_STEPS; step += STEP_INCREMENT) {
     const upgrade = migrations[version];
 
     // 缺少对应迁移，无法继续
@@ -71,7 +88,12 @@ export const migrate = (data: Record<string, unknown>): Record<string, unknown> 
   return settle(current, version);
 };
 
-/** 解析原始文本：格式损坏返回 null */
+/**
+ * 解析原始文本：格式损坏返回 null
+ *
+ * @param {string} raw 原始 JSON 文本
+ * @returns {Record<string, unknown> | null} 解析结果，失败时为 null
+ */
 const parseRaw = (raw: string): Record<string, unknown> | null => {
   try {
     return JSON.parse(raw) as Record<string, unknown>;
@@ -80,7 +102,12 @@ const parseRaw = (raw: string): Record<string, unknown> | null => {
   }
 };
 
-/** 校验迁移结果：失败回退默认状态 */
+/**
+ * 校验迁移结果：失败回退默认状态
+ *
+ * @param {Record<string, unknown> | null} migrated 迁移后的数据
+ * @returns {State} 合法的应用状态
+ */
 const validateMigrated = (migrated: Record<string, unknown> | null): State => {
   // 迁移失败直接回退
   if (migrated === null) {
@@ -97,7 +124,12 @@ const validateMigrated = (migrated: Record<string, unknown> | null): State => {
   return defaultState;
 };
 
-/** 解析并迁移到当前版本：损坏或无法迁移的数据回退默认状态 */
+/**
+ * 解析并迁移到当前版本：损坏或无法迁移的数据回退默认状态
+ *
+ * @param {string | null} raw 原始存储文本
+ * @returns {State} 应用状态
+ */
 export const parseState = (raw: string | null): State => {
   // 无存储内容
   if (raw === null) {
@@ -114,7 +146,12 @@ export const parseState = (raw: string | null): State => {
   return validateMigrated(migrate(parsed));
 };
 
-/** 序列化为 JSON 字符串 */
+/**
+ * 序列化为 JSON 字符串
+ *
+ * @param {State} state 应用状态
+ * @returns {string} JSON 文本
+ */
 export const serializeState = (state: State): string => JSON.stringify(state);
 
 /** 存储边界：仅依赖读写两项能力 */
@@ -123,10 +160,20 @@ export interface Storage {
   setItem: (key: string, value: string) => void;
 }
 
-/** 从存储读取状态 */
+/**
+ * 从存储读取状态
+ *
+ * @param {Storage} storage 存储实现
+ * @returns {State} 应用状态
+ */
 export const loadState = (storage: Storage): State => parseState(storage.getItem(STORAGE_KEY));
 
-/** 将状态写入存储 */
+/**
+ * 将状态写入存储
+ *
+ * @param {Storage} storage 存储实现
+ * @param {State} state 应用状态
+ */
 export const saveState = (storage: Storage, state: State): void => {
   storage.setItem(STORAGE_KEY, serializeState(state));
 };

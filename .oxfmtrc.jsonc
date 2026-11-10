@@ -1,116 +1,56 @@
 {
-  // Schema 地址
-  "$schema": "./node_modules/oxfmt/configuration_schema.json",
-  // 行宽
-  "printWidth": 100,
-  // 缩进宽度
-  "tabWidth": 2,
-  // 制表符缩进
-  "useTabs": false,
-  // 换行符
-  "endOfLine": "lf",
-  // 末尾换行
-  "insertFinalNewline": true,
-  // 分号
-  "semi": true,
-  // 单引号
-  "singleQuote": false,
-  // 属性引号
-  "quoteProps": "as-needed",
-  // 尾逗号
-  "trailingComma": "all",
-  // 括号空格
-  "bracketSpacing": true,
-  // 对象换行
-  "objectWrap": "collapse",
-  // 箭头括号
-  "arrowParens": "always",
-  // 标签闭合
-  "bracketSameLine": false,
-  // 属性分行
-  "singleAttributePerLine": true,
-  // 空白敏感度
-  "htmlWhitespaceSensitivity": "ignore",
-  // Vue 块缩进
-  "vueIndentScriptAndStyle": false,
-  // 内嵌格式化
-  "embeddedLanguageFormatting": "auto",
-  // 运算符位置
-  "experimentalOperatorPosition": "start",
-  // JSDoc 格式化
-  "jsdoc": false,
-  // 忽略文件
-  "ignorePatterns": [
-    // 契约制品
-    "contracts/http/dist/**",
-    // 自动导入声明
-    "apps/web/auto-imports.d.ts",
-    // 依赖目录
-    "**/node_modules/**",
-    // 构建产物
-    "**/dist/**"
-  ],
+  "$schema": "./node_modules/oxfmt/configuration_schema.json", // Schema 地址
+  "printWidth": 120, // 行宽
+  "tabWidth": 2, // 缩进宽度
+  "useTabs": false, // 制表符缩进
+  "endOfLine": "lf", // 换行符
+  "insertFinalNewline": true, // 末尾换行
+  "semi": true, // 分号
+  "singleQuote": false, // 单引号
+  "jsxSingleQuote": false, // JSX 单引号
+  "quoteProps": "as-needed", // 属性引号
+  "trailingComma": "all", // 尾逗号
+  "bracketSpacing": true, // 括号空格
+  "arrowParens": "always", // 箭头括号
+  "bracketSameLine": false, // 标签闭合
+  "htmlWhitespaceSensitivity": "ignore", // 空白敏感度
+  "vueIndentScriptAndStyle": false, // Vue 块缩进
+  "embeddedLanguageFormatting": "auto", // 内嵌格式化
+  "proseWrap": "preserve", // 折行方式
+  "jsdoc": false, // JSDoc 格式化
+  "sortPackageJson": false, // package.json 排序
+  "astro": false, // Astro 支持
+  "svelte": false, // Svelte 支持
+  "sortTailwindcss": false, // Tailwind 排序
+  "associations": [], // 语言关联
+  "objectWrap": "collapse", // 对象换行
+  "singleAttributePerLine": true, // 属性分行
+  "experimentalOperatorPosition": "start", // 运算符位置
+  "ignorePatterns": ["**/auto-imports.d.ts", "**/node_modules/**", ".venv/**", "**/dist/**"], // 忽略文件
   // 文件覆盖
   "overrides": [{
-    // Markdown 文件
-    "files": ["**/*.md"],
-    // 折行方式
-    "proseWrap": "preserve"
-  }, {
-    // 契约生成物
-    "files": ["apps/web/src/api/generated/**"],
-    // 导入排序
-    "sortImports": false
+    "files": ["**/generated/**"], // 契约生成物
+    "sortImports": false // 导入排序
   }],
-  // 语言关联
-  "associations": [],
-  // Astro 支持
-  "astro": false,
-  // Svelte 支持
-  "svelte": false,
   // 导入排序
   "sortImports": {
     // 分组
     "groups": [
-      // 内置模块
       "builtin",
-      // 第三方依赖
       "external",
-      // 内部别名
       ["internal", "subpath"],
-      // 相对路径
       ["parent", "sibling", "index"],
-      // 样式
       "style",
-      // 类型
       "type",
-      // 未归类
       "unknown"
     ],
-    // 排序方向
-    "order": "asc",
-    // 忽略大小写
-    "ignoreCase": true,
-    // 分组空行
-    "newlinesBetween": true,
-    // 内部前缀
-    "internalPattern": ["@/", "~/", "#"],
-    // 副作用导入排序
-    "sortSideEffects": true,
-    // 按注释分区
-    "partitionByComment": false,
-    // 按空行分区
-    "partitionByNewline": false,
-    // 自定义分组
-    "customGroups": [ // 业务模块
-      { "groupName": "app-features", "elementNamePattern": ["@/features/**"] }, // 基础模块
-      { "groupName": "app-core", "elementNamePattern": ["@/lib/**", "@/config/**", "@/stores/**"] }
-    ]
-  },
-  // package.json 排序
-  "sortPackageJson": false,
-  // Tailwind 排序
-  "sortTailwindcss": false,
-  // 折行方式
-  "proseWrap": "preserve"
+    "order": "asc", // 排序方向
+    "ignoreCase": true, // 忽略大小写
+    "newlinesBetween": true, // 分组空行
+    "internalPattern": ["@/", "~/", "#"], // 内部前缀
+    "sortSideEffects": true, // 副作用导入排序
+    "partitionByComment": false, // 按注释分区
+    "partitionByNewline": false, // 按空行分区
+    "customGroups": [] // 自定义分组
+  }
 }

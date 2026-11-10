@@ -9,5 +9,5 @@ describe("app", () => {
     const wrapper = mount(App);
 
     expect(wrapper.exists()).toBe(true);
-  }, 5000);
+  });
 });
