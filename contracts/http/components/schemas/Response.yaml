@@ -5,7 +5,6 @@ required:
   - message
   - data
 properties:
-  # 状态码 - 0 表示成功
   code:
     type: integer
   message:

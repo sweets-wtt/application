@@ -1,8 +1,26 @@
-import { useGetHealthz } from "@/api";
+import { Healthz200Response, useGetHealthz } from "@/api";
 import { HEARTBEAT_INTERVAL, SERVER_STATUS } from "@/features/health/constants";
+import { logger } from "@/lib/logger";
 
-import type { Healthz200Response } from "@/api";
 import type { ServerStatus } from "@/features/health/constants";
+
+/** 按契约校验响应：不符时上报并丢弃 */
+const validate = (payload: unknown): Healthz200Response | undefined => {
+  // 数据未就绪时不校验
+  if (payload === undefined) {
+    return;
+  }
+
+  const result = Healthz200Response.safeParse(payload);
+
+  // 契约不符仅上报，不中断渲染
+  if (!result.success) {
+    logger.warn("响应不符合契约", { issues: result.error.issues.length });
+    return;
+  }
+
+  return result.data;
+};
 
 /** 健康检查返回值 */
 export interface HealthCheckResult {
@@ -53,8 +71,8 @@ export const useHealthCheck = (): HealthCheckResult => {
   });
   // 是否在线
   const online = computed(() => status.value === SERVER_STATUS.online);
-  // 取响应信封内层数据
-  const data = computed<Healthz200Response | undefined>(() => result.value?.data);
+  // 按契约校验响应信封
+  const data = computed<Healthz200Response | undefined>(() => validate(result.value?.data));
 
   return { data, isFetching, online, status };
 };
