@@ -59,8 +59,16 @@ const maskValue = (key: string, value: unknown): unknown => {
  * @param {Record<string, unknown>} data 待脱敏的数据
  * @returns {Record<string, unknown>} 脱敏后的数据
  */
-const redact = (data: Record<string, unknown> = {}): Record<string, unknown> =>
-  Object.fromEntries(Object.entries(data).map(([key, value]) => [key, maskValue(key, value)]));
+const redact = (data: Readonly<Record<string, unknown>> = {}): Record<string, unknown> => {
+  const masked: Record<string, unknown> = {};
+
+  // 逐字段按键名脱敏
+  for (const [key, value] of Object.entries(data)) {
+    masked[key] = maskValue(key, value);
+  }
+
+  return masked;
+};
 
 /**
  * 创建 Consola 实例：无 console 环境返回 undefined
@@ -68,8 +76,11 @@ const redact = (data: Record<string, unknown> = {}): Record<string, unknown> =>
  * @returns {ConsolaInstance | undefined} 日志实例
  */
 const createInstance = (): ConsolaInstance | undefined => {
-  if (globalThis.console === undefined) {
-    return;
+  // 以可选视图访问 console：部分运行时环境不提供 console
+  const host = globalThis as { readonly console?: Console };
+
+  if (host.console === undefined) {
+    return undefined;
   }
 
   return createConsola({ level: DEFAULT_LOG_LEVEL });
@@ -86,7 +97,7 @@ export const logger = {
    * @param {string} message 日志消息
    * @param {Record<string, unknown>} [data] 附加数据
    */
-  error: (message: string, data?: Record<string, unknown>): void => {
+  error: (message: string, data?: Readonly<Record<string, unknown>>): void => {
     instance?.error(message, redact(data));
   },
   /**
@@ -95,7 +106,7 @@ export const logger = {
    * @param {string} message 日志消息
    * @param {Record<string, unknown>} [data] 附加数据
    */
-  info: (message: string, data?: Record<string, unknown>): void => {
+  info: (message: string, data?: Readonly<Record<string, unknown>>): void => {
     instance?.info(message, redact(data));
   },
   /**
@@ -104,7 +115,7 @@ export const logger = {
    * @param {string} message 日志消息
    * @param {Record<string, unknown>} [data] 附加数据
    */
-  warn: (message: string, data?: Record<string, unknown>): void => {
+  warn: (message: string, data?: Readonly<Record<string, unknown>>): void => {
     instance?.warn(message, redact(data));
   },
 };

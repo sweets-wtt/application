@@ -3,7 +3,7 @@ const routes: RouteRecordRaw[] = [
   {
     // 根路径挂载默认布局
     path: "/",
-    component: () => import("@/layouts/DefaultLayout.vue"),
+    component: async () => await import("@/layouts/DefaultLayout.vue"),
     // 根路径重定向至首页
     redirect: "/home",
     children: [
@@ -11,7 +11,7 @@ const routes: RouteRecordRaw[] = [
         // 首页
         path: "home",
         name: "home",
-        component: () => import("@/views/HomeView.vue"),
+        component: async () => await import("@/views/HomeView.vue"),
         meta: {
           // 页面标题
           title: "首页",

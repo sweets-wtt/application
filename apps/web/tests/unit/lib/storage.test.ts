@@ -10,7 +10,7 @@ import type { State, Storage } from "@/lib/storage";
  * @param {Record<string, string>} initial 初始数据
  * @returns {Storage} 内存存储实现
  */
-const memory = (initial: Record<string, string> = {}): Storage => {
+const memory = (initial: Readonly<Record<string, string>> = {}): Storage => {
   const data = { ...initial };
 
   return {

@@ -7,15 +7,19 @@ import type { ConsolaInstance } from "consola";
 /** 日志级别：warn */
 const LEVEL_WARN = 4;
 
-/** 模拟 Consola 实例 */
+/** 模拟 Consola 实例：仅覆盖日志器用到的成员 */
 const instance = vi.hoisted(() => ({
-  error: vi.fn<(message: string, data?: Record<string, unknown>) => void>(),
-  info: vi.fn<(message: string, data?: Record<string, unknown>) => void>(),
+  error: vi.fn<(message: string, data?: Readonly<Record<string, unknown>>) => void>(),
+  info: vi.fn<(message: string, data?: Readonly<Record<string, unknown>>) => void>(),
   level: 3,
-  warn: vi.fn<(message: string, data?: Record<string, unknown>) => void>(),
+  warn: vi.fn<(message: string, data?: Readonly<Record<string, unknown>>) => void>(),
 }));
 
-vi.mock(import("consola"), () => ({ createConsola: (): ConsolaInstance => instance as unknown as ConsolaInstance }));
+vi.mock(import("consola"), () => ({
+  // 模块模拟边界：模拟实例不含 Consola 完整成员，断言不可避免
+  // eslint-disable-next-line typescript/no-unsafe-type-assertion
+  createConsola: (): ConsolaInstance => instance as unknown as ConsolaInstance,
+}));
 
 describe("logger", () => {
   it("info 输出脱敏数据", () => {
@@ -34,6 +38,8 @@ describe("logger", () => {
 
   it("configureLogger 不抛错", () => {
     // 默认配置不应抛出
-    expect(() => configureLogger()).not.toThrow();
+    expect(() => {
+      configureLogger();
+    }).not.toThrow();
   });
 });

@@ -28,7 +28,7 @@ export type State = z.infer<typeof stateSchema>;
 export const defaultState: State = { locale: "zh-CN", version: CURRENT_VERSION };
 
 /** 相邻迁移表：键为源版本，值返回升一级后的数据 */
-const migrations: Record<string, (state: Record<string, unknown>) => Record<string, unknown>> = {};
+const migrations: Record<string, (state: Readonly<Record<string, unknown>>) => Record<string, unknown>> = {};
 
 /**
  * 读取版本号：字段非字符串时回退到给定值
@@ -37,7 +37,7 @@ const migrations: Record<string, (state: Record<string, unknown>) => Record<stri
  * @param {string} fallback 无法读取时的回退值
  * @returns {string} 版本号
  */
-const readVersion = (state: Record<string, unknown>, fallback: string): string => {
+const readVersion = (state: Readonly<Record<string, unknown>>, fallback: string): string => {
   // 合法版本号必须为字符串
   if (typeof state["version"] === "string") {
     return state["version"];
@@ -53,7 +53,7 @@ const readVersion = (state: Record<string, unknown>, fallback: string): string =
  * @param {string} version 数据版本
  * @returns {Record<string, unknown> | null} 匹配时返回数据，否则为 null
  */
-const settle = (current: Record<string, unknown>, version: string): Record<string, unknown> | null => {
+const settle = (current: Readonly<Record<string, unknown>>, version: string): Record<string, unknown> | null => {
   // 仅当前版本可直接使用
   if (version === CURRENT_VERSION) {
     return current;
@@ -68,7 +68,7 @@ const settle = (current: Record<string, unknown>, version: string): Record<strin
  * @param {Record<string, unknown>} data 待迁移的原始数据
  * @returns {Record<string, unknown> | null} 迁移结果，失败时为 null
  */
-export const migrate = (data: Record<string, unknown>): Record<string, unknown> | null => {
+export const migrate = (data: Readonly<Record<string, unknown>>): Record<string, unknown> | null => {
   let current = data;
   let version = readVersion(current, DEFAULT_VERSION);
 
@@ -88,6 +88,9 @@ export const migrate = (data: Record<string, unknown>): Record<string, unknown> 
   return settle(current, version);
 };
 
+/** 原始状态模式：仅校验是普通对象，结构交由迁移与版本校验处理 */
+const rawSchema = z.record(z.string(), z.unknown());
+
 /**
  * 解析原始文本：格式损坏返回 null
  *
@@ -96,7 +99,15 @@ export const migrate = (data: Record<string, unknown>): Record<string, unknown> 
  */
 const parseRaw = (raw: string): Record<string, unknown> | null => {
   try {
-    return JSON.parse(raw) as Record<string, unknown>;
+    // 先按未知类型接收，再校验为普通对象
+    const parsed = rawSchema.safeParse(JSON.parse(raw));
+
+    // 非普通对象视为损坏
+    if (!parsed.success) {
+      return null;
+    }
+
+    return parsed.data;
   } catch {
     return null;
   }
@@ -108,7 +119,7 @@ const parseRaw = (raw: string): Record<string, unknown> | null => {
  * @param {Record<string, unknown> | null} migrated 迁移后的数据
  * @returns {State} 合法的应用状态
  */
-const validateMigrated = (migrated: Record<string, unknown> | null): State => {
+const validateMigrated = (migrated: Readonly<Record<string, unknown>> | null): State => {
   // 迁移失败直接回退
   if (migrated === null) {
     return defaultState;
@@ -149,15 +160,15 @@ export const parseState = (raw: string | null): State => {
 /**
  * 序列化为 JSON 字符串
  *
- * @param {State} state 应用状态
+ * @param {Readonly<Record<PropertyKey, unknown>>} state 只读状态树
  * @returns {string} JSON 文本
  */
-export const serializeState = (state: State): string => JSON.stringify(state);
+export const serializeState = (state: Readonly<Record<PropertyKey, unknown>>): string => JSON.stringify(state);
 
 /** 存储边界：仅依赖读写两项能力 */
 export interface Storage {
-  getItem: (key: string) => string | null;
-  setItem: (key: string, value: string) => void;
+  readonly getItem: (key: string) => string | null;
+  readonly setItem: (key: string, value: string) => void;
 }
 
 /**
@@ -174,6 +185,6 @@ export const loadState = (storage: Storage): State => parseState(storage.getItem
  * @param {Storage} storage 存储实现
  * @param {State} state 应用状态
  */
-export const saveState = (storage: Storage, state: State): void => {
+export const saveState = (storage: Storage, state: Readonly<State>): void => {
   storage.setItem(STORAGE_KEY, serializeState(state));
 };

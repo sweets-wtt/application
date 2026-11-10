@@ -16,7 +16,7 @@ const RETRY_COUNT = 1;
 const validate = (payload: unknown): Healthz200Response | undefined => {
   // 数据未就绪时不校验
   if (payload === undefined) {
-    return;
+    return undefined;
   }
 
   const result = Healthz200Response.safeParse(payload);
@@ -24,7 +24,7 @@ const validate = (payload: unknown): Healthz200Response | undefined => {
   // 契约不符仅上报，不中断渲染
   if (!result.success) {
     logger.warn("响应不符合契约", { issues: result.error.issues.length });
-    return;
+    return undefined;
   }
 
   return result.data;

@@ -1,26 +1,35 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 /** 模拟的查询状态 */
-const query = vi.hoisted(() => ({
-  data: { value: undefined as unknown },
-  isError: { value: false },
-  isFetching: { value: false },
-  isSuccess: { value: true },
-}));
+const query = vi.hoisted(
+  (): {
+    data: { value: unknown };
+    isError: { value: boolean };
+    isFetching: { value: boolean };
+    isSuccess: { value: boolean };
+  } => ({
+    data: { value: undefined },
+    isError: { value: false },
+    isFetching: { value: false },
+    isSuccess: { value: true },
+  }),
+);
 
 /** 模拟的日志告警 */
-const warn = vi.hoisted(() => vi.fn<(message: string, data?: Record<string, unknown>) => void>());
+const warn = vi.hoisted(() => vi.fn<(message: string, data?: Readonly<Record<string, unknown>>) => void>());
 
 vi.mock(import("@/api"), async (importOriginal) => {
   const actual = await importOriginal();
 
+  // 模块模拟边界：模拟查询仅覆盖组合式函数用到的字段，断言不可避免
+  // eslint-disable-next-line typescript/no-unsafe-type-assertion
   return { ...actual, useGetHealthz: (() => query) as typeof actual.useGetHealthz };
 });
 
 vi.mock(import("@/lib/logger"), () => ({
   logger: {
-    error: vi.fn<(message: string, data?: Record<string, unknown>) => void>(),
-    info: vi.fn<(message: string, data?: Record<string, unknown>) => void>(),
+    error: vi.fn<(message: string, data?: Readonly<Record<string, unknown>>) => void>(),
+    info: vi.fn<(message: string, data?: Readonly<Record<string, unknown>>) => void>(),
     warn,
   },
 }));
@@ -67,8 +76,9 @@ describe("useHealthCheck", () => {
     const { data } = useHealthCheck();
 
     expect(data.value).toBeUndefined();
-    // 告警消息固定，issues 仅要求为数字而不绑定具体条数
-    expect(warn).toHaveBeenCalledWith("响应不符合契约", expect.objectContaining({ issues: expect.any(Number) }));
+    // 告警消息固定，issues 仅要求为数字而不绑定具体条数（expect.any 返回 any，先收窄为 unknown）
+    const issues: unknown = expect.any(Number);
+    expect(warn).toHaveBeenCalledWith("响应不符合契约", expect.objectContaining({ issues }));
   });
 
   it("数据未就绪时不校验", () => {

@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import { apiFetch, setBaseUrl } from "@/api";
 
+import type { ResponseView } from "@/api";
 import type { Mock } from "vitest";
 
 /** HTTP 状态码：成功 */
@@ -13,8 +14,8 @@ const STATUS_SERVER_ERROR = 500;
 /** JSON 响应头 */
 const JSON_HEADERS = { "Content-Type": "application/json" };
 
-/** 模拟 fetch 的签名 */
-type FetchMock = Mock<(input: RequestInfo | URL, init?: RequestInit) => Promise<Response>>;
+/** 模拟 fetch 的签名：客户端实际仅以字符串路径调用 */
+type FetchMock = Mock<(input: string) => Promise<ResponseView>>;
 
 /**
  * 构造 JSON 响应
@@ -29,11 +30,11 @@ const jsonResponse = (body: unknown, status: number): Response =>
 /**
  * 安装模拟 fetch
  *
- * @param {Response} response 模拟返回的响应
+ * @param {ResponseView} response 模拟返回的响应
  * @returns {FetchMock} 模拟函数
  */
-const stubFetch = (response: Response): FetchMock => {
-  const mock = vi.fn<(input: RequestInfo | URL, init?: RequestInit) => Promise<Response>>().mockResolvedValue(response);
+const stubFetch = (response: ResponseView): FetchMock => {
+  const mock = vi.fn<(input: string) => Promise<ResponseView>>().mockResolvedValue(response);
 
   vi.stubGlobal("fetch", mock);
 
