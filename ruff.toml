@@ -1,10 +1,10 @@
-# 额外排除
+# 额外排除路径
 extend-exclude = ["**/generated/**"]
 # 行宽
 line-length = 100
 # 预览模式
 preview = false
-# 源码目录
+# 源码根
 src = ["apps/server/src"]
 # 目标版本
 target-version = "py312"
@@ -13,79 +13,79 @@ unsafe-fixes = false
 
 # 格式化
 [format]
-# docstring 代码
+# docstring 内代码格式化
 docstring-code-format = true
-# 换行符（默认 auto 会随文件已有换行，此处统一下为 lf）
+# 换行符
 line-ending = "lf"
-# 引号
+# 引号风格
 quote-style = "double"
 
 # 检查
 [lint]
-# 预览规则须显式指定完整规则码
+# 预览规则须以完整规则码选择
 explicit-preview-rules = true
 # 禁用规则
 ignore = [
-  # 尾逗号
+  # 缺失尾逗号
   "COM812",
-  # 禁止尾逗号（与 formatter 冲突）
+  # 禁止尾逗号
   "COM819",
-  # 版权声明
+  # 缺失版权声明
   "CPY001",
-  # 与 D211 互斥
+  # 类前空行位置
   "D203",
-  # docstring 制表符缩进（与 formatter 冲突）
+  # docstring 制表符缩进
   "D206",
-  # 与 D212 互斥
+  # 多行摘要起始行
   "D213",
-  # 三单引号（与 formatter 冲突）
+  # 三单引号
   "D300",
-  # 中文句号
+  # 缺失句号结尾
   "D400",
-  # 中文标点
+  # 缺失终止标点
   "D415",
-  # 缩进非 4 的倍数（与 formatter 冲突）
+  # 缩进非四的倍数
   "E111",
-  # 缩进注释非 4 的倍数（与 formatter 冲突）
+  # 注释缩进非四的倍数
   "E114",
-  # 过度缩进（与 formatter 冲突）
+  # 过度缩进
   "E117",
-  # 布尔参数
+  # 布尔类型注解位置参数
   "FBT001",
-  # 布尔参数
+  # 布尔默认值位置参数
   "FBT002",
-  # f-string 日志
+  # 日志 f-string
   "G004",
-  # 字符串折行
+  # 隐式字符串拼接
   "ISC001",
-  # 单引号字面量（与 formatter 冲突）
+  # 行内字符串单引号
   "Q000",
-  # 单引号多行字符串（与 formatter 冲突）
+  # 多行字符串单引号
   "Q001",
-  # 单引号 docstring（与 formatter 冲突）
+  # docstring 单引号
   "Q002",
-  # 可避免的转义引号（与 formatter 冲突）
+  # 可避免的转义引号
   "Q003",
-  # 多余转义引号（与 formatter 冲突）
+  # 多余转义引号
   "Q004",
-  # 全角标点
+  # 模糊 Unicode 字符（字符串）
   "RUF001",
-  # 全角标点
+  # 模糊 Unicode 字符（docstring）
   "RUF002",
-  # 全角标点
+  # 模糊 Unicode 字符（注释）
   "RUF003",
-  # __slots__
+  # str 子类未定义 __slots__
   "SLOT000",
-  # 长错误消息
+  # 抛出原始异常参数
   "TRY003",
-  # try 内返回
+  # try 内返回应改 else
   "TRY300",
-  # 制表符缩进（与 formatter 冲突）
+  # 制表符缩进
   "W191",
 ]
 # 日志器对象
 logger-objects = ["server.core.logging.get_logger"]
-# 预览规则（仅 lint，不影响格式化）
+# 预览模式
 preview = true
 # 启用规则
 select = ["ALL", "DOC201", "RUF029"]
@@ -98,19 +98,19 @@ force-single-line = true
 force-sort-within-sections = true
 # 第一方模块
 known-first-party = ["server"]
-# 导入后空行
+# 导入后空行数
 lines-after-imports = 2
 # 尾逗号拆分
 split-on-trailing-comma = true
 
 # 导入约定
 [lint.flake8-import-conventions]
-# 禁用导入
+# 禁用的 from 导入
 banned-from = ["typing"]
 
 # 导入检查
 [lint.flake8-tidy-imports]
-# 禁止相对导入（仅允许同包内 . 前缀，禁止 .. 及更远）
+# 相对导入层级
 ban-relative-imports = "parents"
 
 # 禁用导入
@@ -120,9 +120,9 @@ ban-relative-imports = "parents"
 # 统一用 httpx
 "requests".msg = "使用 httpx"
 
-# 不可变默认值（避免 B008 误报框架依赖注入）
+# 不可变调用
 [lint.flake8-bugbear]
-# FastAPI 声明式默认值本质是标记，不产生每次调用的新对象
+# 视为不可变的默认值调用
 extend-immutable-calls = [
   "fastapi.Body",
   "fastapi.Cookie",
@@ -142,11 +142,11 @@ max-complexity = 10
 
 # 按文件禁用
 [lint.per-file-ignores]
-# 依赖注入参数（通配包名，便于新增 Python 包时自动覆盖）
+# 依赖注入参数
 "apps/*/src/*/api/**" = ["ARG001"]
-# 框架签名（同上）
+# 框架签名
 "apps/*/src/*/core/logging.py" = ["ARG001"]
-# 测试放宽
+# 测试文件
 "apps/*/tests/**" = ["ANN001", "ANN201", "D103", "PLR2004", "S101", "S105", "S106"]
 
 # 文档字符串

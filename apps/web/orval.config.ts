@@ -5,13 +5,13 @@ export default defineConfig({
   contracts: {
     // 输入
     input: {
-      // 契约来源（仓库根 contracts/http/dist）
+      // 契约来源
       target: "../../contracts/http/dist/openapi.yaml",
     },
 
     // 输出
     output: {
-      // 客户端
+      // 客户端类型
       client: "vue-query",
       // 输出模式
       mode: "tags-split",
@@ -29,9 +29,9 @@ export default defineConfig({
 
       // 模式定义
       schemas: {
-        // 单文件模式 - 全部 zod 模式合并为一个模块
+        // 输出模式
         mode: "single",
-        // 模式目录
+        // 输出目录
         path: "./src/api/generated/schemas",
         // 校验器类型
         type: "zod",

@@ -1,12 +1,12 @@
 {
 	# ACME 证书邮箱
 	email {$ACME_EMAIL}
-	# 关闭管理接口 - 容器内无需远程配置
+	# 管理接口
 	admin off
 }
 
-# Web 应用 - 唯一公网入口
+# Web 站点
 web.{$AUTH_DOMAIN} {
-	# 静态资源、SPA 回退与 API 反代由 Nginx 处理
+	# 上游服务
 	reverse_proxy web:80
 }

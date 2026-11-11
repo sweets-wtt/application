@@ -1,4 +1,4 @@
-# 起始标签
+# 从最近标签开始
 from_latest_tag = true
 # 忽略合并提交
 ignore_merge_commits = true
@@ -15,7 +15,7 @@ path = "CHANGELOG.md"
 remote = "github.com"
 # 仓库名
 repository = "application"
-# 远端模板
+# 模板
 template = "remote"
 
 # 提交类型

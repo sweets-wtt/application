@@ -19,7 +19,7 @@
 │   ├── 运行时管理: uv
 │   └── 运行时管理: bun
 ├── 持续集成: github
-├── 容器平台: podman
+├── 容器平台: docker
 │   └── 入口代理: caddy
 ├── Python 工具链
 │   ├── 测试框架: pytest
@@ -69,7 +69,7 @@
 │   └── web/            # 前端应用
 ├── contracts/          # 契约目录
 ├── infra/              # 服务编排
-├── .containerignore    # 构建忽略
+├── .dockerignore       # 构建忽略
 ├── .editorconfig       # 代码风格
 ├── .gitattributes      # 版本属性
 ├── .gitignore          # 版本忽略

@@ -1,13 +1,13 @@
 # 默认规则
 [default]
-# 忽略正则：放行 HTTP404、UTF8 这类形似拼写错误的编号
+# 忽略正则
 extend-ignore-re = ["[\"']?[A-Z]{2,5}[0-9]{3}[\"']?"]
 
 # 文件
 [files]
-# 额外排除
+# 额外排除路径
 extend-exclude = [
-  # 锁文件：递归匹配，覆盖子目录下的 lock（如 .venv/.lock）
+  # 锁文件
   "**/*.lock",
   # 自动导入声明
   "**/auto-imports.d.ts",

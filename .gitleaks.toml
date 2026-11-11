@@ -13,13 +13,3 @@ id = "pipe-to-shell"
 keywords = ["curl", "wget"]
 # 检测正则
 regex = '''(?i)\b(?:curl|wget)\b[^\n]*?\|\s*(?:sudo\s+(?:-\S+\s+)*)?(?:\S*/)?(?:sh|bash|zsh|ksh|dash)\b'''
-
-# 文档中的安装示例豁免
-# targetRules 限定仅作用于 pipe-to-shell，避免削弱文档中真实密钥的检测
-[[allowlists]]
-# 说明
-description = "文档中的安装示例"
-# 正则匹配文档路径
-paths = ['''(^|/)docs/.*\.md$''', '''README\.md$''']
-# 仅作用于管道执行规则
-targetRules = ["pipe-to-shell"]

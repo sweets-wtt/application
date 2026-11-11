@@ -17,16 +17,16 @@ inputs:
     description: 依赖安装方式（all | bun | none）
     # 默认值
     default: all
-  # 生成环境文件
+  # 环境文件
   env-file:
     # 说明
     description: 是否生成 infra/.env
     # 默认值
     default: "true"
-  # 安装容器运行时
+  # 容器运行时
   container-runtime:
     # 说明
-    description: 是否安装 podman
+    description: 是否安装 docker
     # 默认值
     default: "false"
 
@@ -36,7 +36,7 @@ runs:
   using: composite
   # 步骤
   steps:
-    # 检出仓库
+    # 检出动作
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       # 输入参数
       with:
@@ -44,7 +44,7 @@ runs:
         fetch-depth: ${{ inputs.fetch-depth }}
         # 持久化凭据
         persist-credentials: false
-    # 安装工具链
+    # 工具链动作
     - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
       # 输入参数
       with:
@@ -55,9 +55,10 @@ runs:
       run: task install
       # 执行环境
       shell: bash
-    # 安装容器运行时
+    # 容器运行时
     - if: inputs.container-runtime == 'true'
-      run: sudo apt-get update && sudo apt-get install -y podman podman-compose
+      # ubuntu-latest 预装 docker 与 compose 插件，仅需确认可用
+      run: docker version && docker compose version
       # 执行环境
       shell: bash
     # 安装前端依赖

@@ -17,10 +17,10 @@ output: prefixed
 vars:
   # uv 命令
   UV: uv run --locked
-  # 前端文件
+  # 前端文件匹配
   WEB_FILES: "'**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs,vue,html,css}'"
   # 编排命令
-  COMPOSE: podman compose -f infra/compose.yaml -p application
+  COMPOSE: docker compose -f infra/compose.yaml -p application
   # 契约制品
   SPEC: contracts/http/dist/openapi.yaml
   # Python 模型
@@ -122,11 +122,11 @@ tasks:
   check-python:
     desc: 检查 Python
     cmds:
-      # 格式
+      # 格式检查
       - "{{.UV}} ruff format --check ."
-      # 静态
+      # 静态检查
       - "{{.UV}} ruff check ."
-      # 类型
+      # 类型检查
       - "{{.UV}} ty check ."
 
   check-typescript:
@@ -134,22 +134,23 @@ tasks:
     deps:
       - build-types
     cmds:
-      # 格式
+      # 格式检查
       - bunx oxfmt --check --no-error-on-unmatched-pattern {{.WEB_FILES}}
-      # 静态（含类型感知与类型检查诊断，不再单独运行 tsc）
+      # 静态检查
       - bunx oxlint --no-error-on-unmatched-pattern
 
   build-types:
     desc: 生成组件类型声明
     internal: true
     silent: true
-    # 组件声明由 vite 插件产出，须在应用目录内运行
+    # 工作目录
     dir: apps/web
-    # 仅在源文件或构建配置变更时重新生成
+    # 源文件
     sources:
       - "src/**/*.{ts,tsx,vue}"
       - vite.config.ts
       - tsconfig.json
+    # 生成物
     generates:
       - components.d.ts
     cmds:
@@ -206,12 +207,12 @@ tasks:
   build-image-web:
     desc: 构建 Web 镜像
     cmds:
-      - podman build -f apps/web/Dockerfile -t {{.REGISTRY}}web:{{.TAG}} .
+      - docker build -f apps/web/Dockerfile -t {{.REGISTRY}}web:{{.TAG}} .
 
   build-image-server:
     desc: 构建 Server 镜像
     cmds:
-      - podman build -f apps/server/Dockerfile -t {{.REGISTRY}}server:{{.TAG}} .
+      - docker build -f apps/server/Dockerfile -t {{.REGISTRY}}server:{{.TAG}} .
 
   check-size:
     desc: 检查产物体积
@@ -243,19 +244,19 @@ tasks:
     dir: apps/web
     cmds:
       - task: build-web
-      # 运行测试
+      # 端到端测试
       - bunx playwright test
 
   # ── 契约 ──
 
   bundle-spec:
     desc: 打包契约
-    # 只执行一次
+    # 执行次数
     run: once
     cmds:
-      # 合并契约
+      # 打包契约
       - bunx redocly bundle contracts/http/openapi.yaml --output {{.SPEC}}
-      # 写入标记
+      # 写入生成标记
       - task: bundle-stamp
 
   bundle-stamp:

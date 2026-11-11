@@ -1,6 +1,6 @@
 # 规则
 rules:
-  # 自仓库引用
+  # 自仓库引用规则
   self-repository:
     # 忽略文件
     ignore:

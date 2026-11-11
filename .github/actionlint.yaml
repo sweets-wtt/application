@@ -8,11 +8,11 @@ config-variables: null
 
 # 路径规则
 paths:
-  # 工作流
+  # 工作流路径
   .github/workflows/**/*.yaml:
-    # 忽略
+    # 忽略规则
     ignore: []
-  # 复合动作
+  # 复合动作路径
   .github/actions/**/action.yaml:
-    # 忽略
+    # 忽略规则
     ignore: []

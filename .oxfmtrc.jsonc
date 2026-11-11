@@ -1,25 +1,28 @@
 {
-  "$schema": "./node_modules/oxfmt/configuration_schema.json", // Schema 地址
-  // 行宽：仅列出于默认值不同的项，其余沿用 oxfmt 默认
+  // Schema 地址
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  // 行宽
   "printWidth": 120,
-  // 空白敏感度：默认 css 会保留 HTML 空白，此处忽略以贴合 Vue 模板书写习惯
+  // HTML 空白敏感度
   "htmlWhitespaceSensitivity": "ignore",
-  // 属性分行：显式关闭，保持与默认同值但锁定意图，避免上游默认变更导致漂移
+  // 标签属性独占一行
   "singleAttributePerLine": false,
-  // 对象换行：默认 preserve 依赖作者换行，此处折叠为更紧凑的写法
+  // 对象换行策略
   "objectWrap": "collapse",
-  // 运算符位置：默认 end 将运算符留在上一行末尾，此处置于行首便于纵向阅读
+  // 运算符换行位置
   "experimentalOperatorPosition": "start",
-  // 忽略文件
+  // 忽略路径
   "ignorePatterns": ["**/auto-imports.d.ts", "**/components.d.ts", "**/node_modules/**", ".venv/**", "**/dist/**"],
   // 文件覆盖
   "overrides": [{
-    "files": ["**/generated/**"], // 契约生成物
-    "sortImports": false // 导入排序
+    // 匹配路径
+    "files": ["**/generated/**"],
+    // 导入排序
+    "sortImports": false
   }],
   // 导入排序
   "sortImports": {
-    // 分组：在默认分组基础上追加 type，使类型导入独立成组
+    // 分组顺序
     "groups": [
       "builtin",
       "external",
@@ -29,7 +32,7 @@
       "type",
       "unknown"
     ],
-    // 副作用导入排序：默认不参与排序，此处纳入以保持稳定
+    // 副作用导入参与排序
     "sortSideEffects": true
   }
 }

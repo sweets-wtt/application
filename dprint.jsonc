@@ -1,17 +1,13 @@
 {
   // Schema 地址
   "$schema": "https://dprint.dev/schemas/v0.json",
-  // 包含文件
+  // 包含路径
   "includes": ["**/*.{json,jsonc,md,yaml,toml}", "**/Dockerfile"],
-  // 排除文件
-  // 注意 `**/dist/**` 同时排除契约打包产物 contracts/http/dist/：
-  // 该目录虽在 .gitignore 中被反选入库，但由 redocly bundle 生成，不应再被格式化
+  // 排除路径
   "excludes": ["**/node_modules/**", ".venv/**", "**/dist/**"],
-  // 行宽：对 json/toml/dockerfile 插件与各自默认值一致（120）仅为显式声明；
-  // 对 markdown 插件则覆盖其默认的 80，是本项实际生效的关键
+  // 行宽
   "lineWidth": 120,
   // 插件
-  // 版本号需手工维护：dprint 插件不受依赖更新工具管理，升级时须显式改写版本
   "plugins": [
     "npm:@dprint/dockerfile@0.7.0",
     "https://plugins.dprint.dev/json-0.25.2.wasm",
@@ -26,9 +22,9 @@
   },
   // JSON 插件
   "json": {
-    // 数组单行
+    // 数组折叠单行
     "array.preferSingleLine": true,
-    // 对象单行
+    // 对象折叠单行
     "object.preferSingleLine": true,
     // 尾逗号
     "trailingCommas": "never"
@@ -37,21 +33,21 @@
   "markdown": {
     // 强调符号
     "emphasisKind": "asterisks",
-    // 列表符号
+    // 无序列表符号
     "list.unorderedMarker": "asterisks",
-    // 折行
+    // 文本折行
     "textWrap": "always"
   },
   // YAML 插件
   "yaml": {
-    // 注释空格
+    // 注释前导空格
     "formatComments": true
   },
   // TOML 插件
   "toml": {
-    // 数组单行
+    // 数组折叠单行
     "array.preferSingleLine": true,
-    // 内联表单行
+    // 内联表折叠单行
     "inlineTable.preferSingleLine": true,
     // 数组排序
     "sortArrays": true,

@@ -15,20 +15,19 @@ jsonSchemaDialect: "https://json-schema.org/draft/2020-12/schema"
 
 # 服务地址
 servers:
-  # 根路径 - 交由入口代理
+  # 根路径
   - url: /
 
 # 标签定义
-# operation 引用的 tag 必须在此声明，否则 operation-tag-defined 报错
 tags:
   # 健康检查
   - name: health
-    # 描述须与 operation 的 summary 不同，否则 description-duplication 报错
+    # 描述
     description: 服务健康检查相关接口
 
 # 路径定义
 paths:
   # 存活探针
   /healthz:
-    # 引用路径文件
+    # 路径文件引用
     $ref: "./paths/healthz.yaml"

@@ -7,55 +7,55 @@ no_tty: true
 
 # 命令模板
 templates:
-  # task 入口
+  # task 命令
   task: mise exec -- task
 
-# 合并后
+# 合并后钩子
 post-merge:
-  # 任务
+  # 作业列表
   jobs:
     # 安装依赖
     - name: install
-      # 命令
+      # 执行命令
       run: "{task} install"
       # 失败提示
       fail_text: "依赖同步失败: task install"
 
-# 提交前
+# 提交前钩子
 pre-commit:
-  # 任务
+  # 作业列表
   jobs:
     # 全量检查
     - name: check
-      # 命令
+      # 执行命令
       run: "{task} check"
       # 失败提示
       fail_text: "提交前检查失败: task check"
 
-# 提交信息
+# 提交信息钩子
 commit-msg:
-  # 任务
+  # 作业列表
   jobs:
     # 规范校验
     - name: cog
-      # 命令
+      # 执行命令
       run: "{task} check-commit -- --file {1}"
       # 失败提示
       fail_text: "提交信息不符合 Conventional Commits"
 
-# 推送前
+# 推送前钩子
 pre-push:
-  # 任务
+  # 作业列表
   jobs:
-    # 契约漂移
+    # 契约漂移检查
     - name: contract
-      # 命令
+      # 执行命令
       run: "{task} check-codegen"
       # 失败提示
       fail_text: "契约生成物存在漂移"
     # 测试
     - name: test
-      # 命令
+      # 执行命令
       run: "{task} test"
       # 失败提示
       fail_text: "测试失败: task test"

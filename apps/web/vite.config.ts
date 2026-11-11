@@ -12,13 +12,13 @@ export default defineConfig({
     vue(),
     UnoCSS(),
     AutoImport({
-      // 生成类型声明供 tsc 识别自动导入
+      // 类型声明路径
       dts: "./auto-imports.d.ts",
       imports: [
         "vue",
         "pinia",
         "@vueuse/core",
-        // 路由 preset 仅覆盖组合式 API，此处补全路由创建与工具函数
+        // 路由导入项
         {
           "vue-router": [
             "createRouter",
@@ -40,15 +40,13 @@ export default defineConfig({
             "START_LOCATION",
           ],
         },
-        // 自动导入类型，不注入运行时导入
+        // 仅类型导入
         { from: "vue-router", imports: ["RouteRecordRaw"], type: true },
       ],
       include: [/\.[jt]sx?$/, /\.vue$/, /\.vue\?vue/, /\.vue\.[jt]sx?\?vue/],
     }),
     Components({
-      // 生成类型声明：为自动导入的组件提供全局类型，供 tsc 与 Volar 识别
-      // 生成物为 unplugin-vue-components 固定输出，缺少 oxfmt-ignore 头，
-      // 故经由 oxlint / oxfmt / typos 的 ignorePatterns 统一排除
+      // 类型声明路径
       dts: "./components.d.ts",
       resolvers: [IconsResolver({ prefix: "icon" }), RekaResolver()],
     }),
@@ -61,10 +59,10 @@ export default defineConfig({
     environment: "jsdom",
     exclude: ["**/e2e/**", "**/node_modules/**"],
     include: ["tests/**/*.test.ts"],
-    // 使用 threads 池：forks 池在 Windows 下临时目录会 EPERM
+    // 工作池
     pool: "threads",
     setupFiles: ["./tests/setup.ts"],
-    // 单测试超时（毫秒）
+    // 测试超时
     testTimeout: 5000,
   },
 });

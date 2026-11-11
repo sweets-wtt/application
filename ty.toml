@@ -2,7 +2,7 @@
 [analysis]
 # 返回类型推断
 return-type-inference = "always"
-# 严格相等
+# 严格相等语义
 strict-equality-semantics = true
 # 严格泛型窄化
 strict-generic-narrowing = true
@@ -16,7 +16,7 @@ python-version = "3.12"
 
 # 源码
 [src]
-# 排除目录
+# 排除路径
 exclude = [
   # 字节码缓存
   "**/__pycache__",
@@ -34,8 +34,7 @@ error-on-warning = true
 output-format = "full"
 
 # 规则
-# all = "error" 已将全部规则提升为 error；
-# 此处仅列出于该基线不同的项，未列出者一律按 error 处理
+# 默认级别
 [rules]
 # 全部规则
 all = "error"
@@ -43,21 +42,21 @@ all = "error"
 conflicting-declarations = "ignore"
 # 装饰器返回动态类型
 dynamic-function-decorator-return = "warn"
-# 未知规则 ignore
+# 未知规则的禁用注释
 ignore-comment-unknown-rule = "ignore"
 # 无效声明
 invalid-declaration = "warn"
-# 语法错误 ignore
+# 无效的禁用注释
 invalid-ignore-comment = "ignore"
 # 旧式位置参数
 invalid-legacy-positional-parameter = "warn"
-# 可能缺属性
+# 可能缺失属性
 possibly-missing-attribute = "warn"
-# 可能缺导入
+# 可能缺失导入
 possibly-missing-import = "warn"
-# None 联合真值判断
+# None 联合类型真值判断
 truthiness-test-of-none-union = "warn"
-# 未绑定 global
+# 未绑定的 global
 unresolved-global = "ignore"
 # 未定义引用
 unresolved-reference = "warn"
@@ -65,19 +64,19 @@ unresolved-reference = "warn"
 unsound-assignment = "warn"
 # 不健全 yield
 unsound-yield = "warn"
-# 动态基类不支持
+# 动态基类
 unsupported-dynamic-base = "warn"
-# 失效 ignore - 与前端 oxlint 的 reportUnusedDisableDirectives 对齐
+# 未使用的禁用注释
 unused-ignore-comment = "warn"
-# 失效 type ignore - 同上
+# 未使用的 type ignore 注释
 unused-type-ignore-comment = "warn"
 
-# 测试放宽
+# 文件覆盖
 [[overrides]]
-# 仅测试目录
+# 匹配路径
 include = ["apps/server/tests/**"]
 
-# 测试规则
+# 覆盖规则
 [overrides.rules]
-# 测试中允许缺失属性（mock 与夹具常见）
+# 可能缺失属性
 possibly-missing-attribute = "ignore"

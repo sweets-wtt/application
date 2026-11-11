@@ -1,74 +1,122 @@
 {
-  "$schema": "./node_modules/oxlint/configuration_schema.json", // Schema 地址
+  // Schema 地址
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
   // 规则类别
   "categories": {
-    "correctness": "error", // 正确性
-    "nursery": "error", // 实验性
-    "pedantic": "error", // 严格
-    "perf": "error", // 性能
-    "restriction": "error", // 限制性
-    "style": "error", // 风格
-    "suspicious": "error" // 可疑代码
+    // 正确性
+    "correctness": "error",
+    // 实验性
+    "nursery": "error",
+    // 严格
+    "pedantic": "error",
+    // 性能
+    "perf": "error",
+    // 限制性
+    "restriction": "error",
+    // 风格
+    "style": "error",
+    // 可疑代码
+    "suspicious": "error"
   },
   // 运行选项
   "options": {
-    "reportUnusedDisableDirectives": "error", // 未用禁用注释
-    "typeAware": true, // 类型感知规则
-    "typeCheck": true // 类型检查诊断
+    // 未使用的禁用注释
+    "reportUnusedDisableDirectives": "error",
+    // 类型感知规则
+    "typeAware": true,
+    // 类型检查诊断
+    "typeCheck": true
   },
-  "plugins": ["eslint", "jsdoc", "typescript", "unicorn", "vue", "vitest", "import", "promise", "node", "oxc"], // 插件
-  "ignorePatterns": ["**/generated/**", "**/auto-imports.d.ts", "**/components.d.ts"], // 忽略文件
-  // 规则：仅列出与类别默认值不同的项
+  // 插件
+  "plugins": ["eslint", "jsdoc", "typescript", "unicorn", "vue", "vitest", "import", "promise", "node", "oxc"],
+  // 忽略路径
+  "ignorePatterns": ["**/generated/**", "**/auto-imports.d.ts", "**/components.d.ts"],
+  // 规则
   "rules": {
-    // ── eslint（9 条）
-    "eslint/id-length": ["error", { "max": 40, "min": 2 }], // 标识符长度范围
+    // ── eslint
+    // 标识符长度
+    "eslint/id-length": ["error", { "max": 40, "min": 2 }],
+    // 构造函数命名
     "eslint/new-cap": [
       "error",
       { "capIsNewExceptions": ["AutoImport", "Components", "Icons", "IconsResolver", "RekaResolver", "UnoCSS"] }
-    ], // 构造函数须大写（豁免 Vite 插件工厂）
-    "eslint/no-duplicate-imports": "off", // 禁止重复导入
-    "eslint/no-undef": "off", // 禁止未声明变量
-    "eslint/no-undefined": "off", // 禁止直接使用 undefined 标识符
-    "eslint/one-var": ["error", "never"], // 每个作用域只允许一条声明
-    "eslint/require-unicode-regexp": "off", // 正则须带 u 标志
-    "eslint/sort-imports": "off", // 导入语句须排序
-    "eslint/sort-keys": "off", // 对象键须排序
-    // ── unicorn（2 条）
-    "unicorn/filename-case": ["error", { "cases": { "camelCase": true, "kebabCase": true, "pascalCase": true } }], // 文件名命名规范
-    "unicorn/no-null": "off", // 禁止 null
-    // ── vitest（10 条）
-    "vitest/consistent-test-filename": "off", // 测试文件命名统一
-    "vitest/no-hooks": "off", // 禁止钩子
-    "vitest/no-importing-vitest-globals": "off", // 禁止导入 vitest 全局 API
-    "vitest/prefer-describe-function-title": "off", // describe 优先用函数名描述（与 valid-title 互斥）
-    "vitest/prefer-expect-assertions": ["error", { "onlyFunctionsWithAsyncKeyword": true }], // 要求声明断言数量
-    "vitest/prefer-importing-vitest-globals": "off", // 优先 vitest 全局 API
-    "vitest/prefer-to-be-truthy": "off", // 优先 toBeTruthy（与 prefer-strict-boolean-matchers 互斥）
-    "vitest/require-hook": "off", // 要求通过钩子组织测试（全局关闭，仅测试文件由 overrides 重新开启）
-    "vitest/require-test-timeout": "off", // 要求测试声明超时（已由 testTimeout 全局配置）
-    "vitest/require-top-level-describe": "off", // 测试须包在顶层 describe 中
-    // ── import（7 条）
-    "import/exports-last": "off", // 导出语句置于文件末尾
-    "import/first": "off", // 导入语句须置于文件顶部
-    "import/group-exports": "off", // 导出声明须合并
-    "import/no-default-export": "off", // 禁止默认导出
-    "import/no-named-export": "off", // 禁止具名导出
-    "import/no-unassigned-import": ["error", { "allow": ["**/*.css", "virtual:*"] }], // 禁止无赋值的副作用导入
-    "import/unambiguous": "off", // 文件须明确为模块
-    // ── oxc（4 条）
-    "oxc/no-async-await": "off", // 禁止 async/await
-    "oxc/no-barrel-file": ["error", { "threshold": 300 }], // 禁止桶文件
-    "oxc/no-optional-chaining": "off", // 禁止可选链
-    "oxc/no-rest-spread-properties": "off", // 禁止对象展开属性
-    // ── typescript（1 条）
-    "typescript/return-await": ["error", "error-handling-correctness-only"] // 仅当影响错误处理时要求 await（try/catch 内）
+    ],
+    // 重复导入
+    "eslint/no-duplicate-imports": "off",
+    // 未声明变量
+    "eslint/no-undef": "off",
+    // undefined 标识符
+    "eslint/no-undefined": "off",
+    // 每作用域一条声明
+    "eslint/one-var": ["error", "never"],
+    // 正则 u 标志
+    "eslint/require-unicode-regexp": "off",
+    // 导入语句排序
+    "eslint/sort-imports": "off",
+    // 对象键排序
+    "eslint/sort-keys": "off",
+    // ── unicorn
+    // 文件名命名
+    "unicorn/filename-case": ["error", { "cases": { "camelCase": true, "kebabCase": true, "pascalCase": true } }],
+    // null 字面量
+    "unicorn/no-null": "off",
+    // ── vitest
+    // 测试文件命名
+    "vitest/consistent-test-filename": "off",
+    // 测试钩子
+    "vitest/no-hooks": "off",
+    // 导入 vitest 全局 API
+    "vitest/no-importing-vitest-globals": "off",
+    // describe 标题
+    "vitest/prefer-describe-function-title": "off",
+    // 断言数量声明
+    "vitest/prefer-expect-assertions": ["error", { "onlyFunctionsWithAsyncKeyword": true }],
+    // 使用 vitest 全局 API
+    "vitest/prefer-importing-vitest-globals": "off",
+    // 真值断言匹配器
+    "vitest/prefer-to-be-truthy": "off",
+    // 钩子组织测试
+    "vitest/require-hook": "off",
+    // 测试超时声明
+    "vitest/require-test-timeout": "off",
+    // 顶层 describe
+    "vitest/require-top-level-describe": "off",
+    // ── import
+    // 导出位置
+    "import/exports-last": "off",
+    // 导入位置
+    "import/first": "off",
+    // 导出合并
+    "import/group-exports": "off",
+    // 默认导出
+    "import/no-default-export": "off",
+    // 具名导出
+    "import/no-named-export": "off",
+    // 无赋值副作用导入
+    "import/no-unassigned-import": ["error", { "allow": ["**/*.css", "virtual:*"] }],
+    // 模块标记
+    "import/unambiguous": "off",
+    // ── oxc
+    // async/await
+    "oxc/no-async-await": "off",
+    // 桶文件
+    "oxc/no-barrel-file": ["error", { "threshold": 300 }],
+    // 可选链
+    "oxc/no-optional-chaining": "off",
+    // 对象展开属性
+    "oxc/no-rest-spread-properties": "off",
+    // ── typescript
+    // return await 模式
+    "typescript/return-await": ["error", "error-handling-correctness-only"]
   },
-  // 按文件模式覆盖
+  // 文件覆盖
   "overrides": [{
-    "files": ["**/*.{test,spec}.ts", "**/tests/**"], // 测试文件
+    // 匹配路径
+    "files": ["**/*.{test,spec}.ts", "**/tests/**"],
     // 规则
     "rules": {
-      "vitest/require-hook": "error" // 要求通过钩子组织测试
+      // 钩子组织测试
+      "vitest/require-hook": "error"
     }
   }]
 }

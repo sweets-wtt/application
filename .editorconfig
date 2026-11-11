@@ -7,28 +7,28 @@ root = true
 charset = utf-8
 # 换行符
 end_of_line = lf
-# 缩进风格
+# 缩进字符
 indent_style = space
 # 缩进宽度
 indent_size = 2
 # 末尾换行
 insert_final_newline = true
-# 行尾空白
+# 去除行尾空白
 trim_trailing_whitespace = true
 
-# Markdown
+# Markdown 规则
 [*.md]
-# 行尾空白
+# 去除行尾空白
 trim_trailing_whitespace = false
 
-# Makefile
+# Makefile 规则
 [Makefile]
-# 缩进风格
+# 缩进字符
 indent_style = tab
 # 缩进宽度
 indent_size = tab
 
-# Python
+# Python 规则
 [*.py]
 # 缩进宽度
 indent_size = 4

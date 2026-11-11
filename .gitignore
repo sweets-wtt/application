@@ -29,6 +29,8 @@ node_modules/
 
 # 字节码
 __pycache__/
+# 编译产物
+*.py[cod]
 # Hypothesis 缓存
 .hypothesis
 # Mypy 缓存
@@ -44,6 +46,10 @@ __pycache__/
 
 # 覆盖率
 .coverage
+# 覆盖率派生产物
+.coverage.*
+# 覆盖率报告目录
+htmlcov/
 # Blob 报告
 blob-report/
 # Playwright 报告

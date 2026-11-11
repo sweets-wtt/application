@@ -1,14 +1,17 @@
-# 标准响应信封
+# 响应信封
 type: object
 required:
   - code
   - message
   - data
 properties:
+  # 业务状态码
   code:
     type: integer
+  # 提示信息
   message:
     type: string
+  # 业务数据
   data:
     type: object
 additionalProperties: false

@@ -1,5 +1,5 @@
-# 文本属性
+# 文本规范化
 * text=auto eol=lf
 
-# 生成物
+# 生成物标记
 **/generated/** linguist-generated=true

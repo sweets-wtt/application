@@ -8,14 +8,14 @@ on:
 
 # 权限
 permissions:
-  # 内容
+  # 内容权限
   contents: read
 
 # 并发控制
 concurrency:
   # 分组
   group: release
-  # 取消进行中
+  # 取消进行中的运行
   cancel-in-progress: false
 
 # 任务
@@ -28,9 +28,9 @@ jobs:
     runs-on: ubuntu-latest
     # 权限
     permissions:
-      # 内容写入
+      # 内容写入权限
       contents: write
-      # 包写入
+      # 包写入权限
       packages: write
     # 输出
     outputs:
@@ -38,7 +38,7 @@ jobs:
       tag: ${{ steps.tag.outputs.tag }}
     # 步骤
     steps:
-      # 检出仓库
+      # 检出动作
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         # 输入参数
         with:
@@ -46,16 +46,16 @@ jobs:
           fetch-depth: 0
           # 持久化凭据
           persist-credentials: false
-      # 安装工具链
+      # 工具链动作
       - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
         # 输入参数
         with:
           # 工具版本
           version: "2026.8.14"
-          # 启用缓存
+          # 缓存
           cache: false
-      # 安装容器运行时
-      - run: sudo apt-get update && sudo apt-get install -y podman podman-compose
+      # 容器运行时
+      - run: docker version && docker compose version
       # 配置提交者名称
       - run: git config user.name 'github-actions[bot]'
       # 配置提交者邮箱
@@ -78,7 +78,7 @@ jobs:
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # 用户
           GHCR_USER: ${{ github.actor }}
-        run: echo "$GHCR_TOKEN" | podman login ghcr.io -u "$GHCR_USER" --password-stdin
+        run: echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
       # 构建并推送镜像
       - env:
           # 镜像仓库
@@ -87,5 +87,5 @@ jobs:
           TAG: ${{ steps.tag.outputs.tag }}
         run: |
           task build-image
-          podman push "${REGISTRY}server:${TAG}"
-          podman push "${REGISTRY}web:${TAG}"
+          docker push "${REGISTRY}server:${TAG}"
+          docker push "${REGISTRY}web:${TAG}"

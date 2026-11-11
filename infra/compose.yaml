@@ -1,37 +1,37 @@
-# 项目名，用于容器与网络前缀
+# 项目名
 name: application
 
 # 自定义网络
 networks:
-  # 入口网（Caddy 与 Web）
+  # 入口网络
   edge:
-  # 内部网（api 等内部服务）
+  # 内部网络
   internal:
 
 # 具名卷
 volumes:
-  # Caddy 证书与数据
+  # Caddy 数据卷
   caddy-data:
 
-# 服务公共字段（YAML 锚点，供各服务合并）
-x-service: &service # 重启策略：非手动停止时总是重启
+# 服务公共字段
+x-service: &service # 重启策略
   restart: unless-stopped
   # 日志配置
   logging:
-    # 日志驱动：写入宿主机 systemd journal
+    # 日志驱动
     driver: journald
 
-# 健康检查公共参数（YAML 锚点）
+# 健康检查公共参数
 x-healthcheck: &healthcheck # 检查间隔
   interval: "10s"
-  # 单次检查超时
+  # 检查超时
   timeout: "5s"
-  # 连续失败重试次数
+  # 重试次数
   retries: 5
-  # 启动后的宽限期
+  # 启动宽限期
   start_period: "30s"
 
-# 内部网络引用（YAML 锚点）
+# 内部网络引用
 x-internal: &internal
   - "internal"
 
@@ -39,13 +39,13 @@ x-internal: &internal
 services:
   # 入口代理
   caddy:
-    # 合并公共服务字段
+    # 公共字段
     <<: *service
-    # 镜像，固定到 digest 以保证不可变
+    # 镜像
     image: "caddy:2.11.7@sha256:36c24ad91a7ff7bc4c87fe22bfa8df3c4b18da0773d73fc12ee2c52b98c0bb7e"
     # 环境变量
     environment:
-      # 站点域名，未设置时报错退出
+      # 站点域名
       AUTH_DOMAIN: "${AUTH_DOMAIN:?}"
       # ACME 证书邮箱
       ACME_EMAIL: "${ACME_EMAIL:?}"
@@ -55,77 +55,77 @@ services:
       - "80:80"
       # HTTPS
       - "443:443"
-      # HTTP/3（基于 UDP）
+      # HTTP/3
       - "443:443/udp"
     # 挂载卷
     volumes:
-      # 代理配置，只读挂载
+      # 代理配置
       - "./Caddyfile:/etc/caddy/Caddyfile:ro"
-      # 证书与数据持久化
+      # 数据卷
       - "caddy-data:/data"
     # 健康检查
     healthcheck:
-      # 合并公共健康检查参数
+      # 公共参数
       <<: *healthcheck
-      # 管理接口已关闭，改为校验二进制可用
+      # 检查命令
       test: ["CMD", "caddy", "version"]
-    # 加入的网络
+    # 网络
     networks:
       - "edge"
 
   # 后端服务
   api:
-    # 合并公共服务字段
+    # 公共字段
     <<: *service
-    # 镜像，可由环境变量覆盖
+    # 镜像
     image: "${SERVER_IMAGE:-server:latest}"
     # 健康检查
     healthcheck:
-      # 合并公共健康检查参数
+      # 公共参数
       <<: *healthcheck
-      # 请求存活探针接口
+      # 检查命令
       test: [
         "CMD-SHELL",
         "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz')\"",
       ]
-    # 仅加入内部网，不对外暴露端口
+    # 网络
     networks: *internal
 
   # 前端服务
   web:
-    # 合并公共服务字段
+    # 公共字段
     <<: *service
-    # 镜像，可由环境变量覆盖
+    # 镜像
     image: "${WEB_IMAGE:-web:latest}"
     # 构建配置
     build:
-      # 构建上下文为仓库根
+      # 构建上下文
       context: ".."
-      # 构建文件路径
+      # 构建文件
       dockerfile: "apps/web/Dockerfile"
       # 构建参数
       args:
-        # API 基地址，构建时注入
+        # API 基地址
         VITE_API_BASE_URL: "${VITE_API_BASE_URL:-}"
-        # 心跳轮询间隔，构建时注入
+        # 心跳间隔
         VITE_HEARTBEAT_INTERVAL: "${VITE_HEARTBEAT_INTERVAL:-}"
     # 健康检查
     healthcheck:
-      # 合并公共健康检查参数
+      # 公共参数
       <<: *healthcheck
-      # 请求首页并确认页面内容
+      # 检查命令
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/ | grep -q app"]
-      # 启动后的宽限期
+      # 启动宽限期
       start_period: "10s"
-    # 加入的网络
+    # 网络
     networks:
-      # 供 Caddy 访问
+      # 入口网络
       - "edge"
-      # 供反代 api 使用
+      # 内部网络
       - "internal"
     # 依赖服务
     depends_on:
-      # 依赖后端服务
+      # 后端服务
       api:
-        # 等待其健康后再启动
+        # 就绪条件
         condition: "service_healthy"

@@ -7,14 +7,14 @@ FROM python:3.12-slim AS builder
   # 工作目录
   WORKDIR /app
 
-  # 工作区配置与锁文件 - 锁文件位于工作区根, 覆盖全部成员
+  # 工作区配置与锁文件
   COPY pyproject.toml uv.lock ./
   # Server 项目配置
   COPY apps/server/pyproject.toml ./apps/server/
   # Server 源码
   COPY apps/server/src/ ./apps/server/src/
 
-  # 安装依赖 - 仅目标成员且不含开发依赖
+  # 安装依赖
   RUN uv sync --frozen --no-editable --no-dev --package server
 
 # 运行层
@@ -29,17 +29,16 @@ FROM python:3.12-slim
   # 工作目录
   WORKDIR /app
 
-  # 运行用户
+  # 运行用户与组
   RUN groupadd --system --gid 1000 app && useradd --system --uid 1000 --gid app app
 
-  # 用户
+  # 运行用户
   USER app
 
   # 端口
   EXPOSE 8000
 
-  # 工作进程数 - 默认 2 兼顾单进程阻塞隔离
-  # 可通过同名环境变量覆盖
+  # 工作进程数
   ENV GRANIAN_WORKERS=2
 
   # 启动命令

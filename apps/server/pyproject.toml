@@ -31,14 +31,14 @@ dependencies = [
 description = "Server 应用"
 # 项目名
 name = "server"
-# 支持的 Python 版本
+# Python 版本
 requires-python = ">=3.12"
 # 版本
 version = "0.1.0"
 
 # 覆盖率报告
 [tool.coverage.report]
-# 排除不可覆盖分支
+# 排除行
 exclude_lines = [
   # 抽象方法
   "@(abc\\.)?abstractmethod",
@@ -46,33 +46,33 @@ exclude_lines = [
   "if TYPE_CHECKING:",
   # 脚本入口
   "if __name__ == .__main__.:",
-  # 显式排除标记
+  # 排除标记
   "pragma: no cover",
-  # 抽象占位实现
+  # 未实现占位
   "raise NotImplementedError",
 ]
 
-# coverage
+# 覆盖率采集
 [tool.coverage.run]
 # 分支覆盖率
 branch = true
-# 排除契约生成物
+# 排除路径
 omit = ["*/generated/*"]
 # 统计范围
 source = ["server"]
 
 # pytest
 [tool.pytest.ini_options]
-# pytest 选项
+# 选项
 addopts = "--strict-markers --strict-config --cov --cov-branch --cov-report=term-missing --import-mode=importlib"
-# 异步 fixture 默认作用域
+# 异步 fixture 作用域
 asyncio_default_fixture_loop_scope = "function"
-# 异步测试自动处理模式
+# 异步模式
 asyncio_mode = "auto"
 # 测试目录
 testpaths = ["tests"]
 
-# uv 构建后端选项
+# uv 构建后端
 [tool.uv.build-backend]
 # 模块名
 module-name = "server"

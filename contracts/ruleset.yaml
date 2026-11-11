@@ -2,87 +2,85 @@
 extends: [[vacuum:oas, recommended]]
 
 # 规则
-# 仅列出与 vacuum recommended 默认严重级别不同的规则；
-# 与默认一致的规则由 extends 继承，无需重复声明（重复声明不改变行为，只会制造噪音）
 rules:
-  # ── 文档结构与元信息 ──
+  # ── 文档结构与元信息
 
-  # OpenAPI 2 须声明非空 host（默认 info，收紧为 error）
+  # OpenAPI 2 非空 host
   oas2-api-host: error
-  # OpenAPI 2 须声明非空 schemes（默认 warn，收紧为 error）
+  # OpenAPI 2 非空 schemes
   oas2-api-schemes: error
-  # host 不得指向 example.com（默认 warn，收紧为 error）
+  # host 不得指向 example.com
   oas2-host-not-example: error
-  # host 不得以斜杠结尾（默认 warn，收紧为 error）
+  # host 不得以斜杠结尾
   oas2-host-trailing-slash: error
-  # servers 定义须合法（默认 warn，收紧为 error）
+  # servers 定义合法性
   oas3-api-servers: error
 
-  # ── Schema 与类型 ──
+  # ── Schema 与类型
 
-  # schema 属性名须使用 camelCase（默认 warn，收紧为 error）
+  # 属性名 camelCase
   camel-case-properties: error
-  # 描述不得重复（默认 info，收紧为 error）
+  # 描述重复
   description-duplication: error
-  # 单元素组合器应直接内联（默认 warn，收紧为 error）
+  # 单元素组合器内联
   no-unnecessary-combinator: error
-  # 可空枚举须显式包含 null（默认 warn，收紧为 error）
+  # 可空枚举显式包含 null
   nullable-enum-contains-null: error
-  # schema 及其属性须声明 type（默认 info，收紧为 error）
+  # schema 与属性声明 type
   oas-missing-type: error
-  # 枚举值须符合声明类型（默认 warn，收紧为 error）
+  # 枚举值符合声明类型
   typed-enum: error
 
-  # ── 路径与操作 ──
+  # ── 路径与操作
 
-  # 路径段不得包含 HTTP 动词（默认 warn，收紧为 error）
+  # 路径段不含 HTTP 动词
   no-http-verbs-in-path: error
-  # 操作须包含描述（默认 warn，收紧为 error）
+  # 操作包含描述
   operation-description: error
-  # 操作须至少包含一个 2xx 或 3xx 响应（默认 warn，收紧为 error）
+  # 操作含 2xx 或 3xx 响应
   operation-success-response: error
-  # 操作 tag 须在全局 tags 中定义（默认 warn，收紧为 error）
+  # 操作 tag 须在全局 tags 中定义
   operation-tag-defined: error
-  # path item 内的操作不得使用 $ref（默认 warn，收紧为 error）
+  # path item 内操作不使用 $ref
   path-item-refs: error
-  # 路径不得以斜杠结尾（默认 warn，收紧为 error）
+  # 路径不以斜杠结尾
   path-keys-no-trailing-slash: error
-  # 路径段须使用 kebab-case（默认 warn，收紧为 error）
+  # 路径段使用 kebab-case
   paths-kebab-case: error
 
-  # ── 示例与安全 ──
+  # ── 示例与安全
 
-  # GET 与 DELETE 不应接受请求体（默认 warn，收紧为 error）
+  # GET 与 DELETE 不接受请求体
   no-request-body: error
-  # formData 参数须在 consumes 中声明对应类型（默认 warn，收紧为 error）
+  # formData 参数在 consumes 中声明
   oas2-operation-formData-consume-check: error
-  # 示例的 value 与 externalValue 互斥（默认 warn，收紧为 error）
+  # 示例 value 与 externalValue 互斥
   oas3-example-external-check: error
-  # 参数须包含描述（默认 warn，收紧为 error）
+  # 参数包含描述
   oas3-parameter-description: error
-  # 示例须符合对应 schema（默认 warn，收紧为 error）
+  # 示例符合 schema
   oas3-valid-schema-example: error
 
-  # ── 引用与清理 ──
+  # ── 引用与清理
 
-  # x-zally-ignore 应迁移为 x-lint-ignore（默认 warn，收紧为 error）
+  # x-zally-ignore 迁移为 x-lint-ignore
   migrate-zally-ignore: error
-  # 参数须包含描述（默认 warn，收紧为 error）
+  # 参数包含描述
   oas2-parameter-description: error
-  # 禁止未使用的定义与失效引用（默认 warn，收紧为 error）
+  # 未使用的定义与失效引用
   oas2-unused-definition: error
-  # 禁止未使用的组件与失效引用（默认 warn，收紧为 error）
+  # 未使用的组件与失效引用
   oas3-unused-component: error
 
-  # ── 项目自定义规则 ──
+  # ── 项目自定义规则
 
-  # 敏感字段禁止提供示例与默认值
+  # 敏感字段的示例与默认值
   no-sensitive-examples:
-    # 规则描述
+    # 描述
     description: 敏感字段禁止示例与默认值
-    # 违规级别
+    # 级别
     severity: error
-    # 作用目标：敏感字段（覆盖常见命名变体）
+    # 作用目标
     given:
       - "$..password"
       - "$..passwd"
@@ -96,7 +94,7 @@ rules:
       - "$..authorization"
       - "$..credential"
       - "$..credentials"
-    # 断言：示例与默认值均不得出现
+    # 断言
     then:
       - field: example
         function: falsy
