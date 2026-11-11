@@ -3,3 +3,6 @@
 
 # 生成物标记
 **/generated/** linguist-generated=true
+# 自动导入与组件类型声明
+**/auto-imports.d.ts linguist-generated=true
+**/components.d.ts linguist-generated=true

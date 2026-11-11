@@ -1,22 +1,35 @@
-# 版本控制目录
-.git/
+# ── 版本控制与仓库元数据 ──
 
-# 环境变量文件
+# Git 目录
+.git/
+# GitHub 工作流与动作
+.github/
+# 本地工具配置
+**/.reasonix/
+
+# ── 环境变量 ──
+
+# 实际配置
 **/.env
-# 环境变量派生文件
+# 派生配置
 **/.env.*
 
-# 依赖目录
+# ── 依赖 ──
+
+# npm 与 bun 依赖
 **/node_modules/
-# 虚拟环境
+# Python 虚拟环境
 **/.venv/
 
-# 日志文件
+# ── 日志 ──
+
 **/*.log
 # 轮转日志
 **/*.log.*
 
-# 字节码
+# ── Python ──
+
+# 字节码目录
 **/__pycache__/
 # 编译产物
 **/*.py[cod]
@@ -26,32 +39,34 @@
 **/.ruff_cache
 # Hypothesis 缓存
 **/.hypothesis
-# 增量构建缓存
-**/*.tsbuildinfo
 # Pytest 临时目录
 **/pytest-of-*/
-
-# 覆盖率
-**/.coverage
-# 覆盖率派生产物
-**/.coverage.*
-# 覆盖率报告目录
-**/htmlcov/
-
-# 构建产物
-**/dist/
 # 构建元数据
 **/*.egg-info/
-# 任务增量缓存
+
+# ── 覆盖率 ──
+
+# 数据文件
+**/.coverage
+# 派生数据文件
+**/.coverage.*
+# HTML 报告
+**/htmlcov/
+
+# ── TypeScript ──
+
+# 增量构建缓存
+**/*.tsbuildinfo
+
+# ── 构建产物 ──
+
+# 各应用构建输出
+**/dist/
+# task 增量缓存
 **/.task/
 
-# 本地工具配置
-**/.reasonix/
-# 部署密钥
-infra/secrets/
+# ── 构建无关的仓库内容 ──
 
-# 仓库元数据
-.github/
 # 测试目录
 apps/*/tests/
 # 服务编排

@@ -14,8 +14,14 @@ FROM oven/bun:1 AS builder
 
   # 工作区配置
   COPY package.json bun.lock ./
-  # Web 应用
-  COPY apps/web/ apps/web/
+  # Web 应用配置
+  COPY apps/web/package.json apps/web/
+  # Web 源码
+  COPY apps/web/src/ apps/web/src/
+  # 构建配置
+  COPY apps/web/index.html apps/web/vite.config.ts apps/web/tsconfig.json apps/web/uno.config.ts apps/web/
+  # 类型声明
+  COPY apps/web/auto-imports.d.ts apps/web/components.d.ts apps/web/
 
   # 安装依赖
   RUN bun install --frozen-lockfile

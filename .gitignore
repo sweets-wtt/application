@@ -1,33 +1,41 @@
-# 系统文件
-.DS_Store
-# 缩略图缓存
-Thumbs.db
+# ── 编辑器与操作系统 ──
 
-# IDE 配置
+# macOS 目录属性
+.DS_Store
+# Windows 缩略图缓存
+Thumbs.db
+# JetBrains IDE
 .idea/
-# 编辑器配置
+# VS Code
 .vscode/
 
-# 环境变量
+# ── 环境变量 ──
+
+# 实际配置
 .env
-# 环境变量派生
+# 派生配置
 .env.*
-# 环境变量示例
+# 示例配置不入忽略
 !.env.example
-# 环境变量派生示例
+# 派生示例配置不入忽略
 !.env.*.example
 
-# 依赖目录
+# ── 依赖 ──
+
+# npm 与 bun 依赖
 node_modules/
-# 虚拟环境
+# Python 虚拟环境
 .venv/
 
-# 日志
+# ── 日志 ──
+
 *.log
 # 轮转日志
 *.log.*
 
-# 字节码
+# ── Python ──
+
+# 字节码目录
 __pycache__/
 # 编译产物
 *.py[cod]
@@ -41,34 +49,46 @@ __pycache__/
 .pytest_cache/
 # Ruff 缓存
 .ruff_cache
+# Pytest 临时目录
+pytest-of-*/
+# 构建元数据
+*.egg-info/
+
+# ── 覆盖率 ──
+
+# 数据文件
+.coverage
+# 派生数据文件
+.coverage.*
+# HTML 报告
+htmlcov/
+
+# ── TypeScript ──
+
 # 增量构建缓存
 *.tsbuildinfo
 
-# 覆盖率
-.coverage
-# 覆盖率派生产物
-.coverage.*
-# 覆盖率报告目录
-htmlcov/
-# Blob 报告
-blob-report/
+# ── 测试产物 ──
+
+# Vitest 结果
+test-results/
 # Playwright 报告
 playwright-report/
-# Pytest 临时目录
-pytest-of-*/
-# 测试结果
-test-results/
+# Playwright 二进制报告
+blob-report/
 
-# 构建产物
+# ── 构建产物 ──
+
+# 各应用构建输出
 dist/
-# 契约制品入库
+# 契约制品需入库
 !contracts/*/dist/
-# 构建元数据
-*.egg-info/
-# 任务增量缓存
+# task 增量缓存
 .task/
 
-# 本地编排
+# ── 本地环境 ──
+
+# compose 本地覆盖
 infra/compose.override.yaml
 # 部署密钥
 infra/secrets/*
