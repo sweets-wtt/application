@@ -1,32 +1,17 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json", // Schema 地址
-  "printWidth": 120, // 行宽
-  "tabWidth": 2, // 缩进宽度
-  "useTabs": false, // 制表符缩进
-  "endOfLine": "lf", // 换行符
-  "insertFinalNewline": true, // 末尾换行
-  "semi": true, // 分号
-  "singleQuote": false, // 单引号
-  "jsxSingleQuote": false, // JSX 单引号
-  "quoteProps": "as-needed", // 属性引号
-  "trailingComma": "all", // 尾逗号
-  "bracketSpacing": true, // 括号空格
-  "arrowParens": "always", // 箭头括号
-  "bracketSameLine": false, // 标签闭合
-  "htmlWhitespaceSensitivity": "ignore", // 空白敏感度
-  "vueIndentScriptAndStyle": false, // Vue 块缩进
-  "embeddedLanguageFormatting": "auto", // 内嵌格式化
-  "proseWrap": "preserve", // 折行方式
-  "jsdoc": false, // JSDoc 格式化
-  "sortPackageJson": false, // package.json 排序
-  "astro": false, // Astro 支持
-  "svelte": false, // Svelte 支持
-  "sortTailwindcss": false, // Tailwind 排序
-  "associations": [], // 语言关联
-  "objectWrap": "collapse", // 对象换行
-  "singleAttributePerLine": true, // 属性分行
-  "experimentalOperatorPosition": "start", // 运算符位置
-  "ignorePatterns": ["**/auto-imports.d.ts", "**/node_modules/**", ".venv/**", "**/dist/**"], // 忽略文件
+  // 行宽：仅列出于默认值不同的项，其余沿用 oxfmt 默认
+  "printWidth": 120,
+  // 空白敏感度：默认 css 会保留 HTML 空白，此处忽略以贴合 Vue 模板书写习惯
+  "htmlWhitespaceSensitivity": "ignore",
+  // 属性分行：显式关闭，保持与默认同值但锁定意图，避免上游默认变更导致漂移
+  "singleAttributePerLine": false,
+  // 对象换行：默认 preserve 依赖作者换行，此处折叠为更紧凑的写法
+  "objectWrap": "collapse",
+  // 运算符位置：默认 end 将运算符留在上一行末尾，此处置于行首便于纵向阅读
+  "experimentalOperatorPosition": "start",
+  // 忽略文件
+  "ignorePatterns": ["**/auto-imports.d.ts", "**/components.d.ts", "**/node_modules/**", ".venv/**", "**/dist/**"],
   // 文件覆盖
   "overrides": [{
     "files": ["**/generated/**"], // 契约生成物
@@ -34,7 +19,7 @@
   }],
   // 导入排序
   "sortImports": {
-    // 分组
+    // 分组：在默认分组基础上追加 type，使类型导入独立成组
     "groups": [
       "builtin",
       "external",
@@ -44,13 +29,7 @@
       "type",
       "unknown"
     ],
-    "order": "asc", // 排序方向
-    "ignoreCase": true, // 忽略大小写
-    "newlinesBetween": true, // 分组空行
-    "internalPattern": ["@/", "~/", "#"], // 内部前缀
-    "sortSideEffects": true, // 副作用导入排序
-    "partitionByComment": false, // 按注释分区
-    "partitionByNewline": false, // 按空行分区
-    "customGroups": [] // 自定义分组
+    // 副作用导入排序：默认不参与排序，此处纳入以保持稳定
+    "sortSideEffects": true
   }
 }

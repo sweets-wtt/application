@@ -131,13 +131,29 @@ tasks:
 
   check-typescript:
     desc: 检查 TypeScript
+    deps:
+      - build-types
     cmds:
       # 格式
       - bunx oxfmt --check --no-error-on-unmatched-pattern {{.WEB_FILES}}
-      # 静态
+      # 静态（含类型感知与类型检查诊断，不再单独运行 tsc）
       - bunx oxlint --no-error-on-unmatched-pattern
-      # 类型
-      - bunx tsc -p apps/web/tsconfig.json --noEmit
+
+  build-types:
+    desc: 生成组件类型声明
+    internal: true
+    silent: true
+    # 组件声明由 vite 插件产出，须在应用目录内运行
+    dir: apps/web
+    # 仅在源文件或构建配置变更时重新生成
+    sources:
+      - "src/**/*.{ts,tsx,vue}"
+      - vite.config.ts
+      - tsconfig.json
+    generates:
+      - components.d.ts
+    cmds:
+      - bun run build
 
   # ── 格式化 ──
 

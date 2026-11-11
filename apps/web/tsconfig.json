@@ -65,5 +65,5 @@
     "skipLibCheck": true
   },
   // 参与编译的文件范围
-  "include": ["src", "tests", "auto-imports.d.ts"]
+  "include": ["src", "tests", "auto-imports.d.ts", "components.d.ts"]
 }

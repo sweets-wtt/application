@@ -34,60 +34,50 @@ error-on-warning = true
 output-format = "full"
 
 # 规则
+# all = "error" 已将全部规则提升为 error；
+# 此处仅列出于该基线不同的项，未列出者一律按 error 处理
 [rules]
 # 全部规则
 all = "error"
-# Protocol 歧义
-ambiguous-protocol-member = "warn"
-# 笼统 ignore
-blanket-ignore-comment = "ignore"
 # 冲突声明
 conflicting-declarations = "ignore"
-# 已弃用
-deprecated = "warn"
 # 装饰器返回动态类型
 dynamic-function-decorator-return = "warn"
-# 实验性语法
-experimental-syntax = "warn"
 # 未知规则 ignore
 ignore-comment-unknown-rule = "ignore"
 # 无效声明
-invalid-declaration = "ignore"
+invalid-declaration = "warn"
 # 语法错误 ignore
 invalid-ignore-comment = "ignore"
 # 旧式位置参数
 invalid-legacy-positional-parameter = "warn"
-# 未声明依赖
-missing-direct-dependency = "ignore"
 # 可能缺属性
 possibly-missing-attribute = "warn"
-# 可能缺隐式调用
-possibly-missing-implicit-call = "warn"
 # 可能缺导入
 possibly-missing-import = "warn"
-# 可能缺子模块
-possibly-missing-submodule = "warn"
-# 可能未定义引用
-possibly-unresolved-reference = "ignore"
-# 可调用真值判断
-truthiness-test-of-callable = "warn"
-# 可迭代真值判断
-truthiness-test-of-iterable = "warn"
 # None 联合真值判断
 truthiness-test-of-none-union = "warn"
 # 未绑定 global
 unresolved-global = "ignore"
 # 未定义引用
-unresolved-reference = "ignore"
+unresolved-reference = "warn"
 # 不健全赋值
 unsound-assignment = "warn"
 # 不健全 yield
 unsound-yield = "warn"
-# 不支持的基类
-unsupported-base = "warn"
 # 动态基类不支持
 unsupported-dynamic-base = "warn"
-# 失效 ignore
-unused-ignore-comment = "ignore"
-# 失效 type ignore
-unused-type-ignore-comment = "ignore"
+# 失效 ignore - 与前端 oxlint 的 reportUnusedDisableDirectives 对齐
+unused-ignore-comment = "warn"
+# 失效 type ignore - 同上
+unused-type-ignore-comment = "warn"
+
+# 测试放宽
+[[overrides]]
+# 仅测试目录
+include = ["apps/server/tests/**"]
+
+# 测试规则
+[overrides.rules]
+# 测试中允许缺失属性（mock 与夹具常见）
+possibly-missing-attribute = "ignore"

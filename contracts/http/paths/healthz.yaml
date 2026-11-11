@@ -2,6 +2,9 @@ get:
   operationId: getHealthz
   summary: 存活探针
   description: 返回服务存活状态
+  # 归属标签：须在入口 openapi.yaml 的 tags 中声明
+  tags:
+    - health
   responses:
     "200":
       $ref: "../components/responses/Healthz200.yaml"

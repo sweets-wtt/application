@@ -46,8 +46,10 @@ export default defineConfig({
       include: [/\.[jt]sx?$/, /\.vue$/, /\.vue\?vue/, /\.vue\.[jt]sx?\?vue/],
     }),
     Components({
-      // 生成物会与格式化规则冲突，故关闭
-      dts: false,
+      // 生成类型声明：为自动导入的组件提供全局类型，供 tsc 与 Volar 识别
+      // 生成物为 unplugin-vue-components 固定输出，缺少 oxfmt-ignore 头，
+      // 故经由 oxlint / oxfmt / typos 的 ignorePatterns 统一排除
+      dts: "./components.d.ts",
       resolvers: [IconsResolver({ prefix: "icon" }), RekaResolver()],
     }),
     Icons({ autoInstall: false }),

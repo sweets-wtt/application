@@ -1,22 +1,18 @@
 # 默认规则
 [default]
-# 跳过二进制
-binary = false
-# 检查内容
-check-file = true
-# 检查文件名
-check-filename = true
-# 忽略正则
+# 忽略正则：放行 HTTP404、UTF8 这类形似拼写错误的编号
 extend-ignore-re = ["[\"']?[A-Z]{2,5}[0-9]{3}[\"']?"]
 
 # 文件
 [files]
 # 额外排除
 extend-exclude = [
+  # 锁文件：递归匹配，覆盖子目录下的 lock（如 .venv/.lock）
+  "**/*.lock",
   # 自动导入声明
   "**/auto-imports.d.ts",
+  # 组件声明
+  "**/components.d.ts",
   # 生成物
   "**/generated/**",
-  # 锁文件
-  "*.lock",
 ]

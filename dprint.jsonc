@@ -4,10 +4,14 @@
   // 包含文件
   "includes": ["**/*.{json,jsonc,md,yaml,toml}", "**/Dockerfile"],
   // 排除文件
+  // 注意 `**/dist/**` 同时排除契约打包产物 contracts/http/dist/：
+  // 该目录虽在 .gitignore 中被反选入库，但由 redocly bundle 生成，不应再被格式化
   "excludes": ["**/node_modules/**", ".venv/**", "**/dist/**"],
-  // 行宽
+  // 行宽：对 json/toml/dockerfile 插件与各自默认值一致（120）仅为显式声明；
+  // 对 markdown 插件则覆盖其默认的 80，是本项实际生效的关键
   "lineWidth": 120,
   // 插件
+  // 版本号需手工维护：dprint 插件不受依赖更新工具管理，升级时须显式改写版本
   "plugins": [
     "npm:@dprint/dockerfile@0.7.0",
     "https://plugins.dprint.dev/json-0.25.2.wasm",

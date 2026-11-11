@@ -15,14 +15,10 @@ unsafe-fixes = false
 [format]
 # docstring 代码
 docstring-code-format = true
-# 缩进
-indent-style = "space"
-# 换行符
+# 换行符（默认 auto 会随文件已有换行，此处统一下为 lf）
 line-ending = "lf"
 # 引号
 quote-style = "double"
-# 魔法尾逗号
-skip-magic-trailing-comma = false
 
 # 检查
 [lint]
@@ -32,16 +28,28 @@ explicit-preview-rules = true
 ignore = [
   # 尾逗号
   "COM812",
+  # 禁止尾逗号（与 formatter 冲突）
+  "COM819",
   # 版权声明
   "CPY001",
   # 与 D211 互斥
   "D203",
+  # docstring 制表符缩进（与 formatter 冲突）
+  "D206",
   # 与 D212 互斥
   "D213",
+  # 三单引号（与 formatter 冲突）
+  "D300",
   # 中文句号
   "D400",
   # 中文标点
   "D415",
+  # 缩进非 4 的倍数（与 formatter 冲突）
+  "E111",
+  # 缩进注释非 4 的倍数（与 formatter 冲突）
+  "E114",
+  # 过度缩进（与 formatter 冲突）
+  "E117",
   # 布尔参数
   "FBT001",
   # 布尔参数
@@ -50,6 +58,16 @@ ignore = [
   "G004",
   # 字符串折行
   "ISC001",
+  # 单引号字面量（与 formatter 冲突）
+  "Q000",
+  # 单引号多行字符串（与 formatter 冲突）
+  "Q001",
+  # 单引号 docstring（与 formatter 冲突）
+  "Q002",
+  # 可避免的转义引号（与 formatter 冲突）
+  "Q003",
+  # 多余转义引号（与 formatter 冲突）
+  "Q004",
   # 全角标点
   "RUF001",
   # 全角标点
@@ -62,6 +80,8 @@ ignore = [
   "TRY003",
   # try 内返回
   "TRY300",
+  # 制表符缩进（与 formatter 冲突）
+  "W191",
 ]
 # 日志器对象
 logger-objects = ["server.core.logging.get_logger"]
@@ -72,8 +92,6 @@ select = ["ALL", "DOC201", "RUF029"]
 
 # 导入排序
 [lint.isort]
-# 合并别名导入
-combine-as-imports = false
 # 单行导入
 force-single-line = true
 # 分组内排序
@@ -82,10 +100,6 @@ force-sort-within-sections = true
 known-first-party = ["server"]
 # 导入后空行
 lines-after-imports = 2
-# 按类型排序
-order-by-type = true
-# 相对导入顺序
-relative-imports-order = "furthest-to-closest"
 # 尾逗号拆分
 split-on-trailing-comma = true
 
@@ -94,12 +108,32 @@ split-on-trailing-comma = true
 # 禁用导入
 banned-from = ["typing"]
 
+# 导入检查
+[lint.flake8-tidy-imports]
+# 禁止相对导入（仅允许同包内 . 前缀，禁止 .. 及更远）
+ban-relative-imports = "parents"
+
 # 禁用导入
 [lint.flake8-tidy-imports.banned-api]
 # 统一用 UTC
 "datetime.datetime.utcnow".msg = "使用 datetime.now(UTC)"
 # 统一用 httpx
 "requests".msg = "使用 httpx"
+
+# 不可变默认值（避免 B008 误报框架依赖注入）
+[lint.flake8-bugbear]
+# FastAPI 声明式默认值本质是标记，不产生每次调用的新对象
+extend-immutable-calls = [
+  "fastapi.Body",
+  "fastapi.Cookie",
+  "fastapi.Depends",
+  "fastapi.File",
+  "fastapi.Form",
+  "fastapi.Header",
+  "fastapi.Path",
+  "fastapi.Query",
+  "fastapi.Security",
+]
 
 # 复杂度
 [lint.mccabe]
@@ -108,17 +142,12 @@ max-complexity = 10
 
 # 按文件禁用
 [lint.per-file-ignores]
-# 依赖注入参数
-"apps/server/src/server/api/**" = ["ARG001"]
-# 框架签名
-"apps/server/src/server/core/logging.py" = ["ARG001"]
+# 依赖注入参数（通配包名，便于新增 Python 包时自动覆盖）
+"apps/*/src/*/api/**" = ["ARG001"]
+# 框架签名（同上）
+"apps/*/src/*/core/logging.py" = ["ARG001"]
 # 测试放宽
-"apps/server/tests/**" = ["ANN001", "ANN201", "D103", "PLR2004", "S101", "S105", "S106"]
-
-# 代码风格
-[lint.pycodestyle]
-# 行宽上限
-max-line-length = 100
+"apps/*/tests/**" = ["ANN001", "ANN201", "D103", "PLR2004", "S101", "S105", "S106"]
 
 # 文档字符串
 [lint.pydocstyle]

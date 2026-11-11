@@ -18,7 +18,6 @@
 │   ├── 兼容检查: oasdiff
 │   ├── 运行时管理: uv
 │   └── 运行时管理: bun
-├── 依赖更新: renovate
 ├── 持续集成: github
 ├── 容器平台: podman
 │   └── 入口代理: caddy
@@ -87,7 +86,6 @@
 ├── mise.toml           # 开发环境
 ├── package.json        # 包体配置
 ├── pyproject.toml      # 工作区根
-├── renovate.jsonc      # 依赖更新
 ├── ruff.toml           # 后端检查
 ├── ty.toml             # 类型检查
 ├── typos.toml          # 拼写检查

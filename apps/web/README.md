@@ -42,8 +42,8 @@ apps/web/                                # 前端应用
 │   ├── api/                             # 接口访问
 │   │   ├── generated/                   # 契约生成
 │   │   │   ├── http/                    # 接口生成
-│   │   │   │   ├── default/             # 默认分组
-│   │   │   │   │   └── default.ts       # 实现文件
+│   │   │   │   ├── health/              # 按 tag 分组
+│   │   │   │   │   └── health.ts        # 实现文件
 │   │   │   │   └── index.ts             # 出口文件
 │   │   │   └── schemas/                 # 模式校验
 │   │   │       └── index.zod.ts         # 模式出口

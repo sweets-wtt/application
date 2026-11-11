@@ -7,12 +7,17 @@ info:
 jsonSchemaDialect: https://json-schema.org/draft/2020-12/schema
 servers:
   - url: /
+tags:
+  - name: health
+    description: 服务健康检查相关接口
 paths:
   /healthz:
     get:
       operationId: getHealthz
       summary: 存活探针
       description: 返回服务存活状态
+      tags:
+        - health
       responses:
         '200':
           $ref: '#/components/responses/Healthz200'

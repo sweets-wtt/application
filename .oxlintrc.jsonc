@@ -17,7 +17,7 @@
     "typeCheck": true // 类型检查诊断
   },
   "plugins": ["eslint", "jsdoc", "typescript", "unicorn", "vue", "vitest", "import", "promise", "node", "oxc"], // 插件
-  "ignorePatterns": ["**/generated/**", "**/auto-imports.d.ts"], // 忽略文件
+  "ignorePatterns": ["**/generated/**", "**/auto-imports.d.ts", "**/components.d.ts"], // 忽略文件
   // 规则：仅列出与类别默认值不同的项
   "rules": {
     // ── eslint（9 条）
@@ -44,7 +44,7 @@
     "vitest/prefer-expect-assertions": ["error", { "onlyFunctionsWithAsyncKeyword": true }], // 要求声明断言数量
     "vitest/prefer-importing-vitest-globals": "off", // 优先 vitest 全局 API
     "vitest/prefer-to-be-truthy": "off", // 优先 toBeTruthy（与 prefer-strict-boolean-matchers 互斥）
-    "vitest/require-hook": "off", // 要求通过钩子组织测试
+    "vitest/require-hook": "off", // 要求通过钩子组织测试（全局关闭，仅测试文件由 overrides 重新开启）
     "vitest/require-test-timeout": "off", // 要求测试声明超时（已由 testTimeout 全局配置）
     "vitest/require-top-level-describe": "off", // 测试须包在顶层 describe 中
     // ── import（7 条）
