@@ -4,7 +4,7 @@
   // 包含路径
   "includes": ["**/*.{json,jsonc,md,yaml,toml}", "**/Dockerfile"],
   // 排除路径
-  "excludes": ["**/node_modules/**", ".venv/**", "**/dist/**"],
+  "excludes": ["**/dist/**"],
   // 行宽
   "lineWidth": 120,
   // 插件

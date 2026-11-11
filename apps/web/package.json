@@ -10,8 +10,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "size": "size-limit",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "size": "size-limit"
   },
   "dependencies": {
     "@tanstack/vue-query": "^5.106.0",

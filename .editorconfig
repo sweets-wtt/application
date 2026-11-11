@@ -21,13 +21,6 @@ trim_trailing_whitespace = true
 # 去除行尾空白
 trim_trailing_whitespace = false
 
-# Makefile 规则
-[Makefile]
-# 缩进字符
-indent_style = tab
-# 缩进宽度
-indent_size = tab
-
 # Python 规则
 [*.py]
 # 缩进宽度
