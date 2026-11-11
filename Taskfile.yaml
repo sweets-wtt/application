@@ -34,14 +34,11 @@ vars:
 
 # 任务
 tasks:
-  # ── 默认 ──
   default:
     desc: 列出任务
     aliases: [list]
     cmds:
       - task --list
-
-  # ── 安装 ──
 
   install:
     desc: 安装
@@ -64,8 +61,6 @@ tasks:
     desc: 安装 TypeScript 依赖
     cmds:
       - bun install --frozen-lockfile
-
-  # ── 检查 ──
 
   check:
     desc: 检查
@@ -156,8 +151,6 @@ tasks:
     cmds:
       - bun run build
 
-  # ── 格式化 ──
-
   format:
     desc: 格式化
     deps:
@@ -185,8 +178,6 @@ tasks:
       - bunx oxlint --fix --no-error-on-unmatched-pattern
       # 格式化
       - bunx oxfmt --no-error-on-unmatched-pattern {{.WEB_FILES}}
-
-  # ── 构建 ──
 
   build:
     desc: 构建
@@ -220,8 +211,6 @@ tasks:
       - task: build-web
       - bun run --filter @app/web size
 
-  # ── 测试 ──
-
   test:
     desc: 测试
     cmds:
@@ -246,8 +235,6 @@ tasks:
       - task: build-web
       # 端到端测试
       - bunx playwright test
-
-  # ── 契约 ──
 
   bundle-spec:
     desc: 打包契约
@@ -317,8 +304,6 @@ tasks:
       - task: codegen
       - git diff --exit-code -- {{.GENERATED}}
 
-  # ── CI ──
-
   scan-vuln:
     desc: 扫描漏洞
     cmds:
@@ -330,8 +315,6 @@ tasks:
       - check
       - scan-vuln
 
-  # ── 元信息 ──
-
   install-hooks:
     desc: 安装钩子
     cmds:
@@ -341,8 +324,6 @@ tasks:
     desc: 校验提交信息
     cmds:
       - cog verify {{.CLI_ARGS}}
-
-  # ── 运行时 ──
 
   compose-up:
     desc: 启动本地服务

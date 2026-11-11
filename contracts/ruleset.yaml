@@ -3,8 +3,6 @@ extends: [[vacuum:oas, recommended]]
 
 # 规则
 rules:
-  # ── 文档结构与元信息
-
   # OpenAPI 2 非空 host
   oas2-api-host: error
   # OpenAPI 2 非空 schemes
@@ -15,8 +13,6 @@ rules:
   oas2-host-trailing-slash: error
   # servers 定义合法性
   oas3-api-servers: error
-
-  # ── Schema 与类型
 
   # 属性名 camelCase
   camel-case-properties: error
@@ -30,8 +26,6 @@ rules:
   oas-missing-type: error
   # 枚举值符合声明类型
   typed-enum: error
-
-  # ── 路径与操作
 
   # 路径段不含 HTTP 动词
   no-http-verbs-in-path: error
@@ -48,8 +42,6 @@ rules:
   # 路径段使用 kebab-case
   paths-kebab-case: error
 
-  # ── 示例与安全
-
   # GET 与 DELETE 不接受请求体
   no-request-body: error
   # formData 参数在 consumes 中声明
@@ -61,8 +53,6 @@ rules:
   # 示例符合 schema
   oas3-valid-schema-example: error
 
-  # ── 引用与清理
-
   # x-zally-ignore 迁移为 x-lint-ignore
   migrate-zally-ignore: error
   # 参数包含描述
@@ -71,8 +61,6 @@ rules:
   oas2-unused-definition: error
   # 未使用的组件与失效引用
   oas3-unused-component: error
-
-  # ── 项目自定义规则
 
   # 敏感字段的示例与默认值
   no-sensitive-examples:

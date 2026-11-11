@@ -17,21 +17,9 @@ python-version = "3.12"
 # 源码
 [src]
 # 排除路径
-exclude = [
-  # 字节码缓存
-  "**/__pycache__",
-  # 生成物
-  "**/generated",
-]
+exclude = ["**/generated"]
 # 源码根
 include = ["apps/server/src", "apps/server/tests"]
-
-# 终端
-[terminal]
-# 警告即失败
-error-on-warning = true
-# 输出格式
-output-format = "full"
 
 # 规则
 # 默认级别

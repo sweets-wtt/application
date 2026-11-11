@@ -17,8 +17,6 @@ unsafe-fixes = false
 docstring-code-format = true
 # 换行符
 line-ending = "lf"
-# 引号风格
-quote-style = "double"
 
 # 检查
 [lint]
@@ -72,8 +70,6 @@ force-sort-within-sections = true
 known-first-party = ["server"]
 # 导入后空行数
 lines-after-imports = 2
-# 尾逗号拆分
-split-on-trailing-comma = true
 
 # 导入约定
 [lint.flake8-import-conventions]
@@ -106,11 +102,6 @@ extend-immutable-calls = [
   "fastapi.Query",
   "fastapi.Security",
 ]
-
-# 复杂度
-[lint.mccabe]
-# 复杂度上限
-max-complexity = 10
 
 # 按文件禁用
 [lint.per-file-ignores]
