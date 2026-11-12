@@ -14,17 +14,17 @@ const memory = (initial: Readonly<Record<string, string>> = {}): Storage => {
   const data = { ...initial };
 
   return {
-    getItem: (key: string): string | null => data[key] ?? null,
+    getItem: (key: string): string | undefined => data[key],
     setItem: (key: string, value: string): void => {
       data[key] = value;
     },
   };
 };
 
-describe("parseState", () => {
+describe("parseState()", () => {
   it("空数据回退默认状态", () => {
     // 无存储内容直接回退
-    expect(parseState(null)).toStrictEqual(defaultState);
+    expect(parseState()).toStrictEqual(defaultState);
   });
 
   it("合法数据解析为状态", () => {
@@ -43,7 +43,7 @@ describe("parseState", () => {
   });
 });
 
-describe("migrate", () => {
+describe("migrate()", () => {
   it("当前版本原样返回", () => {
     // 当前版本无需迁移
     const data = { locale: "en-US", version: "1" };
@@ -51,14 +51,14 @@ describe("migrate", () => {
     expect(migrate(data)).toStrictEqual(data);
   });
 
-  it("缺失版本视为最早版本 - 无迁移时返回 null", () => {
+  it("缺失版本视为最早版本 - 无迁移时返回 undefined", () => {
     // 无对应迁移表项
-    expect(migrate({ locale: "en-US" })).toBeNull();
+    expect(migrate({ locale: "en-US" })).toBeUndefined();
   });
 
-  it("未知版本返回 null", () => {
+  it("未知版本返回 undefined", () => {
     // 未知版本无法迁移
-    expect(migrate({ version: "9" })).toBeNull();
+    expect(migrate({ version: "9" })).toBeUndefined();
   });
 });
 

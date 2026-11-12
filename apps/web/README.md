@@ -29,7 +29,6 @@ Vue 3 单页应用的目录规范与代码编写说明新增代码按本文档�
     ├── 端到端测试: playwright
     ├── 体积检查: size-limit
     ├── 构建插件: @vitejs/plugin-vue
-    ├── 自动导入: unplugin-auto-import
     ├── 图标按需: unplugin-icons
     └── 组件按需: unplugin-vue-components
 ```

@@ -1,3 +1,4 @@
+import { createPinia, setActivePinia } from "pinia";
 import { describe, expect, it } from "vitest";
 
 import useAppStore from "@/stores/app";

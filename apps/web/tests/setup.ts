@@ -1,6 +1,7 @@
 import { beforeAll, vi } from "vitest";
 
 // 单元测试禁止真实网络
+// eslint-disable-next-line vitest/require-top-level-describe
 beforeAll(() => {
   vi.stubGlobal(
     "fetch",

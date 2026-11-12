@@ -48,12 +48,6 @@
     // 数组折叠单行
     "array.preferSingleLine": true,
     // 内联表折叠单行
-    "inlineTable.preferSingleLine": true,
-    // 数组排序
-    "sortArrays": true,
-    // 内联表排序
-    "sortInlineTables": true,
-    // 键排序
-    "sortKeys": true
+    "inlineTable.preferSingleLine": true
   }
 }

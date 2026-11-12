@@ -1,4 +1,5 @@
 import { VueQueryPlugin } from "@tanstack/vue-query";
+import { createApp } from "vue";
 
 import { setBaseUrl } from "@/api";
 import App from "@/App.vue";

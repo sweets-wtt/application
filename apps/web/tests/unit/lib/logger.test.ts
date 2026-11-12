@@ -21,7 +21,7 @@ vi.mock(import("consola"), () => ({
   createConsola: (): ConsolaInstance => instance as unknown as ConsolaInstance,
 }));
 
-describe("logger", () => {
+describe("logger()", () => {
   it("info 输出脱敏数据", () => {
     // 敏感键应被掩码
     logger.info("hello", { token: "x", user: "app" });

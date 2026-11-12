@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from "vue";
+
 import { useHealthCheck } from "@/features/health";
 import { SERVER_STATUS } from "@/features/health/constants";
 

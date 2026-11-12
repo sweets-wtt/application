@@ -1,8 +1,12 @@
+import { useDocumentVisibility } from "@vueuse/core";
+import { computed } from "vue";
+
 import { Healthz200Response, useGetHealthz } from "@/api";
 import { HEARTBEAT_INTERVAL, SERVER_STATUS } from "@/features/health/constants";
 import { logger } from "@/lib/logger";
 
 import type { ServerStatus } from "@/features/health/constants";
+import type { ComputedRef, Ref } from "vue";
 
 /** 重试次数：失败重试一次 */
 const RETRY_COUNT = 1;

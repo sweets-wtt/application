@@ -21,7 +21,7 @@ FROM oven/bun:1 AS builder
   # 构建配置
   COPY apps/web/index.html apps/web/vite.config.ts apps/web/tsconfig.json apps/web/uno.config.ts apps/web/
   # 类型声明
-  COPY apps/web/auto-imports.d.ts apps/web/components.d.ts apps/web/
+  COPY apps/web/components.d.ts apps/web/
 
   # 安装依赖
   RUN bun install --frozen-lockfile

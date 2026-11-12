@@ -1,9 +1,11 @@
+import { defineStore } from "pinia";
+
 import { parseState, serializeState } from "@/lib/storage";
 
-import type { Storage } from "@/lib/storage";
+import type { StorageLike } from "pinia-plugin-persistedstate";
 
-/** LocalStorage 适配为 Storage 接口 */
-const stateStorage: Storage = {
+/** LocalStorage 适配为插件存储接口 */
+const stateStorage: StorageLike = {
   getItem: (key) => localStorage.getItem(key),
   setItem: (key, value) => {
     localStorage.setItem(key, value);

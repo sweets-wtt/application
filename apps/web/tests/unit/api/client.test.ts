@@ -41,7 +41,7 @@ const stubFetch = (response: ResponseView): FetchMock => {
   return mock;
 };
 
-describe("apiFetch", () => {
+describe("apiFetch()", () => {
   it("返回约定结构", async () => {
     expect.hasAssertions();
 

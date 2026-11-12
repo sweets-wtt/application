@@ -5,7 +5,7 @@ import { DEFAULT_HEARTBEAT_INTERVAL, parseHeartbeatInterval } from "@/features/h
 /** 测试用心跳间隔 */
 const TEST_INTERVAL = "5000";
 
-describe("parseHeartbeatInterval", () => {
+describe("parseHeartbeatInterval()", () => {
   it("解析正整数", () => {
     // 合法数字原样返回
     expect(parseHeartbeatInterval(TEST_INTERVAL)).toBe(Number(TEST_INTERVAL));

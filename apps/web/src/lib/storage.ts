@@ -47,28 +47,28 @@ const readVersion = (state: Readonly<Record<string, unknown>>, fallback: string)
 };
 
 /**
- * 版本匹配则返回数据，否则返回 null
+ * 版本匹配则返回数据，否则返回 undefined
  *
  * @param {Record<string, unknown>} current 当前数据
  * @param {string} version 数据版本
- * @returns {Record<string, unknown> | null} 匹配时返回数据，否则为 null
+ * @returns {Record<string, unknown> | undefined} 匹配时返回数据，否则为 undefined
  */
-const settle = (current: Readonly<Record<string, unknown>>, version: string): Record<string, unknown> | null => {
+const settle = (current: Readonly<Record<string, unknown>>, version: string): Record<string, unknown> | undefined => {
   // 仅当前版本可直接使用
   if (version === CURRENT_VERSION) {
     return current;
   }
 
-  return null;
+  return undefined;
 };
 
 /**
- * 逐级迁移到当前版本：无对应迁移或超出迭代上限则返回 null
+ * 逐级迁移到当前版本：无对应迁移或超出迭代上限则返回 undefined
  *
  * @param {Record<string, unknown>} data 待迁移的原始数据
- * @returns {Record<string, unknown> | null} 迁移结果，失败时为 null
+ * @returns {Record<string, unknown> | undefined} 迁移结果，失败时为 undefined
  */
-export const migrate = (data: Readonly<Record<string, unknown>>): Record<string, unknown> | null => {
+export const migrate = (data: Readonly<Record<string, unknown>>): Record<string, unknown> | undefined => {
   let current = data;
   let version = readVersion(current, DEFAULT_VERSION);
 
@@ -92,36 +92,36 @@ export const migrate = (data: Readonly<Record<string, unknown>>): Record<string,
 const rawSchema = z.record(z.string(), z.unknown());
 
 /**
- * 解析原始文本：格式损坏返回 null
+ * 解析原始文本：格式损坏返回 undefined
  *
  * @param {string} raw 原始 JSON 文本
- * @returns {Record<string, unknown> | null} 解析结果，失败时为 null
+ * @returns {Record<string, unknown> | undefined} 解析结果，失败时为 undefined
  */
-const parseRaw = (raw: string): Record<string, unknown> | null => {
+const parseRaw = (raw: string): Record<string, unknown> | undefined => {
   try {
     // 先按未知类型接收，再校验为普通对象
     const parsed = rawSchema.safeParse(JSON.parse(raw));
 
     // 非普通对象视为损坏
     if (!parsed.success) {
-      return null;
+      return undefined;
     }
 
     return parsed.data;
   } catch {
-    return null;
+    return undefined;
   }
 };
 
 /**
  * 校验迁移结果：失败回退默认状态
  *
- * @param {Record<string, unknown> | null} migrated 迁移后的数据
+ * @param {Record<string, unknown> | undefined} migrated 迁移后的数据
  * @returns {State} 合法的应用状态
  */
-const validateMigrated = (migrated: Readonly<Record<string, unknown>> | null): State => {
+const validateMigrated = (migrated: Readonly<Record<string, unknown>> | undefined): State => {
   // 迁移失败直接回退
-  if (migrated === null) {
+  if (migrated === undefined) {
     return defaultState;
   }
 
@@ -138,19 +138,19 @@ const validateMigrated = (migrated: Readonly<Record<string, unknown>> | null): S
 /**
  * 解析并迁移到当前版本：损坏或无法迁移的数据回退默认状态
  *
- * @param {string | null} raw 原始存储文本
+ * @param {string | null} [raw] 原始存储文本，缺失视为无内容
  * @returns {State} 应用状态
  */
-export const parseState = (raw: string | null): State => {
-  // 无存储内容
-  if (raw === null) {
+export const parseState = (raw?: string | null): State => {
+  // 非字符串即无存储内容，null、undefined 均视为缺失
+  if (typeof raw !== "string") {
     return defaultState;
   }
 
   const parsed = parseRaw(raw);
 
   // JSON 损坏
-  if (parsed === null) {
+  if (parsed === undefined) {
     return defaultState;
   }
 
@@ -167,7 +167,7 @@ export const serializeState = (state: Readonly<Record<PropertyKey, unknown>>): s
 
 /** 存储边界：仅依赖读写两项能力 */
 export interface Storage {
-  readonly getItem: (key: string) => string | null;
+  readonly getItem: (key: string) => string | null | undefined;
   readonly setItem: (key: string, value: string) => void;
 }
 

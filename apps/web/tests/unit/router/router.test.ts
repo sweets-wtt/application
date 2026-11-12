@@ -8,7 +8,7 @@ const FIRST_INDEX = 0;
 /** 根路由数量 */
 const ROOT_ROUTE_COUNT = 1;
 
-describe("routes", () => {
+describe("routes()", () => {
   it("包含首页路由", () => {
     // 仅一条根路由
     expect(routes).toHaveLength(ROOT_ROUTE_COUNT);

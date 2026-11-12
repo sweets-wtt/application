@@ -1,3 +1,5 @@
+import type { RouteRecordRaw } from "vue-router";
+
 /** 路由表：本阶段仅首页嵌套于默认布局 */
 const routes: RouteRecordRaw[] = [
   {

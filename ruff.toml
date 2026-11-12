@@ -23,38 +23,7 @@ line-ending = "lf"
 # 预览规则须以完整规则码选择
 explicit-preview-rules = true
 # 禁用规则
-ignore = [
-  "COM812",
-  "COM819",
-  "CPY001",
-  "D203",
-  "D206",
-  "D213",
-  "D300",
-  "D400",
-  "D415",
-  "E111",
-  "E114",
-  "E117",
-  "FBT001",
-  "FBT002",
-  "G004",
-  "ISC001",
-  "Q000",
-  "Q001",
-  "Q002",
-  "Q003",
-  "Q004",
-  "RUF001",
-  "RUF002",
-  "RUF003",
-  "SLOT000",
-  "TRY003",
-  "TRY300",
-  "W191",
-]
-# 日志器对象
-logger-objects = ["server.core.logging.get_logger"]
+ignore = ["COM812", "CPY001", "D400", "D415", "ISC001", "RUF002", "RUF003"]
 # 预览模式
 preview = true
 # 启用规则
@@ -107,14 +76,10 @@ extend-immutable-calls = [
 [lint.per-file-ignores]
 # 依赖注入参数
 "apps/*/src/*/api/**" = ["ARG001"]
-# 框架签名
-"apps/*/src/*/core/logging.py" = ["ARG001"]
 # 测试文件
-"apps/*/tests/**" = ["ANN001", "ANN201", "D103", "PLR2004", "S101", "S105", "S106"]
+"apps/*/tests/**" = ["S101"]
 
 # 文档字符串
 [lint.pydocstyle]
 # 文档约定
 convention = "google"
-# 豁免装饰器
-ignore-decorators = ["*/delete", "*/get", "*/patch", "*/post", "*/put", "typing.overload"]

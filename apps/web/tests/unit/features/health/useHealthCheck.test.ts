@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { useHealthCheck } from "@/features/health/composables/useHealthCheck";
+
 /** 模拟的查询状态 */
 const query = vi.hoisted(
   (): {
@@ -34,8 +36,6 @@ vi.mock(import("@/lib/logger"), () => ({
   },
 }));
 
-import { useHealthCheck } from "@/features/health/composables/useHealthCheck";
-
 /** 合法响应信封 */
 const VALID = { code: 0, data: { status: "ok" }, message: "ok" };
 
@@ -50,7 +50,7 @@ const INVALID = { code: 0, data: { status: "invalid" }, message: "ok" };
  */
 const response = (body: unknown): Record<string, unknown> => ({ data: body, headers: new Headers(), status: 200 });
 
-describe("useHealthCheck", () => {
+describe("useHealthCheck()", () => {
   beforeEach(() => {
     // 每个用例重置模拟状态
     query.data.value = undefined;

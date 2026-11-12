@@ -9,8 +9,6 @@ extend-ignore-re = ["[\"']?[A-Z]{2,5}[0-9]{3}[\"']?"]
 extend-exclude = [
   # 锁文件
   "**/*.lock",
-  # 自动导入声明
-  "**/auto-imports.d.ts",
   # 组件声明
   "**/components.d.ts",
   # 生成物

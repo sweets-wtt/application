@@ -22,42 +22,9 @@ exclude = ["**/generated"]
 include = ["apps/server/src", "apps/server/tests"]
 
 # 规则
-# 默认级别
 [rules]
 # 全部规则
 all = "error"
-# 冲突声明
-conflicting-declarations = "ignore"
-# 装饰器返回动态类型
-dynamic-function-decorator-return = "warn"
-# 未知规则的禁用注释
-ignore-comment-unknown-rule = "ignore"
-# 无效声明
-invalid-declaration = "warn"
-# 无效的禁用注释
-invalid-ignore-comment = "ignore"
-# 旧式位置参数
-invalid-legacy-positional-parameter = "warn"
-# 可能缺失属性
-possibly-missing-attribute = "warn"
-# 可能缺失导入
-possibly-missing-import = "warn"
-# None 联合类型真值判断
-truthiness-test-of-none-union = "warn"
-# 未绑定的 global
-unresolved-global = "ignore"
-# 未定义引用
-unresolved-reference = "warn"
-# 不健全赋值
-unsound-assignment = "warn"
-# 不健全 yield
-unsound-yield = "warn"
-# 动态基类
-unsupported-dynamic-base = "warn"
-# 未使用的禁用注释
-unused-ignore-comment = "warn"
-# 未使用的 type ignore 注释
-unused-type-ignore-comment = "warn"
 
 # 文件覆盖
 [[overrides]]
