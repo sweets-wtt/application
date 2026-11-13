@@ -5,21 +5,10 @@
   "printWidth": 120,
   // HTML 空白敏感度
   "htmlWhitespaceSensitivity": "ignore",
-  // 标签属性独占一行
-  "singleAttributePerLine": false,
   // 对象换行策略
   "objectWrap": "collapse",
   // 运算符换行位置
   "experimentalOperatorPosition": "start",
-  // 忽略路径
-  "ignorePatterns": ["**/components.d.ts"],
-  // 文件覆盖
-  "overrides": [{
-    // 匹配路径
-    "files": ["**/generated/**"],
-    // 导入排序
-    "sortImports": false
-  }],
   // 导入排序
   "sortImports": {
     // 分组顺序
@@ -32,7 +21,16 @@
       "type",
       "unknown"
     ],
-    // 副作用导入参与排序
+    // 副作用导入排序
     "sortSideEffects": true
-  }
+  },
+  // 忽略路径
+  "ignorePatterns": ["**/components.d.ts"],
+  // 文件覆盖
+  "overrides": [{
+    // 匹配路径
+    "files": ["**/generated/**"],
+    // 导入排序
+    "sortImports": false
+  }]
 }

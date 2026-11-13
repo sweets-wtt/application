@@ -1,6 +1,8 @@
 {
   // Schema 地址
   "$schema": "./node_modules/oxlint/configuration_schema.json",
+  // 插件
+  "plugins": ["eslint", "jsdoc", "typescript", "unicorn", "vue", "vitest", "import", "promise", "node", "oxc"],
   // 规则类别
   "categories": {
     // 正确性
@@ -18,6 +20,8 @@
     // 可疑代码
     "suspicious": "error"
   },
+  // 全局环境
+  "env": { "browser": true },
   // 运行选项
   "options": {
     // 未使用的禁用注释
@@ -27,17 +31,11 @@
     // 类型检查诊断
     "typeCheck": true
   },
-  // 插件
-  "plugins": ["eslint", "jsdoc", "typescript", "unicorn", "vue", "vitest", "import", "promise", "node", "oxc"],
-  // 全局环境
-  "env": { "browser": true },
-  // 忽略路径
-  "ignorePatterns": ["**/generated/**", "**/components.d.ts"],
   // 规则
   "rules": {
     // 标识符长度
     "eslint/id-length": ["error", { "max": 40, "min": 2 }],
-    // 构造函数命名：大写函数不强制 new，保留 new 后须大写
+    // 构造函数命名
     "eslint/new-cap": ["error", { "capIsNew": false }],
     // 重复导入
     "eslint/no-duplicate-imports": ["error", { "allowSeparateTypeImports": true }],
@@ -46,39 +44,13 @@
     // 每作用域一条声明
     "eslint/one-var": ["error", "never"],
     // 正则 u 标志
-    "eslint/require-unicode-regexp": "off",
+    "eslint/require-unicode-regexp": "error",
     // 导入语句排序
     "eslint/sort-imports": "off",
     // 对象键排序
     "eslint/sort-keys": "off",
-    // 文件名命名
-    "unicorn/filename-case": ["error", { "cases": { "camelCase": true, "kebabCase": true, "pascalCase": true } }],
-    // null 字面量
-    "unicorn/no-null": "error",
-    // 测试文件命名
-    "vitest/consistent-test-filename": ["error", { "pattern": ".*[.](test|spec)[.][jt]sx?$" }],
-    // 测试钩子
-    "vitest/no-hooks": "off",
-    // 导入 vitest 全局 API
-    "vitest/no-importing-vitest-globals": "off",
-    // describe 标题
-    "vitest/prefer-describe-function-title": "error",
-    // 断言数量声明
-    "vitest/prefer-expect-assertions": ["error", { "onlyFunctionsWithAsyncKeyword": true }],
-    // 使用 vitest 全局 API
-    "vitest/prefer-importing-vitest-globals": "error",
-    // 真值断言匹配器
-    "vitest/prefer-to-be-truthy": "off",
-    // 钩子组织测试
-    "vitest/require-hook": "off",
-    // 测试超时声明
-    "vitest/require-test-timeout": "off",
-    // 顶层 describe
-    "vitest/require-top-level-describe": "error",
     // 导出位置
     "import/exports-last": "off",
-    // 导入位置
-    "import/first": "error",
     // 导出合并
     "import/group-exports": "off",
     // 默认导出
@@ -87,8 +59,6 @@
     "import/no-named-export": "off",
     // 无赋值副作用导入
     "import/no-unassigned-import": ["error", { "allow": ["**/*.css", "virtual:*"] }],
-    // 模块标记
-    "import/unambiguous": "error",
     // async/await
     "oxc/no-async-await": "off",
     // 桶文件
@@ -98,8 +68,26 @@
     // 对象展开属性
     "oxc/no-rest-spread-properties": "off",
     // return await 模式
-    "typescript/return-await": ["error", "error-handling-correctness-only"]
+    "typescript/return-await": ["error", "error-handling-correctness-only"],
+    // 文件名命名
+    "unicorn/filename-case": ["error", { "cases": { "camelCase": true, "kebabCase": true, "pascalCase": true } }],
+    // 测试文件命名
+    "vitest/consistent-test-filename": ["error", { "pattern": ".*[.](test|spec)[.][jt]sx?$" }],
+    // 测试钩子
+    "vitest/no-hooks": "off",
+    // 导入 vitest 全局 API
+    "vitest/no-importing-vitest-globals": "off",
+    // 断言数量声明
+    "vitest/prefer-expect-assertions": ["error", { "onlyFunctionsWithAsyncKeyword": true }],
+    // 真值断言匹配器
+    "vitest/prefer-to-be-truthy": "off",
+    // 钩子组织测试
+    "vitest/require-hook": "off",
+    // 测试超时声明
+    "vitest/require-test-timeout": "off"
   },
+  // 忽略路径
+  "ignorePatterns": ["**/generated/**", "**/components.d.ts"],
   // 文件覆盖
   "overrides": [{
     // 匹配路径
@@ -110,7 +98,7 @@
       "vitest/require-hook": "error"
     }
   }, {
-    // 端到端测试：由 Playwright 驱动，不适用 vitest 全局规则
+    // 端到端测试
     "files": ["**/e2e/**"],
     // 规则
     "rules": {
@@ -118,7 +106,7 @@
       "vitest/prefer-importing-vitest-globals": "off"
     }
   }, {
-    // 单文件组件与类型声明：无 import/export 也可判定为模块
+    // 单文件组件与类型声明
     "files": ["**/*.vue", "**/*.d.ts"],
     // 规则
     "rules": {

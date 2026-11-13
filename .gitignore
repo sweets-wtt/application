@@ -15,9 +15,9 @@ Thumbs.db
 .env
 # 派生配置
 .env.*
-# 示例配置不入忽略
+# 示例配置例外
 !.env.example
-# 派生示例配置不入忽略
+# 派生示例配置例外
 !.env.*.example
 
 # ── 依赖 ──
@@ -81,7 +81,7 @@ blob-report/
 
 # 各应用构建输出
 dist/
-# 契约制品需入库
+# 契约制品例外
 !contracts/*/dist/
 # task 增量缓存
 .task/

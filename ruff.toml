@@ -1,33 +1,20 @@
-# 额外排除路径
-extend-exclude = ["**/generated/**"]
-# 行宽
-line-length = 100
-# 预览模式
-preview = false
-# 源码根
-src = ["apps/server/src"]
 # 目标版本
 target-version = "py312"
-# 不安全修复
-unsafe-fixes = false
-
-# 格式化
-[format]
-# docstring 内代码格式化
-docstring-code-format = true
-# 换行符
-line-ending = "lf"
+# 行宽
+line-length = 100
+# 额外排除路径
+extend-exclude = ["**/generated/**"]
 
 # 检查
 [lint]
-# 预览规则须以完整规则码选择
-explicit-preview-rules = true
+# 启用规则
+select = ["ALL", "DOC201", "RUF029"]
 # 禁用规则
 ignore = ["COM812", "CPY001", "D400", "D415", "ISC001", "RUF002", "RUF003"]
 # 预览模式
 preview = true
-# 启用规则
-select = ["ALL", "DOC201", "RUF029"]
+# 显式预览规则
+explicit-preview-rules = true
 
 # 导入排序
 [lint.isort]
@@ -42,7 +29,7 @@ lines-after-imports = 2
 
 # 导入约定
 [lint.flake8-import-conventions]
-# 禁用的 from 导入
+# 禁用 from 导入
 banned-from = ["typing"]
 
 # 导入检查
@@ -52,14 +39,14 @@ ban-relative-imports = "parents"
 
 # 禁用导入
 [lint.flake8-tidy-imports.banned-api]
-# 统一用 UTC
+# utcnow
 "datetime.datetime.utcnow".msg = "使用 datetime.now(UTC)"
-# 统一用 httpx
+# requests
 "requests".msg = "使用 httpx"
 
 # 不可变调用
 [lint.flake8-bugbear]
-# 视为不可变的默认值调用
+# 额外不可变调用
 extend-immutable-calls = [
   "fastapi.Body",
   "fastapi.Cookie",
@@ -72,14 +59,21 @@ extend-immutable-calls = [
   "fastapi.Security",
 ]
 
-# 按文件禁用
-[lint.per-file-ignores]
-# 依赖注入参数
-"apps/*/src/*/api/**" = ["ARG001"]
-# 测试文件
-"apps/*/tests/**" = ["S101"]
-
 # 文档字符串
 [lint.pydocstyle]
 # 文档约定
 convention = "google"
+
+# 按文件禁用
+[lint.per-file-ignores]
+# API 层
+"apps/*/src/*/api/**" = ["ARG001"]
+# 测试
+"apps/*/tests/**" = ["S101"]
+
+# 格式化
+[format]
+# docstring 代码格式化
+docstring-code-format = true
+# 换行符
+line-ending = "lf"

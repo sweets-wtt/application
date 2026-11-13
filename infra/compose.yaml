@@ -1,18 +1,6 @@
 # 项目名
 name: application
 
-# 自定义网络
-networks:
-  # 入口网络
-  edge:
-  # 内部网络
-  internal:
-
-# 具名卷
-volumes:
-  # Caddy 数据卷
-  caddy-data:
-
 # 服务公共字段
 x-service: &service # 重启策略
   restart: unless-stopped
@@ -129,3 +117,15 @@ services:
       api:
         # 就绪条件
         condition: "service_healthy"
+
+# 自定义网络
+networks:
+  # 入口网络
+  edge:
+  # 内部网络
+  internal:
+
+# 具名卷
+volumes:
+  # Caddy 数据卷
+  caddy-data:

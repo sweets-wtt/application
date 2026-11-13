@@ -1,3 +1,17 @@
+# 源码
+[src]
+# 源码根
+include = ["apps/server/src", "apps/server/tests"]
+# 排除路径
+exclude = ["**/generated"]
+
+# 运行环境
+[environment]
+# Python 版本
+python-version = "3.12"
+# 目标平台
+python-platform = "linux"
+
 # 分析
 [analysis]
 # 返回类型推断
@@ -6,20 +20,6 @@ return-type-inference = "always"
 strict-equality-semantics = true
 # 严格泛型窄化
 strict-generic-narrowing = true
-
-# 运行环境
-[environment]
-# 目标平台
-python-platform = "linux"
-# Python 版本
-python-version = "3.12"
-
-# 源码
-[src]
-# 排除路径
-exclude = ["**/generated"]
-# 源码根
-include = ["apps/server/src", "apps/server/tests"]
 
 # 规则
 [rules]

@@ -7,9 +7,9 @@ rules:
   oas2-api-host: error
   # OpenAPI 2 非空 schemes
   oas2-api-schemes: error
-  # host 不得指向 example.com
+  # host 非 example.com
   oas2-host-not-example: error
-  # host 不得以斜杠结尾
+  # host 无尾斜杠
   oas2-host-trailing-slash: error
   # servers 定义合法性
   oas3-api-servers: error
@@ -20,7 +20,7 @@ rules:
   description-duplication: error
   # 单元素组合器内联
   no-unnecessary-combinator: error
-  # 可空枚举显式包含 null
+  # 可空枚举含 null
   nullable-enum-contains-null: error
   # schema 与属性声明 type
   oas-missing-type: error
@@ -29,33 +29,33 @@ rules:
 
   # 路径段不含 HTTP 动词
   no-http-verbs-in-path: error
-  # 操作包含描述
+  # 操作描述
   operation-description: error
   # 操作含 2xx 或 3xx 响应
   operation-success-response: error
-  # 操作 tag 须在全局 tags 中定义
+  # 操作 tag 全局定义
   operation-tag-defined: error
-  # path item 内操作不使用 $ref
+  # path item 操作无 $ref
   path-item-refs: error
-  # 路径不以斜杠结尾
+  # 路径无尾斜杠
   path-keys-no-trailing-slash: error
-  # 路径段使用 kebab-case
+  # 路径段 kebab-case
   paths-kebab-case: error
 
-  # GET 与 DELETE 不接受请求体
+  # GET/DELETE 无请求体
   no-request-body: error
-  # formData 参数在 consumes 中声明
+  # formData 声明 consumes
   oas2-operation-formData-consume-check: error
   # 示例 value 与 externalValue 互斥
   oas3-example-external-check: error
-  # 参数包含描述
+  # 参数描述
   oas3-parameter-description: error
   # 示例符合 schema
   oas3-valid-schema-example: error
 
   # x-zally-ignore 迁移为 x-lint-ignore
   migrate-zally-ignore: error
-  # 参数包含描述
+  # 参数描述
   oas2-parameter-description: error
   # 未使用的定义与失效引用
   oas2-unused-definition: error

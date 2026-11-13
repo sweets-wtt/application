@@ -10,17 +10,6 @@ templates:
   # task 命令
   task: mise exec -- task
 
-# 合并后钩子
-post-merge:
-  # 作业列表
-  jobs:
-    # 安装依赖
-    - name: install
-      # 执行命令
-      run: "{task} install"
-      # 失败提示
-      fail_text: "依赖同步失败: task install"
-
 # 提交前钩子
 pre-commit:
   # 作业列表
@@ -59,3 +48,14 @@ pre-push:
       run: "{task} test"
       # 失败提示
       fail_text: "测试失败: task test"
+
+# 合并后钩子
+post-merge:
+  # 作业列表
+  jobs:
+    # 安装依赖
+    - name: install
+      # 执行命令
+      run: "{task} install"
+      # 失败提示
+      fail_text: "依赖同步失败: task install"

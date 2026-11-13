@@ -3,67 +3,67 @@
   "compilerOptions": {
     // 不产出编译物
     "noEmit": true,
-    // 模块解析策略
-    "moduleResolution": "bundler",
-    // 模块格式
-    "module": "ESNext",
-    // 文件模块判定方式
-    "moduleDetection": "force",
-    // 按 exports 字段解析子路径
-    "resolvePackageJsonExports": true,
-    // 按 imports 字段解析内部映射
-    "resolvePackageJsonImports": true,
-    // 允许导入 JSON 模块
-    "resolveJsonModule": true,
-    // 路径别名
-    "paths": { "@/*": ["./src/*"] },
     // 编译目标
     "target": "ESNext",
-    // JSX 处理方式
+    // JSX 处理
     "jsx": "preserve",
-    // 类字段定义语义
+    // 类字段语义
     "useDefineForClassFields": true,
-    // 全局类型声明包
+    // 模块格式
+    "module": "ESNext",
+    // 模块解析
+    "moduleResolution": "bundler",
+    // 模块判定
+    "moduleDetection": "force",
+    // JSON 模块导入
+    "resolveJsonModule": true,
+    // exports 子路径解析
+    "resolvePackageJsonExports": true,
+    // imports 内部映射解析
+    "resolvePackageJsonImports": true,
+    // 路径别名
+    "paths": { "@/*": ["./src/*"] },
+    // 全局类型
     "types": ["node", "vitest/globals"],
-    // 严格类型检查
-    "strict": true,
-    // 索引签名属性须下标访问
-    "noPropertyAccessFromIndexSignature": true,
-    // 下标访问结果含 undefined
-    "noUncheckedIndexedAccess": true,
-    // 禁止可选属性显式赋 undefined
-    "exactOptionalPropertyTypes": true,
-    // 覆写成员须标注 override
-    "noImplicitOverride": true,
-    // 禁止 switch 分支落空
-    "noFallthroughCasesInSwitch": true,
-    // 所有代码路径须显式返回
-    "noImplicitReturns": true,
-    // 报告未使用的局部变量
-    "noUnusedLocals": true,
-    // 报告未使用的函数参数
-    "noUnusedParameters": true,
-    // 允许不可达代码
-    "allowUnreachableCode": false,
-    // 允许未使用的标签
-    "allowUnusedLabels": false,
-    // 校验副作用导入可解析
-    "noUncheckedSideEffectImports": true,
-    // 类型导入须标注 type
+    // 类型导入标注
     "verbatimModuleSyntax": true,
-    // 每个文件可独立转译
+    // 独立转译
     "isolatedModules": true,
-    // 仅允许可擦除语法
+    // 可擦除语法
     "erasableSyntaxOnly": true,
-    // CommonJS 默认导入兼容
+    // CommonJS 互操作
     "esModuleInterop": true,
-    // 允许合成默认导入
+    // 合成默认导入
     "allowSyntheticDefaultImports": true,
-    // 文件名大小写须一致
+    // 严格模式
+    "strict": true,
+    // 下标访问含 undefined
+    "noUncheckedIndexedAccess": true,
+    // 可选属性禁 undefined
+    "exactOptionalPropertyTypes": true,
+    // 索引签名下标访问
+    "noPropertyAccessFromIndexSignature": true,
+    // 覆写标注 override
+    "noImplicitOverride": true,
+    // switch 分支落空
+    "noFallthroughCasesInSwitch": true,
+    // 显式返回
+    "noImplicitReturns": true,
+    // 未使用局部变量
+    "noUnusedLocals": true,
+    // 未使用函数参数
+    "noUnusedParameters": true,
+    // 不可达代码
+    "allowUnreachableCode": false,
+    // 未使用标签
+    "allowUnusedLabels": false,
+    // 副作用导入校验
+    "noUncheckedSideEffectImports": true,
+    // 文件名大小写
     "forceConsistentCasingInFileNames": true,
-    // 跳过依赖库类型检查
+    // 跳过依赖库检查
     "skipLibCheck": true
   },
-  // 参与编译的文件
+  // 参与编译
   "include": ["src", "tests", "components.d.ts"]
 }

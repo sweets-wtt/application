@@ -1,19 +1,19 @@
 {
   // Schema 地址
   "$schema": "https://dprint.dev/schemas/v0.json",
+  // 行宽
+  "lineWidth": 120,
   // 包含路径
   "includes": ["**/*.{json,jsonc,md,yaml,toml}", "**/Dockerfile"],
   // 排除路径
   "excludes": ["**/dist/**"],
-  // 行宽
-  "lineWidth": 120,
   // 插件
   "plugins": [
     "npm:@dprint/dockerfile@0.7.0",
     "https://plugins.dprint.dev/json-0.25.2.wasm",
     "https://plugins.dprint.dev/markdown-0.28.2.wasm",
-    "https://plugins.dprint.dev/g-plane/pretty_yaml-v0.6.0.wasm",
-    "https://plugins.dprint.dev/toml-0.9.0.wasm"
+    "https://plugins.dprint.dev/toml-0.9.0.wasm",
+    "https://plugins.dprint.dev/g-plane/pretty_yaml-v0.6.0.wasm"
   ],
   // Dockerfile 插件
   "dockerfile": {
@@ -38,16 +38,16 @@
     // 文本折行
     "textWrap": "always"
   },
-  // YAML 插件
-  "yaml": {
-    // 注释前导空格
-    "formatComments": true
-  },
   // TOML 插件
   "toml": {
     // 数组折叠单行
     "array.preferSingleLine": true,
     // 内联表折叠单行
     "inlineTable.preferSingleLine": true
+  },
+  // YAML 插件
+  "yaml": {
+    // 注释前导空格
+    "formatComments": true
   }
 }
