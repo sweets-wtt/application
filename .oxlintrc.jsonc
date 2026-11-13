@@ -2,7 +2,7 @@
   // Schema 地址
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   // 插件
-  "plugins": ["eslint", "jsdoc", "typescript", "unicorn", "vue", "vitest", "import", "promise", "node", "oxc"],
+  "plugins": ["eslint", "import", "jsdoc", "node", "oxc", "promise", "typescript", "unicorn", "vitest", "vue"],
   // 规则类别
   "categories": {
     // 正确性

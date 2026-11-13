@@ -1,5 +1,5 @@
 # 目标版本
-target-version = "py312"
+target-version = "py314"
 # 行宽
 line-length = 100
 # 额外排除路径
@@ -10,7 +10,7 @@ extend-exclude = ["**/generated/**"]
 # 启用规则
 select = ["ALL", "DOC201", "RUF029"]
 # 禁用规则
-ignore = ["COM812", "CPY001", "D400", "D415", "ISC001", "RUF002", "RUF003"]
+ignore = ["COM812", "CPY001", "D415", "ISC001", "RUF002", "RUF003"]
 # 预览模式
 preview = true
 # 显式预览规则
@@ -31,11 +31,6 @@ lines-after-imports = 2
 [lint.flake8-import-conventions]
 # 禁用 from 导入
 banned-from = ["typing"]
-
-# 导入检查
-[lint.flake8-tidy-imports]
-# 相对导入层级
-ban-relative-imports = "parents"
 
 # 禁用导入
 [lint.flake8-tidy-imports.banned-api]

@@ -1,6 +1,5 @@
 """日志配置"""
 
-from collections.abc import MutableMapping
 import logging
 import os
 import re
@@ -8,6 +7,10 @@ import sys
 import typing
 
 import structlog
+
+
+if typing.TYPE_CHECKING:
+    from collections.abc import MutableMapping
 
 
 # 敏感键

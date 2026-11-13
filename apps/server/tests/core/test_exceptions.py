@@ -1,10 +1,14 @@
 """业务异常测试"""
 
 import json
+import typing
 
 from fastapi import Request
-from fastapi.responses import JSONResponse
 import pytest
+
+
+if typing.TYPE_CHECKING:
+    from fastapi.responses import JSONResponse
 
 from server.core.exceptions import AppError
 from server.core.exceptions import handle_app_error

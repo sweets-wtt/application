@@ -59,16 +59,16 @@ export const getGetHealthzQueryOptions = <TData = Awaited<ReturnType<typeof getH
     Awaited<ReturnType<typeof getHealthz>>,
     TError,
     TData
-  >;
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 };
 
 export type GetHealthzQueryResult = NonNullable<Awaited<ReturnType<typeof getHealthz>>>;
 export type GetHealthzQueryError = unknown;
 
 /**
+ * 返回服务存活状态
  * @summary 存活探针
  */
-
 export function useGetHealthz<TData = Awaited<ReturnType<typeof getHealthz>>, TError = unknown>(
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getHealthz>>, TError, TData>>;
@@ -78,9 +78,10 @@ export function useGetHealthz<TData = Awaited<ReturnType<typeof getHealthz>>, TE
 ): UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetHealthzQueryOptions(options);
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryReturnType<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>;
-  };
+  const query = useQuery(
+    queryOptions as UseQueryOptions<Awaited<ReturnType<typeof getHealthz>>, TError, TData>,
+    queryClient,
+  ) as UseQueryReturnType<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   query.queryKey = unref(queryOptions).queryKey as DataTag<QueryKey, TData, TError>;
 

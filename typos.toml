@@ -1,16 +1,19 @@
+# 文件
+[files]
+# 额外排除路径
+extend-exclude = [
+  # 组件声明
+  "components.d.ts",
+  # 生成物
+  "generated",
+]
+
 # 默认规则
 [default]
 # 忽略正则
 extend-ignore-re = ["[\"']?[A-Z]{2,5}[0-9]{3}[\"']?"]
 
-# 文件
-[files]
-# 额外排除路径
-extend-exclude = [
-  # 锁文件
-  "**/*.lock",
-  # 组件声明
-  "**/components.d.ts",
-  # 生成物
-  "**/generated/**",
-]
+# 锁文件
+[type.lock]
+# 文件内容检查
+check-file = false

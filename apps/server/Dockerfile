@@ -1,5 +1,5 @@
 # 基础镜像
-FROM python:3.12-slim AS builder
+FROM python:3.14-slim AS builder
 
   # 安装 uv
   COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
@@ -18,7 +18,7 @@ FROM python:3.12-slim AS builder
   RUN uv sync --frozen --no-editable --no-dev --package server
 
 # 运行层
-FROM python:3.12-slim
+FROM python:3.14-slim
 
   # 虚拟环境
   COPY --from=builder /app/.venv /app/.venv

@@ -3,74 +3,74 @@
 lockfile_version = 1
 
 [[tools."aqua:aquasecurity/trivy"]]
-version = "0.76.1"
+version = "0.76.2"
 backend = "aqua:aquasecurity/trivy"
-specifiers = ["0.76.1"]
+specifiers = ["0.76.2"]
 
 [tools."aqua:aquasecurity/trivy"."platforms.linux-arm64"]
-checksum = "sha256:e174dff2a6dba5e3ae41f8d0537a6324405bd08132497340304c6b20e0f16a1f"
-url = "https://github.com/aquasecurity/trivy/releases/download/v0.76.1/trivy_0.76.1_Linux-ARM64.tar.gz"
-url_api = "https://api.github.com/repos/aquasecurity/trivy/releases/assets/662254480"
+checksum = "sha256:ab9d51f86e6a5fb936f605faff6b593ac51bc378fff4d3e8b9d58358b9c367c3"
+url = "https://github.com/aquasecurity/trivy/releases/download/v0.76.2/trivy_0.76.2_Linux-ARM64.tar.gz"
+url_api = "https://api.github.com/repos/aquasecurity/trivy/releases/assets/713401022"
 provenance = "cosign"
 
 [tools."aqua:aquasecurity/trivy"."platforms.linux-arm64-musl"]
-checksum = "sha256:e174dff2a6dba5e3ae41f8d0537a6324405bd08132497340304c6b20e0f16a1f"
-url = "https://github.com/aquasecurity/trivy/releases/download/v0.76.1/trivy_0.76.1_Linux-ARM64.tar.gz"
-url_api = "https://api.github.com/repos/aquasecurity/trivy/releases/assets/662254480"
+checksum = "sha256:ab9d51f86e6a5fb936f605faff6b593ac51bc378fff4d3e8b9d58358b9c367c3"
+url = "https://github.com/aquasecurity/trivy/releases/download/v0.76.2/trivy_0.76.2_Linux-ARM64.tar.gz"
+url_api = "https://api.github.com/repos/aquasecurity/trivy/releases/assets/713401022"
 provenance = "cosign"
 
 [tools."aqua:aquasecurity/trivy"."platforms.linux-x64"]
-checksum = "sha256:c7cbe3137fb8a48a17574bede3dd6beb16742d1e9772929940fc90082c39d9c0"
-url = "https://github.com/aquasecurity/trivy/releases/download/v0.76.1/trivy_0.76.1_Linux-64bit.tar.gz"
-url_api = "https://api.github.com/repos/aquasecurity/trivy/releases/assets/662254617"
+checksum = "sha256:bc0fc726e017b8927a62b2d3531d7a84ee01769daf5c99ed866dced54089fdbf"
+url = "https://github.com/aquasecurity/trivy/releases/download/v0.76.2/trivy_0.76.2_Linux-64bit.tar.gz"
+url_api = "https://api.github.com/repos/aquasecurity/trivy/releases/assets/713401165"
 provenance = "cosign"
 
 [tools."aqua:aquasecurity/trivy"."platforms.linux-x64-baseline"]
-checksum = "sha256:c7cbe3137fb8a48a17574bede3dd6beb16742d1e9772929940fc90082c39d9c0"
-url = "https://github.com/aquasecurity/trivy/releases/download/v0.76.1/trivy_0.76.1_Linux-64bit.tar.gz"
-url_api = "https://api.github.com/repos/aquasecurity/trivy/releases/assets/662254617"
+checksum = "sha256:bc0fc726e017b8927a62b2d3531d7a84ee01769daf5c99ed866dced54089fdbf"
+url = "https://github.com/aquasecurity/trivy/releases/download/v0.76.2/trivy_0.76.2_Linux-64bit.tar.gz"
+url_api = "https://api.github.com/repos/aquasecurity/trivy/releases/assets/713401165"
 provenance = "cosign"
 
 [tools."aqua:aquasecurity/trivy"."platforms.linux-x64-musl"]
-checksum = "sha256:c7cbe3137fb8a48a17574bede3dd6beb16742d1e9772929940fc90082c39d9c0"
-url = "https://github.com/aquasecurity/trivy/releases/download/v0.76.1/trivy_0.76.1_Linux-64bit.tar.gz"
-url_api = "https://api.github.com/repos/aquasecurity/trivy/releases/assets/662254617"
+checksum = "sha256:bc0fc726e017b8927a62b2d3531d7a84ee01769daf5c99ed866dced54089fdbf"
+url = "https://github.com/aquasecurity/trivy/releases/download/v0.76.2/trivy_0.76.2_Linux-64bit.tar.gz"
+url_api = "https://api.github.com/repos/aquasecurity/trivy/releases/assets/713401165"
 provenance = "cosign"
 
 [tools."aqua:aquasecurity/trivy"."platforms.linux-x64-musl-baseline"]
-checksum = "sha256:c7cbe3137fb8a48a17574bede3dd6beb16742d1e9772929940fc90082c39d9c0"
-url = "https://github.com/aquasecurity/trivy/releases/download/v0.76.1/trivy_0.76.1_Linux-64bit.tar.gz"
-url_api = "https://api.github.com/repos/aquasecurity/trivy/releases/assets/662254617"
+checksum = "sha256:bc0fc726e017b8927a62b2d3531d7a84ee01769daf5c99ed866dced54089fdbf"
+url = "https://github.com/aquasecurity/trivy/releases/download/v0.76.2/trivy_0.76.2_Linux-64bit.tar.gz"
+url_api = "https://api.github.com/repos/aquasecurity/trivy/releases/assets/713401165"
 provenance = "cosign"
 
 [tools."aqua:aquasecurity/trivy"."platforms.macos-arm64"]
-checksum = "sha256:11a9b6cd2752011b54f01ea4bd0dbfa9f0c41dc6538d5a3f9d23955f471bf4e5"
-url = "https://github.com/aquasecurity/trivy/releases/download/v0.76.1/trivy_0.76.1_macOS-ARM64.tar.gz"
-url_api = "https://api.github.com/repos/aquasecurity/trivy/releases/assets/662254764"
+checksum = "sha256:ae7ea358326960406b703c77b2ac490190797d80b306b5b50c2a27221da0a5b8"
+url = "https://github.com/aquasecurity/trivy/releases/download/v0.76.2/trivy_0.76.2_macOS-ARM64.tar.gz"
+url_api = "https://api.github.com/repos/aquasecurity/trivy/releases/assets/713400755"
 provenance = "cosign"
 
 [tools."aqua:aquasecurity/trivy"."platforms.macos-x64"]
-checksum = "sha256:7aa762eacd582052d053b62dcf972a1ab058abe39a57ccae234ed8894945b6b7"
-url = "https://github.com/aquasecurity/trivy/releases/download/v0.76.1/trivy_0.76.1_macOS-64bit.tar.gz"
-url_api = "https://api.github.com/repos/aquasecurity/trivy/releases/assets/662254481"
+checksum = "sha256:e08bb9ea449ecf66c6bfb03cbb8697c503ff33d35fc585c9747e3eaeb7ed4c7b"
+url = "https://github.com/aquasecurity/trivy/releases/download/v0.76.2/trivy_0.76.2_macOS-64bit.tar.gz"
+url_api = "https://api.github.com/repos/aquasecurity/trivy/releases/assets/713400752"
 provenance = "cosign"
 
 [tools."aqua:aquasecurity/trivy"."platforms.macos-x64-baseline"]
-checksum = "sha256:7aa762eacd582052d053b62dcf972a1ab058abe39a57ccae234ed8894945b6b7"
-url = "https://github.com/aquasecurity/trivy/releases/download/v0.76.1/trivy_0.76.1_macOS-64bit.tar.gz"
-url_api = "https://api.github.com/repos/aquasecurity/trivy/releases/assets/662254481"
+checksum = "sha256:e08bb9ea449ecf66c6bfb03cbb8697c503ff33d35fc585c9747e3eaeb7ed4c7b"
+url = "https://github.com/aquasecurity/trivy/releases/download/v0.76.2/trivy_0.76.2_macOS-64bit.tar.gz"
+url_api = "https://api.github.com/repos/aquasecurity/trivy/releases/assets/713400752"
 provenance = "cosign"
 
 [tools."aqua:aquasecurity/trivy"."platforms.windows-x64"]
-checksum = "sha256:1051f49cb22d5284f43425f72aad9cda63ca12ceb92e7caa06903490c82dc9bf"
-url = "https://github.com/aquasecurity/trivy/releases/download/v0.76.1/trivy_0.76.1_windows-64bit.zip"
-url_api = "https://api.github.com/repos/aquasecurity/trivy/releases/assets/662254788"
+checksum = "sha256:691f737a7e5566a673c3a74dab9160552ec32101e953b659e5c77443d16dddb6"
+url = "https://github.com/aquasecurity/trivy/releases/download/v0.76.2/trivy_0.76.2_windows-64bit.zip"
+url_api = "https://api.github.com/repos/aquasecurity/trivy/releases/assets/713401033"
 provenance = "cosign"
 
 [tools."aqua:aquasecurity/trivy"."platforms.windows-x64-baseline"]
-checksum = "sha256:1051f49cb22d5284f43425f72aad9cda63ca12ceb92e7caa06903490c82dc9bf"
-url = "https://github.com/aquasecurity/trivy/releases/download/v0.76.1/trivy_0.76.1_windows-64bit.zip"
-url_api = "https://api.github.com/repos/aquasecurity/trivy/releases/assets/662254788"
+checksum = "sha256:691f737a7e5566a673c3a74dab9160552ec32101e953b659e5c77443d16dddb6"
+url = "https://github.com/aquasecurity/trivy/releases/download/v0.76.2/trivy_0.76.2_windows-64bit.zip"
+url_api = "https://api.github.com/repos/aquasecurity/trivy/releases/assets/713401033"
 provenance = "cosign"
 
 [[tools."aqua:astral-sh/uv"]]
@@ -206,134 +206,144 @@ url = "https://github.com/cocogitto/cocogitto/releases/download/7.0.0/cocogitto-
 url_api = "https://api.github.com/repos/cocogitto/cocogitto/releases/assets/366659399"
 
 [[tools."aqua:crate-ci/typos"]]
-version = "1.52.0"
+version = "1.52.2"
 backend = "aqua:crate-ci/typos"
-specifiers = ["1.52.0"]
+specifiers = ["1.52.2"]
 
 [tools."aqua:crate-ci/typos"."platforms.linux-arm64"]
-checksum = "sha256:63b7d4478d467a61fe47cdb3162f720c6797856e61a04f7e125d1cdc282488b8"
-url = "https://github.com/crate-ci/typos/releases/download/v1.52.0/typos-v1.52.0-aarch64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/703151522"
+checksum = "sha256:f2f54b567f5f4688f000f1bf85c585ee22cce3b55befc9418bcdd4c5adc16595"
+checksum_source = "mise-versions"
+url = "https://github.com/crate-ci/typos/releases/download/v1.52.2/typos-v1.52.2-aarch64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/733786825"
 
 [tools."aqua:crate-ci/typos"."platforms.linux-arm64-musl"]
-checksum = "sha256:63b7d4478d467a61fe47cdb3162f720c6797856e61a04f7e125d1cdc282488b8"
-url = "https://github.com/crate-ci/typos/releases/download/v1.52.0/typos-v1.52.0-aarch64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/703151522"
+checksum = "sha256:f2f54b567f5f4688f000f1bf85c585ee22cce3b55befc9418bcdd4c5adc16595"
+checksum_source = "mise-versions"
+url = "https://github.com/crate-ci/typos/releases/download/v1.52.2/typos-v1.52.2-aarch64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/733786825"
 
 [tools."aqua:crate-ci/typos"."platforms.linux-x64"]
-checksum = "sha256:6155d4114f9a0f5b8f6d4fda96266c9d5f6add71df80da7f684ee5e72eb14588"
-url = "https://github.com/crate-ci/typos/releases/download/v1.52.0/typos-v1.52.0-x86_64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/703158772"
+checksum = "sha256:3b13d1291281d39d01822e54035636487a7a0f228e70097899b1e33aeb0e7e93"
+checksum_source = "mise-versions"
+url = "https://github.com/crate-ci/typos/releases/download/v1.52.2/typos-v1.52.2-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/733787189"
 
 [tools."aqua:crate-ci/typos"."platforms.linux-x64-baseline"]
-checksum = "sha256:6155d4114f9a0f5b8f6d4fda96266c9d5f6add71df80da7f684ee5e72eb14588"
-url = "https://github.com/crate-ci/typos/releases/download/v1.52.0/typos-v1.52.0-x86_64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/703158772"
+checksum = "sha256:3b13d1291281d39d01822e54035636487a7a0f228e70097899b1e33aeb0e7e93"
+checksum_source = "mise-versions"
+url = "https://github.com/crate-ci/typos/releases/download/v1.52.2/typos-v1.52.2-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/733787189"
 
 [tools."aqua:crate-ci/typos"."platforms.linux-x64-musl"]
-checksum = "sha256:6155d4114f9a0f5b8f6d4fda96266c9d5f6add71df80da7f684ee5e72eb14588"
-url = "https://github.com/crate-ci/typos/releases/download/v1.52.0/typos-v1.52.0-x86_64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/703158772"
+checksum = "sha256:3b13d1291281d39d01822e54035636487a7a0f228e70097899b1e33aeb0e7e93"
+checksum_source = "mise-versions"
+url = "https://github.com/crate-ci/typos/releases/download/v1.52.2/typos-v1.52.2-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/733787189"
 
 [tools."aqua:crate-ci/typos"."platforms.linux-x64-musl-baseline"]
-checksum = "sha256:6155d4114f9a0f5b8f6d4fda96266c9d5f6add71df80da7f684ee5e72eb14588"
-url = "https://github.com/crate-ci/typos/releases/download/v1.52.0/typos-v1.52.0-x86_64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/703158772"
+checksum = "sha256:3b13d1291281d39d01822e54035636487a7a0f228e70097899b1e33aeb0e7e93"
+checksum_source = "mise-versions"
+url = "https://github.com/crate-ci/typos/releases/download/v1.52.2/typos-v1.52.2-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/733787189"
 
 [tools."aqua:crate-ci/typos"."platforms.macos-arm64"]
-checksum = "sha256:90724dd2905cb1ce033343c71ed60e52fe898674f882803e3110cd228e09e1c5"
-url = "https://github.com/crate-ci/typos/releases/download/v1.52.0/typos-v1.52.0-aarch64-apple-darwin.tar.gz"
-url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/703166489"
+checksum = "sha256:b8e7b8b81f28cc808fd763b6d935536e15ba1ef72613bbb6d628b58a891da7ef"
+checksum_source = "mise-versions"
+url = "https://github.com/crate-ci/typos/releases/download/v1.52.2/typos-v1.52.2-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/733789873"
 
 [tools."aqua:crate-ci/typos"."platforms.macos-x64"]
-checksum = "sha256:8de057f425909b02c0184892539755d70ecc3244c4b214ae9382cedd691127e0"
-url = "https://github.com/crate-ci/typos/releases/download/v1.52.0/typos-v1.52.0-x86_64-apple-darwin.tar.gz"
-url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/703158123"
+checksum = "sha256:2c1e5cd3be644005d27543d7d83a32dbba36eb285bc12678818709938a63a988"
+checksum_source = "mise-versions"
+url = "https://github.com/crate-ci/typos/releases/download/v1.52.2/typos-v1.52.2-x86_64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/733789561"
 
 [tools."aqua:crate-ci/typos"."platforms.macos-x64-baseline"]
-checksum = "sha256:8de057f425909b02c0184892539755d70ecc3244c4b214ae9382cedd691127e0"
-url = "https://github.com/crate-ci/typos/releases/download/v1.52.0/typos-v1.52.0-x86_64-apple-darwin.tar.gz"
-url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/703158123"
+checksum = "sha256:2c1e5cd3be644005d27543d7d83a32dbba36eb285bc12678818709938a63a988"
+checksum_source = "mise-versions"
+url = "https://github.com/crate-ci/typos/releases/download/v1.52.2/typos-v1.52.2-x86_64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/733789561"
 
 [tools."aqua:crate-ci/typos"."platforms.windows-x64"]
-checksum = "sha256:7da6eb1932ad86921420a7198dbc9e62a10bcd995144704dc19b81d3fb802182"
-url = "https://github.com/crate-ci/typos/releases/download/v1.52.0/typos-v1.52.0-x86_64-pc-windows-msvc.zip"
-url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/703159242"
+checksum = "sha256:ab79036832cea0f2a21aa947731d39512250cc0f7a6a2f6add26262738a8cc11"
+url = "https://github.com/crate-ci/typos/releases/download/v1.52.2/typos-v1.52.2-x86_64-pc-windows-msvc.zip"
+url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/733790297"
 
 [tools."aqua:crate-ci/typos"."platforms.windows-x64-baseline"]
-checksum = "sha256:7da6eb1932ad86921420a7198dbc9e62a10bcd995144704dc19b81d3fb802182"
-url = "https://github.com/crate-ci/typos/releases/download/v1.52.0/typos-v1.52.0-x86_64-pc-windows-msvc.zip"
-url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/703159242"
+checksum = "sha256:ab79036832cea0f2a21aa947731d39512250cc0f7a6a2f6add26262738a8cc11"
+checksum_source = "mise-versions"
+url = "https://github.com/crate-ci/typos/releases/download/v1.52.2/typos-v1.52.2-x86_64-pc-windows-msvc.zip"
+url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/733790297"
 
 [[tools."aqua:daveshanley/vacuum"]]
-version = "0.36.2"
+version = "0.40.0"
 backend = "aqua:daveshanley/vacuum"
-specifiers = ["0.36.2"]
+specifiers = ["0.40.0"]
 
 [tools."aqua:daveshanley/vacuum"."platforms.linux-arm64"]
-checksum = "sha256:751f3c6b8f1978deda3c1cec47cdafeeb150c29a9970267df8de26289a1c21c8"
-url = "https://github.com/daveshanley/vacuum/releases/download/v0.36.2/vacuum_0.36.2_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/699624662"
+checksum = "sha256:3968fb2dea91f7fe0e3856a2be39489041056fdab812f4e4322e16a421c3a1ff"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.40.0/vacuum_0.40.0_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/737366507"
 provenance = "cosign"
 
 [tools."aqua:daveshanley/vacuum"."platforms.linux-arm64-musl"]
-checksum = "sha256:751f3c6b8f1978deda3c1cec47cdafeeb150c29a9970267df8de26289a1c21c8"
-url = "https://github.com/daveshanley/vacuum/releases/download/v0.36.2/vacuum_0.36.2_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/699624662"
+checksum = "sha256:3968fb2dea91f7fe0e3856a2be39489041056fdab812f4e4322e16a421c3a1ff"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.40.0/vacuum_0.40.0_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/737366507"
 provenance = "cosign"
 
 [tools."aqua:daveshanley/vacuum"."platforms.linux-x64"]
-checksum = "sha256:5736f27a806888f7ed89fba6bb8a3a00e5da895f1ad870f699b3018b7c8bcb0d"
-url = "https://github.com/daveshanley/vacuum/releases/download/v0.36.2/vacuum_0.36.2_linux_x86_64.tar.gz"
-url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/699624665"
+checksum = "sha256:1b1f5ab50db8fc5158d3fb72e5fcc1e2e01cd39ba3afb7209546b2ce1bd66272"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.40.0/vacuum_0.40.0_linux_x86_64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/737366679"
 provenance = "cosign"
 
 [tools."aqua:daveshanley/vacuum"."platforms.linux-x64-baseline"]
-checksum = "sha256:5736f27a806888f7ed89fba6bb8a3a00e5da895f1ad870f699b3018b7c8bcb0d"
-url = "https://github.com/daveshanley/vacuum/releases/download/v0.36.2/vacuum_0.36.2_linux_x86_64.tar.gz"
-url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/699624665"
+checksum = "sha256:1b1f5ab50db8fc5158d3fb72e5fcc1e2e01cd39ba3afb7209546b2ce1bd66272"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.40.0/vacuum_0.40.0_linux_x86_64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/737366679"
 provenance = "cosign"
 
 [tools."aqua:daveshanley/vacuum"."platforms.linux-x64-musl"]
-checksum = "sha256:5736f27a806888f7ed89fba6bb8a3a00e5da895f1ad870f699b3018b7c8bcb0d"
-url = "https://github.com/daveshanley/vacuum/releases/download/v0.36.2/vacuum_0.36.2_linux_x86_64.tar.gz"
-url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/699624665"
+checksum = "sha256:1b1f5ab50db8fc5158d3fb72e5fcc1e2e01cd39ba3afb7209546b2ce1bd66272"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.40.0/vacuum_0.40.0_linux_x86_64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/737366679"
 provenance = "cosign"
 
 [tools."aqua:daveshanley/vacuum"."platforms.linux-x64-musl-baseline"]
-checksum = "sha256:5736f27a806888f7ed89fba6bb8a3a00e5da895f1ad870f699b3018b7c8bcb0d"
-url = "https://github.com/daveshanley/vacuum/releases/download/v0.36.2/vacuum_0.36.2_linux_x86_64.tar.gz"
-url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/699624665"
+checksum = "sha256:1b1f5ab50db8fc5158d3fb72e5fcc1e2e01cd39ba3afb7209546b2ce1bd66272"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.40.0/vacuum_0.40.0_linux_x86_64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/737366679"
 provenance = "cosign"
 
 [tools."aqua:daveshanley/vacuum"."platforms.macos-arm64"]
-checksum = "sha256:7fb1666195a8fe2075fd4fb4076831f1152ef8257dfe087d343e71f17a389688"
-url = "https://github.com/daveshanley/vacuum/releases/download/v0.36.2/vacuum_0.36.2_darwin_arm64.tar.gz"
-url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/699624609"
+checksum = "sha256:0befa3cb558cd4fb79b1a9fb9b5e41c012f90431b27d676fd98ceba2ae371893"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.40.0/vacuum_0.40.0_darwin_arm64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/737366511"
 provenance = "cosign"
 
 [tools."aqua:daveshanley/vacuum"."platforms.macos-x64"]
-checksum = "sha256:879cbc99179aebfa6c569e5e6672b60ed19647c15a9e948e3a644c97df69625a"
-url = "https://github.com/daveshanley/vacuum/releases/download/v0.36.2/vacuum_0.36.2_darwin_x86_64.tar.gz"
-url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/699624607"
+checksum = "sha256:5e45434df042aef3fa161c44038e5f4d300e39dbe2b9ecc24fccc4ef511b1ad2"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.40.0/vacuum_0.40.0_darwin_x86_64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/737366519"
 provenance = "cosign"
 
 [tools."aqua:daveshanley/vacuum"."platforms.macos-x64-baseline"]
-checksum = "sha256:879cbc99179aebfa6c569e5e6672b60ed19647c15a9e948e3a644c97df69625a"
-url = "https://github.com/daveshanley/vacuum/releases/download/v0.36.2/vacuum_0.36.2_darwin_x86_64.tar.gz"
-url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/699624607"
+checksum = "sha256:5e45434df042aef3fa161c44038e5f4d300e39dbe2b9ecc24fccc4ef511b1ad2"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.40.0/vacuum_0.40.0_darwin_x86_64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/737366519"
 provenance = "cosign"
 
 [tools."aqua:daveshanley/vacuum"."platforms.windows-x64"]
-checksum = "sha256:758578f69b265955e17d5288959b4d96f76c1eb96374841f7627c54b573e0377"
-url = "https://github.com/daveshanley/vacuum/releases/download/v0.36.2/vacuum_0.36.2_windows_x86_64.tar.gz"
-url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/699624664"
+checksum = "sha256:7acb88b026b6219218502e40bef607fe0f074b943f0ec79861612888e791fd45"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.40.0/vacuum_0.40.0_windows_x86_64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/737366653"
 provenance = "cosign"
 
 [tools."aqua:daveshanley/vacuum"."platforms.windows-x64-baseline"]
-checksum = "sha256:758578f69b265955e17d5288959b4d96f76c1eb96374841f7627c54b573e0377"
-url = "https://github.com/daveshanley/vacuum/releases/download/v0.36.2/vacuum_0.36.2_windows_x86_64.tar.gz"
-url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/699624664"
+checksum = "sha256:7acb88b026b6219218502e40bef607fe0f074b943f0ec79861612888e791fd45"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.40.0/vacuum_0.40.0_windows_x86_64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/737366653"
 provenance = "cosign"
 
 [[tools."aqua:dprint/dprint"]]
@@ -801,61 +811,71 @@ checksum = "sha256:0f20ce6674d4f2dbcc8c5d59fdf99f7ba45f8c3b367e0f5781cbfa30a1c78
 url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-windows-x64-baseline.zip"
 
 [[tools."github:tufin/oasdiff"]]
-version = "1.35.0"
+version = "1.37.0"
 backend = "github:tufin/oasdiff"
-specifiers = ["v1.35.0"]
+specifiers = ["v1.37.0"]
 
 [tools."github:tufin/oasdiff"."platforms.linux-arm64"]
-checksum = "sha256:1f8b5aa033cd0240ae6c53460268bcd6e578526666a4487a781ece8cef39fbdd"
-url = "https://github.com/tufin/oasdiff/releases/download/v1.35.0/oasdiff_1.35.0_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/685622226"
+checksum = "sha256:072a425ac647ecf2808721e91293fd644cee7935d2b32e650b3158539b2c7898"
+checksum_source = "mise-versions"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.37.0/oasdiff_1.37.0_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/724875873"
 
 [tools."github:tufin/oasdiff"."platforms.linux-arm64-musl"]
-checksum = "sha256:1f8b5aa033cd0240ae6c53460268bcd6e578526666a4487a781ece8cef39fbdd"
-url = "https://github.com/tufin/oasdiff/releases/download/v1.35.0/oasdiff_1.35.0_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/685622226"
+checksum = "sha256:072a425ac647ecf2808721e91293fd644cee7935d2b32e650b3158539b2c7898"
+checksum_source = "mise-versions"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.37.0/oasdiff_1.37.0_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/724875873"
 
 [tools."github:tufin/oasdiff"."platforms.linux-x64"]
-checksum = "sha256:a8023002fcb2eaa7f5758148a9303cb63d33b939886df312268bc0fc7b939140"
-url = "https://github.com/tufin/oasdiff/releases/download/v1.35.0/oasdiff_1.35.0_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/685622252"
+checksum = "sha256:eac87307d31d08c36800c58a409c247f1c5db37fbb72e2544402f22a87cbca3c"
+checksum_source = "mise-versions"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.37.0/oasdiff_1.37.0_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/724875877"
 
 [tools."github:tufin/oasdiff"."platforms.linux-x64-baseline"]
-checksum = "sha256:a8023002fcb2eaa7f5758148a9303cb63d33b939886df312268bc0fc7b939140"
-url = "https://github.com/tufin/oasdiff/releases/download/v1.35.0/oasdiff_1.35.0_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/685622252"
+checksum = "sha256:eac87307d31d08c36800c58a409c247f1c5db37fbb72e2544402f22a87cbca3c"
+checksum_source = "mise-versions"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.37.0/oasdiff_1.37.0_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/724875877"
 
 [tools."github:tufin/oasdiff"."platforms.linux-x64-musl"]
-checksum = "sha256:a8023002fcb2eaa7f5758148a9303cb63d33b939886df312268bc0fc7b939140"
-url = "https://github.com/tufin/oasdiff/releases/download/v1.35.0/oasdiff_1.35.0_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/685622252"
+checksum = "sha256:eac87307d31d08c36800c58a409c247f1c5db37fbb72e2544402f22a87cbca3c"
+checksum_source = "mise-versions"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.37.0/oasdiff_1.37.0_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/724875877"
 
 [tools."github:tufin/oasdiff"."platforms.linux-x64-musl-baseline"]
-checksum = "sha256:a8023002fcb2eaa7f5758148a9303cb63d33b939886df312268bc0fc7b939140"
-url = "https://github.com/tufin/oasdiff/releases/download/v1.35.0/oasdiff_1.35.0_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/685622252"
+checksum = "sha256:eac87307d31d08c36800c58a409c247f1c5db37fbb72e2544402f22a87cbca3c"
+checksum_source = "mise-versions"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.37.0/oasdiff_1.37.0_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/724875877"
 
 [tools."github:tufin/oasdiff"."platforms.macos-arm64"]
-checksum = "sha256:964ad2c0331768c4515fc49779827094bc89a65b1d309dac28886d1c3faf305c"
-url = "https://github.com/tufin/oasdiff/releases/download/v1.35.0/oasdiff_1.35.0_darwin_all.tar.gz"
-url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/685622242"
+checksum = "sha256:eccf5b9f46e689f8adcd79b79d4fdbde26a28301b6a74a0b449ad6a49e187e45"
+checksum_source = "mise-versions"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.37.0/oasdiff_1.37.0_darwin_all.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/724875920"
 
 [tools."github:tufin/oasdiff"."platforms.macos-x64"]
-checksum = "sha256:964ad2c0331768c4515fc49779827094bc89a65b1d309dac28886d1c3faf305c"
-url = "https://github.com/tufin/oasdiff/releases/download/v1.35.0/oasdiff_1.35.0_darwin_all.tar.gz"
-url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/685622242"
+checksum = "sha256:eccf5b9f46e689f8adcd79b79d4fdbde26a28301b6a74a0b449ad6a49e187e45"
+checksum_source = "mise-versions"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.37.0/oasdiff_1.37.0_darwin_all.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/724875920"
 
 [tools."github:tufin/oasdiff"."platforms.macos-x64-baseline"]
-checksum = "sha256:964ad2c0331768c4515fc49779827094bc89a65b1d309dac28886d1c3faf305c"
-url = "https://github.com/tufin/oasdiff/releases/download/v1.35.0/oasdiff_1.35.0_darwin_all.tar.gz"
-url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/685622242"
+checksum = "sha256:eccf5b9f46e689f8adcd79b79d4fdbde26a28301b6a74a0b449ad6a49e187e45"
+checksum_source = "mise-versions"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.37.0/oasdiff_1.37.0_darwin_all.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/724875920"
 
 [tools."github:tufin/oasdiff"."platforms.windows-x64"]
-checksum = "sha256:5cdea2b64bd083d16dff19dba3aae011a0b7388ab33df81051cfc76800bf73e0"
-url = "https://github.com/tufin/oasdiff/releases/download/v1.35.0/oasdiff_1.35.0_windows_amd64.tar.gz"
-url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/685622230"
+checksum = "sha256:d72f1c5c4ba4adddafa4ec3c38f1c34f09df8ddb2d2bdd75869f94145c5bcc6d"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.37.0/oasdiff_1.37.0_windows_amd64.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/724875874"
 
 [tools."github:tufin/oasdiff"."platforms.windows-x64-baseline"]
-checksum = "sha256:5cdea2b64bd083d16dff19dba3aae011a0b7388ab33df81051cfc76800bf73e0"
-url = "https://github.com/tufin/oasdiff/releases/download/v1.35.0/oasdiff_1.35.0_windows_amd64.tar.gz"
-url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/685622230"
+checksum = "sha256:d72f1c5c4ba4adddafa4ec3c38f1c34f09df8ddb2d2bdd75869f94145c5bcc6d"
+checksum_source = "mise-versions"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.37.0/oasdiff_1.37.0_windows_amd64.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/724875874"

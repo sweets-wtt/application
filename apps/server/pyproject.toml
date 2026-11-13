@@ -14,7 +14,7 @@ version = "0.1.0"
 # 描述
 description = "Server 应用"
 # Python 版本
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 # 依赖
 dependencies = [
   # Web 框架

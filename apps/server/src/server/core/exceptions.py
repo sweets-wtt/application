@@ -1,7 +1,12 @@
 """应用异常"""
 
-from fastapi import Request
+import typing
+
 from fastapi.responses import JSONResponse
+
+
+if typing.TYPE_CHECKING:
+    from fastapi import Request
 
 
 class AppError(Exception):

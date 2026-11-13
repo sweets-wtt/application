@@ -1,14 +1,12 @@
 # 源码
 [src]
-# 源码根
-include = ["apps/server/src", "apps/server/tests"]
 # 排除路径
 exclude = ["**/generated"]
 
 # 运行环境
 [environment]
 # Python 版本
-python-version = "3.12"
+python-version = "3.14"
 # 目标平台
 python-platform = "linux"
 
