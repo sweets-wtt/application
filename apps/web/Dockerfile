@@ -31,25 +31,28 @@ FROM oven/bun:1 AS builder
   RUN bun run build
 
 # 运行层
-FROM nginx:alpine
+FROM caddy:2.11.9@sha256:e40b94d0a43b5ff69cb20568d73f10c70703df7b0ffc2298eb3d723cdc9d0bd1
 
   # 静态产物
-  COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
+  COPY --from=builder /app/apps/web/dist /srv
 
-  # Nginx 站点配置
-  COPY apps/web/nginx.conf /etc/nginx/conf.d/default.conf
-
-  # 绑定低端口能力
-  RUN apk add --no-cache libcap && setcap "cap_net_bind_service=+ep" /usr/sbin/nginx
-
-  # 运行期目录属主
-  RUN chown -R nginx:nginx /var/cache/nginx /var/run /usr/share/nginx/html
+  # 站点配置
+  COPY infra/Caddyfile /etc/caddy/Caddyfile
 
   # 运行用户
-  USER nginx
+  RUN addgroup -g 1000 -S caddy && adduser -u 1000 -S -G caddy -s /sbin/nologin caddy
+
+  # 绑定低端口能力
+  RUN setcap "cap_net_bind_service=+ep" /usr/bin/caddy
+
+  # 运行期目录属主
+  RUN chown -R caddy:caddy /srv /data /config
+
+  # 运行用户
+  USER caddy
 
   # 端口
-  EXPOSE 80
+  EXPOSE 80 443 443/udp
 
   # 启动命令
-  CMD ["nginx", "-g", "daemon off;"]
+  CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]

@@ -25,48 +25,14 @@ x-internal: &internal
 
 # 服务定义
 services:
-  # 入口代理
-  caddy:
-    # 公共字段
-    <<: *service
-    # 镜像
-    image: "caddy:2.11.9@sha256:e40b94d0a43b5ff69cb20568d73f10c70703df7b0ffc2298eb3d723cdc9d0bd1"
-    # 环境变量
-    environment:
-      # 站点域名
-      AUTH_DOMAIN: "${AUTH_DOMAIN:?}"
-      # ACME 证书邮箱
-      ACME_EMAIL: "${ACME_EMAIL:?}"
-    # 端口映射
-    ports:
-      # HTTP
-      - "80:80"
-      # HTTPS
-      - "443:443"
-      # HTTP/3
-      - "443:443/udp"
-    # 挂载卷
-    volumes:
-      # 代理配置
-      - "./Caddyfile:/etc/caddy/Caddyfile:ro"
-      # 数据卷
-      - "caddy-data:/data"
-    # 健康检查
-    healthcheck:
-      # 公共参数
-      <<: *healthcheck
-      # 检查命令
-      test: ["CMD", "caddy", "version"]
-    # 网络
-    networks:
-      - "edge"
-
   # 后端服务
   api:
     # 公共字段
     <<: *service
     # 镜像
     image: "${SERVER_IMAGE:-server:latest}"
+    # 网络
+    networks: *internal
     # 健康检查
     healthcheck:
       # 公共参数
@@ -76,10 +42,8 @@ services:
         "CMD-SHELL",
         "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz')\"",
       ]
-    # 网络
-    networks: *internal
 
-  # 前端服务
+  # 前端服务，同时承担公网入口
   web:
     # 公共字段
     <<: *service
@@ -97,14 +61,24 @@ services:
         VITE_API_BASE_URL: "${VITE_API_BASE_URL:-}"
         # 心跳间隔
         VITE_HEARTBEAT_INTERVAL: "${VITE_HEARTBEAT_INTERVAL:-}"
-    # 健康检查
-    healthcheck:
-      # 公共参数
-      <<: *healthcheck
-      # 检查命令
-      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/ | grep -q app"]
-      # 启动宽限期
-      start_period: "10s"
+    # 环境变量
+    environment:
+      # 站点域名
+      AUTH_DOMAIN: "${AUTH_DOMAIN:?}"
+      # ACME 证书邮箱
+      ACME_EMAIL: "${ACME_EMAIL:?}"
+    # 端口映射
+    ports:
+      # HTTP
+      - "80:80"
+      # HTTPS
+      - "443:443"
+      # HTTP/3
+      - "443:443/udp"
+    # 挂载卷
+    volumes:
+      # 证书与配置数据
+      - "caddy-data:/data"
     # 网络
     networks:
       # 入口网络
@@ -117,6 +91,14 @@ services:
       api:
         # 就绪条件
         condition: "service_healthy"
+    # 健康检查
+    healthcheck:
+      # 公共参数
+      <<: *healthcheck
+      # 检查命令
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:8081/healthz"]
+      # 启动宽限期
+      start_period: "10s"
 
 # 自定义网络
 networks:
@@ -127,5 +109,5 @@ networks:
 
 # 具名卷
 volumes:
-  # Caddy 数据卷
+  # Caddy 证书数据卷
   caddy-data:

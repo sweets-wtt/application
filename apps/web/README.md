@@ -96,7 +96,6 @@ apps/web/                                # 前端应用
 │   └── setup.ts                         # 测试配置
 ├── .env.example                         # 变量示例
 ├── index.html                           # 页面模板
-├── nginx.conf                           # 代理配置
 ├── orval.config.ts                      # 契约配置
 ├── package.json                         # 包体配置
 ├── playwright.config.ts                 # 端到端配
@@ -176,7 +175,7 @@ apps/web/                                # 前端应用
 约定：
 
 * 所有 `VITE_*` 变量都会进入客户端 bundle，不能存放密钥
-* 生产环境默认同源，由 Nginx 反代 API
+* 生产环境默认同源，由 Caddy 反代 API，站点配置见 `infra/Caddyfile`
 * 本地开发可设置绝对 API 地址，或在 Vite 中配置 `/healthz`、`/api` 代理，保持与生产同源
 * 环境变量统一在 `src/config/env.ts` 解析，业务代码不直接读 `import.meta.env`
 

@@ -57,5 +57,7 @@
 apps/*/tests/
 # 服务编排
 infra/
+# 入口配置例外
+!infra/Caddyfile
 # API 契约
 contracts/

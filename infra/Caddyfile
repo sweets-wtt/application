@@ -5,8 +5,86 @@
 	admin off
 }
 
+# 安全响应头
+(security_headers) {
+	header {
+		# 强制 HTTPS
+		Strict-Transport-Security "max-age=31536000"
+		# 禁止 MIME 嗅探
+		X-Content-Type-Options "nosniff"
+		# 来源策略
+		Referrer-Policy "strict-origin-when-cross-origin"
+		# 禁止被嵌入
+		X-Frame-Options "DENY"
+		# 隐藏版本标识
+		-Server
+	}
+}
+
+# 访问日志
+(access_log) {
+	log {
+		# 输出到容器标准输出
+		output stdout
+		# 结构化格式
+		format json
+	}
+}
+
+# 站点公共配置
+(site) {
+	# 响应压缩
+	encode zstd gzip
+	# 安全响应头
+	import security_headers
+	# 访问日志
+	import access_log
+}
+
+# 容器内健康检查，不对外发布端口
+:8081 {
+	# 健康检查路径
+	respond /healthz 200
+	# 其余路径
+	respond 404
+}
+
 # Web 站点
 web.{$AUTH_DOMAIN} {
-	# 上游服务
-	reverse_proxy web:80
+	# 站点公共配置
+	import site
+
+	# 带哈希的静态资源
+	@immutable path /assets/*
+	# 长期缓存
+	header @immutable Cache-Control "public, max-age=31536000, immutable"
+
+	# 其余响应
+	@mutable not path /assets/*
+	# 每次校验
+	header @mutable Cache-Control "no-cache"
+
+	# 健康检查反代
+	handle /healthz {
+		# 上游服务
+		reverse_proxy api:8000
+	}
+
+	# 静态资源与单页回退
+	handle {
+		# 站点根目录
+		root * /srv
+		# 文件优先，缺失回退入口
+		try_files {path} /index.html
+		# 静态文件服务
+		file_server
+	}
 }
+
+# 新增应用时追加站点块，复用 site 片段
+# admin.{$AUTH_DOMAIN} {
+# 	# 站点公共配置
+# 	import site
+# 	# 反向代理
+# 	reverse_proxy admin:80
+# }

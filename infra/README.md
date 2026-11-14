@@ -1,16 +1,14 @@
 # Infra
 
-部署与本地编排配置，生产入口由 Caddy 统一终止 TLS，Web 由 Nginx 托管并反代 API
+部署与本地编排配置，公网入口由 Web 镜像内置的 Caddy 承担，统一终止 TLS 并托管静态资源，站点配置位于本目录
 
 ## 结构
 
 ```text
 infra/              # 部署配置
-├── caddy/          # 代理配置
-│   └── sites/      # 站点配置
 ├── secrets/        # 部署密钥
 ├── .env.example    # 变量示例
-├── Caddyfile       # 入口代理
+├── Caddyfile       # 入口配置
 ├── compose.yaml    # 容器编排
 └── README.md       # 部署说明
 ```
@@ -19,19 +17,23 @@ infra/              # 部署配置
 
 ## 职责
 
-* `Caddyfile`：唯一公网入口，负责 HTTPS、ACME 证书与反向代理到 `web:80`
-* `compose.yaml`：编排 `caddy`、`api`、`web`，划分 `edge` 与 `internal` 网络
+* `compose.yaml`：编排 `api` 与 `web`，划分 `edge` 与 `internal` 网络
 * `.env.example`：列出 compose 与前端构建所需变量，不包含真实密钥
+* `Caddyfile`：随 Web 镜像构建的入口配置，负责 HTTPS、ACME 证书与站点路由；安全头、压缩与访问日志抽为 `site` 片段复用
 
 ## 注意事项
 
 * 本地使用前复制 `.env.example` 为 `.env`，真实 `.env` 不提交
-* `AUTH_DOMAIN` 是历史命名，当前仅作为站点域名使用
+* `AUTH_DOMAIN` 是历史命名，当前仅作为站点域名使用，实际站点为 `web.<AUTH_DOMAIN>`
 * `SERVER_IMAGE` 与 `WEB_IMAGE` 生产环境应使用不可变 tag 或 digest，避免 `latest`
-* `api` 只加入 `internal` 网络；`web` 同时加入 `edge` 与 `internal`；只有 Caddy 暴露公网端口
+* `api` 只加入 `internal` 网络；`web` 同时加入 `edge` 与 `internal`；只有 `web` 暴露公网端口
 * `api` 服务只声明镜像，不负责构建；启动编排前先执行 `task build-image`
 * Dockerfile 保留在 `apps/`，由 compose 通过 `context` 与 `dockerfile` 引用
 * `VITE_*` 是 Web 构建时变量，修改后需要重新构建 Web 镜像
+* Web 镜像内置 Caddy，容器内 `:8081` 仅用于健康检查，不对外发布端口
+* `Caddyfile` 通过 `.dockerignore` 的 `!infra/Caddyfile` 例外进入构建上下文，删除该例外会导致 Web 镜像构建失败
+* 新增站点时在 `Caddyfile` 追加站点块并 `import site`，不要复制安全头、压缩与日志配置
+* 证书与 Caddy 运行数据存放在 `caddy-data` 卷，重建容器不会重新签发证书
 * 当前没有数据库服务；server 启动不依赖数据库
 * 本地开发差异写入 `compose.override.yaml`，不要用 profiles 模拟环境
 * 拆多个 compose 文件时使用 `include`，不要用多个 `-f`，避免相对路径解析错误
@@ -44,7 +46,7 @@ infra/              # 部署配置
 | -------- | -------------------- | -------------------------------------------------- |
 | 编排文件 | `compose.yaml`       | 不使用 `docker-compose.yml`                        |
 | 环境叠加 | `compose.<env>.yaml` | `compose.override.yaml`、`compose.production.yaml` |
-| 代理配置 | `Caddyfile`          | 站点拆分放 `caddy/sites/`                          |
+| 代理配置 | `Caddyfile`          | 位于 `infra/`，随 Web 镜像构建                     |
 | 变量模板 | `.env.example`       | 不使用 `.env.template`                             |
 | 密钥目录 | `secrets/`           | 内容不入库                                         |
 
