@@ -4,7 +4,7 @@ info:
   title: API
   description: HTTP API 契约
   version: 0.1.0
-jsonSchemaDialect: https://json-schema.org/draft/2020-12/schema
+jsonSchemaDialect: "https://json-schema.org/draft/2020-12/schema"
 servers:
   - url: /
 tags:
@@ -12,15 +12,8 @@ tags:
     description: 服务健康检查相关接口
 paths:
   /healthz:
-    get:
-      operationId: getHealthz
-      summary: 存活探针
-      description: 返回服务存活状态
-      tags:
-        - health
-      responses:
-        '200':
-          $ref: '#/components/responses/Healthz200'
+    # 路径文件引用
+    $ref: "#/components/pathItems/healthz"
 components:
   schemas:
     Response:
@@ -44,7 +37,7 @@ components:
         application/json:
           schema:
             allOf:
-              - $ref: '#/components/schemas/Response'
+              - $ref: "#/components/schemas/Response"
               - properties:
                   data:
                     type: object
@@ -56,3 +49,14 @@ components:
                         enum:
                           - ok
                     additionalProperties: false
+  pathItems:
+    healthz:
+      get:
+        operationId: getHealthz
+        summary: 存活探针
+        description: 返回服务存活状态
+        tags:
+          - health
+        responses:
+          "200":
+            $ref: "#/components/responses/Healthz200"

@@ -242,7 +242,7 @@ tasks:
     run: once
     cmds:
       # 打包契约
-      - bunx redocly bundle contracts/http/openapi.yaml --output {{.SPEC}}
+      - vacuum bundle --composed --base contracts/http -q contracts/http/openapi.yaml {{.SPEC}} > /dev/null
       # 写入生成标记
       - task: bundle-stamp
 

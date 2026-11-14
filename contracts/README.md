@@ -53,7 +53,7 @@ contracts/                         # 契约目录
 * 新增组件时在 `components/` 对应目录单独建文件，不要聚合到单个文件
 * 组件引用使用相对路径，例如 `../components/responses/Healthz200.yaml`
 * 响应统一使用 `Response` 信封：`code`、`message`、`data`，并设置 `additionalProperties: false`
-* 内部单仓库不建版本目录；需要多版本并存时用 Redocly 别名而不是 `v1/`
+* 内部单仓库不建版本目录；需要多版本并存时用 `$ref` 别名而不是 `v1/`
 * `dist/` 与两个应用的生成物都由工具生成，禁止手改
 * server 生成物：`apps/server/src/server/generated/contracts.py`
 * web 生成物：`apps/web/src/api/generated/http` 与 `apps/web/src/api/generated/schemas`
