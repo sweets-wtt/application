@@ -1,0 +1,21 @@
+// TypeScript - https://www.typescriptlang.org/tsconfig/
+
+{
+  // 编译选项
+  "compilerOptions": {
+    // 复合
+    "composite": true
+  },
+
+  // 包含
+  "include": [],
+
+  // 引用
+  "references": [
+    { "path": "./packages/typescript/auth" },
+    { "path": "./packages/typescript/contracts" },
+    { "path": "./packages/typescript/log" },
+    { "path": "./packages/typescript/realtime" },
+    { "path": "./packages/typescript/state" }
+  ]
+}

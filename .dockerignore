@@ -1,0 +1,26 @@
+# Dockerignore - `https://docs.docker.com/build/concepts/context/#dockerignore-files`
+
+# 版本控制
+.git/
+
+# 环境
+.env
+.env.*
+.venv/
+**/node_modules/
+
+# 日志
+*.log
+*.log.*
+
+# 缓存
+.cache/
+__pycache__/
+.pytest_cache
+.ruff_cache
+*.tsbuildinfo
+.hypothesis
+
+# 生成
+.coverage
+**/dist/

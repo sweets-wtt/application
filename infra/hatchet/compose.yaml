@@ -1,0 +1,86 @@
+# Docker Compose - `https://docs.docker.com/compose/`
+
+# 服务
+services:
+  # Hatchet
+  hatchet-lite:
+    # 镜像
+    image: "ghcr.io/hatchet-dev/hatchet/hatchet-lite@sha256:db8fb8e009a5c892859e52e4aa50b17aa11ab1dd23801cd320492f2942db30d7"
+    # 重启策略
+    restart: unless-stopped
+    # 环境变量
+    environment:
+      # 数据库直连
+      DATABASE_URL: "postgresql://postgres:${POSTGRES_PASSWORD:?}@postgresql:5432/hatchet?sslmode=disable"
+      # PgBouncer 连接
+      DATABASE_PGBOUNCER_URL: "postgresql://postgres:${POSTGRES_PASSWORD:?}@pgbouncer:5432/hatchet?sslmode=disable"
+      # 消息队列类型
+      SERVER_MSGQUEUE_KIND: "postgres"
+      # 发布订阅类型
+      SERVER_MSGQUEUE_PUBSUB_KIND: "postgres"
+      # 服务器端口
+      SERVER_PORT: "8080"
+      # 服务器地址
+      SERVER_URL: "http://hatchet-lite:8888"
+      # Cookie 不安全模式
+      SERVER_AUTH_COOKIE_INSECURE: "t"
+      # Cookie 域
+      SERVER_AUTH_COOKIE_DOMAIN: "hatchet-lite:8888"
+      # Cookie 密钥
+      SERVER_AUTH_COOKIE_SECRETS: "${HATCHET_AUTH_COOKIE_SECRETS:?}"
+      # gRPC 不安全模式
+      SERVER_GRPC_INSECURE: "t"
+      # gRPC 绑定地址
+      SERVER_GRPC_BIND_ADDRESS: "0.0.0.0"
+      # gRPC 端口
+      SERVER_GRPC_PORT: "7077"
+      # gRPC 广播地址
+      SERVER_GRPC_BROADCAST_ADDRESS: "hatchet-lite:7077"
+      # 主密钥集
+      SERVER_ENCRYPTION_MASTER_KEYSET_FILE: "/run/secrets/hatchet-master-keyset"
+      # JWT 公钥集
+      SERVER_ENCRYPTION_JWT_PUBLIC_KEYSET_FILE: "/run/secrets/hatchet-jwt-public-keyset"
+      # JWT 私钥集
+      SERVER_ENCRYPTION_JWT_PRIVATE_KEYSET_FILE: "/run/secrets/hatchet-jwt-private-keyset"
+    # 密钥
+    secrets:
+      # 主密钥集
+      - "hatchet-master-keyset"
+      # JWT 公钥集
+      - "hatchet-jwt-public-keyset"
+      # JWT 私钥集
+      - "hatchet-jwt-private-keyset"
+    # 数据卷
+    volumes:
+      # 配置目录
+      - "hatchet-config:/config"
+    # 健康检查
+    healthcheck:
+      # 就绪探测
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8733/ready"]
+      # 间隔
+      interval: "10s"
+      # 超时
+      timeout: "5s"
+      # 重试次数
+      retries: 5
+      # 启动宽限期
+      start_period: "5m"
+    # 网络
+    networks:
+      # 应用内部网
+      - "app-internal"
+      # 数据内部网
+      - "data-internal"
+      # 管理网
+      - "management"
+    # 依赖
+    depends_on:
+      # PostgreSQL
+      postgresql:
+        # 条件
+        condition: "service_healthy"
+      # PgBouncer
+      pgbouncer:
+        # 条件
+        condition: "service_healthy"

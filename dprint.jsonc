@@ -1,0 +1,20 @@
+// dprint - `https://dprint.dev/`
+
+{
+  // 行宽
+  "lineWidth": 80,
+  // 缩进宽度
+  "indentWidth": 2,
+  // 使用空格
+  "useTabs": false,
+
+  // 排除
+  "excludes": [],
+
+  // 插件
+  "plugins": [
+    "https://plugins.dprint.dev/markdown-0.24.0.wasm",
+    "https://plugins.dprint.dev/toml-0.8.0.wasm",
+    "https://plugins.dprint.dev/json-0.24.0.wasm"
+  ]
+}
