@@ -1,82 +1,113 @@
-# Docker Compose - `https://docs.docker.com/compose/`
-
 # 项目名
 name: application
 
-# 引入
-include:
-  # PostgreSQL
-  - "postgresql/compose.yaml"
-  # PgBouncer
-  - "pgbouncer/compose.yaml"
-  # Valkey
-  - "valkey/compose.yaml"
-  # Garage
-  - "garage/compose.yaml"
-  # Hatchet
-  - "hatchet/compose.yaml"
-  # authentik
-  - "authentik/compose.yaml"
-  # OpenObserve
-  - "observe/compose.yaml"
-  # Traefik
-  - "traefik/compose.yaml"
-  # Server
-  - "../apps/server/compose.yaml"
+# 服务公共字段
+x-service: &service # 重启策略
+  restart: unless-stopped
+  # 日志配置
+  logging:
+    # 日志驱动
+    driver: journald
 
-# 命名网络
+# 健康检查公共参数
+x-healthcheck: &healthcheck # 检查间隔
+  interval: "10s"
+  # 检查超时
+  timeout: "5s"
+  # 重试次数
+  retries: 5
+  # 启动宽限期
+  start_period: "30s"
+
+# 内部网络引用
+x-internal: &internal
+  - "internal"
+
+# 服务定义
+services:
+  # 后端服务
+  api:
+    # 公共字段
+    <<: *service
+    # 镜像
+    image: "${SERVER_IMAGE:-server:latest}"
+    # 网络
+    networks: *internal
+    # 健康检查
+    healthcheck:
+      # 公共参数
+      <<: *healthcheck
+      # 检查命令
+      test: [
+        "CMD-SHELL",
+        "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz')\"",
+      ]
+
+  # 前端服务，同时承担公网入口
+  web:
+    # 公共字段
+    <<: *service
+    # 镜像
+    image: "${WEB_IMAGE:-web:latest}"
+    # 构建配置
+    build:
+      # 构建上下文
+      context: ".."
+      # 构建文件
+      dockerfile: "apps/web/Dockerfile"
+      # 构建参数
+      args:
+        # API 基地址
+        VITE_API_BASE_URL: "${VITE_API_BASE_URL:-}"
+        # 心跳间隔
+        VITE_HEARTBEAT_INTERVAL: "${VITE_HEARTBEAT_INTERVAL:-}"
+    # 环境变量
+    environment:
+      # 站点域名
+      AUTH_DOMAIN: "${AUTH_DOMAIN:?}"
+      # ACME 证书邮箱
+      ACME_EMAIL: "${ACME_EMAIL:?}"
+    # 端口映射
+    ports:
+      # HTTP
+      - "80:80"
+      # HTTPS
+      - "443:443"
+      # HTTP/3
+      - "443:443/udp"
+    # 挂载卷
+    volumes:
+      # 证书与配置数据
+      - "caddy-data:/data"
+    # 网络
+    networks:
+      # 入口网络
+      - "edge"
+      # 内部网络
+      - "internal"
+    # 依赖服务
+    depends_on:
+      # 后端服务
+      api:
+        # 就绪条件
+        condition: "service_healthy"
+    # 健康检查
+    healthcheck:
+      # 公共参数
+      <<: *healthcheck
+      # 检查命令
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:8081/healthz"]
+      # 启动宽限期
+      start_period: "10s"
+
+# 自定义网络
 networks:
-  # 入口网
+  # 入口网络
   edge:
-  # 应用内部网
-  app-internal:
-  # 数据内部网
-  data-internal:
-  # 管理网
-  management:
-    # 外部隔离
-    internal: true
-  # 出站网
-  egress:
+  # 内部网络
+  internal:
 
-# 命名卷
+# 具名卷
 volumes:
-  # PostgreSQL 数据
-  postgresql-data:
-  # PostgreSQL 仓库
-  postgresql-repo:
-  # Valkey 数据
-  valkey-data:
-  # Garage 数据
-  garage-data:
-  # Garage 仓库
-  garage-repo:
-  # Hatchet 配置
-  hatchet-config:
-  # authentik 数据
-  authentik-data:
-  # OpenObserve 数据
-  openobserve-data:
-  # Collector 存储
-  collector-storage:
-  # Traefik 证书
-  traefik-acme:
-
-# 密钥
-secrets:
-  # PostgreSQL
-  postgres:
-    # 环境变量
-    environment: POSTGRES_PASSWORD
-  # Hatchet 主密钥集
-  hatchet-master-keyset:
-    # 环境变量
-    environment: HATCHET_MASTER_KEYSET
-  # Hatchet JWT 公钥集
-  hatchet-jwt-public-keyset:
-    # 环境变量
-    environment: HATCHET_JWT_PUBLIC_KEYSET
-  # Hatchet JWT 私钥集
-  hatchet-jwt-private-keyset:
-    # 环境变量
-    environment: HATCHET_JWT_PRIVATE_KEYSET
+  # Caddy 证书数据卷
+  caddy-data:

@@ -1,19 +1,61 @@
-# lefthook - `https://lefthook.dev/`
+# 最低版本
+min_version: "2.2.2"
+# 安装校验
+assert_lefthook_installed: true
+# 禁用 TTY
+no_tty: true
 
-# 提交前
+# 命令模板
+templates:
+  # task 命令
+  task: mise exec -- task
+
+# 提交前钩子
 pre-commit:
-  # 命令
-  commands:
-    # 代码检查
-    lint:
-      # 运行命令
-      run: mise exec -- just lint
+  # 作业列表
+  jobs:
+    # 全量检查
+    - name: check
+      # 执行命令
+      run: "{task} check"
+      # 失败提示
+      fail_text: "提交前检查失败: task check"
 
-# 提交信息
+# 提交信息钩子
 commit-msg:
-  # 命令
-  commands:
-    # 提交检查
-    cog:
-      # 运行命令
-      run: mise exec -- cog verify --file {1}
+  # 作业列表
+  jobs:
+    # 规范校验
+    - name: cog
+      # 执行命令
+      run: "{task} check-commit -- --file {1}"
+      # 失败提示
+      fail_text: "提交信息不符合 Conventional Commits"
+
+# 推送前钩子
+pre-push:
+  # 作业列表
+  jobs:
+    # 契约漂移检查
+    - name: contract
+      # 执行命令
+      run: "{task} check-codegen"
+      # 失败提示
+      fail_text: "契约生成物存在漂移"
+    # 测试
+    - name: test
+      # 执行命令
+      run: "{task} test"
+      # 失败提示
+      fail_text: "测试失败: task test"
+
+# 合并后钩子
+post-merge:
+  # 作业列表
+  jobs:
+    # 安装依赖
+    - name: install
+      # 执行命令
+      run: "{task} install"
+      # 失败提示
+      fail_text: "依赖同步失败: task install"

@@ -1,0 +1,7 @@
+# 随机种子
+seed = 42
+
+# 生成配置
+[generation]
+# 确定性生成
+deterministic = true

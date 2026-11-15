@@ -1,25 +1,94 @@
-# gitignore - `https://git-scm.com/docs/gitignore`
+# ── 编辑器与操作系统 ──
 
-# 环境
+# macOS 目录属性
+.DS_Store
+# Windows 缩略图缓存
+Thumbs.db
+# JetBrains IDE
+.idea/
+# VS Code
+.vscode/
+
+# ── 环境变量 ──
+
+# 实际配置
 .env
+# 派生配置
 .env.*
+# 示例配置例外
 !.env.example
+# 派生示例配置例外
 !.env.*.example
-.venv/
-node_modules/
 
-# 日志
+# ── 依赖 ──
+
+# npm 与 bun 依赖
+node_modules/
+# Python 虚拟环境
+.venv/
+
+# ── 日志 ──
+
 *.log
+# 轮转日志
 *.log.*
 
-# 缓存
-.cache/
-__pycache__/
-.ruff_cache
-.pytest_cache
-*.tsbuildinfo
-.hypothesis
+# ── Python ──
 
-# 生成
+# 字节码目录
+__pycache__/
+# 编译产物
+*.py[cod]
+# Hypothesis 缓存
+.hypothesis
+# Mypy 缓存
+.mypy_cache/
+# Pyright 缓存
+.pyright/
+# Pytest 缓存
+.pytest_cache/
+# Ruff 缓存
+.ruff_cache
+# Pytest 临时目录
+pytest-of-*/
+# 构建元数据
+*.egg-info/
+
+# ── 覆盖率 ──
+
+# 数据文件
 .coverage
+# 派生数据文件
+.coverage.*
+# HTML 报告
+htmlcov/
+
+# ── TypeScript ──
+
+# 增量构建缓存
+*.tsbuildinfo
+
+# ── 测试产物 ──
+
+# Vitest 结果
+test-results/
+# Playwright 报告
+playwright-report/
+# Playwright 二进制报告
+blob-report/
+
+# ── 构建产物 ──
+
+# 各应用构建输出
 dist/
+# 契约制品例外
+!contracts/*/dist/
+# task 增量缓存
+.task/
+
+# ── 本地环境 ──
+
+# compose 本地覆盖
+infra/compose.override.yaml
+# 部署密钥
+infra/secrets/*

@@ -1,0 +1,74 @@
+# 目标版本
+target-version = "py314"
+# 行宽
+line-length = 100
+# 额外排除路径
+extend-exclude = ["**/generated/**"]
+
+# 检查
+[lint]
+# 启用规则
+select = ["ALL", "DOC201", "RUF029"]
+# 禁用规则
+ignore = ["COM812", "CPY001", "D415", "ISC001", "RUF002", "RUF003"]
+# 预览模式
+preview = true
+# 显式预览规则
+explicit-preview-rules = true
+
+# 导入排序
+[lint.isort]
+# 单行导入
+force-single-line = true
+# 分组内排序
+force-sort-within-sections = true
+# 第一方模块
+known-first-party = ["server"]
+# 导入后空行数
+lines-after-imports = 2
+
+# 导入约定
+[lint.flake8-import-conventions]
+# 禁用 from 导入
+banned-from = ["typing"]
+
+# 禁用导入
+[lint.flake8-tidy-imports.banned-api]
+# utcnow
+"datetime.datetime.utcnow".msg = "使用 datetime.now(UTC)"
+# requests
+"requests".msg = "使用 httpx"
+
+# 不可变调用
+[lint.flake8-bugbear]
+# 额外不可变调用
+extend-immutable-calls = [
+  "fastapi.Body",
+  "fastapi.Cookie",
+  "fastapi.Depends",
+  "fastapi.File",
+  "fastapi.Form",
+  "fastapi.Header",
+  "fastapi.Path",
+  "fastapi.Query",
+  "fastapi.Security",
+]
+
+# 文档字符串
+[lint.pydocstyle]
+# 文档约定
+convention = "google"
+
+# 按文件禁用
+[lint.per-file-ignores]
+# API 层
+"apps/*/src/*/api/**" = ["ARG001"]
+# 测试
+"apps/*/tests/**" = ["S101"]
+
+# 格式化
+[format]
+# docstring 代码格式化
+docstring-code-format = true
+# 换行符
+line-ending = "lf"

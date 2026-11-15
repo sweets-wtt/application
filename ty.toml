@@ -1,0 +1,35 @@
+# 源码
+[src]
+# 排除路径
+exclude = ["**/generated"]
+
+# 运行环境
+[environment]
+# Python 版本
+python-version = "3.14"
+# 目标平台
+python-platform = "linux"
+
+# 分析
+[analysis]
+# 返回类型推断
+return-type-inference = "always"
+# 严格相等语义
+strict-equality-semantics = true
+# 严格泛型窄化
+strict-generic-narrowing = true
+
+# 规则
+[rules]
+# 全部规则
+all = "error"
+
+# 文件覆盖
+[[overrides]]
+# 匹配路径
+include = ["apps/server/tests/**"]
+
+# 覆盖规则
+[overrides.rules]
+# 可能缺失属性
+possibly-missing-attribute = "ignore"

@@ -1,0 +1,36 @@
+{
+  // Schema 地址
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  // 行宽
+  "printWidth": 120,
+  // HTML 空白敏感度
+  "htmlWhitespaceSensitivity": "ignore",
+  // 对象换行策略
+  "objectWrap": "collapse",
+  // 运算符换行位置
+  "experimentalOperatorPosition": "start",
+  // 导入排序
+  "sortImports": {
+    // 分组顺序
+    "groups": [
+      "builtin",
+      "external",
+      ["internal", "subpath"],
+      ["parent", "sibling", "index"],
+      "style",
+      "type",
+      "unknown"
+    ],
+    // 副作用导入排序
+    "sortSideEffects": true
+  },
+  // 忽略路径
+  "ignorePatterns": ["**/components.d.ts"],
+  // 文件覆盖
+  "overrides": [{
+    // 匹配路径
+    "files": ["**/generated/**"],
+    // 导入排序
+    "sortImports": false
+  }]
+}

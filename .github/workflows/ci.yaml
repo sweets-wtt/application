@@ -1,9 +1,7 @@
-# GitHub Actions 持续集成 - https://docs.github.com/actions
-
 # 工作流名称
 name: ci
 
-# 触发事件
+# 触发条件
 on:
   # 拉取请求
   pull_request:
@@ -13,84 +11,174 @@ on:
     branches:
       - main
 
-# 令牌权限
+# 权限
 permissions:
-  # 内容
+  # 内容权限
   contents: read
 
-# 作业
+# 并发控制
+concurrency:
+  # 分组
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # 取消进行中的运行
+  cancel-in-progress: true
+
+# 任务
 jobs:
-  # 持续集成
-  ci:
+  # 代码检查
+  lint:
     # 运行环境
     runs-on: ubuntu-latest
+    # 超时分钟
+    timeout-minutes: 15
     # 步骤
     steps:
-      # 检出仓库
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        # 动作输入
+      # 环境准备动作
+      - uses: ./.github/actions/setup
+        # 输入参数
         with:
           # 检出深度
           fetch-depth: 0
-          # 凭据保留
-          persist-credentials: false
-      # 环境管理
-      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
-        # 动作输入
-        with:
-          # 版本
-          version: "2026.8.14"
-      # 环境准备
-      - run: mise exec -- just setup
-      # 环境变量
-      - run: sed 's/=$/=placeholder/' infra/.env.example > infra/.env
-      # 运行命令
-      - run: mise exec -- just ci
+          # 环境文件
+          env-file: false
+      # 运行 CI
+      - run: task ci
 
-  # 依赖更新配置校验
-  renovate:
+  # 测试
+  test:
     # 运行环境
     runs-on: ubuntu-latest
+    # 超时分钟
+    timeout-minutes: 20
     # 步骤
     steps:
-      # 检出仓库
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        # 动作输入
+      # 环境准备动作
+      - uses: ./.github/actions/setup
+        # 输入参数
         with:
-          # 凭据保留
-          persist-credentials: false
-      # 运行时
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-      # 配置校验
-      - uses: suzuki-shunsuke/github-action-renovate-config-validator@ee9f69e1f683ed0d08225086482b34fc9abe9300 # v2.1.0
-        # 动作输入
-        with:
-          # 配置路径
-          config_file_path: renovate.jsonc
+          # 检出深度
+          fetch-depth: 0
+      # 运行测试
+      - run: task test
+      # 检查产物体积
+      - run: task check-size
+      # 检查契约漂移
+      - run: task check-codegen
 
-  # 兼容检查
-  oasdiff:
+  # 端到端测试
+  e2e:
+    # 运行环境
+    runs-on: ubuntu-latest
+    # 超时分钟
+    timeout-minutes: 20
+    # 步骤
+    steps:
+      # 环境准备动作
+      - uses: ./.github/actions/setup
+        # 输入参数
+        with:
+          # 依赖安装方式
+          dependencies: bun
+          # 环境文件
+          env-file: false
+      # 安装 Playwright 浏览器
+      - run: mise exec -- bun x playwright install --with-deps chromium
+      # 运行端到端测试
+      - run: task test-e2e
+
+  # 镜像构建
+  images:
+    # 运行环境
+    runs-on: ubuntu-latest
+    # 超时分钟
+    timeout-minutes: 20
+    # 步骤
+    steps:
+      # 环境准备动作
+      - uses: ./.github/actions/setup
+        # 输入参数
+        with:
+          # 环境文件
+          env-file: false
+          # 容器运行时
+          container-runtime: "true"
+      # 构建镜像
+      - run: task build-image
+
+  # API 兼容检查
+  compat:
     # 运行条件
     if: github.event_name == 'pull_request'
     # 运行环境
     runs-on: ubuntu-latest
+    # 超时分钟
+    timeout-minutes: 10
     # 步骤
     steps:
-      # 检出仓库
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        # 动作输入
+      # 环境准备动作
+      - uses: ./.github/actions/setup
+        # 输入参数
         with:
           # 检出深度
           fetch-depth: 0
-          # 凭据保留
-          persist-credentials: false
-      # 环境管理
-      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
-        # 动作输入
-        with:
-          # 版本
-          version: "2026.8.14"
-      # 运行命令
+          # 依赖安装方式
+          dependencies: none
+          # 环境文件
+          env-file: false
+      # 对比契约基线
       - run: |
-          vacuum bundle --ruleset contracts/http/vacuum.yaml contracts/http/openapi.yaml /tmp/rev.yaml
-          oasdiff breaking --fail-on ERR origin/main:contracts/http/openapi.yaml /tmp/rev.yaml
+          if git cat-file -e "origin/main:contracts/http/dist/openapi.yaml" 2>/dev/null; then
+            oasdiff breaking --fail-on ERR "origin/main:contracts/http/dist/openapi.yaml" contracts/http/dist/openapi.yaml
+          else
+            echo "基线制品缺失 - 跳过兼容检查"
+          fi
+
+  # 提交规范
+  commit-lint:
+    # 运行条件
+    if: github.event_name == 'pull_request'
+    # 运行环境
+    runs-on: ubuntu-latest
+    # 超时分钟
+    timeout-minutes: 5
+    # 步骤
+    steps:
+      # 环境准备动作
+      - uses: ./.github/actions/setup
+        # 输入参数
+        with:
+          # 检出深度
+          fetch-depth: 0
+          # 依赖安装方式
+          dependencies: none
+          # 环境文件
+          env-file: false
+      # 校验提交信息
+      - env:
+          # 基线提交
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          for sha in $(git rev-list --no-merges "$BASE"..HEAD); do
+            git log -1 --format=%B "$sha" | mise exec -- cog verify --file - || exit 1
+          done
+
+  # 依赖审查
+  deps-review:
+    # 运行条件
+    if: github.event_name == 'pull_request'
+    # 运行环境
+    runs-on: ubuntu-latest
+    # 超时分钟
+    timeout-minutes: 10
+    # 步骤
+    steps:
+      # 环境准备动作
+      - uses: ./.github/actions/setup
+        # 输入参数
+        with:
+          # 依赖安装方式
+          dependencies: none
+          # 环境文件
+          env-file: false
+      # 审查依赖变更
+      - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0

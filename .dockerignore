@@ -1,26 +1,63 @@
-# Dockerignore - `https://docs.docker.com/build/concepts/context/#dockerignore-files`
+# ── 版本控制与仓库元数据 ──
 
-# 版本控制
+# Git 目录
 .git/
+# GitHub 工作流与动作
+.github/
 
-# 环境
-.env
-.env.*
-.venv/
+# ── 环境变量 ──
+
+# 实际配置
+**/.env
+# 派生配置
+**/.env.*
+
+# ── 依赖 ──
+
+# npm 与 bun 依赖
 **/node_modules/
+# Python 虚拟环境
+**/.venv/
 
-# 日志
-*.log
-*.log.*
+# ── Python ──
 
-# 缓存
-.cache/
-__pycache__/
-.pytest_cache
-.ruff_cache
-*.tsbuildinfo
-.hypothesis
+# 字节码目录
+**/__pycache__/
+# 编译产物
+**/*.py[cod]
+# Pytest 缓存
+**/.pytest_cache
+# Ruff 缓存
+**/.ruff_cache
+# Hypothesis 缓存
+**/.hypothesis
 
-# 生成
-.coverage
+# ── 覆盖率 ──
+
+# 数据文件
+**/.coverage
+# 派生数据文件
+**/.coverage.*
+
+# ── TypeScript ──
+
+# 增量构建缓存
+**/*.tsbuildinfo
+
+# ── 构建产物 ──
+
+# 各应用构建输出
 **/dist/
+# task 增量缓存
+**/.task/
+
+# ── 构建无关的仓库内容 ──
+
+# 测试目录
+apps/*/tests/
+# 服务编排
+infra/
+# 入口配置例外
+!infra/Caddyfile
+# API 契约
+contracts/

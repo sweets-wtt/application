@@ -1,0 +1,18 @@
+# 自托管 runner
+self-hosted-runner:
+  # 标签
+  labels: []
+
+# 配置变量
+config-variables: null
+
+# 路径规则
+paths:
+  # 工作流路径
+  .github/workflows/**/*.yaml:
+    # 忽略规则
+    ignore: []
+  # 复合动作路径
+  .github/actions/**/action.yaml:
+    # 忽略规则
+    ignore: []

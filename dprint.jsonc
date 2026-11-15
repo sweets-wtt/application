@@ -1,20 +1,53 @@
-// dprint - `https://dprint.dev/`
-
 {
+  // Schema 地址
+  "$schema": "https://dprint.dev/schemas/v0.json",
   // 行宽
-  "lineWidth": 80,
-  // 缩进宽度
-  "indentWidth": 2,
-  // 使用空格
-  "useTabs": false,
-
-  // 排除
-  "excludes": [],
-
+  "lineWidth": 120,
+  // 包含路径
+  "includes": ["**/*.{json,jsonc,md,yaml,toml}", "**/Dockerfile"],
+  // 排除路径
+  "excludes": ["**/dist/**"],
   // 插件
   "plugins": [
-    "https://plugins.dprint.dev/markdown-0.24.0.wasm",
-    "https://plugins.dprint.dev/toml-0.8.0.wasm",
-    "https://plugins.dprint.dev/json-0.24.0.wasm"
-  ]
+    "npm:@dprint/dockerfile@0.8.0",
+    "npm:@dprint/json@0.26.0",
+    "npm:@dprint/markdown@0.29.0",
+    "npm:@dprint/toml@0.10.0",
+    "npm:dprint-plugin-yaml@0.6.0"
+  ],
+  // Dockerfile 插件
+  "dockerfile": {
+    // 缩进构建阶段
+    "indentStages": true
+  },
+  // JSON 插件
+  "json": {
+    // 数组折叠单行
+    "array.preferSingleLine": true,
+    // 对象折叠单行
+    "object.preferSingleLine": true,
+    // 尾逗号
+    "trailingCommas": "never"
+  },
+  // Markdown 插件
+  "markdown": {
+    // 强调符号
+    "emphasisKind": "asterisks",
+    // 无序列表符号
+    "list.unorderedMarker": "asterisks",
+    // 文本折行
+    "textWrap": "always"
+  },
+  // TOML 插件
+  "toml": {
+    // 数组折叠单行
+    "array.preferSingleLine": true,
+    // 内联表折叠单行
+    "inlineTable.preferSingleLine": true
+  },
+  // YAML 插件
+  "yaml": {
+    // 注释前导空格
+    "formatComments": true
+  }
 }
