@@ -20,12 +20,20 @@ tasks:
     desc: 安装
     deps:
       - install-tools
+      - install-hooks
 
   install-tools:
     desc: 安装工具链
     run: once
     cmds:
       - mise install --locked
+
+  install-hooks:
+    desc: 安装钩子
+    deps:
+      - install-tools
+    cmds:
+      - "{{.MISE}} lefthook install"
 
   check:
     desc: 检查
@@ -36,12 +44,17 @@ tasks:
   check-config:
     desc: 检查配置与文档格式
     cmds:
-      - "{{.MISE}} dprint check"
+      - "{{.MISE}} dprint check {{.CLI_ARGS}}"
 
   check-spell:
     desc: 检查拼写
     cmds:
-      - "{{.MISE}} typos"
+      - "{{.MISE}} typos {{.CLI_ARGS}}"
+
+  check-commit:
+    desc: 校验提交信息
+    cmds:
+      - "{{.MISE}} cog verify {{.CLI_ARGS}}"
 
   format:
     desc: 格式化

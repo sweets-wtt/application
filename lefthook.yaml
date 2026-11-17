@@ -1,0 +1,65 @@
+# 最低版本
+min_version: "2.2.2"
+# 安装校验
+assert_lefthook_installed: true
+# 禁用 TTY
+no_tty: true
+# 通配符匹配
+glob_matcher: doublestar
+
+# 命令模板
+templates:
+  # task 命令
+  task: mise exec -- task
+
+# 提交前钩子
+pre-commit:
+  # 作业列表
+  jobs:
+    # 配置格式
+    - name: config
+      # 文件匹配
+      glob: "**/*.{json,jsonc,md,yml,yaml,toml}"
+      # 执行命令
+      run: "{task} check-config -- {staged_files}"
+      # 失败提示
+      fail_text: "提交前检查失败: task check-config"
+    # 拼写检查
+    - name: spell
+      # 执行命令
+      run: "{task} check-spell -- {staged_files}"
+      # 失败提示
+      fail_text: "提交前检查失败: task check-spell"
+
+# 提交信息钩子
+commit-msg:
+  # 作业列表
+  jobs:
+    # 规范校验
+    - name: cog
+      # 执行命令
+      run: "{task} check-commit -- --file {1}"
+      # 失败提示
+      fail_text: "提交信息不符合 Conventional Commits"
+
+# 推送前钩子
+pre-push:
+  # 作业列表
+  jobs:
+    # 全量检查
+    - name: check
+      # 执行命令
+      run: "{task} check"
+      # 失败提示
+      fail_text: "推送前检查失败: task check"
+
+# 合并后钩子
+post-merge:
+  # 作业列表
+  jobs:
+    # 安装依赖
+    - name: install
+      # 执行命令
+      run: "{task} install"
+      # 失败提示
+      fail_text: "依赖同步失败: task install"

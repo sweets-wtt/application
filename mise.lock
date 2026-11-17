@@ -2,6 +2,77 @@
 
 lockfile_version = 1
 
+[[tools."aqua:cocogitto/cocogitto"]]
+version = "7.0.0"
+backend = "aqua:cocogitto/cocogitto"
+specifiers = ["7.0.0"]
+
+[tools."aqua:cocogitto/cocogitto"."platforms.linux-arm64"]
+checksum = "sha256:379949f50c4f8245ef9532913e83f351c048b55e40ebd52ed8a850642c07a753"
+checksum_source = "mise-versions"
+url = "https://github.com/cocogitto/cocogitto/releases/download/7.0.0/cocogitto-7.0.0-aarch64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/cocogitto/cocogitto/releases/assets/366659384"
+
+[tools."aqua:cocogitto/cocogitto"."platforms.linux-arm64-musl"]
+checksum = "sha256:379949f50c4f8245ef9532913e83f351c048b55e40ebd52ed8a850642c07a753"
+checksum_source = "mise-versions"
+url = "https://github.com/cocogitto/cocogitto/releases/download/7.0.0/cocogitto-7.0.0-aarch64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/cocogitto/cocogitto/releases/assets/366659384"
+
+[tools."aqua:cocogitto/cocogitto"."platforms.linux-x64"]
+checksum = "sha256:e03938ff2c4c86d71c00c0f3284dbbe95c5ca76fe34a51f33e945c23010d59bb"
+checksum_source = "mise-versions"
+url = "https://github.com/cocogitto/cocogitto/releases/download/7.0.0/cocogitto-7.0.0-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/cocogitto/cocogitto/releases/assets/366659350"
+
+[tools."aqua:cocogitto/cocogitto"."platforms.linux-x64-baseline"]
+checksum = "sha256:e03938ff2c4c86d71c00c0f3284dbbe95c5ca76fe34a51f33e945c23010d59bb"
+checksum_source = "mise-versions"
+url = "https://github.com/cocogitto/cocogitto/releases/download/7.0.0/cocogitto-7.0.0-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/cocogitto/cocogitto/releases/assets/366659350"
+
+[tools."aqua:cocogitto/cocogitto"."platforms.linux-x64-musl"]
+checksum = "sha256:e03938ff2c4c86d71c00c0f3284dbbe95c5ca76fe34a51f33e945c23010d59bb"
+checksum_source = "mise-versions"
+url = "https://github.com/cocogitto/cocogitto/releases/download/7.0.0/cocogitto-7.0.0-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/cocogitto/cocogitto/releases/assets/366659350"
+
+[tools."aqua:cocogitto/cocogitto"."platforms.linux-x64-musl-baseline"]
+checksum = "sha256:e03938ff2c4c86d71c00c0f3284dbbe95c5ca76fe34a51f33e945c23010d59bb"
+checksum_source = "mise-versions"
+url = "https://github.com/cocogitto/cocogitto/releases/download/7.0.0/cocogitto-7.0.0-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/cocogitto/cocogitto/releases/assets/366659350"
+
+[tools."aqua:cocogitto/cocogitto"."platforms.macos-arm64"]
+checksum = "sha256:429303b6d68c6461aa221ab4de82b26d0bbcdee7127947ea9c7c411ab9bc574c"
+checksum_source = "mise-versions"
+url = "https://github.com/cocogitto/cocogitto/releases/download/7.0.0/cocogitto-7.0.0-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/cocogitto/cocogitto/releases/assets/366659431"
+
+[tools."aqua:cocogitto/cocogitto"."platforms.macos-x64"]
+checksum = "sha256:591dcd462e2e35ecc21caf41a15a65d464b7ce1ce8a5c299fa0d46a7798dddb0"
+checksum_source = "mise-versions"
+url = "https://github.com/cocogitto/cocogitto/releases/download/7.0.0/cocogitto-7.0.0-x86_64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/cocogitto/cocogitto/releases/assets/366659418"
+
+[tools."aqua:cocogitto/cocogitto"."platforms.macos-x64-baseline"]
+checksum = "sha256:591dcd462e2e35ecc21caf41a15a65d464b7ce1ce8a5c299fa0d46a7798dddb0"
+checksum_source = "mise-versions"
+url = "https://github.com/cocogitto/cocogitto/releases/download/7.0.0/cocogitto-7.0.0-x86_64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/cocogitto/cocogitto/releases/assets/366659418"
+
+[tools."aqua:cocogitto/cocogitto"."platforms.windows-x64"]
+checksum = "sha256:074f68f05d270da5c0d69d3e234ec362bec4c6e3189c21d1c948d038603655d7"
+checksum_source = "mise-versions"
+url = "https://github.com/cocogitto/cocogitto/releases/download/7.0.0/cocogitto-7.0.0-x86_64-pc-windows-msvc.tar.gz"
+url_api = "https://api.github.com/repos/cocogitto/cocogitto/releases/assets/366659399"
+
+[tools."aqua:cocogitto/cocogitto"."platforms.windows-x64-baseline"]
+checksum = "sha256:074f68f05d270da5c0d69d3e234ec362bec4c6e3189c21d1c948d038603655d7"
+checksum_source = "mise-versions"
+url = "https://github.com/cocogitto/cocogitto/releases/download/7.0.0/cocogitto-7.0.0-x86_64-pc-windows-msvc.tar.gz"
+url_api = "https://api.github.com/repos/cocogitto/cocogitto/releases/assets/366659399"
+
 [[tools."aqua:crate-ci/typos"]]
 version = "1.52.2"
 backend = "aqua:crate-ci/typos"
@@ -142,6 +213,77 @@ provenance = "github-attestations"
 checksum = "sha256:3beb87a2582f1e43a301efd0840565518484e53f8c7b0ad27b857eee08e0745f"
 url = "https://github.com/dprint/dprint/releases/download/0.64.3/dprint-x86_64-pc-windows-msvc.zip"
 url_api = "https://api.github.com/repos/dprint/dprint/releases/assets/667629154"
+provenance = "github-attestations"
+
+[[tools."aqua:evilmartians/lefthook"]]
+version = "2.2.2"
+backend = "aqua:evilmartians/lefthook"
+specifiers = ["2.2.2"]
+
+[tools."aqua:evilmartians/lefthook"."platforms.linux-arm64"]
+checksum = "sha256:5e11944542e9889078d2300495882aa854d63854a664d09c5637df0bbc21c0e1"
+url = "https://github.com/evilmartians/lefthook/releases/download/v2.2.2/lefthook_2.2.2_Linux_aarch64.gz"
+url_api = "https://api.github.com/repos/evilmartians/lefthook/releases/assets/636518953"
+provenance = "github-attestations"
+
+[tools."aqua:evilmartians/lefthook"."platforms.linux-arm64-musl"]
+checksum = "sha256:5e11944542e9889078d2300495882aa854d63854a664d09c5637df0bbc21c0e1"
+url = "https://github.com/evilmartians/lefthook/releases/download/v2.2.2/lefthook_2.2.2_Linux_aarch64.gz"
+url_api = "https://api.github.com/repos/evilmartians/lefthook/releases/assets/636518953"
+provenance = "github-attestations"
+
+[tools."aqua:evilmartians/lefthook"."platforms.linux-x64"]
+checksum = "sha256:2b8d7fd52771f26d7a50260ef10cd6fe704d66f60102e566362b84da09884ab7"
+url = "https://github.com/evilmartians/lefthook/releases/download/v2.2.2/lefthook_2.2.2_Linux_x86_64.gz"
+url_api = "https://api.github.com/repos/evilmartians/lefthook/releases/assets/636518865"
+provenance = "github-attestations"
+
+[tools."aqua:evilmartians/lefthook"."platforms.linux-x64-baseline"]
+checksum = "sha256:2b8d7fd52771f26d7a50260ef10cd6fe704d66f60102e566362b84da09884ab7"
+url = "https://github.com/evilmartians/lefthook/releases/download/v2.2.2/lefthook_2.2.2_Linux_x86_64.gz"
+url_api = "https://api.github.com/repos/evilmartians/lefthook/releases/assets/636518865"
+provenance = "github-attestations"
+
+[tools."aqua:evilmartians/lefthook"."platforms.linux-x64-musl"]
+checksum = "sha256:2b8d7fd52771f26d7a50260ef10cd6fe704d66f60102e566362b84da09884ab7"
+url = "https://github.com/evilmartians/lefthook/releases/download/v2.2.2/lefthook_2.2.2_Linux_x86_64.gz"
+url_api = "https://api.github.com/repos/evilmartians/lefthook/releases/assets/636518865"
+provenance = "github-attestations"
+
+[tools."aqua:evilmartians/lefthook"."platforms.linux-x64-musl-baseline"]
+checksum = "sha256:2b8d7fd52771f26d7a50260ef10cd6fe704d66f60102e566362b84da09884ab7"
+url = "https://github.com/evilmartians/lefthook/releases/download/v2.2.2/lefthook_2.2.2_Linux_x86_64.gz"
+url_api = "https://api.github.com/repos/evilmartians/lefthook/releases/assets/636518865"
+provenance = "github-attestations"
+
+[tools."aqua:evilmartians/lefthook"."platforms.macos-arm64"]
+checksum = "sha256:aef03ff2faaf87594068ec3ab794dcc1acd8d64f2aa3109785244c8359fbf15b"
+url = "https://github.com/evilmartians/lefthook/releases/download/v2.2.2/lefthook_2.2.2_MacOS_arm64.gz"
+url_api = "https://api.github.com/repos/evilmartians/lefthook/releases/assets/636518817"
+provenance = "github-attestations"
+
+[tools."aqua:evilmartians/lefthook"."platforms.macos-x64"]
+checksum = "sha256:016e560b0cc982f45df14c301509e05b5c4265655eea996495093cd0c632063a"
+url = "https://github.com/evilmartians/lefthook/releases/download/v2.2.2/lefthook_2.2.2_MacOS_x86_64.gz"
+url_api = "https://api.github.com/repos/evilmartians/lefthook/releases/assets/636518821"
+provenance = "github-attestations"
+
+[tools."aqua:evilmartians/lefthook"."platforms.macos-x64-baseline"]
+checksum = "sha256:016e560b0cc982f45df14c301509e05b5c4265655eea996495093cd0c632063a"
+url = "https://github.com/evilmartians/lefthook/releases/download/v2.2.2/lefthook_2.2.2_MacOS_x86_64.gz"
+url_api = "https://api.github.com/repos/evilmartians/lefthook/releases/assets/636518821"
+provenance = "github-attestations"
+
+[tools."aqua:evilmartians/lefthook"."platforms.windows-x64"]
+checksum = "sha256:980579c96db6df0064f7d831dd409cb9eac1c993a13bc936574507e9e075be52"
+url = "https://github.com/evilmartians/lefthook/releases/download/v2.2.2/lefthook_2.2.2_Windows_x86_64.gz"
+url_api = "https://api.github.com/repos/evilmartians/lefthook/releases/assets/636518867"
+provenance = "github-attestations"
+
+[tools."aqua:evilmartians/lefthook"."platforms.windows-x64-baseline"]
+checksum = "sha256:980579c96db6df0064f7d831dd409cb9eac1c993a13bc936574507e9e075be52"
+url = "https://github.com/evilmartians/lefthook/releases/download/v2.2.2/lefthook_2.2.2_Windows_x86_64.gz"
+url_api = "https://api.github.com/repos/evilmartians/lefthook/releases/assets/636518867"
 provenance = "github-attestations"
 
 [[tools."aqua:go-task/task"]]
