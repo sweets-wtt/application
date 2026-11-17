@@ -1,0 +1,54 @@
+# 版本
+version: "3"
+
+# 输出模式
+output: prefixed
+
+# 变量
+vars:
+  MISE: "mise exec --"
+
+# 任务
+tasks:
+  default:
+    desc: 列出任务
+    aliases: [list]
+    cmds:
+      - task --list
+
+  install:
+    desc: 安装
+    deps:
+      - install-tools
+
+  install-tools:
+    desc: 安装工具链
+    run: once
+    cmds:
+      - mise install --locked
+
+  check:
+    desc: 检查
+    deps:
+      - check-config
+      - check-spell
+
+  check-config:
+    desc: 检查配置与文档格式
+    cmds:
+      - "{{.MISE}} dprint check"
+
+  check-spell:
+    desc: 检查拼写
+    cmds:
+      - "{{.MISE}} typos"
+
+  format:
+    desc: 格式化
+    deps:
+      - format-config
+
+  format-config:
+    desc: 格式化配置与文档
+    cmds:
+      - "{{.MISE}} dprint fmt"

@@ -1,0 +1,73 @@
+{
+  // Schema 地址
+  "$schema": "https://dprint.dev/schemas/v0.json",
+  // 行宽
+  "lineWidth": 120,
+  // 包含路径
+  "includes": ["**/*.{json,jsonc,md,yml,yaml,toml}"],
+  // 排除路径
+  "excludes": [],
+  // 插件
+  "plugins": [
+    "npm:@dprint/json@0.26.0",
+    "npm:@dprint/markdown@0.29.0",
+    "npm:@dprint/toml@0.10.0",
+    "npm:dprint-plugin-yaml@0.6.0"
+  ],
+  // JSON
+  "json": {
+    // 数组折叠单行
+    "array.preferSingleLine": true,
+    // 对象折叠单行
+    "object.preferSingleLine": true,
+    // 尾逗号
+    "trailingCommas": "never"
+  },
+  // Markdown
+  "markdown": {
+    // 文本折行
+    "textWrap": "always",
+    // 强调符号
+    "emphasisKind": "asterisks",
+    // 标题上方空行
+    "heading.blankLinesAbove": 1,
+    // 无序列表符号
+    "list.unorderedMarker": "asterisks",
+    // 代码块语法错误时报错
+    "codeBlock.raiseSyntaxErrors": true,
+    // HTML 折叠单行
+    "html.preferSingleLine": true
+  },
+  // YAML
+  "yaml": {
+    // 折叠单行
+    "preferSingleLine": true,
+    // 流式序列折叠单行
+    "flowSequence.preferSingleLine": true,
+    // 流式映射折叠单行
+    "flowMap.preferSingleLine": true,
+    // 文本折行
+    "proseWrap": "always",
+    // 强制双引号
+    "quotes": "forceDouble",
+    // 注释前导空格
+    "formatComments": true
+  },
+  // TOML
+  "toml": {
+    // 子表缩进
+    "indentTables": "always",
+    // 表项缩进
+    "indentEntries": "always",
+    // 数组折叠单行
+    "array.preferSingleLine": true,
+    // 内联表折叠单行
+    "inlineTable.preferSingleLine": true,
+    // 尾逗号
+    "trailingCommas": "never",
+    // 表键排序
+    "sortKeys": true,
+    // 内联表键排序
+    "sortInlineTables": true
+  }
+}

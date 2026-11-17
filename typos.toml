@@ -1,0 +1,14 @@
+# 文件
+[files]
+  # 额外排除路径
+  extend-exclude = []
+
+# 默认规则
+[default]
+  # 忽略编号标识符
+  extend-ignore-identifiers-re = ["^[A-Z]{2,5}[0-9]{3}$"]
+
+# 锁文件
+[type.lock]
+  # 文件内容检查
+  check-file = false
