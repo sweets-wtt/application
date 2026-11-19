@@ -1,0 +1,4 @@
+# 继承默认规则
+[extend]
+  # 使用内置规则
+  useDefault = true

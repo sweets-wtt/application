@@ -1,0 +1,23 @@
+# 扫描配置
+scan:
+  # 扫描类型
+  scanners:
+    - vuln
+    - secret
+    - misconfig
+
+  # 跳过目录
+  skip-dirs:
+    - .git
+    - .docs
+
+# 严重级别
+severity:
+  - HIGH
+  - CRITICAL
+
+# 失败退出码
+exit-code: 1
+
+# 忽略文件
+ignorefile: .trivyignore

@@ -40,6 +40,9 @@ tasks:
     deps:
       - check-config
       - check-spell
+      - check-github
+      - check-audit
+      - check-secret
 
   check-config:
     desc: 检查配置与文档格式
@@ -55,6 +58,46 @@ tasks:
     desc: 校验提交信息
     cmds:
       - "{{.MISE}} cog verify {{.CLI_ARGS}}"
+
+  check-commits:
+    desc: 校验提交范围
+    cmds:
+      - "{{.MISE}} cog check --ignore-merge-commits {{.CLI_ARGS}}"
+
+  check-release:
+    desc: 发布前检查
+    deps:
+      - check
+    vars:
+      BASE:
+        sh: "git describe --tags --abbrev=0 --match 'v*' 2>/dev/null || git rev-list --max-parents=0 HEAD"
+    cmds:
+      - "{{.MISE}} cog check --ignore-merge-commits {{.BASE}}..HEAD"
+
+  check-github:
+    desc: 检查工作流语法
+    cmds:
+      - "{{.MISE}} actionlint {{.CLI_ARGS}}"
+
+  check-audit:
+    desc: 审计工作流安全
+    cmds:
+      - "{{.MISE}} zizmor .github {{.CLI_ARGS}}"
+
+  check-secret:
+    desc: 扫描密钥
+    cmds:
+      - "{{.MISE}} gitleaks git --redact --no-banner {{.CLI_ARGS}}"
+
+  check-secret-staged:
+    desc: 扫描暂存密钥
+    cmds:
+      - "{{.MISE}} gitleaks git --pre-commit --staged --redact --no-banner {{.CLI_ARGS}}"
+
+  check-vuln:
+    desc: 扫描漏洞
+    cmds:
+      - "{{.MISE}} trivy fs . {{.CLI_ARGS}}"
 
   format:
     desc: 格式化

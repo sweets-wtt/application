@@ -1,0 +1,17 @@
+# 动作名称
+name: setup
+# 动作说明
+description: 准备工具链
+
+# 执行配置
+runs:
+  # 动作类型
+  using: composite
+  # 步骤
+  steps:
+    # 工具链动作
+    - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4
+      # 输入参数
+      with:
+        # 工具版本
+        version: "2026.11.7"

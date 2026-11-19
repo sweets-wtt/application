@@ -1,0 +1,66 @@
+# 工作流名称
+name: release
+
+# 触发条件
+on:
+  # 手动触发
+  workflow_dispatch:
+
+# 权限
+permissions:
+  # 内容权限
+  contents: read
+
+# 并发控制
+concurrency:
+  # 分组
+  group: release
+  # 取消进行中的运行
+  cancel-in-progress: false
+
+# 任务
+jobs:
+  # 发版
+  release:
+    # 运行条件
+    if: github.ref == 'refs/heads/main'
+    # 运行环境
+    runs-on: ubuntu-latest
+    # 超时分钟
+    timeout-minutes: 10
+    # 权限
+    permissions:
+      # 内容写入权限
+      contents: write
+    # 步骤
+    steps:
+      # 检出仓库
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        # 输入参数
+        with:
+          # 检出深度
+          fetch-depth: 0
+          # 持久化凭据
+          persist-credentials: false
+      # 环境准备动作
+      - uses: ./.github/actions/setup # zizmor: ignore[self-repository]
+      # 发布前检查
+      - run: task check-release
+      # 配置提交者
+      - run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+      # 生成版本标签
+      - run: mise exec -- cog bump --auto
+      # 读取版本标签
+      - id: tag
+        # 执行命令
+        run: echo "tag=$(git tag --points-at HEAD 'v*' | head -n1)" >> "$GITHUB_OUTPUT"
+      # 推送标签
+      - if: steps.tag.outputs.tag != ''
+        # 环境变量
+        env:
+          # 令牌
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # 执行命令
+        run: git push "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}" main "$tag"

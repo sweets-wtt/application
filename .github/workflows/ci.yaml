@@ -1,0 +1,102 @@
+# 工作流名称
+name: ci
+
+# 触发条件
+on:
+  # 拉取请求
+  pull_request:
+  # 推送
+  push:
+    # 分支
+    branches:
+      - main
+
+# 权限
+permissions:
+  # 内容权限
+  contents: read
+
+# 并发控制
+concurrency:
+  # 分组
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # 取消进行中的运行
+  cancel-in-progress: true
+
+# 任务
+jobs:
+  # 检查
+  check:
+    # 名称
+    name: ${{ matrix.name }}
+    # 运行环境
+    runs-on: ubuntu-latest
+    # 超时分钟
+    timeout-minutes: ${{ matrix.timeout }}
+    # 矩阵
+    strategy:
+      # 单项失败不取消其他项
+      fail-fast: false
+      # 任务矩阵
+      matrix:
+        include:
+          - name: lint
+            timeout: 10
+            fetch_depth: 1
+            tasks:
+              - task check-config
+              - task check-spell
+          - name: workflows
+            timeout: 5
+            fetch_depth: 1
+            tasks:
+              - task check-github
+              - task check-audit
+          - name: security
+            timeout: 10
+            fetch_depth: 0
+            tasks:
+              - task check-secret
+              - task check-vuln
+    # 步骤
+    steps:
+      # 检出仓库
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        # 输入参数
+        with:
+          # 检出深度
+          fetch-depth: ${{ matrix.fetch_depth }}
+          # 持久化凭据
+          persist-credentials: false
+      # 环境准备动作
+      - uses: ./.github/actions/setup # zizmor: ignore[self-repository]
+      # 执行检查
+      - run: ${{ join(matrix.tasks, ' && ') }}
+
+  # 提交规范
+  commit-lint:
+    # 运行条件
+    if: github.event_name == 'pull_request'
+    # 运行环境
+    runs-on: ubuntu-latest
+    # 超时分钟
+    timeout-minutes: 5
+    # 步骤
+    steps:
+      # 检出仓库
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        # 输入参数
+        with:
+          # 检出深度
+          fetch-depth: 0
+          # 持久化凭据
+          persist-credentials: false
+      # 环境准备动作
+      - uses: ./.github/actions/setup # zizmor: ignore[self-repository]
+      # 校验提交信息
+      - # 环境变量
+        env:
+          # 基线提交
+          BASE: ${{ github.event.pull_request.base.sha }}
+        # 执行命令
+        run: task check-commits -- "$BASE"..HEAD

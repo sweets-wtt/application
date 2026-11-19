@@ -20,6 +20,8 @@ pre-commit:
     - name: config
       # 文件匹配
       glob: "**/*.{json,jsonc,md,yml,yaml,toml}"
+      # 排除路径
+      exclude: ["CHANGELOG.md"]
       # 执行命令
       run: "{task} check-config -- {staged_files}"
       # 失败提示
@@ -30,6 +32,28 @@ pre-commit:
       run: "{task} check-spell -- {staged_files}"
       # 失败提示
       fail_text: "提交前检查失败: task check-spell"
+    # 工作流检查
+    - name: workflow
+      # 文件匹配
+      glob: ".github/workflows/**/*.{yml,yaml}"
+      # 执行命令
+      run: "{task} check-github -- {staged_files}"
+      # 失败提示
+      fail_text: "提交前检查失败: task check-github"
+    # 工作流审计
+    - name: audit
+      # 文件匹配
+      glob: ".github/**/*.{yml,yaml}"
+      # 执行命令
+      run: "{task} check-audit"
+      # 失败提示
+      fail_text: "提交前检查失败: task check-audit"
+    # 密钥扫描
+    - name: secret
+      # 执行命令
+      run: "{task} check-secret-staged"
+      # 失败提示
+      fail_text: "提交前检查失败: task check-secret-staged"
 
 # 提交信息钩子
 commit-msg:
