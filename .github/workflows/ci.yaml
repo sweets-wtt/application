@@ -58,6 +58,11 @@ jobs:
             tasks:
               - task check-secret
               - task check-vuln
+          - name: contract
+            timeout: 10
+            fetch_depth: 1
+            tasks:
+              - task check-contract
     # 步骤
     steps:
       # 检出仓库
@@ -72,6 +77,34 @@ jobs:
       - uses: ./.github/actions/setup # zizmor: ignore[self-repository]
       # 执行检查
       - run: ${{ join(matrix.tasks, ' && ') }}
+
+  # 契约兼容
+  compat:
+    # 运行条件
+    if: github.event_name == 'pull_request'
+    # 运行环境
+    runs-on: ubuntu-latest
+    # 超时分钟
+    timeout-minutes: 5
+    # 步骤
+    steps:
+      # 检出仓库
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        # 输入参数
+        with:
+          # 检出深度
+          fetch-depth: 0
+          # 持久化凭据
+          persist-credentials: false
+      # 环境准备动作
+      - uses: ./.github/actions/setup # zizmor: ignore[self-repository]
+      # 对比契约基线
+      - run: |
+          if git cat-file -e "origin/main:contracts/http/dist/openapi.yaml" 2>/dev/null; then
+            mise exec -- oasdiff breaking --fail-on ERR "origin/main:contracts/http/dist/openapi.yaml" contracts/http/dist/openapi.yaml
+          else
+            echo "基线制品缺失 - 跳过兼容检查"
+          fi
 
   # 提交规范
   commit-lint:

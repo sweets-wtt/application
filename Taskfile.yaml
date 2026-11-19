@@ -7,6 +7,8 @@ output: prefixed
 # 变量
 vars:
   MISE: "mise exec --"
+  # 契约制品
+  SPEC: contracts/http/dist/openapi.yaml
 
 # 任务
 tasks:
@@ -21,6 +23,7 @@ tasks:
     deps:
       - install-tools
       - install-hooks
+      - install-typespec
 
   install-tools:
     desc: 安装工具链
@@ -35,6 +38,18 @@ tasks:
     cmds:
       - "{{.MISE}} lefthook install"
 
+  install-typespec:
+    desc: 安装契约依赖
+    deps:
+      - install-tools
+    sources:
+      - package.json
+      - bun.lock
+    generates:
+      - node_modules/@typespec/compiler/package.json
+    cmds:
+      - "{{.MISE}} bun install --frozen-lockfile"
+
   check:
     desc: 检查
     deps:
@@ -43,6 +58,8 @@ tasks:
       - check-github
       - check-audit
       - check-secret
+      - check-api
+      - check-typespec
 
   check-config:
     desc: 检查配置与文档格式
@@ -53,6 +70,39 @@ tasks:
     desc: 检查拼写
     cmds:
       - "{{.MISE}} typos {{.CLI_ARGS}}"
+
+  check-api:
+    desc: 校验接口契约
+    cmds:
+      - "{{.MISE}} vacuum lint --ruleset contracts/ruleset.yaml --min-score 95 {{.SPEC}}"
+
+  check-typespec:
+    desc: 检查契约定义格式
+    deps:
+      - install-typespec
+    cmds:
+      - "{{.MISE}} bun run check-format"
+
+  format-typespec:
+    desc: 格式化契约定义
+    deps:
+      - install-typespec
+    cmds:
+      - "{{.MISE}} bun run format"
+
+  compile-spec:
+    desc: 生成 OpenAPI 契约
+    deps:
+      - install-typespec
+    cmds:
+      - "{{.MISE}} bun run compile"
+
+  check-contract:
+    desc: 检查契约漂移
+    cmds:
+      - task: compile-spec
+      - task: check-api
+      - git diff --exit-code -- contracts/http/dist
 
   check-commit:
     desc: 校验提交信息
@@ -72,6 +122,7 @@ tasks:
       BASE:
         sh: "git describe --tags --abbrev=0 --match 'v*' 2>/dev/null || git rev-list --max-parents=0 HEAD"
     cmds:
+      - task: check-contract
       - "{{.MISE}} cog check --ignore-merge-commits {{.BASE}}..HEAD"
 
   check-github:
@@ -103,6 +154,7 @@ tasks:
     desc: 格式化
     deps:
       - format-config
+      - format-typespec
 
   format-config:
     desc: 格式化配置与文档

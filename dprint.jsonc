@@ -6,7 +6,7 @@
   // 包含路径
   "includes": ["**/*.{json,jsonc,md,yml,yaml,toml}"],
   // 排除路径
-  "excludes": ["CHANGELOG.md"],
+  "excludes": ["CHANGELOG.md", "**/dist/**", "node_modules/**", "tsp-output/**"],
   // 插件
   "plugins": [
     "npm:@dprint/json@0.26.0",

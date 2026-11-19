@@ -1,7 +1,7 @@
 # 文件
 [files]
   # 额外排除路径
-  extend-exclude = ["CHANGELOG.md"]
+  extend-exclude = ["CHANGELOG.md", "node_modules", "tsp-output"]
 
 # 默认规则
 [default]

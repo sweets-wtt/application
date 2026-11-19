@@ -1,0 +1,77 @@
+openapi: 3.1.0
+info:
+  title: API
+  version: 0.1.0
+  description: HTTP API 契约
+tags:
+  - name: health
+    description: 服务健康检查相关接口
+paths:
+  /healthz:
+    get:
+      operationId: getHealthz
+      summary: 存活探针
+      description: 返回服务存活状态
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthzResponse'
+              examples:
+                存活响应:
+                  summary: 存活响应
+                  description: 服务正常时的响应示例
+                  value:
+                    code: 0
+                    message: ok
+                    data:
+                      status: ok
+      tags:
+        - health
+components:
+  schemas:
+    HealthzData:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - ok
+          description: 存活状态取值
+          examples:
+            - ok
+      description: 存活数据
+      examples:
+        - status: ok
+    HealthzResponse:
+      type: object
+      required:
+        - code
+        - message
+        - data
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: 业务状态码
+        message:
+          type: string
+          description: 提示信息
+        data:
+          $ref: '#/components/schemas/HealthzData'
+          description: 业务数据
+      description: 存活响应
+      examples:
+        - code: 0
+          message: ok
+          data:
+            status: ok
+servers:
+  - url: /
+    description: API server
+    variables: {}

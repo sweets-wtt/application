@@ -15,3 +15,16 @@ Thumbs.db
 # 日志
 *.log
 *.log.*
+
+# 构建输出
+dist/
+# 契约制品例外
+!contracts/*/dist/
+
+# JavaScript 依赖
+node_modules/
+# TypeSpec 输出
+tsp-output/
+
+# 任务缓存
+.task/

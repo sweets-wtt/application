@@ -73,7 +73,7 @@ pre-push:
     # 全量检查
     - name: check
       # 执行命令
-      run: "{task} check"
+      run: "{task} check && {task} check-contract"
       # 失败提示
       fail_text: "推送前检查失败: task check"
 

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "application",
+  "private": true,
+  "scripts": {
+    "compile": "bunx --bun tsp compile contracts/typespec",
+    "format": "bunx --bun tsp format \"contracts/typespec/**/*.tsp\"",
+    "check-format": "bunx --bun tsp format --check \"contracts/typespec/**/*.tsp\""
+  },
+  "devDependencies": {
+    "@typespec/compiler": "1.18.0",
+    "@typespec/http": "1.18.0",
+    "@typespec/openapi": "1.18.0",
+    "@typespec/openapi3": "1.18.0"
+  },
+  "packageManager": "bun@1.4.4",
+  "engines": { "bun": ">=1.4.4" }
+}

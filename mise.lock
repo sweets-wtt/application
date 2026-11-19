@@ -215,75 +215,146 @@ checksum_source = "mise-versions"
 url = "https://github.com/crate-ci/typos/releases/download/v1.52.2/typos-v1.52.2-x86_64-pc-windows-msvc.zip"
 url_api = "https://api.github.com/repos/crate-ci/typos/releases/assets/733790297"
 
+[[tools."aqua:daveshanley/vacuum"]]
+version = "0.41.0"
+backend = "aqua:daveshanley/vacuum"
+specifiers = ["0.41.0"]
+
+[tools."aqua:daveshanley/vacuum"."platforms.linux-arm64"]
+checksum = "sha256:3ff590d05aa3ee42b9608f871ae14ae8bc1f90a594c06f3820079f498d9b0cac"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.41.0/vacuum_0.41.0_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/747563397"
+provenance = "cosign"
+
+[tools."aqua:daveshanley/vacuum"."platforms.linux-arm64-musl"]
+checksum = "sha256:3ff590d05aa3ee42b9608f871ae14ae8bc1f90a594c06f3820079f498d9b0cac"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.41.0/vacuum_0.41.0_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/747563397"
+provenance = "cosign"
+
+[tools."aqua:daveshanley/vacuum"."platforms.linux-x64"]
+checksum = "sha256:17b9ca0f23c4f926bac3814393684acc81dc40e2f8fffd28812e4bf885d4269f"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.41.0/vacuum_0.41.0_linux_x86_64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/747563400"
+provenance = "cosign"
+
+[tools."aqua:daveshanley/vacuum"."platforms.linux-x64-baseline"]
+checksum = "sha256:17b9ca0f23c4f926bac3814393684acc81dc40e2f8fffd28812e4bf885d4269f"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.41.0/vacuum_0.41.0_linux_x86_64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/747563400"
+provenance = "cosign"
+
+[tools."aqua:daveshanley/vacuum"."platforms.linux-x64-musl"]
+checksum = "sha256:17b9ca0f23c4f926bac3814393684acc81dc40e2f8fffd28812e4bf885d4269f"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.41.0/vacuum_0.41.0_linux_x86_64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/747563400"
+provenance = "cosign"
+
+[tools."aqua:daveshanley/vacuum"."platforms.linux-x64-musl-baseline"]
+checksum = "sha256:17b9ca0f23c4f926bac3814393684acc81dc40e2f8fffd28812e4bf885d4269f"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.41.0/vacuum_0.41.0_linux_x86_64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/747563400"
+provenance = "cosign"
+
+[tools."aqua:daveshanley/vacuum"."platforms.macos-arm64"]
+checksum = "sha256:9d8c3efb19e4a307743fd4b046b736441c61959e5b6de58d1ee3472b2791c8d3"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.41.0/vacuum_0.41.0_darwin_arm64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/747563522"
+provenance = "cosign"
+
+[tools."aqua:daveshanley/vacuum"."platforms.macos-x64"]
+checksum = "sha256:fc40e65a8a532151e080a8a562d6903fc1a362d274ab496341fc532822dda27d"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.41.0/vacuum_0.41.0_darwin_x86_64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/747563528"
+provenance = "cosign"
+
+[tools."aqua:daveshanley/vacuum"."platforms.macos-x64-baseline"]
+checksum = "sha256:fc40e65a8a532151e080a8a562d6903fc1a362d274ab496341fc532822dda27d"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.41.0/vacuum_0.41.0_darwin_x86_64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/747563528"
+provenance = "cosign"
+
+[tools."aqua:daveshanley/vacuum"."platforms.windows-x64"]
+checksum = "sha256:32b2df18dab0f5481bc20271bae03421f54e78e0b57b0b772f3ff10278efe2b6"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.41.0/vacuum_0.41.0_windows_x86_64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/747563396"
+provenance = "cosign"
+
+[tools."aqua:daveshanley/vacuum"."platforms.windows-x64-baseline"]
+checksum = "sha256:32b2df18dab0f5481bc20271bae03421f54e78e0b57b0b772f3ff10278efe2b6"
+url = "https://github.com/daveshanley/vacuum/releases/download/v0.41.0/vacuum_0.41.0_windows_x86_64.tar.gz"
+url_api = "https://api.github.com/repos/daveshanley/vacuum/releases/assets/747563396"
+provenance = "cosign"
+
 [[tools."aqua:dprint/dprint"]]
-version = "0.64.3"
+version = "0.65.0"
 backend = "aqua:dprint/dprint"
-specifiers = ["0.64.3"]
+specifiers = ["0.65.0"]
 
 [tools."aqua:dprint/dprint"."platforms.linux-arm64"]
-checksum = "sha256:c820bfc67b0cd6f5f0fa4d00ecdcb056944c86030859f5e50151c88d9164b30d"
-url = "https://github.com/dprint/dprint/releases/download/0.64.3/dprint-aarch64-unknown-linux-gnu.zip"
-url_api = "https://api.github.com/repos/dprint/dprint/releases/assets/667629157"
+checksum = "sha256:804535e54f431674f5481725ba5d4718de0a7398d6abd33b899fd734f6d98062"
+url = "https://github.com/dprint/dprint/releases/download/0.65.0/dprint-aarch64-unknown-linux-gnu.zip"
+url_api = "https://api.github.com/repos/dprint/dprint/releases/assets/756773173"
 provenance = "github-attestations"
 
 [tools."aqua:dprint/dprint"."platforms.linux-arm64-musl"]
-checksum = "sha256:61c8936368ff4030a615ce43853adc5a0707ff77973743d0a691aee2cbf64723"
-url = "https://github.com/dprint/dprint/releases/download/0.64.3/dprint-aarch64-unknown-linux-musl.zip"
-url_api = "https://api.github.com/repos/dprint/dprint/releases/assets/667629170"
+checksum = "sha256:a427ef844b300d896b3f836706bb77d8df6b77f8f2627103c4a34ded94cf6ae1"
+url = "https://github.com/dprint/dprint/releases/download/0.65.0/dprint-aarch64-unknown-linux-musl.zip"
+url_api = "https://api.github.com/repos/dprint/dprint/releases/assets/756773169"
 provenance = "github-attestations"
 
 [tools."aqua:dprint/dprint"."platforms.linux-x64"]
-checksum = "sha256:f71cb7e22d6776439eba168d5cb296092d6413fea7148fe4d70684a2702a4fee"
-url = "https://github.com/dprint/dprint/releases/download/0.64.3/dprint-x86_64-unknown-linux-gnu.zip"
-url_api = "https://api.github.com/repos/dprint/dprint/releases/assets/667629165"
+checksum = "sha256:d1aaf0c6d015931b860804eda5bf7fac9d29e2253351b7d6b0177e6b03a8776d"
+url = "https://github.com/dprint/dprint/releases/download/0.65.0/dprint-x86_64-unknown-linux-gnu.zip"
+url_api = "https://api.github.com/repos/dprint/dprint/releases/assets/756773175"
 provenance = "github-attestations"
 
 [tools."aqua:dprint/dprint"."platforms.linux-x64-baseline"]
-checksum = "sha256:f71cb7e22d6776439eba168d5cb296092d6413fea7148fe4d70684a2702a4fee"
-url = "https://github.com/dprint/dprint/releases/download/0.64.3/dprint-x86_64-unknown-linux-gnu.zip"
-url_api = "https://api.github.com/repos/dprint/dprint/releases/assets/667629165"
+checksum = "sha256:d1aaf0c6d015931b860804eda5bf7fac9d29e2253351b7d6b0177e6b03a8776d"
+url = "https://github.com/dprint/dprint/releases/download/0.65.0/dprint-x86_64-unknown-linux-gnu.zip"
+url_api = "https://api.github.com/repos/dprint/dprint/releases/assets/756773175"
 provenance = "github-attestations"
 
 [tools."aqua:dprint/dprint"."platforms.linux-x64-musl"]
-checksum = "sha256:f105dbc2b0bc0d83c644fcabc3e7bd8779469c0d9faeda48365c58b389d5a443"
-url = "https://github.com/dprint/dprint/releases/download/0.64.3/dprint-x86_64-unknown-linux-musl.zip"
-url_api = "https://api.github.com/repos/dprint/dprint/releases/assets/667629164"
+checksum = "sha256:61707303f4305891fecffec1f92ec8243b07e9d3ba8a7e81f7543fc77fb0002d"
+url = "https://github.com/dprint/dprint/releases/download/0.65.0/dprint-x86_64-unknown-linux-musl.zip"
+url_api = "https://api.github.com/repos/dprint/dprint/releases/assets/756773172"
 provenance = "github-attestations"
 
 [tools."aqua:dprint/dprint"."platforms.linux-x64-musl-baseline"]
-checksum = "sha256:f105dbc2b0bc0d83c644fcabc3e7bd8779469c0d9faeda48365c58b389d5a443"
-url = "https://github.com/dprint/dprint/releases/download/0.64.3/dprint-x86_64-unknown-linux-musl.zip"
-url_api = "https://api.github.com/repos/dprint/dprint/releases/assets/667629164"
+checksum = "sha256:61707303f4305891fecffec1f92ec8243b07e9d3ba8a7e81f7543fc77fb0002d"
+url = "https://github.com/dprint/dprint/releases/download/0.65.0/dprint-x86_64-unknown-linux-musl.zip"
+url_api = "https://api.github.com/repos/dprint/dprint/releases/assets/756773172"
 provenance = "github-attestations"
 
 [tools."aqua:dprint/dprint"."platforms.macos-arm64"]
-checksum = "sha256:94b48820945602fb113a34343db0a9e653a8346c60966f790556dc9ce4084a92"
-url = "https://github.com/dprint/dprint/releases/download/0.64.3/dprint-aarch64-apple-darwin.zip"
-url_api = "https://api.github.com/repos/dprint/dprint/releases/assets/667629166"
+checksum = "sha256:5e57a5e75f5d29d1f9dcc10255fccb9815031f4720fe6759643d0ee12cf201f2"
+url = "https://github.com/dprint/dprint/releases/download/0.65.0/dprint-aarch64-apple-darwin.zip"
+url_api = "https://api.github.com/repos/dprint/dprint/releases/assets/756773168"
 provenance = "github-attestations"
 
 [tools."aqua:dprint/dprint"."platforms.macos-x64"]
-checksum = "sha256:b868e1e87d2ed23217e5ea9521989c167ce8392090088bf0e1fb43be727ea752"
-url = "https://github.com/dprint/dprint/releases/download/0.64.3/dprint-x86_64-apple-darwin.zip"
-url_api = "https://api.github.com/repos/dprint/dprint/releases/assets/667629151"
+checksum = "sha256:b94e2ede59904f34f8047ee9f069767acf19df389b3983f4b97a4fd64f5fcf15"
+url = "https://github.com/dprint/dprint/releases/download/0.65.0/dprint-x86_64-apple-darwin.zip"
+url_api = "https://api.github.com/repos/dprint/dprint/releases/assets/756773186"
 provenance = "github-attestations"
 
 [tools."aqua:dprint/dprint"."platforms.macos-x64-baseline"]
-checksum = "sha256:b868e1e87d2ed23217e5ea9521989c167ce8392090088bf0e1fb43be727ea752"
-url = "https://github.com/dprint/dprint/releases/download/0.64.3/dprint-x86_64-apple-darwin.zip"
-url_api = "https://api.github.com/repos/dprint/dprint/releases/assets/667629151"
+checksum = "sha256:b94e2ede59904f34f8047ee9f069767acf19df389b3983f4b97a4fd64f5fcf15"
+url = "https://github.com/dprint/dprint/releases/download/0.65.0/dprint-x86_64-apple-darwin.zip"
+url_api = "https://api.github.com/repos/dprint/dprint/releases/assets/756773186"
 provenance = "github-attestations"
 
 [tools."aqua:dprint/dprint"."platforms.windows-x64"]
-checksum = "sha256:3beb87a2582f1e43a301efd0840565518484e53f8c7b0ad27b857eee08e0745f"
-url = "https://github.com/dprint/dprint/releases/download/0.64.3/dprint-x86_64-pc-windows-msvc.zip"
-url_api = "https://api.github.com/repos/dprint/dprint/releases/assets/667629154"
+checksum = "sha256:83bc6c5df42d6001062a71ac475ceb5be119472af6afb3fce52ff13ed042db77"
+url = "https://github.com/dprint/dprint/releases/download/0.65.0/dprint-x86_64-pc-windows-msvc.zip"
+url_api = "https://api.github.com/repos/dprint/dprint/releases/assets/756773171"
 provenance = "github-attestations"
 
 [tools."aqua:dprint/dprint"."platforms.windows-x64-baseline"]
-checksum = "sha256:3beb87a2582f1e43a301efd0840565518484e53f8c7b0ad27b857eee08e0745f"
-url = "https://github.com/dprint/dprint/releases/download/0.64.3/dprint-x86_64-pc-windows-msvc.zip"
-url_api = "https://api.github.com/repos/dprint/dprint/releases/assets/667629154"
+checksum = "sha256:83bc6c5df42d6001062a71ac475ceb5be119472af6afb3fce52ff13ed042db77"
+url = "https://github.com/dprint/dprint/releases/download/0.65.0/dprint-x86_64-pc-windows-msvc.zip"
+url_api = "https://api.github.com/repos/dprint/dprint/releases/assets/756773171"
 provenance = "github-attestations"
 
 [[tools."aqua:evilmartians/lefthook"]]
@@ -640,3 +711,123 @@ checksum = "sha256:d284a16e09d9df4ce2c000357e7b59bd531be093bea5718a1ce225b449b59
 url = "https://github.com/zizmorcore/zizmor/releases/download/v1.32.0/zizmor-x86_64-pc-windows-msvc.zip"
 url_api = "https://api.github.com/repos/zizmorcore/zizmor/releases/assets/703541929"
 provenance = "github-attestations"
+
+[[tools.bun]]
+version = "1.4.4"
+backend = "core:bun"
+specifiers = ["1.4.4"]
+
+[tools.bun."platforms.linux-arm64"]
+checksum = "sha256:baa6bb36f51d6e58561e02bbea825038a9df454f673d6d776e8bbf86f8c7850e"
+url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-linux-aarch64.zip"
+
+[tools.bun."platforms.linux-arm64-musl"]
+checksum = "sha256:57f01b02ac7113c61c935f28f38c2eab849e3c970dab21f8b640a87b1ef65009"
+url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-linux-aarch64-musl.zip"
+
+[tools.bun."platforms.linux-x64"]
+checksum = "sha256:bf8ccbfb2b0b80159e0f9a6d15c55317add8077534dbc6130a3edb52fccb395c"
+url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-linux-x64.zip"
+
+[tools.bun."platforms.linux-x64-baseline"]
+checksum = "sha256:e0446eb55995772eb9894bebae9a6be368d985a8b9271ee124486f9946eedd76"
+url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-linux-x64-baseline.zip"
+
+[tools.bun."platforms.linux-x64-musl"]
+checksum = "sha256:a5a8ccc5e74dcb883fe974f125a7bdb3b41e5195ed1b870e73f17effd3eb2b2d"
+url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-linux-x64-musl.zip"
+
+[tools.bun."platforms.linux-x64-musl-baseline"]
+checksum = "sha256:6e9c37098b293920aed28bfb51ab240e26d23bfdd9bbfecb3ad428ac166549bc"
+url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-linux-x64-musl-baseline.zip"
+
+[tools.bun."platforms.macos-arm64"]
+checksum = "sha256:c240d7f0ccb90c263a849fcdb09b7ee62630d921348ed6aafda86b9d577bc510"
+url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-darwin-aarch64.zip"
+
+[tools.bun."platforms.macos-x64"]
+checksum = "sha256:50a3491f73abc2fe81673171a85762d3bc2cc1680ccecadd983de99adf77977e"
+url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-darwin-x64.zip"
+
+[tools.bun."platforms.macos-x64-baseline"]
+checksum = "sha256:d4a155adfbfd09155eb3ba05c9e3a544f39297d7a68616d3c7759f67ab5c47dc"
+url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-darwin-x64-baseline.zip"
+
+[tools.bun."platforms.windows-x64"]
+checksum = "sha256:cd2c0fccc78f3ede1f50ca827a15f063eda13d4d150a3d0674f4f6e323d864a5"
+url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-windows-x64.zip"
+
+[tools.bun."platforms.windows-x64-baseline"]
+checksum = "sha256:0f20ce6674d4f2dbcc8c5d59fdf99f7ba45f8c3b367e0f5781cbfa30a1c78d99"
+url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-windows-x64-baseline.zip"
+
+[[tools."github:tufin/oasdiff"]]
+version = "1.39.0"
+backend = "github:tufin/oasdiff"
+specifiers = ["v1.39.0"]
+
+[tools."github:tufin/oasdiff"."platforms.linux-arm64"]
+checksum = "sha256:481db7d891d916f13df277b2ef8bbb95477702827710e49fe22cef69c359c780"
+checksum_source = "mise-versions"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.39.0/oasdiff_1.39.0_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/760679266"
+
+[tools."github:tufin/oasdiff"."platforms.linux-arm64-musl"]
+checksum = "sha256:481db7d891d916f13df277b2ef8bbb95477702827710e49fe22cef69c359c780"
+checksum_source = "mise-versions"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.39.0/oasdiff_1.39.0_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/760679266"
+
+[tools."github:tufin/oasdiff"."platforms.linux-x64"]
+checksum = "sha256:71a85930728f367a2086077b7ae1411319421549d18473a3e8258b6451520433"
+checksum_source = "mise-versions"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.39.0/oasdiff_1.39.0_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/760679280"
+
+[tools."github:tufin/oasdiff"."platforms.linux-x64-baseline"]
+checksum = "sha256:71a85930728f367a2086077b7ae1411319421549d18473a3e8258b6451520433"
+checksum_source = "mise-versions"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.39.0/oasdiff_1.39.0_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/760679280"
+
+[tools."github:tufin/oasdiff"."platforms.linux-x64-musl"]
+checksum = "sha256:71a85930728f367a2086077b7ae1411319421549d18473a3e8258b6451520433"
+checksum_source = "mise-versions"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.39.0/oasdiff_1.39.0_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/760679280"
+
+[tools."github:tufin/oasdiff"."platforms.linux-x64-musl-baseline"]
+checksum = "sha256:71a85930728f367a2086077b7ae1411319421549d18473a3e8258b6451520433"
+checksum_source = "mise-versions"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.39.0/oasdiff_1.39.0_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/760679280"
+
+[tools."github:tufin/oasdiff"."platforms.macos-arm64"]
+checksum = "sha256:fe88d9950324d3b0ebeaf8e0d3a210b64cb099a0f55fce5ee5a22b276df0eac4"
+checksum_source = "mise-versions"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.39.0/oasdiff_1.39.0_darwin_all.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/760679349"
+
+[tools."github:tufin/oasdiff"."platforms.macos-x64"]
+checksum = "sha256:fe88d9950324d3b0ebeaf8e0d3a210b64cb099a0f55fce5ee5a22b276df0eac4"
+checksum_source = "mise-versions"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.39.0/oasdiff_1.39.0_darwin_all.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/760679349"
+
+[tools."github:tufin/oasdiff"."platforms.macos-x64-baseline"]
+checksum = "sha256:fe88d9950324d3b0ebeaf8e0d3a210b64cb099a0f55fce5ee5a22b276df0eac4"
+checksum_source = "mise-versions"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.39.0/oasdiff_1.39.0_darwin_all.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/760679349"
+
+[tools."github:tufin/oasdiff"."platforms.windows-x64"]
+checksum = "sha256:956a73df88e03efdf3fcc5f327446cc176fefe4adcea1978b0fef464a1ee8901"
+checksum_source = "mise-versions"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.39.0/oasdiff_1.39.0_windows_amd64.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/760679261"
+
+[tools."github:tufin/oasdiff"."platforms.windows-x64-baseline"]
+checksum = "sha256:956a73df88e03efdf3fcc5f327446cc176fefe4adcea1978b0fef464a1ee8901"
+checksum_source = "mise-versions"
+url = "https://github.com/tufin/oasdiff/releases/download/v1.39.0/oasdiff_1.39.0_windows_amd64.tar.gz"
+url_api = "https://api.github.com/repos/tufin/oasdiff/releases/assets/760679261"
